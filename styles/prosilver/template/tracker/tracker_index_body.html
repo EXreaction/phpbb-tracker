@@ -1,0 +1,123 @@
+<!-- INCLUDE overall_header.html -->
+<h2>{L_TRACKER}</h2>
+<p>{L_TRACKER_PROJECTS}</p>	
+		
+<!-- IF not S_DISPLAY_PROJECT -->
+<div class="forabg">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<table class="table1" cellspacing="0">
+		<thead>
+			<tr>
+				<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+				<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="height: 50px">
+				<td class="bg1" colspan="2" align="center">
+					<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ELSE -->		
+	<!-- IF .bug -->
+		<!-- BEGIN bug -->
+			<!-- IF .bug.project -->
+			<h3>{L_BUG_TRACKER}</h3>
+			<div class="forabg">
+				<div class="inner"><span class="corners-top"><span></span></span>
+					<table class="table1" cellspacing="0">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- BEGIN project -->
+						<!-- IF bug.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+								<td style="width: 35%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_NAME}</a></td>
+								<td style="width: 65%;">{bug.project.PROJECT_DESC}</td>
+							</tr>
+						<!-- END project -->
+					</tbody>
+					</table>
+				<span class="corners-bottom"><span></span></span></div>
+			</div>
+			<!-- ENDIF -->
+		<!-- END bug -->
+	<!-- ENDIF -->
+			
+	<!-- IF .feature -->
+		<!-- BEGIN feature -->
+			<!-- IF .feature.project -->
+			<h3>{L_FEATURE_TRACKER}</h3>
+			<div class="forabg">
+				<div class="inner"><span class="corners-top"><span></span></span>
+					<table class="table1" cellspacing="0">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- BEGIN project -->
+						<!-- IF feature.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+								<td style="width: 35%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_NAME}</a></td>
+								<td style="width: 65%;">{feature.project.PROJECT_DESC}</td>
+							</tr>
+						<!-- END project -->
+					</tbody>
+					</table>
+				<span class="corners-bottom"><span></span></span></div>
+			</div>
+			<!-- ENDIF -->
+		<!-- END feature -->
+	<!-- ENDIF -->
+			
+	<!-- IF .security -->
+		<!-- BEGIN security -->
+			<!-- IF .security.project -->
+			<h3>{L_SECURITY_TRACKER}</h3>
+			<div class="forabg">
+				<div class="inner"><span class="corners-top"><span></span></span>
+					<table class="table1" cellspacing="0">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- BEGIN project -->
+						<!-- IF security.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+								<td style="width: 35%;"><a href="{security.project.U_PROJECT}">{security.project.PROJECT_NAME}</a></td>
+								<td style="width: 65%;">{security.project.PROJECT_DESC}</td>
+							</tr>
+						<!-- END project -->
+					</tbody>
+					</table>
+				<span class="corners-bottom"><span></span></span></div>
+			</div>
+			<!-- ENDIF -->
+		<!-- END security -->
+	<!-- ENDIF -->
+<!-- ENDIF -->
+<br />
+
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
+	<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a></h3>
+	<fieldset class="quick-login">
+		<label for="username">{L_USERNAME}:</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />  
+		<label for="password">{L_PASSWORD}:</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" /> | 
+		<label for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" class="checkbox" /></label> <input type="submit" name="login" value="{L_LOGIN}" class="button2" />
+	</fieldset>
+</form>
+<!-- ENDIF -->
+<br /><div style="text-align: center;" class="copyright">Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a></div>
+<!-- INCLUDE overall_footer.html -->

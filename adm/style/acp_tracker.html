@@ -1,0 +1,494 @@
+<!-- INCLUDE overall_header.html -->
+<a name="maincontent"></a>
+
+<!-- IF not S_VERSION_CHECK -->
+<h1>{L_TITLE}</h1>
+
+<p>{L_EXPLAIN}</p>
+<!-- ENDIF -->
+
+<!-- IF S_VERSION_CHECK -->
+
+	<h1>{L_TRACKER_VERSION_CHECK}</h1>
+
+	<p>{L_TRACKER_VERSION_CHECK_EXPLAIN}</p>
+
+	<!-- IF S_UP_TO_DATE -->
+		<div class="successbox">
+			<p>{L_TRACKER_VERSION_UP_TO_DATE_ACP}</p>
+		</div>
+	<!-- ELSE -->
+		<div class="errorbox">
+			<p>{L_TRACKER_VERSION_NOT_UP_TO_DATE_ACP}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<fieldset>
+		<legend></legend>
+	<dl>
+		<dt><label>{L_CURRENT_VERSION}</label></dt>
+		<dd><strong>{CURRENT_VERSION}</strong></dd>
+	</dl>
+	<dl>
+		<dt><label>{L_LATEST_VERSION}</label></dt>
+		<dd><strong>{LATEST_VERSION}</strong></dd>
+	</dl>
+	</fieldset>
+
+	<!-- IF not S_UP_TO_DATE -->
+		{UPDATE_INSTRUCTIONS}
+		<br /><br />
+	<!-- ENDIF -->
+<!-- ELSEIF S_IN_MANAGE_SETTINGS -->
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_tracker" method="post" action="{U_ACTION}">
+<!-- BEGIN options -->
+	<!-- IF options.S_LEGEND -->
+		<!-- IF not options.S_FIRST_ROW -->
+			</fieldset>
+		<!-- ENDIF -->
+		<fieldset>
+			<legend>{options.LEGEND}</legend>
+	<!-- ELSE -->
+
+		<dl>
+			<dt><label for="{options.KEY}">{options.TITLE}:</label><!-- IF options.S_EXPLAIN --><br /><span>{options.TITLE_EXPLAIN}</span><!-- ENDIF --></dt>
+			<dd>{options.CONTENT}</dd>
+		</dl>
+
+	<!-- ENDIF -->
+<!-- END options -->
+</fieldset>
+
+<fieldset class="submit-buttons">
+	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+</fieldset>
+{S_FORM_TOKEN}
+</form>
+<!-- ELSEIF S_IN_MANAGE_ATTACHMENTS -->
+	<!-- IF S_IN_MANAGE_ATTACHMENTS_DEFAULT -->	
+		<!-- IF S_ERROR -->
+			<div class="errorbox">
+				<h3>{L_WARNING}</h3>
+				<p>{ERROR_MSG}</p>
+			</div>
+		<!-- ENDIF -->	
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+			<fieldset class="tabulated">
+				<h3>{L_TRACKER_ORPHAN}</h3>
+				<table cellspacing="1">
+				<thead>
+				<tr>
+					<th>{L_USERNAME}</th>
+					<th>{L_TRACKER_FILENAME}</th>
+					<th>{L_TRACKER_FILESIZE}</th>
+					<th>{L_FILEDATE}</th>
+					<th>{L_MARK}</th>
+				</tr>
+				</thead>
+				<tbody>
+					<!-- BEGIN orphan -->
+					<!-- IF orphan.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+						<td>{orphan.POSTER_USERNAME}</td>
+						<td><a href="{orphan.U_DOWNLOAD_LINK}">{orphan.REAL_FILENAME}</a></td>
+						<td>{orphan.FILESIZE} {orphan.SIZE_LANG}</td>
+						<td>{orphan.FILETIME}</td>
+						<td style="text-align: center;"><input type="checkbox" class="radio" name="attach_ids[]" value="{orphan.ATTACH_ID}" /></td>
+					</tr>
+					<!-- BEGINELSE -->
+
+					<!-- END orphan -->
+				</tbody>
+				</table>
+				<fieldset class="quick">
+					<b class="small"><a href="#" onclick="marklist('acp_tracker', 'attach_ids', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('acp_tracker', 'attach_ids', false); return false;">{L_UNMARK_ALL}</a></b>
+				</fieldset>
+				
+				<br />
+				<h3>{L_TRACKER_EXTRA_FILES}</h3>
+				<table cellspacing="1">
+				<thead>
+				<tr>
+					<th>{L_TRACKER_FILENAME}</th>
+					<th>{L_MARK}</th>
+				</tr>
+				</thead>
+				<tbody>
+					<!-- BEGIN extra_files -->
+					<!-- IF extra_files.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+						<td><a href="{extra_files.FULL_FILENAME}">{extra_files.FULL_FILENAME}</a></td>
+						<td style="text-align: center;"><input type="checkbox" class="radio" name="extra_files[]" value="{extra_files.FILENAME}" /></td>
+					</tr>
+					<!-- BEGINELSE -->
+
+					<!-- END orphan -->
+				</tbody>
+				</table>
+				<fieldset class="quick">
+					<b class="small"><a href="#" onclick="marklist('acp_tracker', 'extra_files', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('acp_tracker', 'extra_files', false); return false;">{L_UNMARK_ALL}</a></b>
+				</fieldset>
+					
+				<p class="quick">
+					<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_DELETE_MARKED}" />
+				</p>
+			</fieldset>
+			{S_FORM_TOKEN}
+		</form>
+	<!-- ENDIF -->
+
+<!-- ELSEIF S_IN_MANAGE_PROJECT -->
+	<!-- IF S_IN_MANAGE_PROJECT_DEFAULT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+		<fieldset class="tabulated">
+		<legend>{L_TITLE}</legend>
+
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_TRACKER_PROJECT_NAME}</th>
+			<th>{L_TRACKER_PROJECT_DESC}</th>
+			<th>{L_TRACKER_PROJECT_TYPE}</th>
+			<th>{L_TRACKER_PROJECT_ENABLED}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN project -->
+			<!-- IF project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td>{project.PROJECT_NAME}</td>
+				<td>{project.PROJECT_DESC}</td>
+				<td>{project.PROJECT_TYPE}</td>
+				<td>
+					<!-- IF project.PROJECT_ENABLED -->
+						<a href="{project.U_DISABLE}">{L_DISABLE}</a>
+					<!-- ELSE -->
+						<a href="{project.U_ENABLE}">{L_ENABLE}</a>
+					<!-- ENDIF -->
+				</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<a href="{project.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{project.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+			<!-- END project -->
+		</tbody>
+		</table>
+
+		<p class="quick">
+			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_PROJECT_ADD}" />
+		</p>
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_PROJECT_ADD_EDIT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+		<dl>
+			<dt><label for="project_name">{L_TRACKER_PROJECT_NAME}</label><br /><span>{L_TRACKER_PROJECT_NAME_EXPLAIN}</span></dt>
+			<dd><input type="text" id="project_name" name="project_name" size="60" maxlength="255" value="{PROJECT_NAME}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="project_desc">{L_TRACKER_PROJECT_DESC}</label><br /><span>{L_TRACKER_PROJECT_DESC_EXPLAIN}</span></dt>
+			<dd><input type="text" id="project_desc" name="project_desc" size="60" maxlength="255" value="{PROJECT_DESC}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="project_group">{L_TRACKER_PROJECT_GROUP}</label><br /><span>{L_TRACKER_PROJECT_GROUP_EXPLAIN}</span></dt>
+			<dd><select name="project_group" id="project_group">{S_GROUP_OPTIONS}</select></dd>
+		</dl>		
+		<dl>
+			<dt><label for="project_type">{L_TRACKER_PROJECT_TYPE}</label><br /><span>{L_TRACKER_PROJECT_TYPE_EXPLAIN}</span></dt>
+			<dd><select name="project_type" id="project_type">{S_TYPE_OPTIONS}</select></dd>
+		</dl>	
+		<dl>
+			<dt><label for="project_enabled">{L_TRACKER_PROJECT_ENABLED}</label><br /><span>{L_TRACKER_PROJECT_ENABLED_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" name="project_enabled" <!-- IF PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_enabled" <!-- IF not PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+		</dl>
+		</fieldset>
+
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>
+
+	<!-- ENDIF -->
+		{S_FORM_TOKEN}
+		</form>
+<!-- ELSEIF S_IN_MANAGE_COMPONENT -->
+	<!-- IF S_IN_MANAGE_COMPONENT_DEFAULT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+			<dl>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_COMPONENT_VIEW -->
+	<form id="acp_tracker" method="post" action="{U_ACTION}">
+		<fieldset class="tabulated">
+		<legend>{L_TITLE}</legend>
+
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_TRACKER_COMPONENT_NAME}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN component -->
+			<!-- IF component.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td>{component.COMPONENT_NAME}</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<a href="{component.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{component.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+			<!-- END component -->
+		</tbody>
+		</table>
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<p class="quick">
+			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_COMPONENT_ADD}" />
+		</p>
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_COMPONENT_ADD_EDIT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+		<dl>
+			<dt><label for="component_name">{L_TRACKER_COMPONENT_NAME}</label><br /><span>{L_TRACKER_COMPONENT_NAME_EXPLAIN}</span></dt>
+			<dd><input type="text" id="component_name" name="component_name" size="60" maxlength="255" value="{COMPONENT_NAME}" /></dd>
+		</dl>
+		</fieldset>
+
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<input type="hidden" name="component_id" value="{COMPONENT_ID}" />
+		
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>		
+	<!-- ENDIF -->
+		{S_FORM_TOKEN}
+		</form>
+<!-- ELSEIF S_IN_MANAGE_VERSION -->
+	<!-- IF S_IN_MANAGE_VERSION_DEFAULT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+			<dl>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_VERSION_VIEW -->
+	<form id="acp_tracker" method="post" action="{U_ACTION}">
+		<fieldset class="tabulated">
+		<legend>{L_TITLE}</legend>
+
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_TRACKER_VERSION_NAME}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN version -->
+			<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td>{version.VERSION_NAME}</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<a href="{version.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{version.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+			<!-- END version -->
+		</tbody>
+		</table>
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<p class="quick">
+			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_VERSION_ADD}" />
+		</p>
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_VERSION_ADD_EDIT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+		<dl>
+			<dt><label for="version_name">{L_TRACKER_VERSION_NAME}</label><br /><span>{L_TRACKER_VERSION_NAME_EXPLAIN}</span></dt>
+			<dd><input type="text" id="version_name" name="version_name" size="60" maxlength="255" value="{VERSION_NAME}" /></dd>
+		</dl>
+		</fieldset>
+
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<input type="hidden" name="version_id" value="{VERSION_ID}" />
+		
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>		
+	<!-- ENDIF -->
+		{S_FORM_TOKEN}
+		</form>
+<!-- ELSEIF S_IN_MANAGE_SEVERITY -->
+	<!-- IF S_IN_MANAGE_SEVERITY_DEFAULT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+			<dl>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_SEVERITY_VIEW -->
+	<form id="acp_tracker" method="post" action="{U_ACTION}">
+		<fieldset class="tabulated">
+		<legend>{L_TITLE}</legend>
+
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_TRACKER_SEVERITY_NAME}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN severity -->
+			<!-- IF severity.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td>{severity.SEVERITY_NAME}</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<a href="{severity.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{severity.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+			<!-- END severity -->
+		</tbody>
+		</table>
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<p class="quick">
+			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_SEVERITY_ADD}" />
+		</p>
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_SEVERITY_ADD_EDIT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+		<dl>
+			<dt><label for="severity_name">{L_TRACKER_SEVERITY_NAME}</label><br /><span>{L_TRACKER_SEVERITY_NAME_EXPLAIN}</span></dt>
+			<dd><input type="text" id="severity_name" name="severity_name" size="60" maxlength="255" value="{SEVERITY_NAME}" /></dd>
+		</dl>
+		</fieldset>
+
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<input type="hidden" name="severity_id" value="{SEVERITY_ID}" />
+		
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>		
+	<!-- ENDIF -->
+		{S_FORM_TOKEN}
+		</form>
+<!-- ELSEIF S_IN_MANAGE_PRIORITY -->
+	<!-- IF S_IN_MANAGE_PRIORITY_DEFAULT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+			<dl>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_PRIORITY_VIEW -->
+	<form id="acp_tracker" method="post" action="{U_ACTION}">
+		<fieldset class="tabulated">
+		<legend>{L_TITLE}</legend>
+
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th>{L_TRACKER_PRIORITY_NAME}</th>
+			<th>{L_OPTIONS}</th>
+		</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN priority -->
+			<!-- IF priority.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td>{priority.PRIORITY_NAME}</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<a href="{priority.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{priority.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+			<!-- END priority -->
+		</tbody>
+		</table>
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<p class="quick">
+			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_PRIORITY_ADD}" />
+		</p>
+		</fieldset>
+	<!-- ELSEIF S_IN_MANAGE_PRIORITY_ADD_EDIT -->
+		<form id="acp_tracker" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_TITLE}</legend>
+		<dl>
+			<dt><label for="priority_name">{L_TRACKER_PRIORITY_NAME}</label><br /><span>{L_TRACKER_PRIORITY_NAME_EXPLAIN}</span></dt>
+			<dd><input type="text" id="priority_name" name="priority_name" size="60" maxlength="255" value="{PRIORITY_NAME}" /></dd>
+		</dl>
+		</fieldset>
+
+		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<input type="hidden" name="priority_id" value="{PRIORITY_ID}" />
+		
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</fieldset>		
+	<!-- ENDIF -->
+		{S_FORM_TOKEN}
+		</form>
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->
