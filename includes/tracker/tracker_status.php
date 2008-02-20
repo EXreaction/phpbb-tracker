@@ -22,7 +22,7 @@ if (!defined('IN_PHPBB'))
 */
 
 //Bug status types
-$status_type[0] = array(
+$status_type['bugs'] = array(
   0 =>	array(
 	'id' 		=> 0,
 	'name' 		=> 'TRACKER_ALL',
@@ -134,7 +134,7 @@ $status_type[0] = array(
 );
 
 //Feature status types
-$status_type[1] = array(
+$status_type['feature'] = array(
   0 =>	array(
 	'id' 		=> 0,
 	'name' 		=> 'TRACKER_ALL',
@@ -234,7 +234,7 @@ $status_type[1] = array(
 );
 
 //Issue status types
-$status_type[2] = array(
+$status_type['issue'] = array(
   0 =>	array(
 	'id' 		=> 0,
 	'name' 		=> 'TRACKER_ALL',

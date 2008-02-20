@@ -28,7 +28,7 @@ $tracker_types[0] = array(
     'show_priority' 	=> true,
     'show_severity'		=> true,
 	'show_environment' 	=> true,
-    'status' 			=> $status_type[0],
+    'status' 			=> $status_type['bugs'],
 );
 
 $tracker_types[1] = array(
@@ -39,7 +39,7 @@ $tracker_types[1] = array(
     'show_priority' 	=> true,
     'show_severity' 	=> false,
 	'show_environment' 	=> false,
-    'status' 			=> $status_type[1],
+    'status' 			=> $status_type['feature'],
 );
 
 $tracker_types[2] = array(
@@ -50,7 +50,7 @@ $tracker_types[2] = array(
     'show_priority' 	=> true,
     'show_severity' 	=> true,
 	'show_environment' 	=> true,	
-    'status' 			=> $status_type[2],
+    'status' 			=> $status_type['issue'],
 );
 
 ?>

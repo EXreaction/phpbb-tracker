@@ -504,6 +504,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						p.project_id, 
 						p.project_name,
 						p.project_group,
+						p.project_security,
 						p.project_enabled,
 						u1.user_colour as ticket_user_colour, 
 						u1.username as ticket_username, 
