@@ -374,6 +374,7 @@ class acp_tracker
 						'project_group'			=> request_var('project_group', 0),
 						'project_type'			=> request_var('project_type', 0),
 						'project_enabled'		=> request_var('project_enabled', 0),
+						'project_security'		=> request_var('project_security', 0),
 					);
 					
 					$tracker->add_project($project_data);
@@ -400,6 +401,7 @@ class acp_tracker
 						'project_group'			=> request_var('project_group', 0),
 						'project_type'			=> request_var('project_type', 0),
 						'project_enabled'		=> request_var('project_enabled', 0),
+						'project_security'		=> request_var('project_security', 0),
 					);
 					
 					
@@ -470,6 +472,7 @@ class acp_tracker
 					$project_data['project_group'] = 5;
 					$project_data['project_type'] = 0;
 					$project_data['project_enabled'] = false;
+					$project_data['project_security'] = false;
 				}
 				
 				$template->assign_vars(array(
@@ -490,6 +493,7 @@ class acp_tracker
 					'PROJECT_GROUP'					=> $project_data['project_group'],
 					'PROJECT_TYPE'					=> $project_data['project_type'],
 					'PROJECT_ENABLED'				=> $project_data['project_enabled'],
+					'PROJECT_SECURITY'				=> $project_data['project_security'],
 				));
 				
 				$this->set_template_title($mode);

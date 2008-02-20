@@ -28,7 +28,6 @@ $tracker_types[0] = array(
     'show_priority' 	=> true,
     'show_severity'		=> true,
 	'show_environment' 	=> true,
-    'ticket_security' 	=> false,
     'status' 			=> $status_type[0],
 );
 
@@ -40,8 +39,7 @@ $tracker_types[1] = array(
     'show_priority' 	=> true,
     'show_severity' 	=> false,
 	'show_environment' 	=> false,
-    'ticket_security' 	=> false,
-    'status' 			=> $status_type[0],
+    'status' 			=> $status_type[1],
 );
 
 $tracker_types[2] = array(
@@ -52,8 +50,7 @@ $tracker_types[2] = array(
     'show_priority' 	=> true,
     'show_severity' 	=> true,
 	'show_environment' 	=> true,	
-    'ticket_security' 	=> true,
-    'status' 			=> $status_type[0],
+    'status' 			=> $status_type[2],
 );
 
 ?>

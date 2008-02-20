@@ -210,6 +210,10 @@
 			<dt><label for="project_enabled">{L_TRACKER_PROJECT_ENABLED}</label><br /><span>{L_TRACKER_PROJECT_ENABLED_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" name="project_enabled" <!-- IF PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_enabled" <!-- IF not PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
 		</dl>
+		<dl>
+			<dt><label for="project_security">{L_TRACKER_PROJECT_SECURITY}</label><br /><span>{L_TRACKER_PROJECT_SECURITY_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" name="project_security" <!-- IF PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_security" <!-- IF not PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+		</dl>
 		</fieldset>
 
 		<input type="hidden" name="project_id" value="{PROJECT_ID}" />

@@ -45,8 +45,6 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_VERSION'					=> 'Manage versions',
 	'ACP_TRACKER_SETTINGS'					=> 'Manage settings',
 	'ACP_TRACKER_ATTACHMENTS'				=> 'Manage attachments',
-	'ACP_TRACKER_PRIORITY'					=> 'Manage priority',
-	'ACP_TRACKER_SEVERITY'					=> 'Manage severity',
 	
 	'ACP_TRACKER_SETTINGS_GENERAL'			=> 'General Settings',
 	'ACP_TRACKER_SETTINGS_EXPLAIN'			=> 'Control tracker settings and check for updates.',
@@ -54,8 +52,6 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_PROJECT_EXPLAIN'			=> 'Add, delete and edit projects for the tracker.',
 	'ACP_TRACKER_COMPONENT_EXPLAIN'			=> 'Add, delete and edit components for a project in the tracker.',
 	'ACP_TRACKER_VERSION_EXPLAIN'			=> 'Add, delete and edit versions for a project in the tracker.',
-	'ACP_TRACKER_PRIORITY_EXPLAIN'			=> 'Add, delete and edit priorities for a project in the tracker.',
-	'ACP_TRACKER_SEVERITY_EXPLAIN'			=> 'Add, delete and edit severities for a project in the tracker.',
 	
 	'ACP_TRACKER_PROJECT_ADD'				=> 'Add new project',
 	'ACP_TRACKER_PROJECT_ADDED'				=> 'Project successfully added.',
@@ -81,22 +77,6 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_VERSION_DELETED'			=> 'Version succefully deleted.',
 	'ACP_TRACKER_VERSION_NO_ID'				=> 'The selected version does not exist in the database.',
 	
-	'ACP_TRACKER_PRIORITY_ADD'				=> 'Add new priority',
-	'ACP_TRACKER_PRIORITY_ADDED'			=> 'Priority successfully added.',
-	'ACP_TRACKER_PRIORITY_EDITED'			=> 'Priority successfully edited.',
-	'ACP_TRACKER_PRIORITY_DELETE'			=> 'Delete priority',	
-	'ACP_TRACKER_PRIORITY_DELETE_CONFIRM'	=> 'Are you sure you want to delete this priority from the selected project in the tracker?',
-	'ACP_TRACKER_PRIORITY_DELETED'			=> 'Priority succefully deleted.',
-	'ACP_TRACKER_PRIORITY_NO_ID'			=> 'The selected priority does not exist in the database.',
-
-	'ACP_TRACKER_SEVERITY_ADD'				=> 'Add new severity',
-	'ACP_TRACKER_SEVERITY_ADDED'			=> 'Severity successfully added.',
-	'ACP_TRACKER_SEVERITY_EDITED'			=> 'Severity successfully edited.',
-	'ACP_TRACKER_SEVERITY_DELETE'			=> 'Delete severity',	
-	'ACP_TRACKER_SEVERITY_DELETE_CONFIRM'	=> 'Are you sure you want to delete this severity from the selected project in the tracker?',
-	'ACP_TRACKER_SEVERITY_DELETED'			=> 'Severity succefully deleted.',
-	'ACP_TRACKER_SEVERITY_NO_ID'			=> 'The selected severity does not exist in the database.',
-	
 	'ACP_TRACKER_ATTACHMENTS_DELETE_CONFIRM'	=> 'Are you sure you want to delete the selected items?',
 
 	'ACP_TRACKER_DELETE_MARKED'				=> 'Delete marked',
@@ -106,12 +86,14 @@ $lang = array_merge($lang, array(
 	'TRACKER_PROJECT_ENABLED'				=> 'Project Enabled',
 	'TRACKER_PROJECT_TYPE'					=> 'Project Type',
 	'TRACKER_PROJECT_GROUP'					=> 'Project Group',
+	'TRACKER_PROJECT_SECURITY'				=> 'Project Security',
 	
 	'TRACKER_PROJECT_NAME_EXPLAIN'			=> 'Name of the project.',
 	'TRACKER_PROJECT_DESC_EXPLAIN'			=> 'Description of the project.',
 	'TRACKER_PROJECT_ENABLED_EXPLAIN'		=> 'Select whether or not the project is enabled.',
 	'TRACKER_PROJECT_TYPE_EXPLAIN'			=> 'Select the tracker type of the project.',
 	'TRACKER_PROJECT_GROUP_EXPLAIN'			=> 'Select the group that manages this project.',
+	'TRACKER_PROJECT_SECURITY_EXPLAIN'		=> 'Select this if you would like tickets to be shown only to team members and the user that posted it.',
 	
 	'TRACKER_PROJECT_ID'					=> 'Select a project',
 	
@@ -122,15 +104,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_VERSION_NAME' 					=> 'Version Name',
 	'TRACKER_VERSION_NAME_EXPLAIN'			=> 'Name of the version to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_VERSION_DELETE_ERROR'			=> 'The selected version cannot be deleted because tickets exist that refer to this version.  Delete all tickets refering to this version first.',
-	
-	'TRACKER_SEVERITY_NAME' 				=> 'Severity Name',
-	'TRACKER_SEVERITY_NAME_EXPLAIN'			=> 'Name of the severity to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
-	'TRACKER_SEVERITY_DELETE_ERROR'			=> 'The selected severity cannot be deleted because tickets exist that refer to this severity.  Delete all tickets refering to this severity first.',
-	
-	'TRACKER_PRIORITY_NAME' 				=> 'Priority Name',
-	'TRACKER_PRIORITY_NAME_EXPLAIN'			=> 'Name of the priority to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
-	'TRACKER_PRIORITY_DELETE_ERROR'			=> 'The selected priority cannot be deleted because tickets exist that refer to this priority.  Delete all tickets refering to this priority first.',
-	
+		
 	'TRACKER_FILENAME'						=> 'Filename',
 	'TRACKER_FILESIZE'						=> 'Filesize',
 
@@ -192,23 +166,15 @@ $lang = array_merge($lang, array(
 	'LOG_TRACKER_PROJECT_EDIT'				=> '<strong>Altered tracker project</strong><br />» %s',
 	'LOG_TRACKER_PROJECT_DELETE'			=> '<strong>Deleted tracker project</strong><br />» %%s',
 	
-	'LOG_TRACKER_COMPONENT_ADD'			=> '<strong>Added new component to a project on the tracker</strong><br />» %s',
+	'LOG_TRACKER_COMPONENT_ADD'				=> '<strong>Added new component to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_EDIT'			=> '<strong>Altered tracker project component</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_DELETE'			=> '<strong>Deleted tracker project component</strong><br />» %s',
 
 	'LOG_TRACKER_VERSION_ADD'				=> '<strong>Added new version to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_VERSION_EDIT'				=> '<strong>Altered tracker project version</strong><br />» %s',
 	'LOG_TRACKER_VERSION_DELETE'			=> '<strong>Deleted tracker project version</strong><br />» %s',
-	
-	'LOG_TRACKER_SEVERITY_ADD'				=> '<strong>Added new severity to a project on the tracker</strong><br />» %s',
-	'LOG_TRACKER_SEVERITY_EDIT'			=> '<strong>Altered tracker project severity</strong><br />» %s',
-	'LOG_TRACKER_SEVERITY_DELETE'			=> '<strong>Deleted tracker project severity</strong><br />» %s',
-	
-	'LOG_TRACKER_PRIORITY_ADD'				=> '<strong>Added new priority to a project on the tracker</strong><br />» %s',
-	'LOG_TRACKER_PRIORITY_EDIT'			=> '<strong>Altered tracker project priority</strong><br />» %s',
-	'LOG_TRACKER_PRIORITY_DELETE'			=> '<strong>Deleted tracker project priority</strong><br />» %s',
-	
-	'LOG_TRACKER_DELETE_ORPHAN'			=> '<strong>Removed orphan attachment from tracker</strong><br />» %s',
+		
+	'LOG_TRACKER_DELETE_ORPHAN'				=> '<strong>Removed orphan attachment from tracker</strong><br />» %s',
 	'LOG_TRACKER_DELETE_EXTRA'				=> '<strong>Removed extra file from tracker attachment directory</strong><br />» %s',
 ));
 ?>

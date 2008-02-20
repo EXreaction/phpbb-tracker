@@ -10,6 +10,7 @@ CREATE TABLE phpbb_tracker_project (
 	project_group mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	project_type tinyint(4) DEFAULT '0' NOT NULL,
 	project_enabled tinyint(4) DEFAULT '0' NOT NULL,
+	project_security tinyint(4) DEFAULT '0' NOT NULL,
 	PRIMARY KEY (project_id)
 );
 

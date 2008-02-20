@@ -102,7 +102,7 @@ if ($project_id && !$mode && !$ticket_id)
 	$can_manage = group_memberships($row['project_group'], $user->data['user_id'], true);
 	$hidden_tickets = (!$can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
 	$project_enabled = (!$can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
-	$ticket_security = (!$can_manage && $tracker->get_type_option('security', $project_id)) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
+	$ticket_security = (!$can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 	
 	$my_tickets = ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$my_assigned_tickets = ($assigned_to_user_id) ? ' AND t.ticket_assigned_to = ' . $assigned_to_user_id : '';
@@ -553,7 +553,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$db->sql_freeresult($result);
 	
 	$can_manage = group_memberships($row['project_group'], $user->data['user_id'], true);
-	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$can_manage) || ($tracker->get_type_option('security', $project_id) && !$can_manage && $row['ticket_user_id'] != $user->data['user_id']))
+	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$can_manage) || ($row['project_security'] && !$can_manage && $row['ticket_user_id'] != $user->data['user_id']))
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}

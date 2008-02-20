@@ -183,6 +183,7 @@ $lang = array_merge($lang, array(
 ));
 
 
+//Priority and Severity options
 $lang = array_merge($lang, array(
 	'TRACKER_PRIORITY1'	=> 'Immediate',
 	'TRACKER_PRIORITY2'	=> 'Urgent',
@@ -197,22 +198,31 @@ $lang = array_merge($lang, array(
 	'TRACKER_SEVERITY5'	=> 'Trivial',
 ));
 
+//Type options
 $lang = array_merge($lang, array(
 	'BUG_TRACKER'			=> 'Bug tracker',
 	'FEATURE_TRACKER'		=> 'Feature tracker',
 	'ISSUE_TRACKER'			=> 'Issue tracker',
 ));
 
-//Status
+//Status options
 $lang = array_merge($lang, array(
 	'TRACKER_ALL'						=> 'All tickets',
 	'TRACKER_ALL_OPENED'				=> 'All open tickets',
 	'TRACKER_ALL_CLOSED'				=> 'All closed tickets',
 	'TRACKER_NEW'						=> 'New',
 	'TRACKER_NOT_A_BUG'					=> 'Not a bug',
+	'TRACKER_BUG'						=> 'Bug',
 	'TRACKER_SUPPORT_REQUEST'			=> 'Support request',
 	'TRACKER_DUPLICATE'					=> 'Duplicate',
 	'TRACKER_ALREADY_FIXED'				=> 'Already fixed',
+	'TRACKER_IMPLEMENTING'				=> 'Implementing',
+	'TRACKER_RESEARCHING'				=> 'Researching',
+	'TRACKER_WILL_NOT_IMPLEMENT'		=> 'Will not implement',
+	'TRACKER_IMPLEMENTED_CVS'			=> 'Implemented in CVS',
+	'TRACKER_IMPLEMENTED_SVN'			=> 'Implemented in SVN',	
+	'TRACKER_CLOSED'					=> 'Closed',
+	'TRACKER_INVALID'					=> 'Invalid',
 	'TRACKER_REVIEWED'					=> 'Reviewed',
 	'TRACKER_REVIEW_LATER'				=> 'Review later',
 	'TRACKER_AWAITING_INFO'				=> 'Awaiting information',

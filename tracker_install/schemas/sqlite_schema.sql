@@ -11,7 +11,8 @@ CREATE TABLE phpbb_tracker_project (
 	project_desc text(65535) NOT NULL DEFAULT '',
 	project_group INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	project_type tinyint(4) NOT NULL DEFAULT '0',
-	project_enabled tinyint(4) NOT NULL DEFAULT '0'
+	project_enabled tinyint(4) NOT NULL DEFAULT '0',
+	project_security tinyint(4) NOT NULL DEFAULT '0'
 );
 
 

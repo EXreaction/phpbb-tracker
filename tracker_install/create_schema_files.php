@@ -813,6 +813,7 @@ function get_schema_struct()
 			'project_group'			=> array('UINT', 0),
 			'project_type'			=> array('TINT:4', 0),
 			'project_enabled'		=> array('TINT:4', 0),
+			'project_security'		=> array('TINT:4', 0),
 			
 		),
 		'PRIMARY_KEY'	=> 'project_id',

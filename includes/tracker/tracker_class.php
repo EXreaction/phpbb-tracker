@@ -100,10 +100,6 @@ class tracker
 			case 'severity':
 			case 'environment':
 				return $this->types[$this->projects[$project_id]['project_type']]['show_' . $mode];
-			break;			
-			
-			case 'security':
-				return $this->types[$this->projects[$project_id]['project_type']]['ticket_security'];
 			break;
 			
 			case 'status':
@@ -2276,6 +2272,7 @@ class tracker_cache extends cache
 					'project_desc'			=> $row['project_desc'],
 					'project_enabled'		=> $row['project_enabled'],
 					'project_type'			=> $row['project_type'],
+					'project_security'		=> $row['project_security'],
 					'project_group'			=> $row['project_group'],
 					'group_name'			=> $row['group_name'],
 					'group_colour'			=> $row['group_colour'],

@@ -51,6 +51,7 @@ CREATE TABLE phpbb_tracker_project (
 	project_group number(8) DEFAULT '0' NOT NULL,
 	project_type number(4) DEFAULT '0' NOT NULL,
 	project_enabled number(4) DEFAULT '0' NOT NULL,
+	project_security number(4) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_tracker_project PRIMARY KEY (project_id)
 )
 /

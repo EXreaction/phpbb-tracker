@@ -16,7 +16,8 @@ CREATE TABLE [phpbb_tracker_project] (
 	[project_desc] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[project_group] [int] DEFAULT (0) NOT NULL ,
 	[project_type] [int] DEFAULT (0) NOT NULL ,
-	[project_enabled] [int] DEFAULT (0) NOT NULL 
+	[project_enabled] [int] DEFAULT (0) NOT NULL ,
+	[project_security] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 
