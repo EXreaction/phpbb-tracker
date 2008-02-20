@@ -864,6 +864,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	{
 		unset($ticket_data['ticket_user_id']);
 		unset($ticket_data['ticket_time']);
+		unset($ticket_data['status_id']);
 		$ticket_data['edit_reason'] = utf8_normalize_nfc(request_var('edit_reason', '', true));
 		$ticket_data['edit_time'] = time();
 		$ticket_data['edit_user'] = $user->data['user_id'];
