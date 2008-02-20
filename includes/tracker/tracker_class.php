@@ -1496,7 +1496,6 @@ class tracker
 					ORDER BY ' . $mode . '_name ASC';
 			
 			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
 
 			while ($row = $db->sql_fetchrow($result))
 			{
