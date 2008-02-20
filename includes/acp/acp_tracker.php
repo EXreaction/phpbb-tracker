@@ -86,7 +86,7 @@ class acp_tracker
 		$errstr = '';
 		$errno = 0;
 
-		$info = get_remote_file('www.jeffrusso.net', '/updatecheck', 'phpBBBugtracker.txt', $errstr, $errno);
+		$info = get_remote_file('www.jeffrusso.net', '/updatecheck', 'phpBBTracker.txt', $errstr, $errno);
 
 		if ($info === false)
 		{
@@ -97,7 +97,7 @@ class acp_tracker
 		$latest_version = trim($info[0]);
 
 		$announcement_url = trim($info[1]);
-		$update_link = append_sid($phpbb_root_path . 'bug_install/install.' . $phpEx);
+		$update_link = append_sid($phpbb_root_path . 'tracker_install/install.' . $phpEx);
 
 		$up_to_date = (version_compare(str_replace('rc', 'RC', strtolower($current_version)), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
 
