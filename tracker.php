@@ -15,7 +15,7 @@ define('IN_PHPBB', true);
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 
-if (isset($_GET['mode']) && ($_GET['mode']) == 'download')
+if (isset($_GET['mode']) && (string) $_GET['mode'] === 'download')
 {
 	require($phpbb_root_path . 'includes/tracker/tracker_download.' . $phpEx);
 	exit;
@@ -28,7 +28,7 @@ include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('');
+$user->setup();
 
 //Initialize tracker class
 $tracker = new tracker();
@@ -1059,4 +1059,5 @@ else
 }
 
 page_footer();
+
 ?>
