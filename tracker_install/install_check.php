@@ -68,8 +68,6 @@ class install_check
 		define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
 		define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 		define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
-		define('TRACKER_SEVERITY_TABLE', 		$table_prefix . 'tracker_severity');
-		define('TRACKER_PRIORITY_TABLE', 		$table_prefix . 'tracker_priority');
 		
 		$this->install_tables = array(
 			TRACKER_CONFIG_TABLE,
@@ -79,9 +77,7 @@ class install_check
 			TRACKER_POSTS_TABLE, 
 			TRACKER_COMPONENTS_TABLE, 
 			TRACKER_HISTORY_TABLE, 
-			TRACKER_VERSION_TABLE,
-			TRACKER_SEVERITY_TABLE,
-			TRACKER_PRIORITY_TABLE,			
+			TRACKER_VERSION_TABLE,	
 		);
 		
 		$this->install_files = array(

@@ -25,8 +25,6 @@ class acp_tracker_info
 				'project'		=> array('title' => 'ACP_TRACKER_PROJECT', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'component'		=> array('title' => 'ACP_TRACKER_COMPONENT', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'version'		=> array('title' => 'ACP_TRACKER_VERSION', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-				'severity'		=> array('title' => 'ACP_TRACKER_SEVERITY', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-				'priority'		=> array('title' => 'ACP_TRACKER_PRIORITY', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 			),
 		);
 	}

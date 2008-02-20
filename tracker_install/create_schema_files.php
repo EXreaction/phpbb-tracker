@@ -912,24 +912,6 @@ function get_schema_struct()
 		'PRIMARY_KEY'	=> 'component_id',
 	);
 	
-	$schema_data['phpbb_tracker_priority'] = array(
-		'COLUMNS'		=> array(
-			'priority_id'			=> array('UINT', NULL, 'auto_increment'),
-			'project_id'			=> array('UINT', 0),
-			'priority_name'			=> array('VCHAR_UNI', ''),
-		),
-		'PRIMARY_KEY'	=> 'priority_id',
-	);
-	
-	$schema_data['phpbb_tracker_severity'] = array(
-		'COLUMNS'		=> array(
-			'severity_id'			=> array('UINT', NULL, 'auto_increment'),
-			'project_id'			=> array('UINT', 0),
-			'severity_name'		=> array('VCHAR_UNI', ''),
-		),
-		'PRIMARY_KEY'	=> 'severity_id',
-	);
-	
 	$schema_data['phpbb_tracker_history'] = array(
 		'COLUMNS'		=> array(
 			'history_id'			=> array('UINT', NULL, 'auto_increment'),

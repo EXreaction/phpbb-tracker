@@ -96,22 +96,4 @@ $CFG['mod_modules'][0]['module_data'][4] = array(
 	'module_mode' 		=> 'version', 
 	'module_auth' 		=> 'acl_a_tracker'
 );
-$CFG['mod_modules'][0]['module_data'][5] = array(
-	'module_basename'	=> 'tracker', 
-	'module_enabled' 	=> '1', 
-	'module_display' 	=> '1', 
-	'module_class' 		=> 'acp', 
-	'module_langname' 	=> 'ACP_TRACKER_SEVERITY', 
-	'module_mode' 		=> 'severity', 
-	'module_auth' 		=> 'acl_a_tracker'
-);
-$CFG['mod_modules'][0]['module_data'][6] = array(
-	'module_basename'	=> 'tracker', 
-	'module_enabled' 	=> '1', 
-	'module_display' 	=> '1', 
-	'module_class' 		=> 'acp', 
-	'module_langname' 	=> 'ACP_TRACKER_PRIORITY', 
-	'module_mode' 		=> 'priority', 
-	'module_auth' 		=> 'acl_a_tracker'
-);
 ?>

@@ -27,12 +27,16 @@ class tracker
 	var $extensions = array();
 	var $types = array();
 	var $status = array();
+	var $severity = array();
+	var $priority = array();
 	
 	function tracker()
 	{
 		global $config, $table_prefix, $user, $cache, $template, $phpbb_root_path, $phpEx;
 		
+		//Do not change order of following includes
 		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
+		include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_types.' . $phpEx);
 		//Add language vars to array
 		$user->add_lang('mods/tracker');		
@@ -42,6 +46,8 @@ class tracker
 		$this->extensions = $cache->obtain_attach_extensions(TRACKER_EXTENSION_ID);
 		$this->projects = $tracker_cache->obtain_tracker_projects();
 		$this->types = $tracker_types;
+		$this->set_severity();
+		$this->set_priority();
 		
 		$template->assign_vars(array(
 			'S_IN_TRACKER'				=> true,
@@ -56,6 +62,28 @@ class tracker
 	function set_type($project_id)
 	{
 		$this->status = $this->get_type_option('status', $project_id);
+	}
+	
+	function set_severity()
+	{
+		$this->severity = array(
+			1	=> 'TRACKER_SEVERITY1',
+			2	=> 'TRACKER_SEVERITY2',
+			3	=> 'TRACKER_SEVERITY3',
+			4	=> 'TRACKER_SEVERITY4',
+			5	=> 'TRACKER_SEVERITY5',
+		);
+	}
+	
+	function set_priority()
+	{
+		$this->priority = array(
+			1	=> 'TRACKER_PRIORITY1',
+			2	=> 'TRACKER_PRIORITY2',
+			3	=> 'TRACKER_PRIORITY3',
+			4	=> 'TRACKER_PRIORITY4',
+			5	=> 'TRACKER_PRIORITY5',
+		);
 	}
 	
 	function get_type_option($mode, $project_id)
@@ -408,14 +436,6 @@ class tracker
 		$db->sql_query($sql);
 		
 		$sql = 'DELETE FROM ' . TRACKER_COMPONENTS_TABLE. ' 
-			WHERE project_id = ' . $id;
-		$db->sql_query($sql);
-		
-		$sql = 'DELETE FROM ' . TRACKER_SEVERITY_TABLE. ' 
-			WHERE project_id = ' . $id;
-		$db->sql_query($sql);
-		
-		$sql = 'DELETE FROM ' . TRACKER_PRIORITY_TABLE. ' 
 			WHERE project_id = ' . $id;
 		$db->sql_query($sql);
 		
@@ -1267,14 +1287,6 @@ class tracker
 				$table = TRACKER_VERSION_TABLE;
 			break;
 			
-			case 'priority':
-				$table = TRACKER_PRIORITY_TABLE;
-			break;
-			
-			case 'severity':
-				$table = TRACKER_SEVERITY_TABLE;
-			break;
-			
 			default:
 				trigger_error('NO_MODE');
 			break;
@@ -1463,6 +1475,10 @@ class tracker
 		
 		switch ($mode)
 		{
+			case 'priority':
+			case 'severity':
+			break;
+			
 			case 'version':			
 				$table = TRACKER_VERSION_TABLE;
 			break;
@@ -1471,46 +1487,52 @@ class tracker
 				$table = TRACKER_COMPONENTS_TABLE;
 			break;
 			
-			case 'severity':
-				$table = TRACKER_SEVERITY_TABLE;
-			break;
-			
-			case 'priority':
-				$table = TRACKER_PRIORITY_TABLE;
-			break;
-			
 			default:
 				trigger_error('NO_MODE');
 			break;
 		}
 		
-		$sql = 'SELECT * from ' . $table . '
-			WHERE project_id = ' . $project_id . '
-				ORDER BY ' . $mode . '_name ASC';
-		
-		$result = $db->sql_query($sql);
-
 		$options = '';
-		while ($row = $db->sql_fetchrow($result))
+		if ($mode == 'component' || $mode == 'version')
 		{
-			if ($selected_id && $selected_id == $row[$mode . '_id'])
-			{
-				$selected = ' selected="selected"';
-			}
-			else
-			{
-				$selected = '';
-			}
+			$sql = 'SELECT * from ' . $table . '
+				WHERE project_id = ' . $project_id . '
+					ORDER BY ' . $mode . '_name ASC';
 			
-			$options .= '<option value="' . $row[$mode . '_id'] . '"' . $selected . '>' . $this->set_lang_name($row[$mode . '_name']) .'</option>';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if ($selected_id && $selected_id == $row[$mode . '_id'])
+				{
+					$selected = ' selected="selected"';
+				}
+				else
+				{
+					$selected = '';
+				}
+				
+				$options .= '<option value="' . $row[$mode . '_id'] . '"' . $selected . '>' . $this->set_lang_name($row[$mode . '_name']) .'</option>';
+			}
+			$db->sql_freeresult($result);	
+		}
+		else
+		{
+			$row = ($mode == 'severity') ? $this->severity : $this->priority;
+			foreach ($row as $key => $value)
+			{
+				
+				$selected = ($key == $selected_id) ? ' selected="selected">' : '>';
+				$options .= '<option value="' . $key . '"' . $selected  . $this->set_lang_name($value) .'</option>';
+			}
 		}
 		
 		if ($options)
 		{
 			$options = '<option value="0">' . $user->lang['TRACKER_SELECT'] .'</option>' . $options;
-		}
-		
-		$db->sql_freeresult($result);		
+		}		
+			
 		return $options;
 	}
 	

@@ -249,62 +249,6 @@ END;
 
 
 /*
-	Table: 'phpbb_tracker_priority'
-*/
-CREATE TABLE phpbb_tracker_priority (
-	priority_id number(8) NOT NULL,
-	project_id number(8) DEFAULT '0' NOT NULL,
-	priority_name varchar2(765) DEFAULT '' ,
-	CONSTRAINT pk_phpbb_tracker_priority PRIMARY KEY (priority_id)
-)
-/
-
-
-CREATE SEQUENCE phpbb_tracker_priority_seq
-/
-
-CREATE OR REPLACE TRIGGER t_phpbb_tracker_priority
-BEFORE INSERT ON phpbb_tracker_priority
-FOR EACH ROW WHEN (
-	new.priority_id IS NULL OR new.priority_id = 0
-)
-BEGIN
-	SELECT phpbb_tracker_priority_seq.nextval
-	INTO :new.priority_id
-	FROM dual;
-END;
-/
-
-
-/*
-	Table: 'phpbb_tracker_severity'
-*/
-CREATE TABLE phpbb_tracker_severity (
-	severity_id number(8) NOT NULL,
-	project_id number(8) DEFAULT '0' NOT NULL,
-	severity_name varchar2(765) DEFAULT '' ,
-	CONSTRAINT pk_phpbb_tracker_severity PRIMARY KEY (severity_id)
-)
-/
-
-
-CREATE SEQUENCE phpbb_tracker_severity_seq
-/
-
-CREATE OR REPLACE TRIGGER t_phpbb_tracker_severity
-BEFORE INSERT ON phpbb_tracker_severity
-FOR EACH ROW WHEN (
-	new.severity_id IS NULL OR new.severity_id = 0
-)
-BEGIN
-	SELECT phpbb_tracker_severity_seq.nextval
-	INTO :new.severity_id
-	FROM dual;
-END;
-/
-
-
-/*
 	Table: 'phpbb_tracker_history'
 */
 CREATE TABLE phpbb_tracker_history (

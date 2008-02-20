@@ -184,11 +184,11 @@ $lang = array_merge($lang, array(
 
 
 $lang = array_merge($lang, array(
-	'TRACKER_PRIORITY1'	=> 'Highest',
-	'TRACKER_PRIORITY2'	=> 'High',
-	'TRACKER_PRIORITY3'	=> 'Normal',
-	'TRACKER_PRIORITY4'	=> 'Low',
-	'TRACKER_PRIORITY5'	=> 'Lowest',
+	'TRACKER_PRIORITY1'	=> 'Immediate',
+	'TRACKER_PRIORITY2'	=> 'Urgent',
+	'TRACKER_PRIORITY3'	=> 'High',
+	'TRACKER_PRIORITY4'	=> 'Normal',
+	'TRACKER_PRIORITY5'	=> 'Low',
 	
 	'TRACKER_SEVERITY1'	=> 'Critical',
 	'TRACKER_SEVERITY2'	=> 'Major',
@@ -200,7 +200,7 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'BUG_TRACKER'			=> 'Bug tracker',
 	'FEATURE_TRACKER'		=> 'Feature tracker',
-	'SECURITY_TRACKER'		=> 'Security tracker',
+	'ISSUE_TRACKER'			=> 'Issue tracker',
 ));
 
 //Status

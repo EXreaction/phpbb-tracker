@@ -510,9 +510,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						u2.user_colour as assigned_user_colour, 
 						u2.username as assigned_username,
 						c.component_name,
-						v.version_name,
-						s.severity_name,
-						pr.priority_name',
+						v.version_name',
 
 		'FROM'		=> array(
 			TRACKER_TICKETS_TABLE	=> 't',
@@ -542,14 +540,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			array(
 				'FROM'	=> array(TRACKER_VERSION_TABLE => 'v'),
 				'ON'	=> 't.version_id = v.version_id',
-			),
-			array(
-				'FROM'	=> array(TRACKER_SEVERITY_TABLE => 's'),
-				'ON'	=> 't.severity_id = s.severity_id',
-			),
-			array(
-				'FROM'	=> array(TRACKER_PRIORITY_TABLE => 'pr'),
-				'ON'	=> 't.priority_id = pr.priority_id',
 			),
 		),
 
@@ -760,8 +750,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		
 		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['component_name']),
 		'TICKET_VERSION'			=> (empty($row['version_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['version_name']),
-		'TICKET_PRIORITY'			=> (empty($row['priority_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['priority_name']),
-		'TICKET_SEVERITY'			=> (empty($row['severity_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['severity_name']),
+		'TICKET_PRIORITY'			=> (!isset($tracker->priority[$row['priority_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($tracker->priority[$row['priority_id']]),
+		'TICKET_SEVERITY'			=> (!isset($tracker->severity[$row['severity_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($tracker->severity[$row['severity_id']]),
 		'TICKET_PHP'				=> (empty($row['ticket_php'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_php'],
 		'TICKET_DBMS'				=> (empty($row['ticket_dbms'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_dbms'],
 		)

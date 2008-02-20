@@ -106,24 +106,6 @@ CREATE TABLE phpbb_tracker_components (
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 
 
-# Table: 'phpbb_tracker_priority'
-CREATE TABLE phpbb_tracker_priority (
-	priority_id mediumint(8) UNSIGNED NOT NULL auto_increment,
-	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
-	priority_name varchar(255) DEFAULT '' NOT NULL,
-	PRIMARY KEY (priority_id)
-) CHARACTER SET `utf8` COLLATE `utf8_bin`;
-
-
-# Table: 'phpbb_tracker_severity'
-CREATE TABLE phpbb_tracker_severity (
-	severity_id mediumint(8) UNSIGNED NOT NULL auto_increment,
-	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
-	severity_name varchar(255) DEFAULT '' NOT NULL,
-	PRIMARY KEY (severity_id)
-) CHARACTER SET `utf8` COLLATE `utf8_bin`;
-
-
 # Table: 'phpbb_tracker_history'
 CREATE TABLE phpbb_tracker_history (
 	history_id mediumint(8) UNSIGNED NOT NULL auto_increment,

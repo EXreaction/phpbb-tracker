@@ -103,22 +103,6 @@ CREATE TABLE phpbb_tracker_components (
 );
 
 
-# Table: 'phpbb_tracker_priority'
-CREATE TABLE phpbb_tracker_priority (
-	priority_id INTEGER PRIMARY KEY NOT NULL ,
-	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	priority_name varchar(255) NOT NULL DEFAULT ''
-);
-
-
-# Table: 'phpbb_tracker_severity'
-CREATE TABLE phpbb_tracker_severity (
-	severity_id INTEGER PRIMARY KEY NOT NULL ,
-	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	severity_name varchar(255) NOT NULL DEFAULT ''
-);
-
-
 # Table: 'phpbb_tracker_history'
 CREATE TABLE phpbb_tracker_history (
 	history_id INTEGER PRIMARY KEY NOT NULL ,

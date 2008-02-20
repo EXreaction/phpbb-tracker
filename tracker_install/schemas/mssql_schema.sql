@@ -176,42 +176,6 @@ GO
 
 
 /*
-	Table: 'phpbb_tracker_priority'
-*/
-CREATE TABLE [phpbb_tracker_priority] (
-	[priority_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[priority_name] [varchar] (255) DEFAULT ('') NOT NULL 
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [phpbb_tracker_priority] WITH NOCHECK ADD 
-	CONSTRAINT [PK_phpbb_tracker_priority] PRIMARY KEY  CLUSTERED 
-	(
-		[priority_id]
-	)  ON [PRIMARY] 
-GO
-
-
-/*
-	Table: 'phpbb_tracker_severity'
-*/
-CREATE TABLE [phpbb_tracker_severity] (
-	[severity_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[severity_name] [varchar] (255) DEFAULT ('') NOT NULL 
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [phpbb_tracker_severity] WITH NOCHECK ADD 
-	CONSTRAINT [PK_phpbb_tracker_severity] PRIMARY KEY  CLUSTERED 
-	(
-		[severity_id]
-	)  ON [PRIMARY] 
-GO
-
-
-/*
 	Table: 'phpbb_tracker_history'
 */
 CREATE TABLE [phpbb_tracker_history] (

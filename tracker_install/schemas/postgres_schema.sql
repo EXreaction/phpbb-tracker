@@ -208,32 +208,6 @@ CREATE TABLE phpbb_tracker_components (
 
 
 /*
-	Table: 'phpbb_tracker_priority'
-*/
-CREATE SEQUENCE phpbb_tracker_priority_seq;
-
-CREATE TABLE phpbb_tracker_priority (
-	priority_id INT4 DEFAULT nextval('phpbb_tracker_priority_seq'),
-	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
-	priority_name varchar(255) DEFAULT '' NOT NULL,
-	PRIMARY KEY (priority_id)
-);
-
-
-/*
-	Table: 'phpbb_tracker_severity'
-*/
-CREATE SEQUENCE phpbb_tracker_severity_seq;
-
-CREATE TABLE phpbb_tracker_severity (
-	severity_id INT4 DEFAULT nextval('phpbb_tracker_severity_seq'),
-	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
-	severity_name varchar(255) DEFAULT '' NOT NULL,
-	PRIMARY KEY (severity_id)
-);
-
-
-/*
 	Table: 'phpbb_tracker_history'
 */
 CREATE SEQUENCE phpbb_tracker_history_seq;

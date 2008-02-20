@@ -79,9 +79,9 @@
 		<!-- END feature -->
 	<!-- ENDIF -->
 			
-	<!-- IF .security -->
-		<!-- BEGIN security -->
-			<!-- IF .security.project -->
+	<!-- IF .issue -->
+		<!-- BEGIN issue -->
+			<!-- IF .issue.project -->
 			<h3>{L_SECURITY_TRACKER}</h3>
 			<div class="forabg">
 				<div class="inner"><span class="corners-top"><span></span></span>
@@ -94,9 +94,9 @@
 					</thead>
 					<tbody>
 						<!-- BEGIN project -->
-						<!-- IF security.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 35%;"><a href="{security.project.U_PROJECT}">{security.project.PROJECT_NAME}</a></td>
-								<td style="width: 65%;">{security.project.PROJECT_DESC}</td>
+						<!-- IF issue.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+								<td style="width: 35%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_NAME}</a></td>
+								<td style="width: 65%;">{issue.project.PROJECT_DESC}</td>
 							</tr>
 						<!-- END project -->
 					</tbody>
@@ -104,7 +104,7 @@
 				<span class="corners-bottom"><span></span></span></div>
 			</div>
 			<!-- ENDIF -->
-		<!-- END security -->
+		<!-- END issue -->
 	<!-- ENDIF -->
 <!-- ENDIF -->
 <br />

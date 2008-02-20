@@ -168,48 +168,6 @@ BEGIN
 END;;
 
 
-# Table: 'phpbb_tracker_priority'
-CREATE TABLE phpbb_tracker_priority (
-	priority_id INTEGER NOT NULL,
-	project_id INTEGER DEFAULT 0 NOT NULL,
-	priority_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE
-);;
-
-ALTER TABLE phpbb_tracker_priority ADD PRIMARY KEY (priority_id);;
-
-
-CREATE GENERATOR phpbb_tracker_priority_gen;;
-SET GENERATOR phpbb_tracker_priority_gen TO 0;;
-
-CREATE TRIGGER t_phpbb_tracker_priority FOR phpbb_tracker_priority
-BEFORE INSERT
-AS
-BEGIN
-	NEW.priority_id = GEN_ID(phpbb_tracker_priority_gen, 1);
-END;;
-
-
-# Table: 'phpbb_tracker_severity'
-CREATE TABLE phpbb_tracker_severity (
-	severity_id INTEGER NOT NULL,
-	project_id INTEGER DEFAULT 0 NOT NULL,
-	severity_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE
-);;
-
-ALTER TABLE phpbb_tracker_severity ADD PRIMARY KEY (severity_id);;
-
-
-CREATE GENERATOR phpbb_tracker_severity_gen;;
-SET GENERATOR phpbb_tracker_severity_gen TO 0;;
-
-CREATE TRIGGER t_phpbb_tracker_severity FOR phpbb_tracker_severity
-BEFORE INSERT
-AS
-BEGIN
-	NEW.severity_id = GEN_ID(phpbb_tracker_severity_gen, 1);
-END;;
-
-
 # Table: 'phpbb_tracker_history'
 CREATE TABLE phpbb_tracker_history (
 	history_id INTEGER NOT NULL,
