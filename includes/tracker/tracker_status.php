@@ -1,4 +1,25 @@
 <?php
+/** 
+*
+* @package tracker
+* @version $Id$
+* @copyright (c) 2008 http://www.jeffrusso.net
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/*
+* Tracker status type defined below
+* DO NOT REMOVE OR REPLACE ITEMS 0,1,2 and 3
+*/
 
 //Bug status types
 $status_type[0] = array(

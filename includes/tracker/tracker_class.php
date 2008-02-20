@@ -56,6 +56,30 @@ class tracker
 		);
 	}
 	
+	/**
+	* Set config value. Creates missing config entry.
+	*/
+	function set_config($config_name, $config_value)
+	{
+		global $db, $cache;
+
+		$sql = 'UPDATE ' . TRACKER_CONFIG_TABLE . "
+			SET config_value = '" . $db->sql_escape($config_value) . "'
+			WHERE config_name = '" . $db->sql_escape($config_name) . "'";
+		$db->sql_query($sql);
+
+		if (!$db->sql_affectedrows() && !isset($this->config[$config_name]))
+		{
+			$sql = 'INSERT INTO ' . TRACKER_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+				'config_name'	=> $config_name,
+				'config_value'	=> $config_value));
+			$db->sql_query($sql);
+		}
+
+		$this->config[$config_name] = $config_value;
+		$cache->destroy('_tracker');
+	}
+	
 	/*
 	* Sets current projects status options
 	*/
@@ -110,30 +134,6 @@ class tracker
 				trigger_error('NO_MODE');
 			break;
 		}		
-	}
-	
-	/**
-	* Set config value. Creates missing config entry.
-	*/
-	function set_config($config_name, $config_value)
-	{
-		global $db, $cache;
-
-		$sql = 'UPDATE ' . TRACKER_CONFIG_TABLE . "
-			SET config_value = '" . $db->sql_escape($config_value) . "'
-			WHERE config_name = '" . $db->sql_escape($config_name) . "'";
-		$db->sql_query($sql);
-
-		if (!$db->sql_affectedrows() && !isset($this->config[$config_name]))
-		{
-			$sql = 'INSERT INTO ' . TRACKER_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-				'config_name'	=> $config_name,
-				'config_value'	=> $config_value));
-			$db->sql_query($sql);
-		}
-
-		$this->config[$config_name] = $config_value;
-		$cache->destroy('_tracker');
 	}
 	
 	function add_attachment($form_name, &$errors)
