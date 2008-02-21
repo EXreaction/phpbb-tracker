@@ -63,6 +63,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_HIDE_TICKET_HISTORY'			=> 'Hide ticket history',
 	'TRACKER_DESCRIPTION'					=> 'Description',
 	'TRACKER_LAST_VISIT'					=> 'This ticket was last visited by project member %s on %s.',
+	'TRACKER_SEARCH_DESCRIPTION'			=> 'Enter search terms',
 	
 	'TRACKER_LOCK_TICKET'					=> 'Lock ticket',
 	'TRACKER_LOCK_TICKET_CONFIRM'			=> 'Are you sure you want to lock this ticket?',

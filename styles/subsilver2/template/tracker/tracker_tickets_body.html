@@ -1,6 +1,17 @@
 <!-- INCLUDE overall_header.html -->
 <h2>{L_TITLE}</h2>
 
+<!-- IF S_FOUND_RESULTS -->
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+  <tr>
+	<td><span class="titles">{SEARCH_MATCHES}</span><br /></td>
+</tr>
+ <tr>
+	<td><span class="genmed">{L_SEARCHED_FOR}: <b>{SEARCH_TERM}</b></span></td>
+</tr>
+</table>
+<!-- ENDIF  -->
+
 <div align="center">
 <table class="tablebg" width="100%" cellspacing="1" cellpadding="0" style="margin-top: 5px;">
 <tr>
@@ -26,6 +37,14 @@
 				<input type="hidden" name="p" value="{PROJECT_ID}" />
 				<input type="hidden" name="u" value="{TRACKER_USER_ID}" />
 				<input type="hidden" name="at" value="{TRACKER_ASSIGNED_USER_ID}" />
+				{S_HIDDEN_FIELDS}
+			</form>
+		</td>
+		<td>
+			<form action="{S_ACTION_SEARCH}" method="post" id="search_tracker">
+				{S_HIDDEN_FIELDS_SEARCH}
+				<input type="text" name="term" size="25" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="{SEARCH_TERM}" />
+				<input type="submit" value="{L_GO}" />
 				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
 			</form>
 		</td>

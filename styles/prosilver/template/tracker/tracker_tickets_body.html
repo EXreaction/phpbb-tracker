@@ -1,6 +1,15 @@
 <!-- INCLUDE overall_header.html -->
 <h2>{L_TITLE}</h2>
 
+<!-- IF S_FOUND_RESULTS -->
+	<div class="rules">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		{SEARCH_MATCHES}<br />
+		{L_SEARCHED_FOR}: <b>{SEARCH_TERM}</b>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- ENDIF  -->
+
 <div class="post bg2" style="text-align: center;">
 	<div class="inner"><span class="corners-top"><span></span></span>		
 	{TRACKER_CURRENTLY_SHOWING}
@@ -25,11 +34,20 @@
 			<input type="hidden" name="p" value="{PROJECT_ID}" />
 			<input type="hidden" name="u" value="{TRACKER_USER_ID}" />
 			<input type="hidden" name="at" value="{TRACKER_ASSIGNED_USER_ID}" />
-		<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
+			{S_HIDDEN_FIELDS}
 		</fieldset>
 		</form>
 	</div>
-
+	<div class="search-box">
+		<form action="{S_ACTION_SEARCH}" method="post" id="search_tracker">
+			<fieldset>
+				{S_HIDDEN_FIELDS_SEARCH}
+				<input type="text" name="term" size="25" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="{SEARCH_TERM}" />
+				<input type="submit" value="{L_GO}" />
+				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
+			</fieldset>
+		</form>
+	</div>
 
 	<div class="pagination">
 		<a href="{U_MY_TICKETS}" title="{TRACKER_MY_TICKETS}">{TRACKER_MY_TICKETS}</a>

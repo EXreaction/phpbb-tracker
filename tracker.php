@@ -35,6 +35,7 @@ $tracker = new tracker();
 
 //Get the varibles we will use to build the tracker pages
 $mode = request_var('mode', '');
+$term = request_var('term', '');
 $ticket_id	= request_var('t', 0);
 $project_id	= request_var('p', 0);
 $post_id	= request_var('pid', 0);
@@ -69,7 +70,7 @@ if (!empty($project_id))
 		}
 	}
 	
-	//Since the project exists and user can see it, set the stause types
+	//Since the project exists and user can see it, set the staus types
 	$tracker->set_type($project_id);
 }
 
@@ -95,8 +96,8 @@ if ($mode == 'delete' && !$auth->acl_get('a_tracker'))
 	trigger_error('TRACKER_DELETE_NO_PERMISSION');
 }
 
-if ($project_id && !$mode && !$ticket_id)
-{
+if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
+{	
 	$row = $tracker->projects[$project_id];
 	$tracker->generate_nav($row);
 	$can_manage = group_memberships($row['project_group'], $user->data['user_id'], true);
@@ -143,15 +144,32 @@ if ($project_id && !$mode && !$ticket_id)
 		'ORDER_BY'	=> 't.ticket_time DESC',
 	);
 	
+	$pagination_mode = '';
+	if ($mode == 'search' && !empty($term))
+	{
+		$template->assign_var('S_IN_SEARCH', true);
+		$searchterm = "*". strtolower($term) . "*";
+		if ($searchterm != "**")
+		{
+			//replace wildcards
+			$searchterm = str_replace("*", $db->any_char , $searchterm);
+			$searchterm = str_replace("?", $db->one_char , $searchterm);
+		}
+			
+		$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(t.ticket_desc) ' . $db->sql_like_expression($searchterm) . ')';
+		$pagination_mode = 'mode=search&amp;term=' . $term;
+	}
+	
 	$total_tickets = $tracker->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
 	$tickets_per_page = $tracker->config['tickets_per_page'];
-
+	
 	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query_limit($sql, $tickets_per_page, $start);
 
 	$tickets = $db->sql_fetchrowset($result);
 	$db->sql_freeresult($result);
 	
+		
 	if ($tickets)
 	{
 		$sql = 'SELECT *
@@ -220,10 +238,22 @@ if ($project_id && !$mode && !$ticket_id)
 		$l_total_tickets = $total_tickets . ' ' . $user->lang['TRACKER_TICKETS'];
 	}
 	
+	if ($mode == 'search' && !empty($term))
+	{		
+		
+		$user->add_lang('search');	
+		$search_matches = ($total_tickets == 1) ? sprintf($user->lang['FOUND_SEARCH_MATCH'], $total_tickets) : sprintf($user->lang['FOUND_SEARCH_MATCHES'], $total_tickets);	
+		$template->assign_vars(array(
+			'S_FOUND_RESULTS' 	=> true,
+			'SEARCH_TERM'		=> $term,
+			'SEARCH_MATCHES' 	=> $search_matches)
+		);
+	}
+	
 	$template->assign_vars(array(
 		'PAGE_NUMBER'	=> ($tickets_per_page > 0) ? on_page($total_tickets, $tickets_per_page, $start) : on_page($total_tickets, $total_tickets, $start),
 		'TOTAL_TICKETS'	=> $l_total_tickets,
-		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id"), $total_tickets, $tickets_per_page, $start) : false,
+		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id$pagination_mode"), $total_tickets, $tickets_per_page, $start) : false,
 		)
 	);
 	
@@ -245,7 +275,10 @@ if ($project_id && !$mode && !$ticket_id)
 		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')) : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;at={$user->data['user_id']}&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 		
-		'U_ACTION'						=> append_sid("{$phpbb_root_path}tracker.$phpEx"),
+		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=search&amp;term=$term") : append_sid("{$phpbb_root_path}tracker.$phpEx"),
+		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
+		'S_ACTION_SEARCH' 				=> build_url(array('mode', 'term')),
+		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 	
 		'S_STATUS_OPTIONS'				=> $tracker->status_select_options($status_type, true),		
 		'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=tracker.$phpEx"),
