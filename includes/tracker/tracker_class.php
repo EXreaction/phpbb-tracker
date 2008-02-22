@@ -215,13 +215,13 @@ class tracker
 		}
 
 		$filedata = array(
-            'poster_id'			=> $user->data['user_id'],
-            'filesize'			=> $file->get('filesize'),
-            'mimetype'			=> $file->get('mimetype'),
-            'extension'			=> $file->get('extension'),
-            'physical_filename' => $file->get('realname'),
-            'real_filename'		=> $file->get('uploadname'),
-            'filetime'			=> time(),
+			'poster_id'			=> $user->data['user_id'],
+			'filesize'			=> $file->get('filesize'),
+			'mimetype'			=> $file->get('mimetype'),
+			'extension'			=> $file->get('extension'),
+			'physical_filename' => $file->get('realname'),
+			'real_filename'		=> $file->get('uploadname'),
+			'filetime'			=> time(),
 		);
 
 		$sql = 'INSERT INTO ' . TRACKER_ATTACHMENTS_TABLE . ' ' .
