@@ -1910,11 +1910,37 @@ class tracker
 		
 		$template->assign_var('S_IN_STATS', true);	
 		if ($project_id)
-		{
+		{			
+			//Get total open
+			$sql = 'SELECT COUNT(*) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					AND ' . $db->sql_in_set('status_id', $this->get_opened()) . '
+					ORDER BY status_id';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			$total_opened = $row['total'];
+			
+			//Get total closed
+			$sql = 'SELECT COUNT(*) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					AND ' . $db->sql_in_set('status_id', $this->get_opened(), true) . '
+					ORDER BY status_id';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			$total_closed = $row['total'];
+
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
 				'L_TITLE'				=> $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'],
-			));
+				
+				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
+				'TOTAL_OPENED'			=> $total_closed,
+				'TOTAL_CLOSED'			=> $total_opened,
+			));			
 			
 			$sql = 'SELECT status_id, COUNT(*) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
@@ -1931,7 +1957,7 @@ class tracker
 			$db->sql_freeresult($result);
 			
 			foreach ($this->status as $item)
-			{		
+			{	
 				if ($item['filter'])
 				{
 					continue;
