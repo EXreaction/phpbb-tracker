@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * @package tracker
 * @version $Id$
@@ -22,14 +22,14 @@ $auth->acl($user->data);
 $user->setup();
 
 // is the user logged in?
-//This might be looked at later if people have problems, but I guess only the founder
-//should be using ftp and installing scripts anyway.
+// This might be looked at later if people have problems, but I guess only the founder
+// should be using ftp and installing scripts anyway.
 if ($user->data['user_type'] != USER_FOUNDER)
 {
 	die('You are not authorized to use this script.');
 }
 
-//Empty cache...
+// Empty cache...
 $cache->purge();
 
 $tracker = new install_check();
@@ -53,13 +53,13 @@ class install_check
 	var $install_modules = array();
 	var $install_alter_db = array();
 	var $no_errors = true;
-	
+
 	function install_check()
 	{
 		global $phpbb_root_path, $phpEx, $user, $table_prefix;
-		
+
 		require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
-				
+
 		define('TRACKER_CONFIG_TABLE',			$table_prefix . 'tracker_config');
 		define('TRACKER_ATTACHMENTS_TABLE',		$table_prefix . 'tracker_attachments');
 		define('TRACKER_PROJECT_TABLE',			$table_prefix . 'tracker_project');
@@ -68,18 +68,18 @@ class install_check
 		define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
 		define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 		define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
-		
+
 		$this->install_tables = array(
 			TRACKER_CONFIG_TABLE,
 			TRACKER_ATTACHMENTS_TABLE,
-			TRACKER_PROJECT_TABLE, 
-			TRACKER_TICKETS_TABLE, 
-			TRACKER_POSTS_TABLE, 
-			TRACKER_COMPONENTS_TABLE, 
-			TRACKER_HISTORY_TABLE, 
-			TRACKER_VERSION_TABLE,	
+			TRACKER_PROJECT_TABLE,
+			TRACKER_TICKETS_TABLE,
+			TRACKER_POSTS_TABLE,
+			TRACKER_COMPONENTS_TABLE,
+			TRACKER_HISTORY_TABLE,
+			TRACKER_VERSION_TABLE,
 		);
-		
+
 		$this->install_files = array(
 			'tracker.php',
 			'adm/style/acp_tracker.html',
@@ -108,47 +108,47 @@ class install_check
 			'styles/subsilver2/template/tracker/tracker_header.html',
 			'styles/subsilver2/template/tracker/tracker_move.html',
 		);
-		
+
 		$this->install_edits['styles/prosilver/template/overall_header.html'] = array(
 			'<!-- IF S_IN_TRACKER -->',
 			'<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <strong>&#8249;</strong> <a href="{U_TRACKER}">{L_TRACKER}</a><!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --><!-- IF TRACKER_TICKET_ID --> <strong>&#8249;</strong> <a href="{U_VIEW_TRACKER_TICKET}">{L_TRACKER_NAV_TICKET}{TRACKER_TICKET_ID}</a><!-- ENDIF --></li>',
 			'<!-- INCLUDE tracker/tracker_header.html -->',
 		);
-		
+
 		$this->install_edits['styles/subsilver2/template/overall_header.html'] = array(
 			'<!-- IF S_IN_TRACKER -->',
 			'<!-- INCLUDE tracker/tracker_breadcrumbs.html -->',
 			'<!-- INCLUDE tracker/tracker_header.html -->',
 		);
-		
+
 		$this->install_permissions = array(
-			'u_tracker_view', 
+			'u_tracker_view',
 			'u_tracker_attach',
 			'u_tracker_download',
-			'u_tracker_post', 
-			'u_tracker_edit', 
+			'u_tracker_post',
+			'u_tracker_edit',
 			'a_tracker',
 		);
-		
+
 		$this->install_modules['acp'] = array(
 			'tracker' 	=> array('settings', 'project', 'component', 'version', 'severity', 'priority'),
 		);
-		
+
 		$this->install_modules['ucp'] = array(
 			//'tracker' => array('settings'),
 		);
-		
+
 		$this->install_alter_db = array(
 			//USERS_TABLE		=> array('user_allow_pm'),
 		);
-		
+
 	}
-	
+
 	function check_tables()
 	{
 		global $db, $table_prefix;
-		
-		echo '<h3>Checking if database tables exist...</h3>';	
+
+		echo '<h3>Checking if database tables exist...</h3>';
 		$error = array();
 		$tables = get_tables($db);
 		foreach ($this->install_tables as $table_name)
@@ -159,7 +159,7 @@ class install_check
 			}
 		}
 		unset($tables);
-		
+
 		if (sizeof($error))
 		{
 			$this->no_errors = false;
@@ -170,15 +170,15 @@ class install_check
 			$this->display_success('All tables found');
 		}
 	}
-	
+
 	function check_alter_db()
 	{
 		global $phpbb_root_path, $db;
-		
+
 		$db->sql_return_on_error(true);
-		
+
 		echo '<h3>Checking other database data...</h3>';
-		$error = array();		
+		$error = array();
 		foreach ($this->install_alter_db as $key => $value)
 		{
 			$table = $key;
@@ -189,14 +189,14 @@ class install_check
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
-				
+
 				if ($db->sql_error_triggered)
-				{				
+				{
 					$error[] = $column;
 				}
 				unset($row);
 			}
-			
+
 			if (sizeof($error))
 			{
 				$this->no_errors = false;
@@ -206,16 +206,16 @@ class install_check
 			{
 				$this->display_success($table . ' table correctly altered');
 			}
-			unset($error);			
+			unset($error);
 		}
-		
+
 		$db->sql_return_on_error(false);
 	}
-	
+
 	function check_files()
 	{
 		global $phpbb_root_path;
-		
+
 		echo '<h3>Checking if files exist...</h3>';
 		$error = array();
 		foreach($this->install_files as $file)
@@ -234,17 +234,17 @@ class install_check
 		else
 		{
 			$this->display_success('All files found');
-		}		
+		}
 	}
-	
+
 	function check_edits()
 	{
 		global $phpbb_root_path;
-		
+
 		echo '<h3>Checking file edits...</h3>';
-		$error = array();		
+		$error = array();
 		foreach($this->install_edits as $key => $value)
-		{	
+		{
 			$file = $key;
 			foreach ($value as $edit)
 			{
@@ -256,7 +256,7 @@ class install_check
 				}
 			}
 		}
-		
+
 		if (sizeof($error))
 		{
 			$this->no_errors = false;
@@ -265,18 +265,18 @@ class install_check
 		else
 		{
 			$this->display_success('All files edited');
-		}			
+		}
 	}
-	
+
 	function check_modules()
 	{
 		global $phpbb_root_path, $db;
-		
+
 		echo '<h3>Checking modules...</h3>';
-		$error = array();		
-		
+		$error = array();
+
 		foreach($this->install_modules['acp'] as $key => $value)
-		{	
+		{
 			$module_basename = $key;
 			foreach ($value as $module_mode)
 			{
@@ -288,7 +288,7 @@ class install_check
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
-				
+
 				if (!$row)
 				{
 					$error[] = 'ACP Module: module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
@@ -296,21 +296,21 @@ class install_check
 				unset($row);
 			}
 		}
-		
+
 		foreach($this->install_modules['ucp'] as $key => $value)
-		{	
+		{
 			$module_basename = $key;
 			foreach ($value as $module_mode)
 			{
 				$sql = 'SELECT parent_id
 					FROM ' . MODULES_TABLE . '
-					WHERE module_basename = "' . $module_basename . '" 
+					WHERE module_basename = "' . $module_basename . '"
 						AND module_class = "ucp"
 						AND module_mode = "' . $module_mode . '"';
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
-				
+
 				if (!$row)
 				{
 					$error[] = 'UCP Module: module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
@@ -318,7 +318,7 @@ class install_check
 				unset($row);
 			}
 		}
-		
+
 		if (sizeof($error))
 		{
 			$this->no_errors = false;
@@ -327,15 +327,15 @@ class install_check
 		else
 		{
 			$this->display_success('All modules installed');
-		}			
+		}
 	}
-	
+
 	function check_permissions()
 	{
 		global $phpbb_root_path, $db;
-		
+
 		echo '<h3>Checking permissions data...</h3>';
-		$error = array();		
+		$error = array();
 		foreach ($this->install_permissions as $value)
 		{
 			$sql = 'SELECT auth_option_id
@@ -344,14 +344,14 @@ class install_check
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
-			
+
 			if (!$row)
 			{
 				$error[] = $value;
 			}
 			unset($row);
 		}
-		
+
 		if (sizeof($error))
 		{
 			$this->no_errors = false;
@@ -360,19 +360,19 @@ class install_check
 		else
 		{
 			$this->display_success('All permissions exist');
-		}	
+		}
 	}
-	
+
 	function display_success($text)
 	{
 		echo '<p style="color: green;"><b>' . $text . '</b></p>';
 	}
-	
+
 	function display_error($title, $error)
 	{
 		echo '<p style="color: red; font-size: 1.05em; font-family: \'Trebuchet MS\', Helvetica, sans-serif;"><strong>'. $title .'</strong><br />' . implode('<br />', $error) . '</p>';
 	}
-	
+
 	function display_done()
 	{
 		if ($this->no_errors)
@@ -384,11 +384,11 @@ class install_check
 			echo '<h2 style="color: red;">There were errors found with the installation.</h2>';
 		}
 	}
-	
+
 	function install_header($title, $dir = '', $lang = '')
 	{
 		global $phpbb_root_path;
-		
+
 	header('Content-type: text/html; charset=UTF-8');
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" dir="' . $dir . '" lang="' . $lang . '" xml:lang="' . $lang . '">
@@ -399,7 +399,7 @@ class install_check
 	<meta http-equiv="content-style-type" content="text/css" />
 	<meta http-equiv="imagetoolbar" content="no" />
 
-	<style type="text/css" media="screen">		
+	<style type="text/css" media="screen">
 		blockquote {
 			background: #ebebeb none 6px 8px no-repeat;
 			border: 1px solid #dbdbdb;
@@ -452,18 +452,18 @@ class install_check
 
 	function install_footer()
 	{
-		
+
 						echo '</div>
 					</div>
 				<span class="corners-bottom"><span></span></span>
 			</div>
 			</div>
 		</div>
-		
+
 		<div id="page-footer">
 			Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />
 			Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a>
-			 
+
 		</div>
 	</div>
 

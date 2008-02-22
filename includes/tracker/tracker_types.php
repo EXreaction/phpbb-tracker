@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * @package tracker
 * @version $Id$
@@ -20,37 +20,39 @@ if (!defined('IN_PHPBB'))
 * Tracker types defined below
 */
 
+$tracker_types = array();
+
 $tracker_types[0] = array(
-    'id' 				=> 'bug',
-    'title' 			=> 'BUG_TRACKER',
-    'show_version' 		=> true,
-    'show_component' 	=> true,
-    'show_priority' 	=> true,
-    'show_severity'		=> true,
+	'id' 				=> 'bug',
+	'title' 			=> 'BUG_TRACKER',
+	'show_version' 		=> true,
+	'show_component' 	=> true,
+	'show_priority' 	=> true,
+	'show_severity'		=> true,
 	'show_environment' 	=> true,
-    'status' 			=> $status_type['bugs'],
+	'status' 			=> $status_type['bugs'],
 );
 
 $tracker_types[1] = array(
-    'id' 				=> 'feature',
-    'title' 			=> 'FEATURE_TRACKER',
-    'show_version' 		=> true,
-    'show_component'	=> true,
-    'show_priority' 	=> true,
-    'show_severity' 	=> false,
+	'id' 				=> 'feature',
+	'title' 			=> 'FEATURE_TRACKER',
+	'show_version' 		=> true,
+	'show_component'	=> true,
+	'show_priority' 	=> true,
+	'show_severity' 	=> false,
 	'show_environment' 	=> false,
-    'status' 			=> $status_type['feature'],
+	'status' 			=> $status_type['feature'],
 );
 
 $tracker_types[2] = array(
-    'id' 				=> 'issue',
-    'title' 			=> 'ISSUE_TRACKER',
-    'show_version' 		=> true,
-    'show_component' 	=> true,
-    'show_priority' 	=> true,
-    'show_severity' 	=> true,
-	'show_environment' 	=> true,	
-    'status' 			=> $status_type['issue'],
+	'id' 				=> 'issue',
+	'title' 			=> 'ISSUE_TRACKER',
+	'show_version' 		=> true,
+	'show_component' 	=> true,
+	'show_priority' 	=> true,
+	'show_severity' 	=> true,
+	'show_environment' 	=> true,
+	'status' 			=> $status_type['issue'],
 );
 
 ?>

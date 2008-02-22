@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 
 /**
 *	MODDERS PLEASE NOTE
-*	
+*
 *	You are able to put your permission sets into a seperate file too by
-*	prefixing the new file with permissions_ and putting it into the acp 
+*	prefixing the new file with permissions_ and putting it into the acp
 *	language folder.
 *
 *	An example of how the file could look like:
@@ -82,7 +82,7 @@ $lang['permission_cat']['tracker'] = 'phpBB Tracker';
 
 
 // Admin Permissions
-$lang = array_merge($lang, array(		
+$lang = array_merge($lang, array(
 	'acl_a_tracker'				=> array('lang' => 'Can manage bugtracker', 								'cat' => 'tracker'),
 	'acl_u_tracker_attach'		=> array('lang' => 'Can attach files to bug tracker tickets/posts', 		'cat' => 'tracker'),
 	'acl_u_tracker_download'	=> array('lang' => 'Can download files from bug tracker tickets/posts', 	'cat' => 'tracker'),

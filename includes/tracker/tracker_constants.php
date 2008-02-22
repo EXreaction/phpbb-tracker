@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * @package tracker
 * @version $Id$
@@ -50,7 +50,7 @@ define('TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE', 4);
 
 define('TRACKER_SUBJECT_LENGTH', 30);
 
-define('TRACKER_ALL', 0); 
+define('TRACKER_ALL', 0);
 define('TRACKER_ALL_OPENED', 1);
 define('TRACKER_ALL_CLOSED', 2);
 define('TRACKER_NEW_STATUS', 3);

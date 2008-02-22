@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * acp info_acp_tracker[English]
 *
@@ -39,32 +39,32 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 
 	'ACP_TRACKER'							=> 'phpBB Tracker',
-		
+
 	'ACP_TRACKER_PROJECT'					=> 'Manage projects',
 	'ACP_TRACKER_COMPONENT'					=> 'Manage components',
 	'ACP_TRACKER_VERSION'					=> 'Manage versions',
 	'ACP_TRACKER_SETTINGS'					=> 'Manage settings',
 	'ACP_TRACKER_ATTACHMENTS'				=> 'Manage attachments',
-	
+
 	'ACP_TRACKER_SETTINGS_GENERAL'			=> 'General Settings',
 	'ACP_TRACKER_SETTINGS_EXPLAIN'			=> 'Control tracker settings and check for updates.',
 	'ACP_TRACKER_ATTACHMENTS_EXPLAIN'		=> 'View orphaned attachments and attachments in the upload folder that are not in the database.',
 	'ACP_TRACKER_PROJECT_EXPLAIN'			=> 'Add, delete and edit projects for the tracker.',
 	'ACP_TRACKER_COMPONENT_EXPLAIN'			=> 'Add, delete and edit components for a project in the tracker.',
 	'ACP_TRACKER_VERSION_EXPLAIN'			=> 'Add, delete and edit versions for a project in the tracker.',
-	
+
 	'ACP_TRACKER_PROJECT_ADD'				=> 'Add new project',
 	'ACP_TRACKER_PROJECT_ADDED'				=> 'Project successfully added.',
 	'ACP_TRACKER_PROJECT_EDITED'			=> 'Project successfully edited.',
-	'ACP_TRACKER_PROJECT_DELETE'			=> 'Delete project',	
-	'ACP_TRACKER_PROJECT_DELETE_CONFIRM'	=> 'Are you sure you want to delete the selected project from the tracker?',	
+	'ACP_TRACKER_PROJECT_DELETE'			=> 'Delete project',
+	'ACP_TRACKER_PROJECT_DELETE_CONFIRM'	=> 'Are you sure you want to delete the selected project from the tracker?',
 	'ACP_TRACKER_PROJECT_DELETED'			=> 'Project succefully deleted.',
 	'ACP_TRACKER_PROJECT_NO_ID'				=> 'The selected project does not exist in the database.',
-	
+
 	'ACP_TRACKER_COMPONENT_ADD'				=> 'Add new component',
 	'ACP_TRACKER_COMPONENT_ADDED'			=> 'Component successfully added.',
 	'ACP_TRACKER_COMPONENT_EDITED'			=> 'Component successfully edited.',
-	'ACP_TRACKER_COMPONENT_DELETE'			=> 'Delete component',	
+	'ACP_TRACKER_COMPONENT_DELETE'			=> 'Delete component',
 	'ACP_TRACKER_COMPONENT_DELETE_CONFIRM'	=> 'Are you sure you want to delete this component from the selected project in the tracker?',
 	'ACP_TRACKER_COMPONENT_DELETED'			=> 'Component succefully deleted.',
 	'ACP_TRACKER_COMPONENT_NO_ID'			=> 'The selected component does not exist in the database.',
@@ -72,39 +72,39 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_VERSION_ADD'				=> 'Add new version',
 	'ACP_TRACKER_VERSION_ADDED'				=> 'Version successfully added.',
 	'ACP_TRACKER_VERSION_EDITED'			=> 'Version successfully edited.',
-	'ACP_TRACKER_VERSION_DELETE'			=> 'Delete version',	
+	'ACP_TRACKER_VERSION_DELETE'			=> 'Delete version',
 	'ACP_TRACKER_VERSION_DELETE_CONFIRM'	=> 'Are you sure you want to delete this version from the selected project in the tracker?',
 	'ACP_TRACKER_VERSION_DELETED'			=> 'Version succefully deleted.',
 	'ACP_TRACKER_VERSION_NO_ID'				=> 'The selected version does not exist in the database.',
-	
+
 	'ACP_TRACKER_ATTACHMENTS_DELETE_CONFIRM'	=> 'Are you sure you want to delete the selected items?',
 
 	'ACP_TRACKER_DELETE_MARKED'				=> 'Delete marked',
-		
+
 	'TRACKER_PROJECT_NAME' 					=> 'Project Name',
 	'TRACKER_PROJECT_DESC'					=> 'Project Description',
 	'TRACKER_PROJECT_ENABLED'				=> 'Project Enabled',
 	'TRACKER_PROJECT_TYPE'					=> 'Project Type',
 	'TRACKER_PROJECT_GROUP'					=> 'Project Group',
 	'TRACKER_PROJECT_SECURITY'				=> 'Project Security',
-	
+
 	'TRACKER_PROJECT_NAME_EXPLAIN'			=> 'Name of the project.',
 	'TRACKER_PROJECT_DESC_EXPLAIN'			=> 'Description of the project.',
 	'TRACKER_PROJECT_ENABLED_EXPLAIN'		=> 'Select whether or not the project is enabled.',
 	'TRACKER_PROJECT_TYPE_EXPLAIN'			=> 'Select the tracker type of the project.',
 	'TRACKER_PROJECT_GROUP_EXPLAIN'			=> 'Select the group that manages this project.',
 	'TRACKER_PROJECT_SECURITY_EXPLAIN'		=> 'Select this if you would like tickets to be shown only to team members and the user that posted it.',
-	
+
 	'TRACKER_PROJECT_ID'					=> 'Select a project',
-	
+
 	'TRACKER_COMPONENT_NAME' 				=> 'Component Name',
 	'TRACKER_COMPONENT_NAME_EXPLAIN'		=> 'Name of the component to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_COMPONENT_DELETE_ERROR'		=> 'The selected component cannot be deleted because tickets exist that refer to this component.  Delete all tickets refering to this component first.',
-	
+
 	'TRACKER_VERSION_NAME' 					=> 'Version Name',
 	'TRACKER_VERSION_NAME_EXPLAIN'			=> 'Name of the version to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_VERSION_DELETE_ERROR'			=> 'The selected version cannot be deleted because tickets exist that refer to this version.  Delete all tickets refering to this version first.',
-		
+
 	'TRACKER_FILENAME'						=> 'Filename',
 	'TRACKER_FILESIZE'						=> 'Filesize',
 
@@ -113,7 +113,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_FILES_DELETED'					=> 'Files and/or orphan attachments successfully removed',
 	'TRACKER_ERROR_REMOVING_ORPHAN'			=> 'Error removing file %s (%s), check to make sure file exists and is not write protected.',
 	'TRACKER_ERROR_REMOVING_FILE'			=> 'Error removing file %s, check to make sure file exists and is not write protected.',
-	
+
 ));
 
 $lang = array_merge($lang, array(
@@ -160,12 +160,12 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
-	'LOG_TRACKER_SETTINGS'					=> '<strong>Altered tracker settings</strong>',	
-	
+	'LOG_TRACKER_SETTINGS'					=> '<strong>Altered tracker settings</strong>',
+
 	'LOG_TRACKER_PROJECT_ADD'				=> '<strong>Added new project to tracker</strong><br />» %s',
 	'LOG_TRACKER_PROJECT_EDIT'				=> '<strong>Altered tracker project</strong><br />» %s',
 	'LOG_TRACKER_PROJECT_DELETE'			=> '<strong>Deleted tracker project</strong><br />» %%s',
-	
+
 	'LOG_TRACKER_COMPONENT_ADD'				=> '<strong>Added new component to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_EDIT'			=> '<strong>Altered tracker project component</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_DELETE'			=> '<strong>Deleted tracker project component</strong><br />» %s',
@@ -173,7 +173,7 @@ $lang = array_merge($lang, array(
 	'LOG_TRACKER_VERSION_ADD'				=> '<strong>Added new version to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_VERSION_EDIT'				=> '<strong>Altered tracker project version</strong><br />» %s',
 	'LOG_TRACKER_VERSION_DELETE'			=> '<strong>Deleted tracker project version</strong><br />» %s',
-		
+
 	'LOG_TRACKER_DELETE_ORPHAN'				=> '<strong>Removed orphan attachment from tracker</strong><br />» %s',
 	'LOG_TRACKER_DELETE_EXTRA'				=> '<strong>Removed extra file from tracker attachment directory</strong><br />» %s',
 ));

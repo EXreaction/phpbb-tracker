@@ -6,9 +6,9 @@ review the changes below and act accordingly if they require any attention.
 
 These changes were made by "{CHANGE_USERNAME}".
 
-Field name: {FIELD_NAME1}         
-Old value: {OLD_VALUE1}          
-New value: {NEW_VALUE1}            
+Field name: {FIELD_NAME1}
+Old value: {OLD_VALUE1}
+New value: {NEW_VALUE1}
 
 Ticket title: {TICKET_TITLE}
 More information:

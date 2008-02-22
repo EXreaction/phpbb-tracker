@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * tracker[English]
 *
@@ -64,7 +64,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_DESCRIPTION'					=> 'Description',
 	'TRACKER_LAST_VISIT'					=> 'This ticket was last visited by project member %s on %s.',
 	'TRACKER_SEARCH_DESCRIPTION'			=> 'Enter search terms',
-	
+
 	'TRACKER_LOCK_TICKET'					=> 'Lock ticket',
 	'TRACKER_LOCK_TICKET_CONFIRM'			=> 'Are you sure you want to lock this ticket?',
 	'TRACKER_UNLOCK_TICKET'					=> 'Unlock ticket',
@@ -77,7 +77,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_MOVE_TICKET_SELECT'			=> 'Select a destination project',
 	'TRACKER_MOVE_TICKET_CONFIRM'			=> 'Once moved the assigned user, status, component, version, priority, serverity, and ticket history will be reset. Are you sure you want to move the selected ticket to the selected project?',
 	'TRACKER_TICKET_HIDDEN_FROM_VIEW'		=> 'This ticket is hidden from public view.  It is only viewable by project members.',
-	
+
 	'TRACKER_NAV_TICKET'					=> 'Ticket #',
 	'TRACKER_CURRENTLY_SHOWING'				=> '<strong>Currently showing:</strong> %s',
 	'TRACKER_CURRENTLY_SHOWING_USER'		=> '<strong>Currently showing:</strong> %s tickets, %s',
@@ -116,17 +116,17 @@ $lang = array_merge($lang, array(
 	'TRACKER_DETAILS_DBMS'					=> 'Database',
 	'TRACKER_REPLY_EXPLAIN'					=> 'Use the form below to post a reply to the ticket "%s".',
 	'TRACKER_REPLY_DETAIL'					=> 'Make sure that the reply to this ticket contains all necessary information and click "Submit reply" to submit your reply.',
-	'TRACKER_REPLY_DETAIL_EMAIL'			=> ' The relevant team members and the poster of this ticket will be notified by email.',				
+	'TRACKER_REPLY_DETAIL_EMAIL'			=> ' The relevant team members and the poster of this ticket will be notified by email.',
 	'TRACKER_REPLY'							=> 'Reply to ticket',
-	
+
 	'TRACKER_EDIT_REASON'					=> 'Edit reason',
 	'TRACKER_EDIT_REASON_EXPLAIN'			=> 'Enter the reason you edited the post/ticket',
-	
+
 	'TRACKER_TICKET_COMMENTS'				=> 'Comments',
 	'TRACKER_TICKET_NO_COMMENTS'			=> 'No comments have been made',
 	'TRACKER_TICKET_DETAILS'				=> 'Ticket details',
 	'TRACKER_TICKET_ID'						=> 'Ticket ID',
-	
+
 	'TRACKER_LAST_POST_BY'					=> ', last post by ',
 	'TRACKER_TICKET_REPLY_SUBMITTED'		=> 'Your post has been successfully submitted',
 	'TRACKER_TICKET_SUBMITTED'				=> 'Your ticket has been successfully submitted.',
@@ -138,16 +138,16 @@ $lang = array_merge($lang, array(
 	'TRACKER_PROJECT_RETURN'				=> '%sReturn to current project%s',
 	'TRACKER_RETURN'						=> '%sReturn to the tracker index page%s',
 	'TRACKER_TICKET_MOVED'					=> 'The selected ticket has been successfully moved',
-	
+
 	'TRACKER_TICKET_TITLE_ERROR'			=> 'You must enter a title when posting a ticket.',
 	'TRACKER_TICKET_DESC_ERROR'				=> 'Your description contains too few characters',
 	'TRACKER_TICKET_MESSAGE_ERROR'			=> 'Your message contains too few characters.',
-	
+
 	'TRACKER_ASSIGN_USER'					=> 'Assign to',
 	'TRACKER_CHANGE_STATUS'					=> 'Assign status',
 	'TRACKER_CHANGE_PRIORITY'				=> 'Assign priority',
 	'TRACKER_CHANGE_SEVERITY'				=> 'Assign severity',
-	
+
 	'TRACKER_HISTORY_ASSIGNED_TO'			=> 'Assigned ticket to user "%s"',
 	'TRACKER_HISTORY_ASSIGNED_TO_GROUP'		=> 'Assigned ticket to group "%s"',
 	'TRACKER_HISTORY_STATUS_CHANGED'		=> 'Changed ticket status from "%s" to "%s"',
@@ -159,7 +159,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_EMAIL_SUBJECT'					=> '[%s %s - #%s] %s',
 	'TRACKER_CANNOT_EDIT_TIME'				=> 'You can no longer edit or delete that ticket/post.',
 	'TRACKER_USER_CANNOT_EDIT'				=> 'You cannot edit tickets/posts in this project.',
-	
+
 	'TRACKER_DELETE_TICKET'					=> 'Delete ticket',
 	'TRACKER_DELETE_TICKET_CONFIRM'			=> 'Are you sure you want to delete the selected ticket?',
 	'TRACKER_DELETE_TICKET_SUCCESS'			=> 'The selected ticket was successfully deleted.',
@@ -167,17 +167,17 @@ $lang = array_merge($lang, array(
 	'TRACKER_DELETE_POST_CONFIRM'			=> 'Are you sure you want to delete the selected post?',
 	'TRACKER_DELETE_POST_SUCCESS'			=> 'The selected post was successfully deleted.',
 	'TRACKER_DELETE_NO_PERMISSION'			=> 'You do not have the permission to delete tickets/post from the tracker.',
-	
+
 	'NO_PERMISSION_TRACKER_VIEW'			=> 'You do not have the permission to view the tracker.  If you believe this is an error please contact the board administrator.',
 	'NO_PERMISSION_TRACKER_POST'			=> 'You do not have the permission to post to the tracker.  If you believe this is an error please contact the board administrator.',
 	'NO_PERMISSION_TRACKER_EDIT'			=> 'You do not have the permission to edit your ticket/post in the tracker.  If you believe this is an error please contact the board administrator.',
 
 	'TRACKER_PROJECT_NO_EXIST'				=> 'The selected project does not exist.',
-	'TRACKER_TICKET_NO_EXIST'				=> 'The selected ticket does not exist.', 
-	'TRACKER_POST_NO_EXIST'					=> 'The selected post does not exist.', 
+	'TRACKER_TICKET_NO_EXIST'				=> 'The selected ticket does not exist.',
+	'TRACKER_POST_NO_EXIST'					=> 'The selected post does not exist.',
 	'TRACKER_NO_PROJECT_EXIST'				=> 'There are currently no projects in the tracker.',
 	'TRACKER_TICKET_LOCKED_MESSAGE'			=> 'This ticket is locked, you cannot edit posts or make further replies.',
-	
+
 	'TRACKER_ATTACHMENTS'					=> 'Attachments',
 	'TRACKER_ATTACHMENTS_UPLOAD'			=> 'Upload attachment',
 	'TRACKER_ATTACHMENTS_ADD'				=> 'Add attachment',
@@ -191,7 +191,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_PRIORITY3'	=> 'High',
 	'TRACKER_PRIORITY4'	=> 'Normal',
 	'TRACKER_PRIORITY5'	=> 'Low',
-	
+
 	'TRACKER_SEVERITY1'	=> 'Critical',
 	'TRACKER_SEVERITY2'	=> 'Major',
 	'TRACKER_SEVERITY3'	=> 'Normal',
@@ -221,7 +221,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_RESEARCHING'				=> 'Researching',
 	'TRACKER_WILL_NOT_IMPLEMENT'		=> 'Will not implement',
 	'TRACKER_IMPLEMENTED_CVS'			=> 'Implemented in CVS',
-	'TRACKER_IMPLEMENTED_SVN'			=> 'Implemented in SVN',	
+	'TRACKER_IMPLEMENTED_SVN'			=> 'Implemented in SVN',
 	'TRACKER_CLOSED'					=> 'Closed',
 	'TRACKER_INVALID'					=> 'Invalid',
 	'TRACKER_REVIEWED'					=> 'Reviewed',
@@ -236,4 +236,5 @@ $lang = array_merge($lang, array(
 	'TRACKER_FIX_COMPLETED'				=> 'Fix completed',
 	'TRACKER_UNREPRODUCABLE'			=> 'Unreproducable',
 ));
+
 ?>

@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
 *
 * @package tracker
 * @version $Id$
@@ -94,7 +94,7 @@ if (!$attachment)
 $attachment['physical_filename'] = basename($attachment['physical_filename']);
 $display_cat = $tracker->extensions[$attachment['extension']]['display_cat'];
 
-if ($display_cat == ATTACHMENT_CATEGORY_IMAGE  && !$user->optionget('viewimg'))
+if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && !$user->optionget('viewimg'))
 {
 	$display_cat = ATTACHMENT_CATEGORY_NONE;
 }
@@ -119,7 +119,7 @@ else
 		{
 			trigger_error($user->lang['PHYSICAL_DOWNLOAD_NOT_POSSIBLE']);
 		}
-		
+
 		redirect($phpbb_root_path . $tracker->config['attachment_path'] . '/' . $attachment['physical_filename']);
 		exit;
 	}
@@ -227,7 +227,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	{
 		header('Content-Disposition: ' . ((strpos($attachment['mimetype'], 'image') === 0) ? 'inline' : 'attachment') . '; ' . header_filename(htmlspecialchars_decode($attachment['real_filename'])));
 	}
-	
+
 	if ($size)
 	{
 		header("Content-Length: $size");
@@ -316,7 +316,7 @@ function download_allowed()
 			}
 		}
 	}
-	
+
 	// Check for own server...
 	$server_name = (!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME');
 
@@ -330,7 +330,7 @@ function download_allowed()
 	{
 		$allowed = true;
 	}
-	
+
 	// Get IP's and Hostnames
 	if (!$allowed)
 	{
@@ -380,7 +380,7 @@ function download_allowed()
 		}
 		$db->sql_freeresult($result);
 	}
-	
+
 	return $allowed;
 }
 

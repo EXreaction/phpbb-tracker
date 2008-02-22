@@ -1,10 +1,10 @@
 <?php
-/** 
+/**
 *
 * @package phpBB3
 * @version $Id$
-* @copyright (c) 2006 phpBB Group 
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+* @copyright (c) 2006 phpBB Group
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 * This file creates new schema files for every database.
 * The filenames will be prefixed with an underscore to not overwrite the current schema files.
@@ -325,7 +325,7 @@ foreach ($supported_dbms as $dbms)
 		}
 
 		// Table specific so we don't get overlap
-		$modded_array = array(); 
+		$modded_array = array();
 
 		// Write columns one by one...
 		foreach ($table_data['COLUMNS'] as $column_name => $column_data)
@@ -676,7 +676,7 @@ foreach ($supported_dbms as $dbms)
 						}
 
 						$line .= ($key_data[0] == 'INDEX') ? 'CREATE INDEX' : '';
-						
+
 						$line .= " {$table_name}_{$key_name} ON {$table_name} (" . implode(', ', $key_data[1]) . ")\n";
 						$line .= "/\n";
 					break;
@@ -803,8 +803,8 @@ foreach ($supported_dbms as $dbms)
 function get_schema_struct()
 {
 	$schema_data = array();
-	
-	
+
+
 	$schema_data['phpbb_tracker_project'] = array(
 		'COLUMNS'		=> array(
 			'project_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -814,11 +814,11 @@ function get_schema_struct()
 			'project_type'			=> array('TINT:4', 0),
 			'project_enabled'		=> array('TINT:4', 0),
 			'project_security'		=> array('TINT:4', 0),
-			
+
 		),
 		'PRIMARY_KEY'	=> 'project_id',
 	);
-	
+
 	$schema_data['phpbb_tracker_config'] = array(
 		'COLUMNS'		=> array(
 			'config_name'		=> array('VCHAR', ''),
@@ -826,7 +826,7 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'config_name',
 	);
-	
+
 	$schema_data['phpbb_tracker_attachments'] = array(
 		'COLUMNS'		=> array(
 			'attach_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -850,7 +850,7 @@ function get_schema_struct()
 			'is_orphan'			=> array('INDEX', 'is_orphan'),
 		),
 	);
-  
+
   	$schema_data['phpbb_tracker_tickets'] = array(
 		'COLUMNS'		=> array(
 			'ticket_id'						=> array('UINT', NULL, 'auto_increment'),
@@ -878,14 +878,14 @@ function get_schema_struct()
 			'last_visit_time'				=> array('TIMESTAMP', 0),
 			'last_visit_username'			=> array('VCHAR_UNI', ''),
 			'last_visit_user_colour'		=> array('VCHAR:6', ''),
-			'edit_time'						=> array('INT:11', 0),	
+			'edit_time'						=> array('INT:11', 0),
 			'edit_reason'					=> array('VCHAR:255', ''),
 			'edit_user'						=> array('UINT', 0),
 			'edit_count'					=> array('USINT', 0),
 		),
 		'PRIMARY_KEY'	=> 'ticket_id',
 	);
-	
+
 	  $schema_data['phpbb_tracker_posts'] = array(
 		'COLUMNS'		=> array(
 			'post_id'					=> array('UINT', NULL, 'auto_increment'),
@@ -896,14 +896,14 @@ function get_schema_struct()
 			'post_desc_uid'				=> array('VCHAR:8', ''),
 			'post_user_id'				=> array('UINT', 0),
 			'post_time'					=> array('INT:11', 0),
-			'edit_time'					=> array('INT:11', 0),	
+			'edit_time'					=> array('INT:11', 0),
 			'edit_reason'				=> array('VCHAR:255', ''),
 			'edit_user'					=> array('UINT', 0),
-			'edit_count'				=> array('USINT', 0),			
+			'edit_count'				=> array('USINT', 0),
 		),
 		'PRIMARY_KEY'	=> 'post_id',
 	);
-	
+
 	$schema_data['phpbb_tracker_components'] = array(
 		'COLUMNS'		=> array(
 			'component_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -912,7 +912,7 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'component_id',
 	);
-	
+
 	$schema_data['phpbb_tracker_history'] = array(
 		'COLUMNS'		=> array(
 			'history_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -921,21 +921,21 @@ function get_schema_struct()
 			'history_status'		=> array('UINT', 0),
 			'history_user_id'		=> array('INT:8', 0),
 			'history_assigned_to'	=> array('INT:8', 0),
-			'history_old_status'	=> array('UINT', 0),			
-			'history_new_status'	=> array('UINT', 0),			
+			'history_old_status'	=> array('UINT', 0),
+			'history_new_status'	=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'	=> 'history_id',
 	);
-	
+
 	$schema_data['phpbb_tracker_version'] = array(
 		'COLUMNS'		=> array(
 			'version_id'			=> array('UINT', NULL, 'auto_increment'),
 			'project_id'			=> array('UINT', 0),
-			'version_name'			=> array('VCHAR_UNI', ''),		
+			'version_name'			=> array('VCHAR_UNI', ''),
 		),
 		'PRIMARY_KEY'	=> 'version_id',
 	);
-	
+
 	return $schema_data;
 }
 
@@ -960,17 +960,17 @@ function custom_data($dbms)
 
 /*
 CREATE TABLESPACE "PHPBB"
-	LOGGING 
-	DATAFILE 'E:\ORACLE\ORADATA\LOCAL\PHPBB.ora' 
+	LOGGING
+	DATAFILE 'E:\ORACLE\ORADATA\LOCAL\PHPBB.ora'
 	SIZE 10M
 	AUTOEXTEND ON NEXT 10M
 	MAXSIZE 100M;
 
-CREATE USER "PHPBB" 
-	PROFILE "DEFAULT" 
-	IDENTIFIED BY "phpbb_password" 
-	DEFAULT TABLESPACE "PHPBB" 
-	QUOTA UNLIMITED ON "PHPBB" 
+CREATE USER "PHPBB"
+	PROFILE "DEFAULT"
+	IDENTIFIED BY "phpbb_password"
+	DEFAULT TABLESPACE "PHPBB"
+	QUOTA UNLIMITED ON "PHPBB"
 	ACCOUNT UNLOCK;
 
 GRANT ANALYZE ANY TO "PHPBB";
@@ -1073,5 +1073,7 @@ EOF;
 
 	return '';
 }
+
+echo 'Done.';
 
 ?>
