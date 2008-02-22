@@ -1,0 +1,101 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF S_IN_PROJECT_STATS -->
+<h2>{L_TITLE}</h2>
+
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<th style="text-align: left; width: 34%;">{L_TRACKER_TOTAL_TICKETS}</th>
+	<th style="text-align: left; width: 33%;">{L_TRACKER_TOTAL_OPEN_TICKETS}</th>
+	<th style="text-align: left; width: 33%;">{L_TRACKER_TOTAL_CLOSED_TICKETS}</th>
+</tr>
+<tr class="row1">
+	<td>{TOTAL_TICKETS}</td>
+	<td>{TOTAL_OPENED}</td>
+	<td>{TOTAL_CLOSED}</td>
+</tr>
+</table>
+<br />
+
+
+<h3>{L_TRACKER_TICKET_STATUS_OVERVIEW}</h3>
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<th style="text-align: left; width: 34%;">{L_TRACKER_STATUS_NAME}</th>
+	<th style="text-align: left; width: 33%;">{L_TRACKER_TOTAL_TICKETS}</th>
+	<th style="text-align: left; width: 33%;">{L_TRACKER_IS_CLOSED_STATUS}</th>
+</tr>
+<!-- BEGIN status -->
+<!-- IF status.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	<td>{status.STATUS_NAME}</td>
+	<td>{status.STATUS_TOTAL}</td>
+	<td>{status.STATUS_CLOSED}</td>
+</tr>
+<!-- BEGINELSE -->
+<tr style="height: 50px">
+	<td class="row1" colspan="3" align="center">
+		<strong>{L_TRACKER_NO_STATUS_EXIST}</strong>
+	</td>
+</tr>
+<!-- END status -->
+</table>
+
+<!-- IF .assigne -->
+<h3>{L_TRACKER_ASSIGNEES}</h3>
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN assigne -->
+	<!-- IF assigne.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{assigne.USERNAME}</td>
+		<td>{assigne.TOTAL}</td>
+	</tr>
+<!-- END assigne -->
+</table>
+<!-- ENDIF -->
+
+<!-- IF .top -->
+<h3>{TRACKER_TOP_REPORTERS}</h3>
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN top -->
+<!-- IF top.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{top.USERNAME}</td>
+		<td>{top.TOTAL}</td>
+	</tr>
+<!-- END top -->
+</table>
+
+<!-- ENDIF -->
+<!-- ELSE -->
+<h2>{L_TRACKER}</h2>
+<p>{L_TRACKER_PROJECTS}</p>		
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<th style="text-align: left;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+	<th style="text-align: left;">{L_TRACKER_DESCRIPTION}</th>
+	<th style="text-align: left;">{L_TRACKER_TYPE}</th>
+	<th style="text-align: left;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN project -->
+<!-- IF project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td><a href="{project.U_PROJECT}">{project.PROJECT_NAME}</a></td>
+		<td>{project.PROJECT_DESC}</td>
+		<td>{project.PROJECT_TYPE}</td>
+		<td>{project.TOTAL_TICKETS}</td>
+	</tr>
+<!-- BEGINELSE -->
+<tr style="height: 50px">
+	<td class="row1" colspan="4" align="center">
+		<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
+	</td>
+</tr>
+<!-- END project -->
+</table>
+<!-- ENDIF -->
+<br />
+<!-- INCLUDE overall_footer.html -->
