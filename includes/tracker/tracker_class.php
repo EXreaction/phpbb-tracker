@@ -1903,16 +1903,16 @@ class tracker
 			'PAGINATION'	=> ($posts_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id"), $total_posts, $posts_per_page, $start) : false,
 		));
 	}
-	
+
 	function display_statistics($project_id)
 	{
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
-		
-		$template->assign_var('S_IN_STATS', true);	
+
+		$template->assign_var('S_IN_STATS', true);
 		if ($project_id)
-		{			
+		{
 			//Get total open
-			$sql = 'SELECT COUNT(*) as total
+			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
 					AND ' . $db->sql_in_set('status_id', $this->get_opened()) . '
@@ -1921,9 +1921,9 @@ class tracker
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 			$total_opened = $row['total'];
-			
+
 			//Get total closed
-			$sql = 'SELECT COUNT(*) as total
+			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
 					AND ' . $db->sql_in_set('status_id', $this->get_opened(), true) . '
@@ -1936,40 +1936,40 @@ class tracker
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
 				'L_TITLE'				=> $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'],
-				
+
 				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
 				'TOTAL_OPENED'			=> $total_closed,
 				'TOTAL_CLOSED'			=> $total_opened,
-			));			
-			
-			$sql = 'SELECT status_id, COUNT(*) as total
+			));
+
+			$sql = 'SELECT status_id, COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
 				GROUP BY status_id
 					ORDER BY status_id';
 			$result = $db->sql_query($sql);
-			
+
 			$status_count = array();
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$status_count[$row['status_id']] = $row['total'];
 			}
 			$db->sql_freeresult($result);
-			
+
 			foreach ($this->status as $item)
-			{	
+			{
 				if ($item['filter'])
 				{
 					continue;
 				}
-				
+
 				$template->assign_block_vars('status', array(
 					'STATUS_TOTAL'		=> (isset($status_count[$item['id']])) ? $status_count[$item['id']] : 0,
 					'STATUS_NAME'		=> $this->set_status($item['id']),
 					'STATUS_CLOSED'		=> ($item['open']) ? $user->lang['NO'] : $user->lang['YES'],
 				));
 			}
-			
+
 			$sql_array = array(
 				'SELECT'	=> 't.ticket_assigned_to as user_id,
 								u.user_colour,
@@ -1986,9 +1986,9 @@ class tracker
 						'ON'	=> 't.ticket_assigned_to = u.user_id',
 					),
 				),
-				
+
 				'WHERE'		=> 't.project_id = ' . $project_id,
-				
+
 				'GROUP_BY'	=> 'u.user_id',
 
 				'ORDER_BY'	=>	'total_tickets, u.username ASC',
@@ -1999,20 +1999,20 @@ class tracker
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
-			
+
 			foreach ($row as $item)
-			{		
+			{
 				if ($item['user_id'] == 0)
 				{
 					continue;
 				}
-				
+
 				$template->assign_block_vars('assigne', array(
 					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
-			
+
 			$sql_array = array(
 				'SELECT'	=> 't.ticket_user_id as user_id,
 								u.user_colour,
@@ -2029,9 +2029,9 @@ class tracker
 						'ON'	=> 't.ticket_user_id = u.user_id',
 					),
 				),
-				
+
 				'WHERE'		=> 't.project_id = ' . $project_id,
-				
+
 				'GROUP_BY'	=> 'u.user_id',
 
 				'ORDER_BY'	=>	'total_tickets, u.username ASC',
@@ -2042,22 +2042,22 @@ class tracker
 			$result = $db->sql_query_limit($sql, $this->config['stat_items']);
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
-			
-			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS'], $this->config['stat_items']));	
-			
+
+			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS'], $this->config['stat_items']));
+
 			foreach ($row as $item)
-			{		
+			{
 				if ($item['user_id'] == 0)
 				{
 					continue;
 				}
-				
+
 				$template->assign_block_vars('top', array(
 					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
-			
+
 			$this->generate_nav($this->projects[$project_id], false, true);
 			// Output page
 			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);
@@ -2079,7 +2079,7 @@ class tracker
 						'ON'	=> 'p.project_id = t.project_id',
 					),
 				),
-				
+
 				'GROUP_BY'	=> 'p.project_id',
 
 				'ORDER_BY'	=>	'p.project_type ASC, lower(p.project_name) ASC',
@@ -2099,8 +2099,8 @@ class tracker
 					{
 						continue;
 					}
-				}	
-				
+				}
+
 				$template->assign_block_vars('project', array(
 					'U_PROJECT'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=statistics&amp;p={$item['project_id']}"),
 					'PROJECT_NAME'		=> $item['project_name'],
@@ -2135,7 +2135,7 @@ class tracker
 		{
 			case 'tickets':
 			$sql_array = array(
-				'SELECT'	=> 'COUNT(*) as total',
+				'SELECT'	=> 'COUNT(ticket_id) as total',
 
 				'FROM'		=> array(
 					TRACKER_TICKETS_TABLE	=> 't',
@@ -2154,7 +2154,7 @@ class tracker
 			break;
 
 			case 'posts':
-				$sql = 'SELECT COUNT(*) as total
+				$sql = 'SELECT COUNT(post_id) as total
 					FROM ' . TRACKER_POSTS_TABLE . '
 					WHERE ticket_id = ' . $ticket_id;
 			break;
