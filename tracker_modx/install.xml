@@ -74,6 +74,12 @@
 		</copy>
 		<open src="includes/functions.php">
 			<edit>
+				<find>function page_header($page_title = '', $display_online_list = true)
+{
+	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;</find>
+				<action type="after-add">	global $tracker;</action>
+			</edit>
+			<edit>
 				<find>// The following assigns all _common_ variables that may be used at any point in a template.</find>
 				<action type="after-add"><![CDATA[	if (!isset($tracker))
 	{

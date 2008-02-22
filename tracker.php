@@ -74,6 +74,11 @@ if (!empty($project_id))
 	$tracker->set_type($project_id);
 }
 
+if ($mode == 'statistics')
+{
+	$tracker->display_statistics($project_id);
+}
+
 //Check if user can view tracker
 if (!$auth->acl_get('u_tracker_view'))
 {
@@ -257,7 +262,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	// Assign index specific vars
 	$template->assign_vars(array(
-		'L_TITLE'						=> $tracker->get_type_option('title', $project_id),
+		'L_TITLE'						=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
 
 		'S_CAN_MANAGE'					=> $can_manage,
 		'PROJECT_ID'					=> $project_id,
@@ -747,7 +752,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_CAN_EDIT'				=> $tracker->check_edit($row['edit_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit"),
 
-		'L_TITLE'					=> $tracker->get_type_option('title', $project_id),
+		'L_TITLE'					=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
 		'U_SEND_PM'					=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $row['ticket_user_id']),
@@ -995,7 +1000,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
 	$can_attach = (file_exists($phpbb_root_path . $tracker->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	$template->assign_vars(array(
-		'L_TITLE'					=> $tracker->get_type_option('title', $project_id),
+		'L_TITLE'					=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->projects[$project_id]['project_name'], $tracker->get_type_option('title', $project_id)) . (($tracker->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
 		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 

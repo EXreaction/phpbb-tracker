@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_TICKET'						=> 'Ticket',
 	'TRACKER_TICKETS'						=> 'Tickets',
 	'TRACKER'								=> 'Tracker',
+	'TRACKER_STATS'							=> 'Tracker Statistics',
 	'TRACKER_POST_TICKET'					=> 'Post a new ticket',
 	'TRACKER_FILTER_TICKET'					=> 'Filter tickets',
 	'TRACKER_MY_TICKETS'					=> 'My tickets',
@@ -177,6 +178,13 @@ $lang = array_merge($lang, array(
 	'TRACKER_POST_NO_EXIST'					=> 'The selected post does not exist.',
 	'TRACKER_NO_PROJECT_EXIST'				=> 'There are currently no projects in the tracker.',
 	'TRACKER_TICKET_LOCKED_MESSAGE'			=> 'This ticket is locked, you cannot edit posts or make further replies.',
+	
+	'TRACKER_TYPE'							=> 'Type',
+	'TRACKER_TOTAL_TICKETS'					=> 'Total Tickets',
+	'TRACKER_TOTAL_OPEN_TICKETS'			=> 'Total Open Tickets',
+	'TRACKER_TOTAL_CLOSED_TICKETS'			=> 'Total Closed Tickets',
+	'TRACKER_STATUS_NAME'					=> 'Status Name',
+	'TRACKER_IS_CLOSED_STATUS'				=> 'Is "Closed" Status',
 
 	'TRACKER_ATTACHMENTS'					=> 'Attachments',
 	'TRACKER_ATTACHMENTS_UPLOAD'			=> 'Upload attachment',

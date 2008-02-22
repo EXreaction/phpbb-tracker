@@ -52,6 +52,7 @@ class tracker
 		$template->assign_vars(array(
 			'S_IN_TRACKER'				=> true,
 			'U_TRACKER' 				=> append_sid("{$phpbb_root_path}tracker.$phpEx"),
+			'U_TRACKER_STATS'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics'),
 		));
 	}
 
@@ -1600,14 +1601,14 @@ class tracker
 	/*
 	* Generates the navigation links at the top of the page
 	*/
-	function generate_nav($data, $ticket_id = false)
+	function generate_nav($data, $ticket_id = false, $in_stats = false)
 	{
 		global $db, $user, $template, $auth;
 		global $phpEx, $phpbb_root_path;
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['project_name'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $data['project_id'])
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", (($in_stats) ? 'mode=statistics&amp;' : '' ) . 'p=' . $data['project_id'])
 			)
 		);
 
@@ -1901,6 +1902,110 @@ class tracker
 			'TOTAL_POSTS'	=> $l_total_posts,
 			'PAGINATION'	=> ($posts_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id"), $total_posts, $posts_per_page, $start) : false,
 		));
+	}
+	
+	function display_statistics($project_id)
+	{
+		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
+		
+		$template->assign_var('S_IN_STATS', true);	
+		if ($project_id)
+		{
+			$template->assign_vars(array(
+				'S_IN_PROJECT_STATS'	=> true,
+				'L_TITLE'				=> $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'],
+			));
+			
+			$sql = 'SELECT status_id, COUNT(*) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+				GROUP BY status_id
+					ORDER BY status_id';
+			$result = $db->sql_query($sql);
+			
+			$status_count = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$status_count[$row['status_id']] = $row['total'];
+			}
+			$db->sql_freeresult($result);
+			
+			foreach ($this->status as $item)
+			{		
+				if ($item['filter'])
+				{
+					continue;
+				}
+				
+				$template->assign_block_vars('status', array(
+					'STATUS_TOTAL'		=> (isset($status_count[$item['id']])) ? $status_count[$item['id']] : 0,
+					'STATUS_NAME'		=> $this->set_status($item['id']),
+					'STATUS_CLOSED'		=> ($item['open']) ? $user->lang['NO'] : $user->lang['YES'],
+				));
+			}
+			
+			$this->generate_nav($this->projects[$project_id], false, true);
+			// Output page
+			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);
+
+		}
+		else
+		{
+			$sql_array = array(
+				'SELECT'	=> 'p.*,
+								COUNT(t.ticket_id) as total_tickets',
+
+				'FROM'		=> array(
+					TRACKER_PROJECT_TABLE	=> 'p',
+				),
+
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(TRACKER_TICKETS_TABLE => 't'),
+						'ON'	=> 'p.project_id = t.project_id',
+					),
+				),
+				
+				'GROUP_BY'	=> 'p.project_id',
+
+				'ORDER_BY'	=>	'p.project_type ASC, lower(p.project_name) ASC',
+
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+
+			foreach ($row as $item)
+			{
+				if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
+				{
+					if (!group_memberships($item['project_group'], $user->data['user_id'], true))
+					{
+						continue;
+					}
+				}	
+				
+				$template->assign_block_vars('project', array(
+					'U_PROJECT'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=statistics&amp;p={$item['project_id']}"),
+					'PROJECT_NAME'		=> $item['project_name'],
+					'PROJECT_DESC'		=> $item['project_desc'],
+					'PROJECT_TYPE'		=> $this->set_lang_name($this->types[$item['project_type']]['title']),
+					'TOTAL_TICKETS'		=> (isset($item['total_tickets'])) ? $item['total_tickets'] : 0,
+				));
+			}
+
+			// Output page
+			page_header($user->lang['TRACKER_STATS'], false);
+
+		}
+
+		$template->set_filenames(array(
+			'body' => 'tracker/tracker_stats_body.html')
+		);
+
+		page_footer();
 	}
 
 	/*
