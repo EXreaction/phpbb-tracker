@@ -125,6 +125,8 @@ $lang = array_merge($lang, array(
 	'TRACKER_TICKETS_PER_PAGE_EXPLAIN'			=> 'Number of tickets per page displayed inside the project.',
 	'TRACKER_POSTS_PER_PAGE'					=> 'Posts per page',
 	'TRACKER_POSTS_PER_PAGE_EXPLAIN'			=> 'Number of comment posts per page inside the ticket.',
+	'TRACKER_STAT_ITEMS'						=> 'Number of top posters',
+	'TRACKER_STAT_ITEMS_EXPLAIN'				=> 'Sets the number of top posters displayed on the statistics page.',
 
 	'TRACKER_VERSION_EXPLAIN'					=> 'Current installed version of the tracker.',
 	'ACP_TRACKER_VERSION_INFO'					=> 'Version Information',

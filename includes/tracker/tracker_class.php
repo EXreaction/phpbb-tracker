@@ -1944,6 +1944,94 @@ class tracker
 				));
 			}
 			
+			$sql_array = array(
+				'SELECT'	=> 't.ticket_assigned_to as user_id,
+								u.user_colour,
+								u.username,
+								COUNT(t.ticket_id) as total_tickets',
+
+				'FROM'		=> array(
+					TRACKER_TICKETS_TABLE => 't',
+				),
+
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 't.ticket_assigned_to = u.user_id',
+					),
+				),
+				
+				'WHERE'		=> 't.project_id = ' . $project_id,
+				
+				'GROUP_BY'	=> 'u.user_id',
+
+				'ORDER_BY'	=>	'total_tickets, u.username ASC',
+
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+			
+			foreach ($row as $item)
+			{		
+				if ($item['user_id'] == 0)
+				{
+					continue;
+				}
+				
+				$template->assign_block_vars('assigne', array(
+					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
+					'TOTAL'			=> $item['total_tickets'],
+				));
+			}
+			
+			$sql_array = array(
+				'SELECT'	=> 't.ticket_user_id as user_id,
+								u.user_colour,
+								u.username,
+								COUNT(t.ticket_id) as total_tickets',
+
+				'FROM'		=> array(
+					TRACKER_TICKETS_TABLE => 't',
+				),
+
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 't.ticket_user_id = u.user_id',
+					),
+				),
+				
+				'WHERE'		=> 't.project_id = ' . $project_id,
+				
+				'GROUP_BY'	=> 'u.user_id',
+
+				'ORDER_BY'	=>	'total_tickets, u.username ASC',
+
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query_limit($sql, $this->config['stat_items']);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+			
+			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS'], $this->config['stat_items']));	
+			
+			foreach ($row as $item)
+			{		
+				if ($item['user_id'] == 0)
+				{
+					continue;
+				}
+				
+				$template->assign_block_vars('top', array(
+					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
+					'TOTAL'			=> $item['total_tickets'],
+				));
+			}
+			
 			$this->generate_nav($this->projects[$project_id], false, true);
 			// Output page
 			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);
