@@ -250,4 +250,14 @@ $lang = array_merge($lang, array(
 	'TRACKER_UNREPRODUCABLE'			=> 'Unreproducable',
 ));
 
+$lang = array_merge($lang, array(
+	'VIEWING_TRACKER'					=> 'Viewing tracker',
+	'VIEWING_TRACKER_TICKET'			=> 'Viewing ticket for %s - %s',
+	'VIEWING_TRACKER_PROJECT'			=> 'Viewing %s - %s',
+	'VIEWING_TRACKER_STATISTICS_ALL'	=> 'Viewing tracker statistics',
+	'VIEWING_TRACKER_STATISTICS'		=> 'Viewing tracker statistics for %s - %s',
+	'ADDING_TRACKER_TICKET'				=> 'Adding ticket to  %s - %s',
+	'REPLYING_TRACKER_TICKET'			=> 'Replying to ticket in %s - %s',
+));
+
 ?>
