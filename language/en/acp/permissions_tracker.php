@@ -83,12 +83,12 @@ $lang['permission_cat']['tracker'] = 'phpBB Tracker';
 
 // Admin Permissions
 $lang = array_merge($lang, array(
-	'acl_a_tracker'				=> array('lang' => 'Can manage bugtracker', 								'cat' => 'tracker'),
-	'acl_u_tracker_attach'		=> array('lang' => 'Can attach files to bug tracker tickets/posts', 		'cat' => 'tracker'),
-	'acl_u_tracker_download'	=> array('lang' => 'Can download files from bug tracker tickets/posts', 	'cat' => 'tracker'),
-	'acl_u_tracker_view'		=> array('lang' => 'Can view bug tracker tickets', 							'cat' => 'tracker'),
-	'acl_u_tracker_post'		=> array('lang' => 'Can post bug tracker tickets', 							'cat' => 'tracker'),
-	'acl_u_tracker_edit'		=> array('lang' => 'Can edit own bug tracker tickets/posts', 				'cat' => 'tracker'),
+	'acl_a_tracker'				=> array('lang' => 'Can manage tracker', 								'cat' => 'tracker'),
+	'acl_u_tracker_attach'		=> array('lang' => 'Can attach files to tracker tickets/posts', 		'cat' => 'tracker'),
+	'acl_u_tracker_download'	=> array('lang' => 'Can download files from tracker tickets/posts', 	'cat' => 'tracker'),
+	'acl_u_tracker_view'		=> array('lang' => 'Can view tracker tickets', 							'cat' => 'tracker'),
+	'acl_u_tracker_post'		=> array('lang' => 'Can post tracker tickets', 							'cat' => 'tracker'),
+	'acl_u_tracker_edit'		=> array('lang' => 'Can edit own tracker tickets/posts', 				'cat' => 'tracker'),
 ));
 
 ?>
