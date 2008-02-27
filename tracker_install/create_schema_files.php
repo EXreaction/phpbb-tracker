@@ -923,6 +923,10 @@ function get_schema_struct()
 			'history_assigned_to'	=> array('INT:8', 0),
 			'history_old_status'	=> array('UINT', 0),
 			'history_new_status'	=> array('UINT', 0),
+			'history_old_priority'	=> array('UINT', 0),
+			'history_new_priority'	=> array('UINT', 0),
+			'history_old_severity'	=> array('UINT', 0),
+			'history_new_severity'	=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'	=> 'history_id',
 	);

@@ -15,17 +15,17 @@
 
 /*
 CREATE TABLESPACE "PHPBB"
-	LOGGING 
-	DATAFILE 'E:\ORACLE\ORADATA\LOCAL\PHPBB.ora' 
+	LOGGING
+	DATAFILE 'E:\ORACLE\ORADATA\LOCAL\PHPBB.ora'
 	SIZE 10M
 	AUTOEXTEND ON NEXT 10M
 	MAXSIZE 100M;
 
-CREATE USER "PHPBB" 
-	PROFILE "DEFAULT" 
-	IDENTIFIED BY "phpbb_password" 
-	DEFAULT TABLESPACE "PHPBB" 
-	QUOTA UNLIMITED ON "PHPBB" 
+CREATE USER "PHPBB"
+	PROFILE "DEFAULT"
+	IDENTIFIED BY "phpbb_password"
+	DEFAULT TABLESPACE "PHPBB"
+	QUOTA UNLIMITED ON "PHPBB"
 	ACCOUNT UNLOCK;
 
 GRANT ANALYZE ANY TO "PHPBB";
@@ -261,6 +261,10 @@ CREATE TABLE phpbb_tracker_history (
 	history_assigned_to number(8) DEFAULT '0' NOT NULL,
 	history_old_status number(8) DEFAULT '0' NOT NULL,
 	history_new_status number(8) DEFAULT '0' NOT NULL,
+	history_old_priority number(8) DEFAULT '0' NOT NULL,
+	history_new_priority number(8) DEFAULT '0' NOT NULL,
+	history_old_severity number(8) DEFAULT '0' NOT NULL,
+	history_new_severity number(8) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_tracker_history PRIMARY KEY (history_id)
 )
 /

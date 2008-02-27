@@ -614,6 +614,36 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			);
 
 			$tracker->update_ticket($data, $ticket_id);
+			
+			if ($data['priority_id'] != $row['priority_id'])
+			{
+				$history = array(
+					'history_time'			=> time(),
+					'history_status'		=> TRACKER_HISTORY_PRIORITY_CHANGED,
+					'history_user_id'		=> $user->data['user_id'],
+					'ticket_id'				=> $ticket_id,
+					'history_old_priority'	=> $row['priority_id'],
+					'history_new_priority'	=> $data['priority_id'],
+				);
+
+				$tracker->add_history($history);
+				unset($history);
+			}
+			
+			if ($data['severity_id'] != $row['severity_id'])
+			{
+				$history = array(
+					'history_time'			=> time(),
+					'history_status'		=> TRACKER_HISTORY_SEVERITY_CHANGED,
+					'history_user_id'		=> $user->data['user_id'],
+					'ticket_id'				=> $ticket_id,
+					'history_old_severity'	=> $row['severity_id'],
+					'history_new_severity'	=> $data['severity_id'],
+				);
+
+				$tracker->add_history($history);
+				unset($history);
+			}
 
 			$history_ts = false;
 			if ($data['status_id'] != $row['status_id'])

@@ -222,6 +222,10 @@ CREATE TABLE phpbb_tracker_history (
 	history_assigned_to INT4 DEFAULT '0' NOT NULL,
 	history_old_status INT4 DEFAULT '0' NOT NULL CHECK (history_old_status >= 0),
 	history_new_status INT4 DEFAULT '0' NOT NULL CHECK (history_new_status >= 0),
+	history_old_priority INT4 DEFAULT '0' NOT NULL CHECK (history_old_priority >= 0),
+	history_new_priority INT4 DEFAULT '0' NOT NULL CHECK (history_new_priority >= 0),
+	history_old_severity INT4 DEFAULT '0' NOT NULL CHECK (history_old_severity >= 0),
+	history_new_severity INT4 DEFAULT '0' NOT NULL CHECK (history_new_severity >= 0),
 	PRIMARY KEY (history_id)
 );
 

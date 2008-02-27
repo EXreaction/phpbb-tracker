@@ -187,7 +187,11 @@ CREATE TABLE [phpbb_tracker_history] (
 	[history_user_id] [int] DEFAULT (0) NOT NULL ,
 	[history_assigned_to] [int] DEFAULT (0) NOT NULL ,
 	[history_old_status] [int] DEFAULT (0) NOT NULL ,
-	[history_new_status] [int] DEFAULT (0) NOT NULL 
+	[history_new_status] [int] DEFAULT (0) NOT NULL ,
+	[history_old_priority] [int] DEFAULT (0) NOT NULL ,
+	[history_new_priority] [int] DEFAULT (0) NOT NULL ,
+	[history_old_severity] [int] DEFAULT (0) NOT NULL ,
+	[history_new_severity] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 

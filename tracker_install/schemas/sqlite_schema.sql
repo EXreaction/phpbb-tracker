@@ -113,7 +113,11 @@ CREATE TABLE phpbb_tracker_history (
 	history_user_id int(8) NOT NULL DEFAULT '0',
 	history_assigned_to int(8) NOT NULL DEFAULT '0',
 	history_old_status INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	history_new_status INTEGER UNSIGNED NOT NULL DEFAULT '0'
+	history_new_status INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	history_old_priority INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	history_new_priority INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	history_old_severity INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	history_new_severity INTEGER UNSIGNED NOT NULL DEFAULT '0'
 );
 
 

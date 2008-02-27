@@ -178,7 +178,11 @@ CREATE TABLE phpbb_tracker_history (
 	history_user_id INTEGER DEFAULT 0 NOT NULL,
 	history_assigned_to INTEGER DEFAULT 0 NOT NULL,
 	history_old_status INTEGER DEFAULT 0 NOT NULL,
-	history_new_status INTEGER DEFAULT 0 NOT NULL
+	history_new_status INTEGER DEFAULT 0 NOT NULL,
+	history_old_priority INTEGER DEFAULT 0 NOT NULL,
+	history_new_priority INTEGER DEFAULT 0 NOT NULL,
+	history_old_severity INTEGER DEFAULT 0 NOT NULL,
+	history_new_severity INTEGER DEFAULT 0 NOT NULL
 );;
 
 ALTER TABLE phpbb_tracker_history ADD PRIMARY KEY (history_id);;

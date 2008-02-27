@@ -117,6 +117,10 @@ CREATE TABLE phpbb_tracker_history (
 	history_assigned_to int(8) DEFAULT '0' NOT NULL,
 	history_old_status mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	history_new_status mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	history_old_priority mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	history_new_priority mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	history_old_severity mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	history_new_severity mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	PRIMARY KEY (history_id)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 

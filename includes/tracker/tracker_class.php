@@ -1772,6 +1772,14 @@ class tracker
 				case TRACKER_HISTORY_STATUS_CHANGED:
 					$history_action = sprintf($user->lang['TRACKER_HISTORY_STATUS_CHANGED'], $this->set_status($row['history_old_status']), $this->set_status($row['history_new_status']));
 				break;
+				
+				case TRACKER_HISTORY_SEVERITY_CHANGED:
+					$history_action = sprintf($user->lang['TRACKER_HISTORY_SEVERITY_CHANGED'], (!isset($this->severity[$row['history_old_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_old_severity']]), (!isset($this->severity[$row['history_new_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_new_severity']]));
+				break;
+				
+				case TRACKER_HISTORY_PRIORITY_CHANGED:
+					$history_action = sprintf($user->lang['TRACKER_HISTORY_PRIORITY_CHANGED'], (!isset($this->priority[$row['history_old_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_old_priority']]), (!isset($this->priority[$row['history_new_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_new_priority']]));
+				break;
 
 				default:
 					trigger_error('NO_MODE');
