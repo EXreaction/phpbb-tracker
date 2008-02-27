@@ -100,6 +100,55 @@
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 <!-- ENDIF -->
+
+<!-- IF .component -->
+<h3>{L_TRACKER_COMPONENT_STATS}</h3>
+<div class="forabg">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<table class="table1" cellspacing="0">
+		<thead>
+			<tr>
+				<th style="text-align: left; width: 50%;">{L_TRACKER_COMPONENT_NAME}</th>
+				<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN component -->
+			<!-- IF component.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+					<td>{component.COMPONENT_NAME}</td>
+					<td>{component.TOTAL}</td>
+				</tr>
+			<!-- END component -->
+		</tbody>
+	</table>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF .version -->
+<h3>{L_TRACKER_VERSION_STATS}</h3>
+<div class="forabg">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<table class="table1" cellspacing="0">
+		<thead>
+			<tr>
+				<th style="text-align: left; width: 50%;">{L_TRACKER_VERSION_NAME}</th>
+				<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN version -->
+			<!-- IF version.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+					<td>{version.VERSION_NAME}</td>
+					<td>{version.TOTAL}</td>
+				</tr>
+			<!-- END version -->
+		</tbody>
+	</table>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+
 <!-- ELSE -->
 <h2>{L_TRACKER}</h2>
 <p>{L_TRACKER_PROJECTS}</p>		

@@ -2057,7 +2057,69 @@ class tracker
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
+			
+			//Get component stats
+			$sql = 'SELECT component_id, COUNT(ticket_id) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+				GROUP BY component_id
+					ORDER BY component_id';
+			$result = $db->sql_query($sql);
 
+			$component_count = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$component_count[$row['component_id']] = $row['total'];
+			}
+			$db->sql_freeresult($result);
+			
+			$sql = 'SELECT component_id, component_name
+				FROM ' . TRACKER_COMPONENTS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					ORDER BY component_name';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+
+			foreach ($row as $item)
+			{
+				$template->assign_block_vars('component', array(
+					'COMPONENT_NAME'		=> $this->set_lang_name($item['component_name']),
+					'TOTAL'					=> (isset($component_count[$item['component_id']])) ? $component_count[$item['component_id']] : 0,
+				));
+			}
+			
+			//Get version stats
+			$sql = 'SELECT version_id, COUNT(ticket_id) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+				GROUP BY version_id
+					ORDER BY version_id';
+			$result = $db->sql_query($sql);
+
+			$version_count = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$version_count[$row['version_id']] = $row['total'];
+			}
+			$db->sql_freeresult($result);
+			
+			$sql = 'SELECT version_id, version_name
+				FROM ' . TRACKER_VERSION_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					ORDER BY version_name';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+
+			foreach ($row as $item)
+			{
+				$template->assign_block_vars('version', array(
+					'VERSION_NAME'			=> $this->set_lang_name($item['version_name']),
+					'TOTAL'					=> (isset($version_count[$item['version_id']])) ? $version_count[$item['version_id']] : 0,
+				));
+			}
+			
 			$this->generate_nav($this->projects[$project_id], false, true);
 			// Output page
 			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);

@@ -97,11 +97,9 @@ $lang = array_merge($lang, array(
 
 	'TRACKER_PROJECT_ID'					=> 'Select a project',
 
-	'TRACKER_COMPONENT_NAME' 				=> 'Component Name',
 	'TRACKER_COMPONENT_NAME_EXPLAIN'		=> 'Name of the component to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_COMPONENT_DELETE_ERROR'		=> 'The selected component cannot be deleted because tickets exist that refer to this component.  Delete all tickets refering to this component first.',
 
-	'TRACKER_VERSION_NAME' 					=> 'Version Name',
 	'TRACKER_VERSION_NAME_EXPLAIN'			=> 'Name of the version to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_VERSION_DELETE_ERROR'			=> 'The selected version cannot be deleted because tickets exist that refer to this version.  Delete all tickets refering to this version first.',
 

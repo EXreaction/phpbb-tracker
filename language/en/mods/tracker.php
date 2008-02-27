@@ -194,6 +194,11 @@ $lang = array_merge($lang, array(
 	'TRACKER_ATTACHMENTS'					=> 'Attachments',
 	'TRACKER_ATTACHMENTS_UPLOAD'			=> 'Upload attachment',
 	'TRACKER_ATTACHMENTS_ADD'				=> 'Add attachment',
+	
+	'TRACKER_COMPONENT_NAME' 				=> 'Component Name',
+	'TRACKER_VERSION_NAME' 					=> 'Version Name',
+	'TRACKER_COMPONENT_STATS' 				=> 'Tickets by component',
+	'TRACKER_VERSION_STATS' 				=> 'Tickets by version',
 ));
 
 

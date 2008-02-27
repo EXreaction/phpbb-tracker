@@ -45,7 +45,7 @@
 <br />
 <table class="tablebg" cellspacing="1" width="100%">
 <tr>
-	<td colspan="3" class="cat"><b class="genmed">{L_TRACKER_ASSIGNEES}</b></td>
+	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_ASSIGNEES}</b></td>
 </tr>
 <tr>
 	<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
@@ -64,7 +64,7 @@
 <br />
 <table class="tablebg" cellspacing="1" width="100%">
 <tr>
-	<td colspan="3" class="cat"><b class="genmed">{TRACKER_TOP_REPORTERS}</b></td>
+	<td colspan="2" class="cat"><b class="genmed">{TRACKER_TOP_REPORTERS}</b></td>
 </tr>
 <tr>
 	<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
@@ -77,7 +77,44 @@
 	</tr>
 <!-- END top -->
 </table>
+<!-- ENDIF -->
 
+<!-- IF .component -->
+<br />
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_COMPONENT_STATS}</b></td>
+</tr>
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_COMPONENT_NAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN component -->
+<!-- IF component.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{component.COMPONENT_NAME}</td>
+		<td>{component.TOTAL}</td>
+	</tr>
+<!-- END component -->
+</table>
+<!-- ENDIF -->
+
+<!-- IF .version -->
+<br />
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_VERSION_STATS}</b></td>
+</tr>
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_VERSION_NAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN version -->
+<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{version.VERSION_NAME}</td>
+		<td>{version.TOTAL}</td>
+	</tr>
+<!-- END version -->
+</table>
 <!-- ENDIF -->
 <!-- ELSE -->
 <h2>{L_TRACKER}</h2>
