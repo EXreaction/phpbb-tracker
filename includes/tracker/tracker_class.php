@@ -527,7 +527,7 @@ class tracker
 					}
 				}
 			}
-			closedir($dir);
+			closedir($dh);
 		}
 
 		return $extra_files;
