@@ -192,6 +192,7 @@ class install_check
 
 				if ($db->sql_error_triggered)
 				{
+					$db->sql_error_triggered = false;
 					$error[] = $column;
 				}
 				unset($row);

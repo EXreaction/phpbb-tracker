@@ -14,121 +14,12 @@
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
+require($phpbb_root_path . 'common.' . $phpEx);
+require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
 
 // Report all errors, except notices
 error_reporting(E_ALL);
 @set_time_limit(0);
-
-// If we are on PHP >= 6.0.0 we do not need some code
-if (version_compare(PHP_VERSION, '6.0.0-dev', '>='))
-{
-	/**
-	* @ignore
-	*/
-	define('STRIP', false);
-}
-else
-{
-	set_magic_quotes_runtime(0);
-
-	// Be paranoid with passed vars
-	if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on' || !function_exists('ini_get'))
-	{
-		deregister_globals();
-	}
-
-	define('STRIP', (get_magic_quotes_gpc()) ? true : false);
-}
-
-if (!file_exists($phpbb_root_path . 'config.' . $phpEx))
-{
-	die("<p>The config.$phpEx file could not be found.</p><p><a href=\"{$phpbb_root_path}install/index.$phpEx\">Click here to install phpBB</a></p>");
-}
-
-require($phpbb_root_path . 'config.' . $phpEx);
-
-if (!defined('PHPBB_INSTALLED'))
-{
-	// Redirect the user to the installer
-	// We have to generate a full HTTP/1.1 header here since we can't guarantee to have any of the information
-	// available as used by the redirect function
-	$server_name = (!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME');
-	$server_port = (!empty($_SERVER['SERVER_PORT'])) ? (int) $_SERVER['SERVER_PORT'] : (int) getenv('SERVER_PORT');
-	$secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 1 : 0;
-
-	$script_name = (!empty($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
-	if (!$script_name)
-	{
-		$script_name = (!empty($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : getenv('REQUEST_URI');
-	}
-
-	// Replace any number of consecutive backslashes and/or slashes with a single slash
-	// (could happen on some proxy setups and/or Windows servers)
-	$script_path = trim(dirname($script_name)) . '/install/index.' . $phpEx;
-	$script_path = preg_replace('#[\\\\/]{2,}#', '/', $script_path);
-
-	$url = (($secure) ? 'https://' : 'http://') . $server_name;
-
-	if ($server_port && (($secure && $server_port <> 443) || (!$secure && $server_port <> 80)))
-	{
-		$url .= ':' . $server_port;
-	}
-
-	$url .= $script_path;
-	header('Location: ' . $url);
-	exit;
-}
-
-// Load Extensions
-if (!empty($load_extensions))
-{
-	$load_extensions = explode(',', $load_extensions);
-
-	foreach ($load_extensions as $extension)
-	{
-		@dl(trim($extension));
-	}
-}
-
-// Include files
-require($phpbb_root_path . 'includes/acm/acm_' . $acm_type . '.' . $phpEx);
-require($phpbb_root_path . 'includes/cache.' . $phpEx);
-require($phpbb_root_path . 'includes/template.' . $phpEx);
-require($phpbb_root_path . 'includes/session.' . $phpEx);
-require($phpbb_root_path . 'includes/auth.' . $phpEx);
-
-require($phpbb_root_path . 'includes/functions.' . $phpEx);
-require($phpbb_root_path . 'includes/functions_content.' . $phpEx);
-
-require($phpbb_root_path . 'includes/constants.' . $phpEx);
-require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
-require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
-require($phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx);
-
-// Instantiate some basic classes
-$user		= new user();
-$auth		= new auth();
-$template		= new template();
-$cache		= new cache();
-$db			= new $sql_db();
-
-// Connect to DB
-$db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, defined('PHPBB_DB_NEW_LINK') ? PHPBB_DB_NEW_LINK : false);
-
-// We do not need this any longer, unset for safety purposes
-unset($dbpasswd);
-
-// Grab global variables, re-cache if necessary
-$config = $cache->obtain_config();
-
-// Add own hook handler
-require($phpbb_root_path . 'includes/hooks/index.' . $phpEx);
-$phpbb_hook = new phpbb_hook(array('exit_handler', 'phpbb_user_session_handler', 'append_sid', array('template', 'display')));
-
-foreach ($cache->obtain_hooks() as $hook)
-{
-	@include($phpbb_root_path . 'includes/hooks/' . $hook . '.' . $phpEx);
-}
 
 // Start session management
 $user->session_begin();
@@ -371,21 +262,52 @@ class install_mod
 
 	function install_form()
 	{
-		global $CFG;
-
+		global $CFG, $db, $table_prefix;
+		
+		$tables = get_tables($db);
+		$installed_version = $install_option = $update_option = $uninstall_option = '';
+		if (in_array($table_prefix . 'tracker_config', $tables))
+		{
+			$sql = 'SELECT config_value
+				FROM ' . $table_prefix . 'tracker_config
+				WHERE config_name = "version"';
+			$result = $db->sql_query($sql);
+			$installed_version = (string) $db->sql_fetchfield('config_value');
+			$db->sql_freeresult($result);
+		}
+		unset($tables);
+		
+		if ($installed_version != '')
+		{
+			if (version_compare($this->format_version($installed_version), $this->format_version($CFG['mod_version']), '<'))
+			{
+				$update_option = '<option value="">---- Update Options ----</option>
+					<option value="update">Update to latest version of ' . $CFG['mod_title'] . '</option>';
+				$uninstall_option = '<option value="">---- Uninstall Options ----</option>
+					<option value="uninstall">Uninstall ' . $CFG['mod_title'] . '</option>';
+			}
+			else
+			{
+				$uninstall_option = '<option value="">---- Uninstall Options ----</option>
+					<option value="uninstall">Uninstall ' . $CFG['mod_title'] . '</option>';
+			}
+		}
+		else
+		{
+			$install_option = '<option value="">---- Install Options ----</option>
+				<option value="install">First Time Install of ' . $CFG['mod_title'] . ' ' . $CFG['mod_version'] . '</option>';
+		}
+		
 		echo '<h1>' . $CFG['mod_title'] . ' Installation Options</h1>';
-
-		//<option value="update">Update to latest version of ' . $CFG['mod_title'] . '</option>
 
 		echo '	<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
 				<p>This script will install, uninstall or upgrade the tables for the ' . $CFG['mod_title'] . '.<br /><a href="install_check.php">Check Installation</a></p>
 				<p><b>Backup data tables before going on!</b></p>
-				<p><select name="mode">
-					<option value="">---- Install Options ----</option>
-					<option value="install">First Time Install of ' . $CFG['mod_title'] . ' ' . $CFG['mod_version'] . '</option>
-					<option value="">---- Uninstall Options ----</option>
-					<option value="uninstall">Uninstall ' . $CFG['mod_title'] . '</option>
-					</select></p>
+				<p><select name="mode">					
+					' . $install_option . '
+					' . $update_option . '
+					' . $uninstall_option . '
+					</select></p> 
 				<p><input type="submit" value="Submit" class="button2"></p>
 				<p><b>Once you have finished with this script, delete it from your server!</b></p>
 			</form>';
@@ -457,6 +379,8 @@ class install_mod
 		$_module = &new acp_modules();
 		$_module->module_class = $parent_module_data['module_class'];
 
+		$db->sql_error_triggered = false;
+					
 		//If the module class is acp we add it to the MODS tab in the ACP
 		if ($parent_module_data['module_class'] == 'acp')
 		{
@@ -477,6 +401,7 @@ class install_mod
 		// Check for last sql error happened
 		if ($db->sql_error_triggered)
 		{
+			$db->sql_error_triggered = false;
 			$error = $db->sql_error($db->sql_error_sql);
 			$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
 		}
@@ -494,7 +419,7 @@ class install_mod
 		$db->sql_freeresult($result);
 
 		for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
-		{
+		{			
 			$module_data[$i]['parent_id'] = $row['module_id'];
 			$_module->update_module_data($module_data[$i], true);
 			$_module->remove_cache_file();
@@ -502,6 +427,7 @@ class install_mod
 			// Check for last sql error happened
 			if ($db->sql_error_triggered)
 			{
+				$db->sql_error_triggered = false;
 				$error = $db->sql_error($db->sql_error_sql);
 				$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
 			}
@@ -520,6 +446,8 @@ class install_mod
 		$_module = &new acp_modules();
 		$_module->module_class = $parent_module_class;
 
+		$db->sql_error_triggered = false;
+		
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . '
 			WHERE module_langname = "' . $parent_module_langname . '"
@@ -529,7 +457,7 @@ class install_mod
 		$db->sql_freeresult($result);
 
 		for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
-		{
+		{			
 			$module_data[$i]['parent_id'] = $row['module_id'];
 			$_module->update_module_data($module_data[$i], true);
 			$_module->remove_cache_file();
@@ -537,6 +465,7 @@ class install_mod
 			// Check for last sql error happened
 			if ($db->sql_error_triggered)
 			{
+				$db->sql_error_triggered = false;
 				$error = $db->sql_error($db->sql_error_sql);
 				$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
 			}
@@ -554,8 +483,10 @@ class install_mod
 		global $db;
 		$_module = &new acp_modules();
 
+		$db->sql_error_triggered = false;
+		
 		if (!empty($module_data))
-		{
+		{			
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
 				WHERE ' . $db->sql_in_set('module_basename', $module_data);
@@ -567,6 +498,7 @@ class install_mod
 				// Check for last sql error happened
 				if ($db->sql_error_triggered)
 				{
+					$db->sql_error_triggered = false;
 					$error = $db->sql_error($db->sql_error_sql);
 					$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
 				}
@@ -575,7 +507,7 @@ class install_mod
 		}
 
 		if (!empty($parent_module_data))
-		{
+		{			
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
 				WHERE ' . $db->sql_in_set('module_langname', $parent_module_data);
@@ -587,6 +519,7 @@ class install_mod
 				// Check for last sql error happened
 				if ($db->sql_error_triggered)
 				{
+					$db->sql_error_triggered = false;
 					$error = $db->sql_error($db->sql_error_sql);
 					$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
 				}
