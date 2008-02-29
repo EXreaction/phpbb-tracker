@@ -171,7 +171,12 @@ switch ($mode)
 
 $install_mod->install_form();
 $install_mod->install_footer();
-exit;
+$db->sql_return_on_error(false);
+
+if (function_exists('exit_handler'))
+{
+	exit_handler();
+}
 
 /*
 * Mod install class
