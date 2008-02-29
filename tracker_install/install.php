@@ -78,7 +78,6 @@ switch ($mode)
 		echo '<h1>Remove ' . $CFG['mod_dir'] . ' directory from your server</h1>';
 
 		$install_mod->install_footer();
-		exit;
 	break;
 
 	case 'install':
@@ -118,7 +117,6 @@ switch ($mode)
 		echo '<h1>Remove ' . $CFG['mod_dir'] . ' directory from your server</h1><br />';
 
 		$install_mod->install_footer();
-		exit;
 	break;
 
 	/*case 'update':
@@ -162,15 +160,14 @@ switch ($mode)
 		}
 
 		$install_mod->install_footer();
-		exit;
 	break;*/
 
 	default:
+		$install_mod->install_form();
+		$install_mod->install_footer();
 	break;
 }
 
-$install_mod->install_form();
-$install_mod->install_footer();
 $db->sql_return_on_error(false);
 
 if (function_exists('exit_handler'))
