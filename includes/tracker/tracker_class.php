@@ -1946,8 +1946,8 @@ class tracker
 				'L_TITLE'				=> $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'],
 
 				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
-				'TOTAL_OPENED'			=> $total_closed,
-				'TOTAL_CLOSED'			=> $total_opened,
+				'TOTAL_OPENED'			=> $total_opened,
+				'TOTAL_CLOSED'			=> $total_closed,
 			));
 
 			$sql = 'SELECT status_id, COUNT(ticket_id) as total
