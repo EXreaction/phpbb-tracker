@@ -138,7 +138,7 @@ class acp_tracker
 				'send_email'			=> array('lang' => 'TRACKER_SEND_EMAIL',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 				'tickets_per_page'		=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'posts_per_page'		=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-				'stat_items'			=> array('lang' => 'TRACKER_STAT_ITEMS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
+				'top_reporters'			=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 			)
 		);
 

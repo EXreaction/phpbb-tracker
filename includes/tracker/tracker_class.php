@@ -2047,11 +2047,11 @@ class tracker
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);
-			$result = $db->sql_query_limit($sql, $this->config['stat_items']);
+			$result = $db->sql_query_limit($sql, $this->config['top_reporters']);
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 
-			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS'], $this->config['stat_items']));
+			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS_TITLE'], $this->config['top_reporters']));
 
 			foreach ($row as $item)
 			{

@@ -192,7 +192,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_IS_CLOSED_STATUS'				=> 'Is "Closed" Status',
 	'TRACKER_TICKET_STATUS_OVERVIEW'		=> 'Ticket status overview',
 	'TRACKER_ASSIGNEES'						=> 'Assignees',
-	'TRACKER_TOP_REPORTERS'					=> 'Top %s reporters',
+	'TRACKER_TOP_REPORTERS_TITLE'			=> 'Top %s reporters',
 	'TRACKER_USERNAME'						=> 'Name',
 
 	'TRACKER_ATTACHMENTS'					=> 'Attachments',
