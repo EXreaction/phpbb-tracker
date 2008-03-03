@@ -1,12 +1,12 @@
 <!-- INCLUDE overall_header.html -->
 <h2>{L_TRACKER}</h2>
-<p>{L_TRACKER_PROJECTS}</p>
+<p>{TRACKER_PROJECTS}</p>
 
 <!-- IF not S_DISPLAY_PROJECT -->
 <table class="tablebg" cellspacing="1" width="100%">
 <tr>
-	<th width="35%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-	<th width="65%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+	<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
+	<th width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
 </tr>
 <tr style="height: 50px">
 	<td class="row1" colspan="2" align="center">
@@ -22,13 +22,14 @@
 			<h3>{L_BUG_TRACKER}</h3>
 				<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
-					<th width="35%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-					<th width="65%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+					<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
+					<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
 				</tr>
 				<!-- BEGIN project -->
 				<!-- IF bug.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-						<td style="width: 35%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_NAME}</a></td>
-						<td style="width: 65%;">{bug.project.PROJECT_DESC}</td>
+						<td style="width: 30%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_NAME}</a></td>
+						<td style="width: 60%;">{bug.project.PROJECT_DESC}</td>
+						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
 				</table>
@@ -43,13 +44,14 @@
 			<h3>{L_FEATURE_TRACKER}</h3>
 				<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
-					<th width="35%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-					<th width="65%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+					<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
+					<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
 				</tr>
 				<!-- BEGIN project -->
 				<!-- IF feature.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-						<td style="width: 35%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_NAME}</a></td>
-						<td style="width: 65%;">{feature.project.PROJECT_DESC}</td>
+						<td style="width: 30%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_NAME}</a></td>
+						<td style="width: 60%;">{feature.project.PROJECT_DESC}</td>
+						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
 				</table>
@@ -64,13 +66,14 @@
 			<h3>{L_ISSUE_TRACKER}</h3>
 				<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
-					<th width="35%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-					<th width="65%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+					<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
+					<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
 				</tr>
 				<!-- BEGIN project -->
 				<!-- IF issue.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-						<td style="width: 35%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_NAME}</a></td>
-						<td style="width: 65%;">{issue.project.PROJECT_DESC}</td>
+						<td style="width: 30%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_NAME}</a></td>
+						<td style="width: 60%;">{issue.project.PROJECT_DESC}</td>
+						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
 			</table>

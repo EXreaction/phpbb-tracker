@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 <h2>{L_TRACKER}</h2>
-<p>{L_TRACKER_PROJECTS}</p>	
+<p>{TRACKER_PROJECTS}</p>	
 		
 <!-- IF not S_DISPLAY_PROJECT -->
 <div class="forabg">
@@ -8,8 +8,8 @@
 		<table class="table1" cellspacing="0">
 		<thead>
 			<tr>
-				<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-				<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+				<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+				<th style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -32,15 +32,16 @@
 					<table class="table1" cellspacing="0">
 					<thead>
 						<tr>
-							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+							<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!-- BEGIN project -->
 						<!-- IF bug.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 35%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_NAME}</a></td>
-								<td style="width: 65%;">{bug.project.PROJECT_DESC}</td>
+								<td style="width: 30%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_NAME}</a></td>
+								<td style="width: 60%;">{bug.project.PROJECT_DESC}</td>
+								<td style="width: 10%; text-align: right;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
 					</tbody>
@@ -60,15 +61,16 @@
 					<table class="table1" cellspacing="0">
 					<thead>
 						<tr>
-							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+							<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!-- BEGIN project -->
 						<!-- IF feature.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 35%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_NAME}</a></td>
-								<td style="width: 65%;">{feature.project.PROJECT_DESC}</td>
+								<td style="width: 30%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_NAME}</a></td>
+								<td style="width: 60%;">{feature.project.PROJECT_DESC}</td>
+								<td style="width: 10%; text-align: right;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
 					</tbody>
@@ -88,15 +90,16 @@
 					<table class="table1" cellspacing="0">
 					<thead>
 						<tr>
-							<th style="text-align: left; width: 35%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-							<th style="text-align: left; width: 65%;">{L_TRACKER_DESCRIPTION}</th>
+							<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
+							<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!-- BEGIN project -->
 						<!-- IF issue.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 35%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_NAME}</a></td>
-								<td style="width: 65%;">{issue.project.PROJECT_DESC}</td>
+								<td style="width: 30%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_NAME}</a></td>
+								<td style="width: 60%;">{issue.project.PROJECT_DESC}</td>
+								<td style="width: 10%; text-align: right;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
 					</tbody>

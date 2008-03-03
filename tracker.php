@@ -1095,15 +1095,17 @@ else
 
 			$display_project = true;
 			$template->assign_block_vars($type['id'] . '.project', array(
-				'PROJECT_NAME'		=> $item['project_name'],
-				'PROJECT_DESC'		=> $item['project_desc'],
-				'U_PROJECT' 		=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $item['project_id']),
+				'PROJECT_NAME'				=> $item['project_name'],
+				'PROJECT_DESC'				=> $item['project_desc'],
+				'U_PROJECT_STATISTICS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics&amp;p=' . $item['project_id']),
+				'U_PROJECT' 				=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $item['project_id']),
 			));
 		}
 	}
 
 	// Assign index specific vars
 	$template->assign_vars(array(
+		'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=statistics") . '">','</a>' ),
 		'S_DISPLAY_PROJECT'			=> $display_project,
 		'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=tracker.$phpEx"),
 	));
