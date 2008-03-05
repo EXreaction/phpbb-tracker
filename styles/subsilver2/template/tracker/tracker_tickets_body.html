@@ -43,7 +43,7 @@
 		<td>
 			<form action="{S_ACTION_SEARCH}" method="post" id="search_tracker">
 				{S_HIDDEN_FIELDS_SEARCH}
-				<input type="text" name="term" maxlength="128" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="<!-- IF SEARCH_TERM-->{SEARCH_TERM}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" class="inputbox autowidth search" />
+				<input type="text" name="term" maxlength="128" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="<!-- IF SEARCH_TERM-->{SEARCH_TERM}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" />
 				<input type="submit" value="{L_SEARCH}" />
 				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
 			</form>
