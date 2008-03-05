@@ -119,7 +119,7 @@ switch ($mode)
 		$install_mod->install_footer();
 	break;
 
-	/*case 'update':
+	case 'update':
 		require($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
 
 		if ($CFG['clear_cache_update'])
@@ -135,6 +135,7 @@ switch ($mode)
 			{
 				case '0.1.0':
 					echo '<br /><h1>Updating database from version 0.1.0 to 0.2.0...</h1>';
+					//Update code goes here
 				break;
 
 				default:
@@ -142,7 +143,7 @@ switch ($mode)
 			}
 
 			//Set arcade version config value to latest version
-			$arcade->set_config('version', $CFG['mod_version']);
+			$tracker->set_config('version', $CFG['mod_version']);
 
 			if ($CFG['clear_cache_update'])
 			{
@@ -160,7 +161,7 @@ switch ($mode)
 		}
 
 		$install_mod->install_footer();
-	break;*/
+	break;
 
 	default:
 		$install_mod->install_form();
