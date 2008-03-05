@@ -42,7 +42,7 @@
 		<form action="{S_ACTION_SEARCH}" method="post" id="search_tracker">
 			<fieldset>
 				{S_HIDDEN_FIELDS_SEARCH}
-				<input type="text" name="term" size="25" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="{SEARCH_TERM}" class="inputbox search" />
+				<input type="text" name="term" maxlength="128" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="{SEARCH_TERM}" class="inputbox autowidth search" />
 				<input class="button2" type="submit" value="{L_SEARCH}" />
 				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
 			</fieldset>
