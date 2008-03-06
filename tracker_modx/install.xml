@@ -18,7 +18,7 @@
 		<mod-version>
 			<major>0</major>
 			<minor>1</minor>
-			<revision>0</revision>
+			<revision>1</revision>
 		</mod-version>
 		<installation>
 			<level>easy</level>
@@ -125,7 +125,7 @@
 			if (!isset($tracker))
 			{	
 				include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
-				$tracker = new tracker();
+				$tracker = new tracker(false);
 			}			
 			
 			// Grab some common modules

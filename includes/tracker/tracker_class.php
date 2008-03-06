@@ -30,7 +30,7 @@ class tracker
 	var $severity = array();
 	var $priority = array();
 
-	function tracker()
+	function tracker($in_tracker = true)
 	{
 		global $config, $table_prefix, $user, $cache, $template, $phpbb_root_path, $phpEx;
 
@@ -50,7 +50,7 @@ class tracker
 		$this->set_priority();
 
 		$template->assign_vars(array(
-			'S_IN_TRACKER'				=> true,
+			'S_IN_TRACKER'				=> $in_tracker,
 			'U_TRACKER' 				=> append_sid("{$phpbb_root_path}tracker.$phpEx"),
 			'U_TRACKER_STATS'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics'),
 		));
