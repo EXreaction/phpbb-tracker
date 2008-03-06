@@ -134,8 +134,24 @@ switch ($mode)
 			switch ($tracker->config['version'])
 			{
 				case '0.1.0':
-					echo '<br /><h1>Updating database from version 0.1.0 to 0.2.0...</h1>';
-					//Update code goes here
+					echo '<br /><h1>Updating database from version 0.1.0 to 0.1.1...</h1>';
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes'][$CFG['mod_version']]);
+
+					$sql = 'SELECT project_name, project_id
+						FROM ' . TRACKER_PROJECT_TABLE;
+					$result = $db->sql_query($sql);
+
+					$row = $db->sql_fetchrowset($result);
+					$db->sql_freeresult($result);
+			
+					foreach ($row as $item)
+					{
+						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . '
+							SET project_name_clean = "' . $db->sql_escape(utf8_clean_string($item['project_name'])) . '"
+						WHERE project_id = ' . (int) $item['project_id'];
+						$db->sql_query($sql);
+					}
+					
 				break;
 
 				default:

@@ -450,7 +450,7 @@ class tracker
 
 		$sql = 'SELECT *
 			FROM ' . TRACKER_PROJECT_TABLE . '
-				ORDER BY project_type ASC, lower(project_name) ASC';
+				ORDER BY project_type ASC, project_name_clean ASC';
 		$result = $db->sql_query($sql);
 
 		$row = $db->sql_fetchrowset($result);
@@ -2152,7 +2152,7 @@ class tracker
 
 				'GROUP_BY'	=> 'p.project_id',
 
-				'ORDER_BY'	=>	'p.project_type ASC, lower(p.project_name) ASC',
+				'ORDER_BY'	=>	'p.project_type ASC, p.project_name_clean ASC',
 
 			);
 
@@ -2531,7 +2531,7 @@ class tracker_cache extends cache
 					),
 				),
 
-				'ORDER_BY'	=> 'lower(project_name) ASC',
+				'ORDER_BY'	=> 'project_name_clean ASC',
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);

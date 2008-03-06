@@ -17,8 +17,8 @@
 
 $CFG = array(
 	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.1.0',
-	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.0 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
+	'mod_version'				=> '0.1.1',
+	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.1 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
 	'mod_dir'					=> 'tracker_install',
 	'clear_cache_install'		=> true,
 	'clear_cache_uninstall'		=> true,
@@ -90,6 +90,16 @@ $CFG = array(
 					'module_mode' 		=> 'version',
 					'module_auth' 		=> 'acl_a_tracker',
 				),
+			),
+		),
+	),
+	'update_schema_changes'	=> array(
+		//Change from version 0.1.0 to 0.1.1
+		'0.1.1'	=> array(
+			'add_columns'		=> array(
+				$table_prefix . 'tracker_project'	=> array(
+					'project_name_clean'		=> array('VCHAR', ''),
+				),		
 			),
 		),
 	),
