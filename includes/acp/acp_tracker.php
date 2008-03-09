@@ -392,6 +392,7 @@ class acp_tracker
 
 					$project_data = array(
 						'project_name'			=> utf8_normalize_nfc(request_var('project_name', '', true)),
+						'project_name_clean'	=> utf8_clean_string(request_var('project_name', '', true)),
 						'project_desc'			=> utf8_normalize_nfc(request_var('project_desc', '', true)),
 						'project_group'			=> request_var('project_group', 0),
 						'project_type'			=> request_var('project_type', 0),
