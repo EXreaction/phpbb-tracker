@@ -371,6 +371,11 @@ class acp_tracker
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
 					);
+					
+					if ($project_data['project_name'] == '')
+					{
+						trigger_error($user->lang['TRACKER_PROJECT_NO_NAME'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
 
 					$tracker->add_project($project_data);
 					add_log('admin', 'LOG_TRACKER_PROJECT_ADD', $project_data['project_name']);
@@ -570,6 +575,11 @@ class acp_tracker
 						'component_name'		=> utf8_normalize_nfc(request_var('component_name', '', true)),
 						'project_id'			=> $project_id,
 					);
+					
+					if ($component_data['component_name'] == '')
+					{
+						trigger_error($user->lang['TRACKER_COMPONENT_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
+					}
 
 					$tracker->handle_project_items('add', $mode, $component_data);
 					add_log('admin', 'LOG_TRACKER_COMPONENT_ADD', $component_data['component_name']);
@@ -747,6 +757,11 @@ class acp_tracker
 						'version_name'			=> utf8_normalize_nfc(request_var('version_name', '', true)),
 						'project_id'			=> $project_id,
 					);
+					
+					if ($version_data['version_name'] == '')
+					{
+						trigger_error($user->lang['TRACKER_VERSION_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
+					}
 
 					$tracker->handle_project_items('add', $mode, $version_data);
 					add_log('admin', 'LOG_TRACKER_VERSION_ADD', $version_data['version_name']);

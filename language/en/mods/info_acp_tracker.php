@@ -87,6 +87,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_PROJECT_TYPE'					=> 'Project Type',
 	'TRACKER_PROJECT_GROUP'					=> 'Project Group',
 	'TRACKER_PROJECT_SECURITY'				=> 'Project Security',
+	'TRACKER_PROJECT_NO_NAME'				=> 'There was no name entered for this project.  You must enter a name.',
 
 	'TRACKER_PROJECT_NAME_EXPLAIN'			=> 'Name of the project.',
 	'TRACKER_PROJECT_DESC_EXPLAIN'			=> 'Description of the project.',
@@ -99,9 +100,11 @@ $lang = array_merge($lang, array(
 
 	'TRACKER_COMPONENT_NAME_EXPLAIN'		=> 'Name of the component to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_COMPONENT_DELETE_ERROR'		=> 'The selected component cannot be deleted because tickets exist that refer to this component.  Delete all tickets refering to this component first.',
-
+	'TRACKER_COMPONENT_NO_NAME'				=> 'There was no name entered for this component.  You must enter a name.',
+	
 	'TRACKER_VERSION_NAME_EXPLAIN'			=> 'Name of the version to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_VERSION_DELETE_ERROR'			=> 'The selected version cannot be deleted because tickets exist that refer to this version.  Delete all tickets refering to this version first.',
+	'TRACKER_VERSION_NO_NAME'				=> 'There was no name entered for this version.  You must enter a name.',
 
 	'TRACKER_FILENAME'						=> 'Filename',
 	'TRACKER_FILESIZE'						=> 'Filesize',
