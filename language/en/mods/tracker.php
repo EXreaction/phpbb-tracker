@@ -55,6 +55,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_ASSIGNED_TO'					=> 'Assigned to',
 	'TRACKER_STATUS'						=> 'Status',
 	'TRACKER_PROJECTS'						=> 'Please select the project you would like to open below. Tracker statistics are available by clicking %shere%s.',
+	'TRACKER_STATISTICS'					=> 'Please select the project of which you want to view the statistics below.',
 	'TRACKER_VIEW_STATISTICS'				=> 'View statistics',
 	'TRACKER_ADD_EXPLAIN'					=> 'Thank you for taking time to submit a ticket about the %s project to our %s. Complete the form below to submit your ticket, and please try to include as much information as possible when describing the issue you are sending a ticket about.<br /><br />Please allow at least 24 hours before we respond to your ticket.',
 	'TRACKER_ADD_EXPLAIN_EMAIL'				=> ' You will be notified by email whenever a team representative makes a change to your ticket, or posts a reply. We will send you a copy of your ticket by email for your records.',
@@ -184,7 +185,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_NO_PROJECT_EXIST'				=> 'There are currently no projects in the tracker.',
 	'TRACKER_NO_STATUS_EXIST'				=> 'There are currently no status type in the tracker.',
 	'TRACKER_TICKET_LOCKED_MESSAGE'			=> 'This ticket is locked, you cannot edit posts or make further replies.',
-	
+
 	'TRACKER_TYPE'							=> 'Type',
 	'TRACKER_TOTAL_TICKETS'					=> 'Total Tickets',
 	'TRACKER_TOTAL_OPEN_TICKETS'			=> 'Total Open Tickets',
@@ -199,7 +200,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_ATTACHMENTS'					=> 'Attachments',
 	'TRACKER_ATTACHMENTS_UPLOAD'			=> 'Upload attachment',
 	'TRACKER_ATTACHMENTS_ADD'				=> 'Add attachment',
-	
+
 	'TRACKER_COMPONENT_NAME' 				=> 'Component Name',
 	'TRACKER_VERSION_NAME' 					=> 'Version Name',
 	'TRACKER_COMPONENT_STATS' 				=> 'Tickets by component',
