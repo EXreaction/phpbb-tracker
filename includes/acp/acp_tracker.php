@@ -372,7 +372,7 @@ class acp_tracker
 						'project_security'		=> request_var('project_security', 0),
 					);
 					
-					if ($project_data['project_name'] == '')
+					if (utf8_clean_string($project_data['project_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_PROJECT_NO_NAME'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
@@ -576,7 +576,7 @@ class acp_tracker
 						'project_id'			=> $project_id,
 					);
 					
-					if ($component_data['component_name'] == '')
+					if (utf8_clean_string($component_data['component_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_COMPONENT_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
 					}
@@ -758,7 +758,7 @@ class acp_tracker
 						'project_id'			=> $project_id,
 					);
 					
-					if ($version_data['version_name'] == '')
+					if (utf8_clean_string($version_data['version_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_VERSION_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
 					}
