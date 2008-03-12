@@ -409,6 +409,30 @@ class install_mod
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
+			
+			//Create .MODS tab if missing and get id again
+			if(!$row)
+			{
+				$dot_mods = array(
+					'module_basename' 	=> '',
+					'module_enabled'	=> '1',
+					'module_display' 	=> '1',
+					'parent_id' 		=> '0',
+					'module_class' 		=> 'acp',
+					'module_langname' 	=> 'ACP_CAT_DOT_MODS',
+					'module_mode' 		=> '',
+					'module_auth' 		=> '',				
+				);				
+			
+				$_module->update_module_data($dot_mods, true);
+					
+				$sql = 'SELECT module_id
+					FROM ' . MODULES_TABLE . '
+					WHERE module_langname = "ACP_CAT_DOT_MODS"';
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+			}
 
 			$parent_module_data['parent_id'] = $row['module_id'];
 		}
