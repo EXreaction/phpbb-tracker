@@ -198,8 +198,7 @@
 		break;]]></action>
 			</edit>
 		</open>
-		<diy-instructions lang="en">CHMOD to 755 or 777 the includes/tracker/files directory.
-Run the included installer at http://yoursite.com/phpBB/tracker_install/install.php
+		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/tracker_install/install.php
 Once done make sure to remove tracker_install folder from your server.</diy-instructions>
 	</action-group>
 </mod>
