@@ -350,9 +350,13 @@ class tracker
 			WHERE attach_id = ' . $filedata['attach_id'];
 		$db->sql_query($sql);
 
-		$filename = basename($filedata['physical_filename']);
-
-		return @unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $filename);
+		if (isset($filedata['physical_filename']))
+		{
+			$filename = basename($filedata['physical_filename']);
+			return @unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $filename);
+		}
+		
+		return true;		
 	}
 
 
