@@ -156,7 +156,10 @@ switch ($mode)
 					{
 						echo '<br /><h1>Moving attachments to new directory</h1>';
 						dircopy('./../includes/tracker/files', './../files/tracker', true, false);
-						remove_dir('./../includes/tracker/files');
+						if (!remove_dir('./../includes/tracker/files'))
+						{
+							echo '<br /><h1>Please make sure to remove includes/tracker/files from the server</h1>';
+						}
 						$tracker->set_config('attachment_path', 'files/tracker');
 					}
 
@@ -770,7 +773,7 @@ function dircopy($src_dir, $dst_dir, $verbose = false, $use_cached_dir_trees = f
 			}
 		}        
 	}
-
+	
 	return $num; 
 }
 
@@ -821,6 +824,7 @@ function get_dir_tree($dir, $root = true)
 
 function remove_dir($dir)
 {
+	$error = false;
 	if(is_dir($dir))
 	{
 		$dir = (substr($dir, -1) != "/")? $dir."/":$dir;
@@ -831,7 +835,10 @@ function remove_dir($dir)
 			{
 				if(!is_dir($dir.$file))
 				{
-					@unlink($dir.$file);
+					if (@unlink($dir.$file))
+					{
+						$error = true;
+					}
 				}
 				else
 				{
@@ -840,8 +847,13 @@ function remove_dir($dir)
 			}
 		}
 		closedir($openDir);
-		@rmdir($dir);
+		if (@rmdir($dir))
+		{
+			$error = true;
+		}
 	}
+	
+	return $error;
 }
 
 ?>
