@@ -50,7 +50,7 @@
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
-	
+
 	<!-- IF S_TICKET_ENVIRONMENT -->
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
@@ -69,7 +69,7 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 	<!-- ENDIF -->
-	
+
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
@@ -91,7 +91,7 @@
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
-	
+
 	<!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
@@ -100,7 +100,7 @@
 		<dl>
 			<dt><label for="attachment">{L_TRACKER_ATTACHMENTS_UPLOAD}:</label></dt>
 			<dd>
-				<input type="file" name="attachment" id="attachment" class="inputbox medium" /> 
+				<input type="file" name="attachment" id="attachment" class="inputbox medium" />
 			</dd>
 		</dl>
 		<dl>
@@ -111,13 +111,13 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 	<!-- ENDIF -->
-	
+
 	<!-- IF S_HAS_ATTACHMENTS -->
 		<div class="panel bg2">
 			<div class="inner"><span class="corners-top"><span></span></span>
 			<h3>{L_POSTED_ATTACHMENTS}</h3>
 			<fieldset class="fields2">
-			<dl>			
+			<dl>
 				<dd><a href="{U_VIEW_ATTACHMENT}" class="{S_CONTENT_FLOW_END}">{FILENAME}</a></dd>
 				<dd style="margin-top: 5px;">
 					<input type="submit" name="delete_attachment" value="{L_DELETE_FILE}" class="button2" />
@@ -128,7 +128,7 @@
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 	<!-- ENDIF -->
-		
+
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
@@ -140,5 +140,7 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 </form>
-<br /><div style="text-align: center;" class="copyright">Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a></div>
+
+<!-- INCLUDE tracker/tracker_footer.html -->
+
 <!-- INCLUDE overall_footer.html -->

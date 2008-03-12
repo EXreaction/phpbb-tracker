@@ -1,7 +1,7 @@
 <!-- INCLUDE overall_header.html -->
 <h2>{L_TRACKER}</h2>
-<p>{TRACKER_PROJECTS}</p>	
-		
+<p>{TRACKER_PROJECTS}</p>
+
 <!-- IF not S_DISPLAY_PROJECT -->
 <div class="forabg">
 	<div class="inner"><span class="corners-top"><span></span></span>
@@ -22,7 +22,7 @@
 	</table>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
-<!-- ELSE -->		
+<!-- ELSE -->
 	<!-- IF .bug -->
 		<!-- BEGIN bug -->
 			<!-- IF .bug.project -->
@@ -51,7 +51,7 @@
 			<!-- ENDIF -->
 		<!-- END bug -->
 	<!-- ENDIF -->
-			
+
 	<!-- IF .feature -->
 		<!-- BEGIN feature -->
 			<!-- IF .feature.project -->
@@ -80,7 +80,7 @@
 			<!-- ENDIF -->
 		<!-- END feature -->
 	<!-- ENDIF -->
-			
+
 	<!-- IF .issue -->
 		<!-- BEGIN issue -->
 			<!-- IF .issue.project -->
@@ -116,11 +116,13 @@
 <form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
 	<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a></h3>
 	<fieldset class="quick-login">
-		<label for="username">{L_USERNAME}:</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />  
-		<label for="password">{L_PASSWORD}:</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" /> | 
+		<label for="username">{L_USERNAME}:</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />
+		<label for="password">{L_PASSWORD}:</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" /> |
 		<label for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" class="checkbox" /></label> <input type="submit" name="login" value="{L_LOGIN}" class="button2" />
 	</fieldset>
 </form>
 <!-- ENDIF -->
-<br /><div style="text-align: center;" class="copyright">Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a></div>
+
+<!-- INCLUDE tracker/tracker_footer.html -->
+
 <!-- INCLUDE overall_footer.html -->

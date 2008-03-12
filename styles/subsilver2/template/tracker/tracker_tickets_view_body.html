@@ -33,7 +33,7 @@
 						<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
 					</tr>
 					<tr>
-						<td class="row2">			
+						<td class="row2">
 							<span class="genmed">
 								<!-- IF UPLOAD_ICON -->{UPLOAD_ICON} <!-- ENDIF -->
 								<a href="{U_DOWNLOAD_LINK}">{DOWNLOAD_NAME}</a> [{FILESIZE} {SIZE_LANG}]
@@ -64,7 +64,7 @@
 			</td>
 		</tr>
 	</table>
-	
+
 	<!-- IF S_DISPLAY_COMMENTS -->
 		<br />
 		<table class="tablebg" width="100%" cellspacing="1">
@@ -73,7 +73,7 @@
 			<td class="row1">
 		<!-- BEGIN comments -->
 		<hr />
-			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">		
+			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">
 				<div class="postdetails">
 				<!-- IF not S_IS_BOT -->
 						<!-- IF comments.S_CAN_DELETE or comments.S_CAN_EDIT -->
@@ -93,7 +93,7 @@
 						<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
 					</tr>
 					<tr>
-						<td class="row2">			
+						<td class="row2">
 							<span class="genmed">
 								<!-- IF comments.UPLOAD_ICON -->{comments.UPLOAD_ICON} <!-- ENDIF -->
 								<a href="{comments.U_DOWNLOAD_LINK}">{comments.DOWNLOAD_NAME}</a> [{comments.FILESIZE} {comments.SIZE_LANG}]
@@ -123,7 +123,7 @@
 				<!-- ENDIF -->
 			</div>
 		<!-- BEGINELSE -->
-			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">	
+			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">
 				<div class="postbody">{L_TRACKER_TICKET_NO_COMMENTS}</div>
 			</div>
 		<!-- END -->
@@ -131,7 +131,7 @@
 		</tr>
 		</table>
 	<!-- ENDIF -->
-	
+
 	<!-- IF S_DISPLAY_HISTORY -->
 	<br />
 	<table class="tablebg" width="100%" cellspacing="1">
@@ -140,12 +140,12 @@
 		<td class="row1">
 		<!-- BEGIN history -->
 			<hr />
-			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;">		
+			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;">
 				<div class="postdetails">{history.HISTORY_ACTION}</div>
 				<div style="margin-top: 10px; padding-top: 2px; border-top: 1px dashed #CCCCCC;">{history.HISTORY_ACTION_BY}</div>
 			</div>
 		<!-- BEGINELSE -->
-			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">	
+			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">
 				<div class="postbody">{L_TRACKER_TICKET_NO_HISTORY}</div>
 			</div>
 		<!-- END -->
@@ -180,7 +180,7 @@
 	</table>
 	<br />
 	<!-- ENDIF -->
-	
+
 	<form action="{U_ACTION}" method="post">
 	<table class="tablebg" width="100%" cellspacing="1">
 	<th colspan="2"><b>{L_TRACKER_REPLY}</b></th>
@@ -211,20 +211,20 @@
 	</table>
 	{S_FORM_TOKEN}
 	</form>
-	
-	<!-- IF S_DISPLAY_REVIEW -->	
+
+	<!-- IF S_DISPLAY_REVIEW -->
 	<br />
 	<div id="ticket-review">
 		<table class="tablebg" width="100%" cellspacing="1">
 		<th><b>{L_TRACKER_PREVIOUS_POSTS}</b></th>
 		<tr>
 			<td class="row1">
-			<!-- BEGIN review -->	
+			<!-- BEGIN review -->
 				<hr />
-				<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;">		
+				<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;">
 					<div class="postdetails">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_POSTED_ON_DATE} {review.POST_TIME}</div>
 					<hr />
-					<div class="postbody">{review.POST_TEXT}</div> 
+					<div class="postbody">{review.POST_TEXT}</div>
 				</div>
 			<!-- END -->
 			</td>
@@ -244,61 +244,61 @@
 		<td class="row2" width="60%">{TICKET_ID}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PROJECT_NAME}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PROJECT_NAME}:</b></td>
 		<td class="row2" width="60%">{PROJECT_NAME}</td>
-	</tr>				
+	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_STATUS}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_STATUS}:</b></td>
 		<td class="row2" width="60%">{TICKET_STATUS_DETAILS}</td>
 	</tr>
 	<!-- IF S_TICKET_COMPONENT -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_COMPONENT}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_COMPONENT}:</b></td>
 		<td class="row2" width="60%">{TICKET_COMPONENT}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_VERSION -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_VERSION}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_VERSION}:</b></td>
 		<td class="row2" width="60%">{TICKET_VERSION}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_PRIORITY -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PRIORITY}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PRIORITY}:</b></td>
 		<td class="row2" width="60%">{TICKET_PRIORITY}</td>
 	</tr>
-	<!-- ENDIF -->	
+	<!-- ENDIF -->
 	<!-- IF S_TICKET_SEVERITY -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_SEVERITY}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_SEVERITY}:</b></td>
 		<td class="row2" width="60%">{TICKET_SEVERITY}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_ENVIRONMENT -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_PHP}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_PHP}:</b></td>
 		<td class="row2" width="60%">{TICKET_PHP}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_DBMS}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_DBMS}:</b></td>
 		<td class="row2" width="60%">{TICKET_DBMS}</td>
 	</tr>
 	<!-- ENDIF -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_ASSIGNED_TO}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_ASSIGNED_TO}:</b></td>
 		<td class="row2" width="60%">{TICKET_ASSIGNED_TO}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_BY}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_BY}:</b></td>
 		<td class="row2" width="60%">{TICKET_REPORTED_BY} (<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTERS_TICKETS}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTERS_TICKETS}:</b></td>
 		<td class="row2" width="60%"><a href="{U_REPORTERS_TICKETS}">{L_TRACKER_LIST_ALL_TICKETS}</a></td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_ON}:</b></td> 
+		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_ON}:</b></td>
 		<td class="row2" width="60%">{TICKET_TIME}</td>
 	</tr>
 	<!-- IF TICKET_LAST_VISIT -->
@@ -337,7 +337,7 @@
 	<tr>
 		<td align="right" valign="top" nowrap="nowrap">
 			<form method="post" action="{S_MOD_ACTION}">
-				<label>{L_QUICK_MOD}:</label> {S_TICKET_MOD} <input name="submit_mod" type="submit" value="{L_GO}" class="button2" />
+				<label>{L_QUICK_MOD}: {S_TICKET_MOD}</label> <input name="submit_mod" type="submit" value="{L_GO}" class="button2" />
 				{S_FORM_TOKEN}
 			</form>
 		</td>
@@ -345,5 +345,7 @@
 	</table>
 	<div class="cleaner">&nbsp;</div>
 <!-- ENDIF -->
-<br /><div style="text-align: center;" class="copyright">Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a></div>
+
+<!-- INCLUDE tracker/tracker_footer.html -->
+
 <!-- INCLUDE overall_footer.html -->

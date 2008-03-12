@@ -7,7 +7,7 @@
 
 <!-- IF TICKET_HIDDEN -->
 <div class="rules" align="center">
-	<div class="inner"><span class="corners-top"><span></span></span>		
+	<div class="inner"><span class="corners-top"><span></span></span>
 		{L_TRACKER_TICKET_HIDDEN_FROM_VIEW}
 	<span class="corners-bottom"><span></span></span></div>
 </div>
@@ -53,9 +53,9 @@
 
 	<!-- IF S_DISPLAY_COMMENTS -->
 	<h3>{L_TRACKER_TICKET_COMMENTS}</h3>
-		<!-- BEGIN comments -->		
+		<!-- BEGIN comments -->
 		<div class="post <!-- IF comments.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
-			<div class="inner"><span class="corners-top"><span></span></span>			
+			<div class="inner"><span class="corners-top"><span></span></span>
 				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
 					<!-- IF not S_IS_BOT -->
 						<!-- IF comments.S_CAN_DELETE or comments.S_CAN_EDIT -->
@@ -89,31 +89,31 @@
 		</div>
 		<!-- BEGINELSE -->
 			<div class="post bg1">
-			<div class="inner"><span class="corners-top"><span></span></span>	
+			<div class="inner"><span class="corners-top"><span></span></span>
 				{L_TRACKER_TICKET_NO_COMMENTS}
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 		<!-- END -->
 	<!-- ENDIF -->
-	
+
 	<!-- IF S_DISPLAY_HISTORY -->
 	<h3>{L_TRACKER_TICKET_HISTORY}</h3>
-		<!-- BEGIN history -->		
+		<!-- BEGIN history -->
 		<div class="post <!-- IF history.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
-			<div class="inner"><span class="corners-top"><span></span></span>			
+			<div class="inner"><span class="corners-top"><span></span></span>
 					<strong>{history.HISTORY_ACTION}</strong>
 					<div style="margin-top: 10px; padding-top: 2px; border-top: 1px dashed #CCCCCC;">{history.HISTORY_ACTION_BY}</div>
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 		<!-- BEGINELSE -->
 			<div class="post bg1">
-			<div class="inner"><span class="corners-top"><span></span></span>	
+			<div class="inner"><span class="corners-top"><span></span></span>
 				{L_TRACKER_TICKET_NO_HISTORY}
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 		<!-- END -->
 	<!-- ENDIF -->
-	
+
 	<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT or PAGINATION or TOTAL_POSTS -->
 	<div class="topic-actions">
 		<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT -->
@@ -128,7 +128,7 @@
 		</div>
 		<!-- ENDIF -->
 	</div>
-	<!-- ENDIF -->	
+	<!-- ENDIF -->
 <!-- ELSE -->
 	<!-- IF S_PREVIEW -->
 	<h3>{L_TRACKER_PREVIEW}</h3>
@@ -160,7 +160,7 @@
 			</fieldset>
 			<span class="corners-bottom"><span></span></span>
 		</div>
-		
+
 		<!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
 		<div class="panel bg2">
 			<div class="inner"><span class="corners-top"><span></span></span>
@@ -169,7 +169,7 @@
 			<dl>
 				<dt><label for="attachment">{L_TRACKER_ATTACHMENTS_UPLOAD}:</label></dt>
 				<dd>
-					<input type="file" name="attachment" id="attachment" class="inputbox medium" /> 
+					<input type="file" name="attachment" id="attachment" class="inputbox medium" />
 				</dd>
 			</dl>
 			<dl>
@@ -180,13 +180,13 @@
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 		<!-- ENDIF -->
-		
+
 		<!-- IF S_HAS_ATTACHMENTS -->
 			<div class="panel bg2">
 				<div class="inner"><span class="corners-top"><span></span></span>
 				<h3>{L_POSTED_ATTACHMENTS}</h3>
 				<fieldset class="fields2">
-				<dl>			
+				<dl>
 					<dd><a href="{U_VIEW_ATTACHMENT}" class="{S_CONTENT_FLOW_END}">{FILENAME}</a></dd>
 					<dd style="margin-top: 5px;">
 						<input type="submit" name="delete_attachment" value="{L_DELETE_FILE}" class="button2" />
@@ -197,7 +197,7 @@
 				<span class="corners-bottom"><span></span></span></div>
 			</div>
 		<!-- ENDIF -->
-		
+
 		<div class="panel bg2">
 			<span class="corners-top"><span></span></span>
 			<fieldset>
@@ -208,16 +208,16 @@
 			<span class="corners-bottom"><span></span></span>
 		</div>
 	</form>
-	
+
 	<!-- IF S_DISPLAY_REVIEW -->
 	<h3>{L_TRACKER_PREVIOUS_POSTS}</h3>
 		<div id="topicreview">
 			<div class="post bg2">
 				<div class="inner"><span class="corners-top"><span></span></span>
-				<!-- BEGIN review -->	
+				<!-- BEGIN review -->
 				<div class="postbody">
 					<p class="author">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_POSTED_ON_DATE} {review.POST_TIME}</p>
-				
+
 					<div class="content">{review.POST_TEXT}</div>
 				</div>
 				<!-- IF not review.S_LAST_ROW --><hr /><!-- ENDIF -->
@@ -250,9 +250,9 @@
 			</ul>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
-	
+
 	<!-- IF S_MANAGE_TICKET --><form name="assign_user_form" action="{U_UPDATE_ACTION}" method="post"><!-- ENDIF -->
-	<div class="post bg2">	
+	<div class="post bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<h3 style="border-bottom: none; margin-top: 5px;">{L_OPTIONS}</h3>
 		<ul class="menu">
@@ -277,11 +277,13 @@
 	<br />
 	<form method="post" action="{S_MOD_ACTION}">
 	<fieldset class="quickmod">
-		<label>{L_QUICK_MOD}:</label> {S_TICKET_MOD} <input name="submit_mod" type="submit" value="{L_GO}" class="button2" />
+		<label>{L_QUICK_MOD}: {S_TICKET_MOD}</label> <input name="submit_mod" type="submit" value="{L_GO}" class="button2" />
 		{S_FORM_TOKEN}
 	</fieldset>
 	</form>
 	<div class="cleaner">&nbsp;</div>
 <!-- ENDIF -->
-<br /><div style="text-align: center;" class="copyright">Powered by phpBB Tracker &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a></div>
+
+<!-- INCLUDE tracker/tracker_footer.html -->
+
 <!-- INCLUDE overall_footer.html -->

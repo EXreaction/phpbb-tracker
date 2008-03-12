@@ -143,7 +143,7 @@ switch ($mode)
 
 					$row = $db->sql_fetchrowset($result);
 					$db->sql_freeresult($result);
-			
+
 					foreach ($row as $item)
 					{
 						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . '
@@ -151,7 +151,7 @@ switch ($mode)
 						WHERE project_id = ' . (int) $item['project_id'];
 						$db->sql_query($sql);
 					}
-					
+
 				break;
 
 				default:
@@ -282,7 +282,7 @@ class install_mod
 	function install_form()
 	{
 		global $CFG, $db, $table_prefix;
-		
+
 		$tables = get_tables($db);
 		$installed_version = $install_option = $update_option = $uninstall_option = '';
 		if (in_array($table_prefix . 'tracker_config', $tables))
@@ -295,7 +295,7 @@ class install_mod
 			$db->sql_freeresult($result);
 		}
 		unset($tables);
-		
+
 		if ($installed_version != '')
 		{
 			if (version_compare($this->format_version($installed_version), $this->format_version($CFG['mod_version']), '<'))
@@ -316,17 +316,17 @@ class install_mod
 			$install_option = '<option value="">---- Install Options ----</option>
 				<option value="install">First Time Install of ' . $CFG['mod_title'] . ' ' . $CFG['mod_version'] . '</option>';
 		}
-		
+
 		echo '<h1>' . $CFG['mod_title'] . ' Installation Options</h1>';
 
 		echo '	<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
 				<p>This script will install, uninstall or upgrade the tables for the ' . $CFG['mod_title'] . '.<br /><a href="install_check.php">Check Installation</a></p>
 				<p><b>Backup data tables before going on!</b></p>
-				<p><select name="mode">					
+				<p><select name="mode">
 					' . $install_option . '
 					' . $update_option . '
 					' . $uninstall_option . '
-					</select></p> 
+					</select></p>
 				<p><input type="submit" value="Submit" class="button2"></p>
 				<p><b>Once you have finished with this script, delete it from your server!</b></p>
 			</form>';
@@ -399,7 +399,7 @@ class install_mod
 		$_module->module_class = $parent_module_data['module_class'];
 
 		$db->sql_error_triggered = false;
-					
+
 		//If the module class is acp we add it to the MODS tab in the ACP
 		if ($parent_module_data['module_class'] == 'acp')
 		{
@@ -409,9 +409,9 @@ class install_mod
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
-			
+
 			//Create .MODS tab if missing and get id again
-			if(!$row)
+			if (!$row)
 			{
 				$dot_mods = array(
 					'module_basename' 	=> '',
@@ -421,11 +421,11 @@ class install_mod
 					'module_class' 		=> 'acp',
 					'module_langname' 	=> 'ACP_CAT_DOT_MODS',
 					'module_mode' 		=> '',
-					'module_auth' 		=> '',				
-				);				
-			
+					'module_auth' 		=> '',
+				);
+
 				$_module->update_module_data($dot_mods, true);
-					
+
 				$sql = 'SELECT module_id
 					FROM ' . MODULES_TABLE . '
 					WHERE module_langname = "ACP_CAT_DOT_MODS"';
@@ -462,7 +462,7 @@ class install_mod
 		$db->sql_freeresult($result);
 
 		for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
-		{			
+		{
 			$module_data[$i]['parent_id'] = $row['module_id'];
 			$_module->update_module_data($module_data[$i], true);
 			$_module->remove_cache_file();
@@ -490,7 +490,7 @@ class install_mod
 		$_module->module_class = $parent_module_class;
 
 		$db->sql_error_triggered = false;
-		
+
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . '
 			WHERE module_langname = "' . $parent_module_langname . '"
@@ -500,7 +500,7 @@ class install_mod
 		$db->sql_freeresult($result);
 
 		for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
-		{			
+		{
 			$module_data[$i]['parent_id'] = $row['module_id'];
 			$_module->update_module_data($module_data[$i], true);
 			$_module->remove_cache_file();
@@ -527,9 +527,9 @@ class install_mod
 		$_module = &new acp_modules();
 
 		$db->sql_error_triggered = false;
-		
+
 		if (!empty($module_data))
-		{			
+		{
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
 				WHERE ' . $db->sql_in_set('module_basename', $module_data);
@@ -550,7 +550,7 @@ class install_mod
 		}
 
 		if (!empty($parent_module_data))
-		{			
+		{
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
 				WHERE ' . $db->sql_in_set('module_langname', $parent_module_data);
