@@ -158,7 +158,7 @@ switch ($mode)
 						dircopy('./../includes/tracker/files', './../files/tracker', true, false);
 						if (!remove_dir('./../includes/tracker/files'))
 						{
-							echo '<br /><h1>Please make sure to remove includes/tracker/files from the server</h1>';
+							echo '<br /><h1>Please make sure to remove ' . $tracker->config['attachment_path'] . ' from the server</h1>';
 						}
 						$tracker->set_config('attachment_path', 'files/tracker');
 					}
