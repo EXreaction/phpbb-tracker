@@ -1236,6 +1236,87 @@ class tracker
 
 		$messenger->send(NOTIFY_EMAIL);
 	}
+	
+	function process_notification($data, $ticket)
+	{
+		global $user;
+		
+		if ($data['priority_id'] != $ticket['priority_id'])
+		{
+			$history = array(
+				'history_time'			=> time(),
+				'history_status'		=> TRACKER_HISTORY_PRIORITY_CHANGED,
+				'history_user_id'		=> $user->data['user_id'],
+				'ticket_id'				=> $ticket['ticket_id'],
+				'history_old_priority'	=> $ticket['priority_id'],
+				'history_new_priority'	=> $data['priority_id'],
+			);
+
+			$this->add_history($history);
+			unset($history);
+		}
+		
+		if ($data['severity_id'] != $ticket['severity_id'])
+		{
+			$history = array(
+				'history_time'			=> time(),
+				'history_status'		=> TRACKER_HISTORY_SEVERITY_CHANGED,
+				'history_user_id'		=> $user->data['user_id'],
+				'ticket_id'				=> $ticket['ticket_id'],
+				'history_old_severity'	=> $ticket['severity_id'],
+				'history_new_severity'	=> $data['severity_id'],
+			);
+
+			$this->add_history($history);
+			unset($history);
+		}
+
+		$history_ts = false;
+		if ($data['status_id'] != $ticket['status_id'])
+		{
+			$history_status = array(
+				'history_time'			=> time(),
+				'history_status'		=> TRACKER_HISTORY_STATUS_CHANGED,
+				'history_user_id'		=> $user->data['user_id'],
+				'ticket_id'				=> $ticket['ticket_id'],
+				'history_old_status'	=> $ticket['status_id'],
+				'history_new_status'	=> $data['status_id'],
+			);
+
+			$this->add_history($history_status);
+			$history_ts = true;
+		}
+
+		$history_at = false;
+		if ($data['ticket_assigned_to'] != $ticket['ticket_assigned_to'])
+		{
+			$history_data = array(
+				'history_time'			=> time(),
+				'history_status'		=> TRACKER_HISTORY_ASSIGNED_TO,
+				'history_user_id'		=> $user->data['user_id'],
+				'ticket_id'				=> $ticket['ticket_id'],
+				'history_assigned_to'	=> $data['ticket_assigned_to'],
+			);
+
+			$this->add_history($history_data);
+			$history_at = true;
+		}
+
+		if ($history_at && !$history_ts)
+		{
+			$history_data['history_old_assigned_to'] = $ticket['ticket_assigned_to'];
+			$this->send_notification($history_data, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
+		}
+		else if ($history_ts && !$history_at)
+		{
+			$this->send_notification($history_status, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
+		}
+		else if ($history_at && $history_ts)
+		{
+			$history_data['history_old_assigned_to'] = $ticket['ticket_assigned_to'];
+			$this->send_notification(array_merge($history_data, $history_status), TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE);
+		}	
+	}
 
 	/*
 	* Limits the email notification subject to length

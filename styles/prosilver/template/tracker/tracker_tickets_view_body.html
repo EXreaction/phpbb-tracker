@@ -146,7 +146,7 @@
 		<div class="panel bg2">
 			<span class="corners-top"><span></span></span>
 			<fieldset class="fields1">
-			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->				
 				<!-- IF S_EDIT_REASON -->
 				<dl>
 					<dt><label for="edit_reason">{L_TRACKER_EDIT_REASON}:</label><br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></dt>
@@ -196,6 +196,48 @@
 				</fieldset>
 				<span class="corners-bottom"><span></span></span></div>
 			</div>
+		<!-- ENDIF -->
+		
+		<!-- IF S_MANAGE_TICKET -->
+		<div class="panel bg2">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_OPTIONS}</h3>
+			<fieldset class="fields2">
+			<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS -->
+				<dl>
+					<dt><label for="au"><strong>{L_TRACKER_ASSIGN_USER}:</strong></label></dt>
+					<dd><select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></dd>
+				</dl>
+				<!-- ENDIF -->
+				<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS -->
+				<dl>
+					<dt><label for="cs"><strong>{L_TRACKER_CHANGE_STATUS}:</strong></label></dt>
+					<dd><select id="cs" name="cs">{S_STATUS_OPTIONS}</select></dd>
+				</dl>
+				<!-- ENDIF -->
+				<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS -->
+				<dl>
+					<dt><label for="pr"><strong>{L_TRACKER_CHANGE_PRIORITY}:</strong></label></dt>
+					<dd><select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></dd>
+				</dl>
+				<!-- ENDIF -->
+				<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS -->
+				<dl>
+					<dt><label for="s"><strong>{L_TRACKER_CHANGE_SEVERITY}:</strong></label></dt>
+					<dd><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></dd>
+				</dl>
+				<!-- ENDIF -->
+				<dl>
+					<dt><label for="ticket_hidden">{L_TRACKER_HIDE_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
+				<dl>
+					<dt><label for="ticket_locked">{L_TRACKER_LOCK_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_locked" id="ticket_locked" value="1"<!-- IF S_IS_LOCKED --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
 		<!-- ENDIF -->
 
 		<div class="panel bg2">

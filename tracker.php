@@ -462,7 +462,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			if ($post_data['post_desc'] && !sizeof($errors))
 			{
 				generate_text_for_storage($post_data['post_desc'], $post_data['post_desc_uid'], $post_data['post_desc_bitfield'], $post_data['post_desc_options'], true, true, true);
-
+				
 				if ($mode == 'reply')
 				{
 					$post_id = $tracker->add_post($post_data, $ticket_id);
@@ -478,6 +478,51 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 					{
 						$tracker->update_attachment($attachment_data, $ticket_id, $post_id);
 					}
+				}
+
+				$sql_array = array(
+					'SELECT'	=> 't.*,
+									p.project_group',
+
+					'FROM'		=> array(
+						TRACKER_TICKETS_TABLE	=> 't',
+					),
+					
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
+							'ON'	=> 't.project_id = p.project_id',
+						),
+					),
+
+					'WHERE'		=> 't.ticket_id = ' . $ticket_id,
+				);
+
+				$sql = $db->sql_build_query('SELECT', $sql_array);
+				$result = $db->sql_query($sql);
+
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+				
+				//If user can manage project check for updates
+				if (group_memberships($row['project_group'], $user->data['user_id'], true))
+				{
+					$data = array(
+						'ticket_assigned_to'	=> request_var('au', 0),
+						'status_id'				=> request_var('cs', 0),
+						'priority_id'			=> request_var('pr', 0),
+						'severity_id'			=> request_var('s', 0),
+					);
+
+					$tracker->update_ticket($data, $ticket_id);					
+					$tracker->process_notification($data, $row);
+					
+					$ticket_reply_hidden = request_var('ticket_hidden', 0);
+					$tracker->hide_unhide((($ticket_reply_hidden) ? 'hide' : 'unhide'), $ticket_id);
+					
+					$ticket_reply_locked = request_var('ticket_locked', 0);
+					$tracker->lock_unlock((($ticket_reply_locked) ? 'lock' : 'unlock'), $ticket_id);
+
 				}
 
 				$message = $user->lang['TRACKER_TICKET_REPLY_SUBMITTED'] . '<br /><br />';
@@ -614,82 +659,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			);
 
 			$tracker->update_ticket($data, $ticket_id);
-			
-			if ($data['priority_id'] != $row['priority_id'])
-			{
-				$history = array(
-					'history_time'			=> time(),
-					'history_status'		=> TRACKER_HISTORY_PRIORITY_CHANGED,
-					'history_user_id'		=> $user->data['user_id'],
-					'ticket_id'				=> $ticket_id,
-					'history_old_priority'	=> $row['priority_id'],
-					'history_new_priority'	=> $data['priority_id'],
-				);
-
-				$tracker->add_history($history);
-				unset($history);
-			}
-			
-			if ($data['severity_id'] != $row['severity_id'])
-			{
-				$history = array(
-					'history_time'			=> time(),
-					'history_status'		=> TRACKER_HISTORY_SEVERITY_CHANGED,
-					'history_user_id'		=> $user->data['user_id'],
-					'ticket_id'				=> $ticket_id,
-					'history_old_severity'	=> $row['severity_id'],
-					'history_new_severity'	=> $data['severity_id'],
-				);
-
-				$tracker->add_history($history);
-				unset($history);
-			}
-
-			$history_ts = false;
-			if ($data['status_id'] != $row['status_id'])
-			{
-				$history_status = array(
-					'history_time'			=> time(),
-					'history_status'		=> TRACKER_HISTORY_STATUS_CHANGED,
-					'history_user_id'		=> $user->data['user_id'],
-					'ticket_id'				=> $ticket_id,
-					'history_old_status'	=> $row['status_id'],
-					'history_new_status'	=> $data['status_id'],
-				);
-
-				$tracker->add_history($history_status);
-				$history_ts = true;
-			}
-
-			$history_at = false;
-			if ($data['ticket_assigned_to'] != $row['ticket_assigned_to'])
-			{
-				$history_data = array(
-					'history_time'			=> time(),
-					'history_status'		=> TRACKER_HISTORY_ASSIGNED_TO,
-					'history_user_id'		=> $user->data['user_id'],
-					'ticket_id'				=> $ticket_id,
-					'history_assigned_to'	=> $data['ticket_assigned_to'],
-				);
-
-				$tracker->add_history($history_data);
-				$history_at = true;
-			}
-
-			if ($history_at && !$history_ts)
-			{
-				$history_data['history_old_assigned_to'] = $row['ticket_assigned_to'];
-				$tracker->send_notification($history_data, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
-			}
-			else if ($history_ts && !$history_at)
-			{
-				$tracker->send_notification($history_status, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
-			}
-			else if ($history_at && $history_ts)
-			{
-				$history_data['history_old_assigned_to'] = $row['ticket_assigned_to'];
-				$tracker->send_notification(array_merge($history_data, $history_status), TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE);
-			}
+			$tracker->process_notification($data, $row);
 
 			$message = $user->lang['TRACKER_TICKET_UPDATED'] . '<br /><br />';
 			$message .= sprintf($user->lang['TRACKER_UPDATED_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
@@ -762,10 +732,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 
 		'U_UPDATE_ACTION'			=> ($can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
-		'S_STATUS_OPTIONS'			=> ($s_ticket_reply || (!$can_manage && !$s_ticket_reply)) ? '' : $tracker->status_select_options($row['status_id']),
-		'S_ASSIGN_USER_OPTIONS'		=> ($s_ticket_reply || (!$can_manage && !$s_ticket_reply)) ? '' : $tracker->user_select_options($row['ticket_assigned_to'], $row['project_group'], $project_id),
-		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || $s_ticket_reply || (!$can_manage && !$s_ticket_reply)) ? '' : $tracker->select_options($project_id, 'severity', $row['severity_id']),
-		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || $s_ticket_reply || (!$can_manage && !$s_ticket_reply)) ? '' : $tracker->select_options($project_id, 'priority', $row['priority_id']),
+		'S_STATUS_OPTIONS'			=> (!$can_manage) ? '' : $tracker->status_select_options($row['status_id']),
+		'S_ASSIGN_USER_OPTIONS'		=> (!$can_manage) ? '' : $tracker->user_select_options($row['ticket_assigned_to'], $row['project_group'], $project_id),
+		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$can_manage) ? '' : $tracker->select_options($project_id, 'severity', $row['severity_id']),
+		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$can_manage) ? '' : $tracker->select_options($project_id, 'priority', $row['priority_id']),
 		'S_TICKET_MOD' 				=> ($ticket_mod != '') ? '<select name="action">' . $ticket_mod . '</select>' : '',
 
 		'S_CAN_POST_TRACKER'		=> $auth->acl_get('u_tracker_post'),
