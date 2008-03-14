@@ -2084,7 +2084,7 @@ class tracker
 
 				'GROUP_BY'	=> 'u.user_id',
 
-				'ORDER_BY'	=>	'total_tickets, u.username ASC',
+				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
 			);
 
@@ -2127,7 +2127,7 @@ class tracker
 
 				'GROUP_BY'	=> 'u.user_id',
 
-				'ORDER_BY'	=>	'total_tickets, u.username ASC',
+				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
 			);
 
