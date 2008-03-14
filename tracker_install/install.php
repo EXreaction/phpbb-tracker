@@ -135,7 +135,7 @@ switch ($mode)
 			{
 				case '0.1.0':
 					echo '<br /><h1>Updating database from version 0.1.0 to 0.1.1...</h1>';
-					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes'][$CFG['mod_version']]);
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
 
 					$sql = 'SELECT project_name, project_id
 						FROM ' . TRACKER_PROJECT_TABLE;
