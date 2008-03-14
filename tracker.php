@@ -257,7 +257,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$template->assign_vars(array(
 		'PAGE_NUMBER'	=> ($tickets_per_page > 0) ? on_page($total_tickets, $tickets_per_page, $start) : on_page($total_tickets, $total_tickets, $start),
 		'TOTAL_TICKETS'	=> $l_total_tickets,
-		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id$sort_type$pagination_mode"), $total_tickets, $tickets_per_page, $start) : false,
+		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type$sort_type$pagination_mode"), $total_tickets, $tickets_per_page, $start) : false,
 	));
 
 	// Assign index specific vars

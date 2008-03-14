@@ -733,7 +733,7 @@ class tracker
 					'last_visit_user_id'		=> 0,
 					'last_visit_username'		=> '',
 					'last_visit_user_colour'	=> '',
-					'status_id'					=> TRACKER_NEW,
+					'status_id'					=> TRACKER_NEW_STATUS,
 				);
 
 				$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
