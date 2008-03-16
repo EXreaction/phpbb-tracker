@@ -50,7 +50,7 @@ CREATE TABLE phpbb_tracker_tickets (
 	ticket_id mediumint(8) UNSIGNED NOT NULL auto_increment,
 	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	ticket_title varchar(255) DEFAULT '' NOT NULL,
-	ticket_desc text NOT NULL,
+	ticket_desc mediumtext NOT NULL,
 	ticket_desc_bitfield varchar(255) DEFAULT '' NOT NULL,
 	ticket_desc_options int(11) UNSIGNED DEFAULT '7' NOT NULL,
 	ticket_desc_uid varchar(8) DEFAULT '' NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE phpbb_tracker_tickets (
 CREATE TABLE phpbb_tracker_posts (
 	post_id mediumint(8) UNSIGNED NOT NULL auto_increment,
 	ticket_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
-	post_desc text NOT NULL,
+	post_desc mediumtext NOT NULL,
 	post_desc_bitfield varchar(255) DEFAULT '' NOT NULL,
 	post_desc_options int(11) UNSIGNED DEFAULT '7' NOT NULL,
 	post_desc_uid varchar(8) DEFAULT '' NOT NULL,

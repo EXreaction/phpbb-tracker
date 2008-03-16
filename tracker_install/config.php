@@ -101,6 +101,14 @@ $CFG = array(
 					'project_name_clean'		=> array('VCHAR', ''),
 				),		
 			),
+			'change_columns'		=> array(
+				$table_prefix . 'tracker_tickets'	=> array(
+					'ticket_desc'	=> array('MTEXT_UNI', ''),
+				),
+				$table_prefix . 'tracker_posts'	=> array(
+					'post_desc'	=> array('MTEXT_UNI', ''),
+				),
+			),
 		),
 	),
 );

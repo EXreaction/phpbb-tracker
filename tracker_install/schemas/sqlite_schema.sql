@@ -50,7 +50,7 @@ CREATE TABLE phpbb_tracker_tickets (
 	ticket_id INTEGER PRIMARY KEY NOT NULL ,
 	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	ticket_title text(65535) NOT NULL DEFAULT '',
-	ticket_desc text(65535) NOT NULL DEFAULT '',
+	ticket_desc mediumtext(16777215) NOT NULL DEFAULT '',
 	ticket_desc_bitfield varchar(255) NOT NULL DEFAULT '',
 	ticket_desc_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	ticket_desc_uid varchar(8) NOT NULL DEFAULT '',
@@ -83,7 +83,7 @@ CREATE TABLE phpbb_tracker_tickets (
 CREATE TABLE phpbb_tracker_posts (
 	post_id INTEGER PRIMARY KEY NOT NULL ,
 	ticket_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	post_desc text(65535) NOT NULL DEFAULT '',
+	post_desc mediumtext(16777215) NOT NULL DEFAULT '',
 	post_desc_bitfield varchar(255) NOT NULL DEFAULT '',
 	post_desc_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	post_desc_uid varchar(8) NOT NULL DEFAULT '',

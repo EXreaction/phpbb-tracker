@@ -143,7 +143,7 @@ CREATE TABLE phpbb_tracker_tickets (
 	ticket_id INT4 DEFAULT nextval('phpbb_tracker_tickets_seq'),
 	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
 	ticket_title varchar(255) DEFAULT '' NOT NULL,
-	ticket_desc varchar(4000) DEFAULT '' NOT NULL,
+	ticket_desc TEXT DEFAULT '' NOT NULL,
 	ticket_desc_bitfield varchar(255) DEFAULT '' NOT NULL,
 	ticket_desc_options INT4 DEFAULT '7' NOT NULL CHECK (ticket_desc_options >= 0),
 	ticket_desc_uid varchar(8) DEFAULT '' NOT NULL,
@@ -181,7 +181,7 @@ CREATE SEQUENCE phpbb_tracker_posts_seq;
 CREATE TABLE phpbb_tracker_posts (
 	post_id INT4 DEFAULT nextval('phpbb_tracker_posts_seq'),
 	ticket_id INT4 DEFAULT '0' NOT NULL CHECK (ticket_id >= 0),
-	post_desc varchar(4000) DEFAULT '' NOT NULL,
+	post_desc TEXT DEFAULT '' NOT NULL,
 	post_desc_bitfield varchar(255) DEFAULT '' NOT NULL,
 	post_desc_options INT4 DEFAULT '7' NOT NULL CHECK (post_desc_options >= 0),
 	post_desc_uid varchar(8) DEFAULT '' NOT NULL,

@@ -94,7 +94,7 @@ CREATE TABLE [phpbb_tracker_tickets] (
 	[ticket_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[project_id] [int] DEFAULT (0) NOT NULL ,
 	[ticket_title] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[ticket_desc] [varchar] (4000) DEFAULT ('') NOT NULL ,
+	[ticket_desc] [text] DEFAULT ('') NOT NULL ,
 	[ticket_desc_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[ticket_desc_options] [int] DEFAULT (7) NOT NULL ,
 	[ticket_desc_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
@@ -120,7 +120,7 @@ CREATE TABLE [phpbb_tracker_tickets] (
 	[edit_reason] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[edit_user] [int] DEFAULT (0) NOT NULL ,
 	[edit_count] [int] DEFAULT (0) NOT NULL 
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [phpbb_tracker_tickets] WITH NOCHECK ADD 
@@ -137,7 +137,7 @@ GO
 CREATE TABLE [phpbb_tracker_posts] (
 	[post_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[ticket_id] [int] DEFAULT (0) NOT NULL ,
-	[post_desc] [varchar] (4000) DEFAULT ('') NOT NULL ,
+	[post_desc] [text] DEFAULT ('') NOT NULL ,
 	[post_desc_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[post_desc_options] [int] DEFAULT (7) NOT NULL ,
 	[post_desc_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
@@ -147,7 +147,7 @@ CREATE TABLE [phpbb_tracker_posts] (
 	[edit_reason] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[edit_user] [int] DEFAULT (0) NOT NULL ,
 	[edit_count] [int] DEFAULT (0) NOT NULL 
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [phpbb_tracker_posts] WITH NOCHECK ADD 

@@ -856,7 +856,7 @@ function get_schema_struct()
 			'ticket_id'						=> array('UINT', NULL, 'auto_increment'),
 			'project_id'					=> array('UINT', 0),
 			'ticket_title'					=> array('STEXT_UNI', ''),
-			'ticket_desc'					=> array('TEXT_UNI', ''),
+			'ticket_desc'					=> array('MTEXT_UNI', ''),
 			'ticket_desc_bitfield'			=> array('VCHAR:255', ''),
 			'ticket_desc_options'			=> array('UINT:11', 7),
 			'ticket_desc_uid'				=> array('VCHAR:8', ''),
@@ -890,7 +890,7 @@ function get_schema_struct()
 		'COLUMNS'		=> array(
 			'post_id'					=> array('UINT', NULL, 'auto_increment'),
 			'ticket_id'					=> array('UINT', 0),
-			'post_desc'					=> array('TEXT_UNI', ''),
+			'post_desc'					=> array('MTEXT_UNI', ''),
 			'post_desc_bitfield'		=> array('VCHAR:255', ''),
 			'post_desc_options'			=> array('UINT:11', 7),
 			'post_desc_uid'				=> array('VCHAR:8', ''),
