@@ -16,9 +16,9 @@
 			</author>
 		</author-group>
 		<author-notes><![CDATA[Thanks to evil3 for helping out with the mod.
-Username: evil3 
-Email: evil@phpbbmodders.net 
-Name: Igor Wiedler 
+Username: evil3
+Email: evil@phpbbmodders.net
+Name: Igor Wiedler
 WWW: http://phpbbmodders.net ]]>
 		</author-notes>
 		<mod-version>
@@ -28,7 +28,7 @@ WWW: http://phpbbmodders.net ]]>
 		</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>373</time>
+			<time>300</time>
 			<target-version>
 				<target-primary>3.0.0</target-primary>
 				<target-major allow="exact">3</target-major>
@@ -49,7 +49,7 @@ WWW: http://phpbbmodders.net ]]>
 				</changelog>
 			</entry>
 			<entry>
-				<date>2008-03-17T00:00:00-05:00</date>
+				<date>2008-03-17</date>
 				<rev-version>
 					<major>0</major>
 					<minor>1</minor>
@@ -150,23 +150,23 @@ WWW: http://phpbbmodders.net ]]>
 
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;]]></find>
-				<action type="after-add"><![CDATA[		case 'tracker':				
+				<action type="after-add"><![CDATA[		case 'tracker':
 			if (!isset($tracker))
-			{	
+			{
 				include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
 				$tracker = new tracker(false);
-			}			
-			
+			}
+
 			// Grab some common modules
 			$url_params = array(
 				'mode=statistics'	=> 'VIEWING_TRACKER_STATISTICS',
 				'mode=add'			=> 'ADDING_TRACKER_TICKET',
 				'mode=reply'		=> 'REPLYING_TRACKER_TICKET',
 			);
-			
+
 			preg_match('#p=([0-9]+)#i', $row['session_page'], $project_id);
 			$project_id = (sizeof($project_id)) ? (int) $project_id[1] : 0;
-			
+
 			preg_match('#t=([0-9]+)#i', $row['session_page'], $ticket_id);
 			$ticket_id = (sizeof($ticket_id)) ? (int) $ticket_id[1] : 0;
 
@@ -190,33 +190,33 @@ WWW: http://phpbbmodders.net ]]>
 						}
 					}
 					else if ($param == 'mode=add' && $project_id)
-					{						
+					{
 						$found_tracker = true;
 						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
-						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);					
+						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
 					}
 					else if ($param == 'mode=reply' && $project_id && $ticket_id)
 					{
 						$found_tracker = true;
 						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
-						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);					
+						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
 					}
 					break;
 				}
 			}
-			
+
 			if (!$found_tracker)
 			{
 				$lang = 'VIEWING_TRACKER';
 				if ($project_id && $ticket_id)
 				{
 					$location = sprintf($user->lang[$lang . '_TICKET'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
-					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);	
+					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
 				}
 				else if ($project_id && !$ticket_id)
 				{
 					$location = sprintf($user->lang[$lang . '_PROJECT'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
-					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);	
+					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
 				}
 				else
 				{

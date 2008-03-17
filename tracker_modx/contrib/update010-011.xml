@@ -16,19 +16,19 @@
 			</author>
 		</author-group>
 		<author-notes><![CDATA[Thanks to evil3 for helping out with the mod.
-Username: evil3 
-Email: evil@phpbbmodders.net 
-Name: Igor Wiedler 
+Username: evil3
+Email: evil@phpbbmodders.net
+Name: Igor Wiedler
 WWW: http://phpbbmodders.net ]]>
 		</author-notes>
 		<mod-version>
-			<major>0</major>
-			<minor>1</minor>
-			<revision>1</revision>
+			<major>1</major>
+			<minor>0</minor>
+			<revision>0</revision>
 		</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>373</time>
+			<time>60</time>
 			<target-version>
 				<target-primary>3.0.0</target-primary>
 				<target-major allow="exact">3</target-major>
@@ -49,7 +49,7 @@ WWW: http://phpbbmodders.net ]]>
 				</changelog>
 			</entry>
 			<entry>
-				<date>2008-03-17T00:00:00-05:00</date>
+				<date>2008-03-17</date>
 				<rev-version>
 					<major>0</major>
 					<minor>1</minor>
