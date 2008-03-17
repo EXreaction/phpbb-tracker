@@ -111,7 +111,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$ticket_security = (!$can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 
 	$my_tickets = ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
-	$my_assigned_tickets = ($assigned_to_user_id) ? ' AND t.ticket_assigned_to = ' . $assigned_to_user_id : '';
+	$my_assigned_tickets = ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
 	$sql_array = array(
 		'SELECT'	=> 't.*,
 						u1.user_colour as ticket_user_colour,
