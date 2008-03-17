@@ -756,7 +756,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
 		'U_SEND_PM'					=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $row['ticket_user_id']),
-		'U_REPORTERS_TICKETS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;u={$row['ticket_user_id']}"),
+		'U_REPORTERS_TICKETS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=" . TRACKER_ALL . "&amp;u={$row['ticket_user_id']}"),
 		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=history"),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
