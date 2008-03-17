@@ -119,6 +119,11 @@ class install_check
 			'<!-- IF S_IN_TRACKER -->',
 			'<!-- INCLUDE tracker/tracker_breadcrumbs.html -->',
 			'<!-- INCLUDE tracker/tracker_header.html -->',
+		);		
+				
+		$this->install_edits['viewonline.php'] = array(
+			'case \'tracker\':',
+			'include($phpbb_root_path . \'includes/tracker/tracker_class.\' . $phpEx);',
 		);
 
 		$this->install_permissions = array(
