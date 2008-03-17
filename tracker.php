@@ -250,8 +250,8 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$template->assign_vars(array(
 			'S_FOUND_RESULTS' 	=> true,
 			'SEARCH_TERM'		=> $term,
-			'SEARCH_MATCHES' 	=> $search_matches)
-		);
+			'SEARCH_MATCHES' 	=> $search_matches,
+		));
 	}
 
 	$template->assign_vars(array(
@@ -424,16 +424,16 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($mode == 'edit' && ($preview || $submit))
 		{
-			unset($post_data['post_time']);
-			unset($post_data['post_user_id']);
-			$post_data['edit_reason'] = utf8_normalize_nfc(request_var('edit_reason', '', true));
-			$post_data['edit_time'] = time();
-			$post_data['edit_user'] = $user->data['user_id'];
+			unset($post_data['post_time'], $post_data['post_user_id']);
+			$post_data += array(
+				'edit_reason'	=> utf8_normalize_nfc(request_var('edit_reason', '', true)),
+				'edit_time'		=> time(),
+				'edit_user'		=> $user->data['user_id'],
+			);
 		}
 
 		if ($add_attachment)
 		{
-			$filedata = array();
 			$filedata = $tracker->add_attachment('attachment', $errors);
 			if (sizeof($filedata))
 			{
@@ -462,7 +462,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			if ($post_data['post_desc'] && !sizeof($errors))
 			{
 				generate_text_for_storage($post_data['post_desc'], $post_data['post_desc_uid'], $post_data['post_desc_bitfield'], $post_data['post_desc_options'], true, true, true);
-				
+
 				if ($mode == 'reply')
 				{
 					$post_id = $tracker->add_post($post_data, $ticket_id);
@@ -487,7 +487,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 					'FROM'		=> array(
 						TRACKER_TICKETS_TABLE	=> 't',
 					),
-					
+
 					'LEFT_JOIN'	=> array(
 						array(
 							'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
@@ -503,7 +503,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
-				
+
 				//If user can manage project check for updates
 				if (group_memberships($row['project_group'], $user->data['user_id'], true))
 				{
@@ -514,12 +514,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						'severity_id'			=> request_var('s', 0),
 					);
 
-					$tracker->update_ticket($data, $ticket_id);					
+					$tracker->update_ticket($data, $ticket_id);
 					$tracker->process_notification($data, $row);
-					
+
 					$ticket_reply_hidden = request_var('ticket_hidden', 0);
 					$tracker->hide_unhide((($ticket_reply_hidden) ? 'hide' : 'unhide'), $ticket_id);
-					
+
 					$ticket_reply_locked = request_var('ticket_locked', 0);
 					$tracker->lock_unlock((($ticket_reply_locked) ? 'lock' : 'unlock'), $ticket_id);
 
@@ -537,7 +537,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			{
 				$errors[] = $user->lang['TRACKER_TICKET_MESSAGE_ERROR'];
 			}
-
 		}
 
 		if ($preview)
@@ -760,7 +759,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=history"),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
-		'TRACKER_REPLY_DETAIL'			=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
+		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
 
 		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		'PROJECT_NAME'				=> $row['project_name'],
@@ -803,7 +802,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			$tracker->display_comments($ticket_id, $project_id, $start);
 		break;
 	}
-
 
 	// Output page
 	page_header($user->lang['TRACKER'] . ' - ' . $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'], false);

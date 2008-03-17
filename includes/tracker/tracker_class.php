@@ -34,11 +34,12 @@ class tracker
 	{
 		global $config, $table_prefix, $user, $cache, $template, $phpbb_root_path, $phpEx;
 
-		//Do not change order of following includes
+		// Do not change order of following includes
 		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_types.' . $phpEx);
-		//Add language vars to array
+
+		// Add language vars to array
 		$user->add_lang('mods/tracker');
 
 		$tracker_cache = new tracker_cache();
@@ -288,6 +289,9 @@ class tracker
 			}
 		}
 
+		/**
+		 * @todo make use of the 3.0.1 code
+		 */
 		$filesize = $attachment['filesize'];
 		$size_lang = ($filesize >= 1048576) ? $user->lang['MB'] : ( ($filesize >= 1024) ? $user->lang['KB'] : $user->lang['BYTES'] );
 		$filesize = ($filesize >= 1048576) ? round((round($filesize / 1048576 * 100) / 100), 2) : (($filesize >= 1024) ? round((round($filesize / 1024 * 100) / 100), 2) : $filesize);
@@ -355,8 +359,8 @@ class tracker
 			$filename = basename($filedata['physical_filename']);
 			return @unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $filename);
 		}
-		
-		return true;		
+
+		return true;
 	}
 
 
@@ -582,7 +586,6 @@ class tracker
 		}
 
 		$action = strtolower($action);
-		$status = '';
 		if ($action == 'enable')
 		{
 			$status = TRACKER_PROJECT_ENABLED;
@@ -844,8 +847,8 @@ class tracker
 		$post_id = $db->sql_nextid();
 
 		$ticket_data = array(
-			'last_post_time'			=> $data['post_time'],
-			'last_post_user_id'			=> $data['post_user_id'],
+			'last_post_time'		=> $data['post_time'],
+			'last_post_user_id'		=> $data['post_user_id'],
 		);
 
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
@@ -944,9 +947,7 @@ class tracker
 			return;
 		}
 
-		$subject = '';
-		$email_template = '';
-		$email_address = '';
+		$subject = $email_template = $email_address = '';
 		$email_template_vars = array();
 		$board_url = generate_board_url() . '/';
 
@@ -955,11 +956,11 @@ class tracker
 			case TRACKER_EMAIL_NOTIFY:
 
 				$email_template = 'tracker_notify';
+
 				$sql = 'SELECT project_name
 							FROM ' . TRACKER_PROJECT_TABLE . '
 						WHERE project_id = ' . $data['project_id'];
 				$result = $db->sql_query($sql);
-
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
@@ -968,12 +969,12 @@ class tracker
 				strip_bbcode($data['ticket_desc'], $data['ticket_desc_uid']);
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user->data['username']),
-					'TICKET_URL'		=> $board_url . 'tracker.' . $phpEx . "?p={$data['project_id']}&t={$data['ticket_id']}",
+					'TICKET_URL'		=> "{$board_url}tracker.$phpEx?p={$data['project_id']}&t={$data['ticket_id']}",
 					'TICKET_ID'			=> $data['ticket_id'],
 					'PROJECT_NAME'		=> htmlspecialchars_decode($row['project_name']),
 					'TICKET_TITLE'		=> htmlspecialchars_decode($data['ticket_title']),
 					'TICKET_DESC'		=> $this->format_desc($data['ticket_desc']),
-					'TRACKER_URL'		=> $board_url . 'tracker.' . $phpEx,
+					'TRACKER_URL'		=> "{$board_url}tracker.$phpEx",
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 				);
@@ -988,11 +989,10 @@ class tracker
 							FROM ' . TRACKER_TICKETS_TABLE . '
 						WHERE ticket_id = ' . $data['ticket_id'];
 				$result = $db->sql_query($sql);
-
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				//We don't need to let the user know if they post in there own ticket
+				// We don't need to let the user know if they post in there own ticket
 				if ($row['ticket_user_id'] == $user->data['user_id'])
 				{
 					return;
@@ -1011,7 +1011,6 @@ class tracker
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
-
 				$user_row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
@@ -1041,11 +1040,10 @@ class tracker
 							FROM ' . TRACKER_TICKETS_TABLE . '
 						WHERE ticket_id = ' . $data['ticket_id'];
 				$result = $db->sql_query($sql);
-
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				//If ticket is hidden then we won't notify anyone who is not project member
+				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
 					if (!group_memberships($this->projects[$row['project_id']]['project_group'], $row['ticket_user_id'], true))
@@ -1058,13 +1056,10 @@ class tracker
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
-
 				$user_row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				$field_name = '';
-				$old_value = '';
-				$new_value = '';
+				$field_name = $old_value = $new_value = '';
 				switch ($data['history_status'])
 				{
 					case TRACKER_HISTORY_ASSIGNED_TO:
@@ -1139,11 +1134,10 @@ class tracker
 							FROM ' . TRACKER_TICKETS_TABLE . '
 						WHERE ticket_id = ' . $data['ticket_id'];
 				$result = $db->sql_query($sql);
-
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				//If ticket is hidden then we won't notify anyone who is not project member
+				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
 					if (!group_memberships($this->projects[$row['project_id']]['project_group'], $row['ticket_user_id'], true))
@@ -1156,7 +1150,6 @@ class tracker
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
-
 				$user_row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
@@ -1236,11 +1229,11 @@ class tracker
 
 		$messenger->send(NOTIFY_EMAIL);
 	}
-	
+
 	function process_notification($data, $ticket)
 	{
 		global $user;
-		
+
 		if ($data['priority_id'] != $ticket['priority_id'])
 		{
 			$history = array(
@@ -1255,7 +1248,7 @@ class tracker
 			$this->add_history($history);
 			unset($history);
 		}
-		
+
 		if ($data['severity_id'] != $ticket['severity_id'])
 		{
 			$history = array(
@@ -1315,7 +1308,7 @@ class tracker
 		{
 			$history_data['history_old_assigned_to'] = $ticket['ticket_assigned_to'];
 			$this->send_notification(array_merge($history_data, $history_status), TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE);
-		}	
+		}
 	}
 
 	/*
@@ -1441,7 +1434,6 @@ class tracker
 	*/
 	function format_username($username)
 	{
-		//if (strtolower($username[strlen($username) - 1]) == 's')
 		if (in_array(strtolower($username[strlen($username) - 1]), array('s', 'x', 'z'), true))
 		{
 			return $username . '\'';
@@ -1459,12 +1451,9 @@ class tracker
 	function is_closed($status_id)
 	{
 		$closed = true;
-		if (isset($this->status[$status_id]))
+		if (isset($this->status[$status_id]) && $this->status[$status_id]['open'] == true)
 		{
-			if ($this->status[$status_id]['open'] == true)
-			{
-				$closed = false;
-			}
+			$closed = false;
 		}
 
 		return $closed;
@@ -1575,9 +1564,7 @@ class tracker
 			$sql = 'SELECT * from ' . $table . '
 				WHERE project_id = ' . $project_id . '
 					ORDER BY ' . $mode . '_name ASC';
-
 			$result = $db->sql_query($sql);
-
 			while ($row = $db->sql_fetchrow($result))
 			{
 				if ($selected_id && $selected_id == $row[$mode . '_id'])
@@ -1693,9 +1680,8 @@ class tracker
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['project_name'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", (($in_stats) ? 'mode=statistics&amp;' : '' ) . 'p=' . $data['project_id'])
-			)
-		);
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", (($in_stats) ? 'mode=statistics&amp;' : '' ) . 'p=' . $data['project_id']),
+		));
 
 		$template->assign_vars(array(
 			'TRACKER_TICKET_ID'		=> $ticket_id,
@@ -1857,11 +1843,11 @@ class tracker
 				case TRACKER_HISTORY_STATUS_CHANGED:
 					$history_action = sprintf($user->lang['TRACKER_HISTORY_STATUS_CHANGED'], $this->set_status($row['history_old_status']), $this->set_status($row['history_new_status']));
 				break;
-				
+
 				case TRACKER_HISTORY_SEVERITY_CHANGED:
 					$history_action = sprintf($user->lang['TRACKER_HISTORY_SEVERITY_CHANGED'], (!isset($this->severity[$row['history_old_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_old_severity']]), (!isset($this->severity[$row['history_new_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_new_severity']]));
 				break;
-				
+
 				case TRACKER_HISTORY_PRIORITY_CHANGED:
 					$history_action = sprintf($user->lang['TRACKER_HISTORY_PRIORITY_CHANGED'], (!isset($this->priority[$row['history_old_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_old_priority']]), (!isset($this->priority[$row['history_new_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_new_priority']]));
 				break;
@@ -2150,8 +2136,8 @@ class tracker
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
-			
-			//Get component stats
+
+			// Get component stats
 			$sql = 'SELECT component_id, COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
@@ -2165,7 +2151,7 @@ class tracker
 				$component_count[$row['component_id']] = $row['total'];
 			}
 			$db->sql_freeresult($result);
-			
+
 			$sql = 'SELECT component_id, component_name
 				FROM ' . TRACKER_COMPONENTS_TABLE . '
 				WHERE project_id = ' . $project_id . '
@@ -2181,8 +2167,8 @@ class tracker
 					'TOTAL'					=> (isset($component_count[$item['component_id']])) ? $component_count[$item['component_id']] : 0,
 				));
 			}
-			
-			//Get version stats
+
+			// Get version stats
 			$sql = 'SELECT version_id, COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
@@ -2196,7 +2182,7 @@ class tracker
 				$version_count[$row['version_id']] = $row['total'];
 			}
 			$db->sql_freeresult($result);
-			
+
 			$sql = 'SELECT version_id, version_name
 				FROM ' . TRACKER_VERSION_TABLE . '
 				WHERE project_id = ' . $project_id . '
@@ -2212,7 +2198,7 @@ class tracker
 					'TOTAL'					=> (isset($version_count[$item['version_id']])) ? $version_count[$item['version_id']] : 0,
 				));
 			}
-			
+
 			$this->generate_nav($this->projects[$project_id], false, true);
 			// Output page
 			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);
@@ -2515,7 +2501,6 @@ class tracker
 					FROM ' . TRACKER_POSTS_TABLE . '
 				WHERE post_id = ' . $id;
 		$result = $db->sql_query($sql);
-
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -2540,7 +2525,6 @@ class tracker
 					FROM ' . TRACKER_PROJECT_TABLE . '
 				WHERE project_id = ' . $id;
 		$result = $db->sql_query($sql);
-
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
