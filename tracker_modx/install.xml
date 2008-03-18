@@ -71,6 +71,18 @@ WWW: http://phpbbmodders.net ]]>
 					<change>Increased size of ticket and post description</change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2008-03-18</date>
+				<rev-version>
+					<major>0</major>
+					<minor>1</minor>
+					<revision>2</revision>
+				</rev-version>
+				<changelog lang="en">
+					<change>Added group support to "Show tickets assigned to me"</change>
+					<change>Fixed bug causing missing column in project table</change>
+				</changelog>
+			</entry>
 		</history>
 	</header>
 	<action-group>
