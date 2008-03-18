@@ -36,54 +36,6 @@ WWW: http://phpbbmodders.net ]]>
 				<target-revision allow="exact">0</target-revision>
 			</target-version>
 		</installation>
-		<history>
-			<entry>
-				<date>2008-03-04</date>
-				<rev-version>
-					<major>0</major>
-					<minor>1</minor>
-					<revision>0</revision>
-				</rev-version>
-				<changelog lang="en">
-					<change>Initial Beta Release</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2008-03-17</date>
-				<rev-version>
-					<major>0</major>
-					<minor>1</minor>
-					<revision>1</revision>
-				</rev-version>
-				<changelog lang="en">
-					<change>Added management options to ticket reply</change>
-					<change>Added attachement form to subsilver2 templates</change>
-					<change>Added htmlspecialchars_decode() for emails</change>
-					<change>Added check to block blank entries in ACP</change>
-					<change>Added visual update to search box</change>
-					<change>Fixed bug viewing all users tickets</change>
-					<change>Fixed bug with sort order for statistics</change>
-					<change>Fixed bug with pagination while sorting/filtering tickets</change>
-					<change>Fixed bug removing attachments for posts when deleting</change>
-					<change>Fixed bug with language variables when viewing statistics</change>
-					<change>Fixed bug with installation script and updating from older versions</change>
-					<change>Fixed bug causing tracker link to appearin viewonline breadcrumbs/nav links</change>
-					<change>Increased size of ticket and post description</change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2008-03-18</date>
-				<rev-version>
-					<major>0</major>
-					<minor>1</minor>
-					<revision>2</revision>
-				</rev-version>
-				<changelog lang="en">
-					<change>Added group support to "Show tickets assigned to me"</change>
-					<change>Fixed bug causing missing column in project table</change>
-				</changelog>
-			</entry>
-		</history>
 	</header>
 	<action-group>
 		<copy>
