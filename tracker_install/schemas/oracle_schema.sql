@@ -46,7 +46,8 @@ CONNECT phpbb/phpbb_password;
 */
 CREATE TABLE phpbb_tracker_project (
 	project_id number(8) NOT NULL,
-	project_name varchar2(765) DEFAULT '' ,
+	project_name varchar2(255) DEFAULT '' ,
+	project_name_clean varchar2(255) DEFAULT '' ,
 	project_desc varchar2(765) DEFAULT '' ,
 	project_group number(8) DEFAULT '0' NOT NULL,
 	project_type number(4) DEFAULT '0' NOT NULL,

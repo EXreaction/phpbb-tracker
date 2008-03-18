@@ -17,7 +17,7 @@
 @set_time_limit(0);
 
 //$schema_path = './../install/schemas/';
-$schema_path = './schemas/';
+$schema_path = './../tracker_install/schemas/';
 
 if (!is_writable($schema_path))
 {
@@ -808,7 +808,8 @@ function get_schema_struct()
 	$schema_data['phpbb_tracker_project'] = array(
 		'COLUMNS'		=> array(
 			'project_id'			=> array('UINT', NULL, 'auto_increment'),
-			'project_name'			=> array('STEXT_UNI', ''),
+			'project_name'			=> array('VCHAR', ''),
+			'project_name_clean'	=> array('VCHAR', ''),
 			'project_desc'			=> array('STEXT_UNI', ''),
 			'project_group'			=> array('UINT', 0),
 			'project_type'			=> array('TINT:4', 0),

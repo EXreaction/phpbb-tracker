@@ -110,6 +110,13 @@ $CFG = array(
 				),
 			),
 		),
+		'0.1.2'	=> array(
+			'change_columns'		=> array(
+				$table_prefix . 'tracker_project'	=> array(
+					'project_name'		=> array('VCHAR', ''),
+				),		
+			),
+		),
 	),
 );
 

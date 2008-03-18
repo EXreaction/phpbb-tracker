@@ -13,6 +13,7 @@ GO
 CREATE TABLE [phpbb_tracker_project] (
 	[project_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[project_name] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[project_name_clean] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[project_desc] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[project_group] [int] DEFAULT (0) NOT NULL ,
 	[project_type] [int] DEFAULT (0) NOT NULL ,

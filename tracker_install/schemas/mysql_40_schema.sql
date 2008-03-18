@@ -5,7 +5,8 @@
 # Table: 'phpbb_tracker_project'
 CREATE TABLE phpbb_tracker_project (
 	project_id mediumint(8) UNSIGNED NOT NULL auto_increment,
-	project_name blob NOT NULL,
+	project_name varbinary(255) DEFAULT '' NOT NULL,
+	project_name_clean varbinary(255) DEFAULT '' NOT NULL,
 	project_desc blob NOT NULL,
 	project_group mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	project_type tinyint(4) DEFAULT '0' NOT NULL,

@@ -89,6 +89,7 @@ CREATE SEQUENCE phpbb_tracker_project_seq;
 CREATE TABLE phpbb_tracker_project (
 	project_id INT4 DEFAULT nextval('phpbb_tracker_project_seq'),
 	project_name varchar(255) DEFAULT '' NOT NULL,
+	project_name_clean varchar(255) DEFAULT '' NOT NULL,
 	project_desc varchar(255) DEFAULT '' NOT NULL,
 	project_group INT4 DEFAULT '0' NOT NULL CHECK (project_group >= 0),
 	project_type INT2 DEFAULT '0' NOT NULL,
