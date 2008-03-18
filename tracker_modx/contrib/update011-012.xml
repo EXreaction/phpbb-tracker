@@ -81,6 +81,8 @@ WWW: http://phpbbmodders.net ]]>
 				<changelog lang="en">
 					<change>Added group support to "Show tickets assigned to me"</change>
 					<change>Fixed bug causing missing column in project table</change>
+					<change>Fixed bug with missing htmlspecialchars_decode in email subject</change>
+					<change>Fixed various bugs with installer/updater</change>
 				</changelog>
 			</entry>
 		</history>
