@@ -1326,7 +1326,7 @@ class tracker
 
 		$subject = sprintf($user->lang['TRACKER_EMAIL_SUBJECT'], $config['sitename'], $this->get_type_option('title', $project_id), $ticket_id, $subject);
 
-		return $subject;
+		return htmlspecialchars_decode($subject);
 	}
 
 	/*
