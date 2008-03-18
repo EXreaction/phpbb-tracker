@@ -17,8 +17,8 @@
 
 $CFG = array(
 	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.1.1',
-	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.1 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
+	'mod_version'				=> '0.1.2',
+	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.2 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
 	'mod_dir'					=> 'tracker_install',
 	'clear_cache_install'		=> true,
 	'clear_cache_uninstall'		=> true,

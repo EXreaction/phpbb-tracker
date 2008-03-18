@@ -109,12 +109,6 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_view_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_view_body.html" />
 			<file from="root/styles/subsilver2/template/tracker/tracker_header.html" to="styles/subsilver2/template/tracker/tracker_header.html" />
 		</copy>
-		<open src="viewonline.php">
-			<edit>
-				<find><![CDATA[				$tracker = new tracker();]]></find>
-				<action type="replace-with"><![CDATA[				$tracker = new tracker(false);]]></action>
-			</edit>
-		</open>
 		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/tracker_install/install.php and select the option to update to latest version.
 Once done make sure to remove tracker_install folder from your server.</diy-instructions>
 	</action-group>

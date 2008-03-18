@@ -162,6 +162,12 @@ switch ($mode)
 						}
 						$tracker->set_config('attachment_path', 'files/tracker');
 					}
+				
+				case '0.1.1':
+					echo '<br /><h1>Updating database from version 0.1.1 to 0.1.2...</h1>';
+					//This is need because of a bug when installing 0.1.1 new
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
 
 				break;
 
