@@ -1994,8 +1994,7 @@ class tracker
 			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
-					AND ' . $db->sql_in_set('status_id', $this->get_opened()) . '
-					ORDER BY status_id';
+					AND ' . $db->sql_in_set('status_id', $this->get_opened());
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -2005,8 +2004,7 @@ class tracker
 			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
-					AND ' . $db->sql_in_set('status_id', $this->get_opened(), true) . '
-					ORDER BY status_id';
+					AND ' . $db->sql_in_set('status_id', $this->get_opened(), true);
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -2050,9 +2048,10 @@ class tracker
 			}
 
 			$sql_array = array(
-				'SELECT'	=> 't.ticket_assigned_to as user_id,
+				'SELECT'	=> 'u.user_id,
 								u.user_colour,
 								u.username,
+								u.username_clean,
 								COUNT(t.ticket_id) as total_tickets',
 
 				'FROM'		=> array(
@@ -2068,7 +2067,7 @@ class tracker
 
 				'WHERE'		=> 't.project_id = ' . $project_id,
 
-				'GROUP_BY'	=> 'u.user_id',
+				'GROUP_BY'	=> 'u.user_id, u.user_colour, u.username, u.username_clean',
 
 				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
@@ -2093,9 +2092,10 @@ class tracker
 			}
 
 			$sql_array = array(
-				'SELECT'	=> 't.ticket_user_id as user_id,
+				'SELECT'	=> 'u.user_id,
 								u.user_colour,
 								u.username,
+								u.username_clean,
 								COUNT(t.ticket_id) as total_tickets',
 
 				'FROM'		=> array(
@@ -2111,7 +2111,7 @@ class tracker
 
 				'WHERE'		=> 't.project_id = ' . $project_id,
 
-				'GROUP_BY'	=> 'u.user_id',
+				'GROUP_BY'	=> 'u.user_id, u.user_colour, u.username, u.username_clean',
 
 				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
@@ -2207,7 +2207,13 @@ class tracker
 		else
 		{
 			$sql_array = array(
-				'SELECT'	=> 'p.*,
+				'SELECT'	=> 'p.project_id, 
+								p.project_name, 
+								p.project_desc, 
+								p.project_name_clean, 
+								p.project_type,
+								p.project_enabled,
+								p.project_group,
 								COUNT(t.ticket_id) as total_tickets',
 
 				'FROM'		=> array(
@@ -2221,7 +2227,13 @@ class tracker
 					),
 				),
 
-				'GROUP_BY'	=> 'p.project_id',
+				'GROUP_BY'	=> 'p.project_id, 
+								p.project_name, 
+								p.project_desc, 
+								p.project_name_clean, 
+								p.project_type,
+								p.project_enabled,
+								p.project_group',
 
 				'ORDER_BY'	=>	'p.project_type ASC, p.project_name_clean ASC',
 

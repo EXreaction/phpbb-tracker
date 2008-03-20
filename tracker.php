@@ -160,8 +160,19 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			$searchterm = str_replace('*', $db->any_char , $searchterm);
 			$searchterm = str_replace('?', $db->one_char , $searchterm);
 		}
-
-		$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(t.ticket_desc) ' . $db->sql_like_expression($searchterm) . ')';
+		
+		switch ($db->sql_layer)
+		{
+			case 'mssql':
+			case 'mssql_odbc':
+				$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(cast(t.ticket_desc as varchar(4000))) ' . $db->sql_like_expression($searchterm) . ')';
+			break;
+			
+			default:
+				$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(t.ticket_desc) ' . $db->sql_like_expression($searchterm) . ')';
+			break;
+		}
+		
 		$pagination_mode = 'mode=search&amp;term=' . $term;
 	}
 
