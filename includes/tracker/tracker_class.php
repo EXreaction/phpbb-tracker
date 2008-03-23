@@ -1434,9 +1434,9 @@ class tracker
 	*/
 	function format_username($username)
 	{
-		if (in_array(strtolower($username[strlen($username) - 1]), array('s', 'x', 'z'), true))
+		if (function_exists('tracker_format_username'))
 		{
-			return $username . '\'';
+			return tracker_format_username($username);
 		}
 		else
 		{

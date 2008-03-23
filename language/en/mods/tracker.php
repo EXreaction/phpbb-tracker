@@ -271,4 +271,19 @@ $lang = array_merge($lang, array(
 	'REPLYING_TRACKER_TICKET'			=> 'Replying to ticket in %s - %s',
 ));
 
+/**
+ * Format a username correctly on localised basis
+ */
+function tracker_format_username($username)
+{
+	if (in_array(strtolower(substr($username, -1, 1)), array('s', 'x', 'z'), true))
+	{
+		return $username . '\'';
+	}
+	else
+	{
+		return $username . '\'s';
+	}
+}
+
 ?>
