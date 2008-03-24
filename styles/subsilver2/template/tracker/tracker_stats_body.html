@@ -9,9 +9,9 @@
 	<th style="text-align: left; width: 33%;">{L_TRACKER_TOTAL_CLOSED_TICKETS}</th>
 </tr>
 <tr class="row1">
-	<td>{TOTAL_TICKETS}</td>
-	<td>{TOTAL_OPENED}</td>
-	<td>{TOTAL_CLOSED}</td>
+	<td><b>{TOTAL_TICKETS}</b></td>
+	<td style="color: red;"><b>{TOTAL_OPENED}</b></td>
+	<td><b>{TOTAL_CLOSED}</b></td>
 </tr>
 </table>
 <br />
@@ -29,7 +29,7 @@
 <!-- BEGIN status -->
 <!-- IF status.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 	<td>{status.STATUS_NAME}</td>
-	<td>{status.STATUS_TOTAL}</td>
+	<td><b>{status.STATUS_TOTAL}</b></td>
 	<td>{status.STATUS_CLOSED}</td>
 </tr>
 <!-- BEGINELSE -->
@@ -54,7 +54,7 @@
 <!-- BEGIN assigne -->
 	<!-- IF assigne.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 		<td>{assigne.USERNAME}</td>
-		<td>{assigne.TOTAL}</td>
+		<td><b>{assigne.TOTAL}</b></td>
 	</tr>
 <!-- END assigne -->
 </table>
@@ -73,7 +73,7 @@
 <!-- BEGIN top -->
 <!-- IF top.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 		<td>{top.USERNAME}</td>
-		<td>{top.TOTAL}</td>
+		<td><b>{top.TOTAL}</b></td>
 	</tr>
 <!-- END top -->
 </table>
@@ -128,10 +128,10 @@
 </tr>
 <!-- BEGIN project -->
 <!-- IF project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-		<td><a href="{project.U_PROJECT}">{project.PROJECT_NAME}</a></td>
+		<td><a href="{project.U_PROJECT}"><b>{project.PROJECT_NAME}</b></a></td>
 		<td>{project.PROJECT_DESC}</td>
 		<td>{project.PROJECT_TYPE}</td>
-		<td>{project.TOTAL_TICKETS}</td>
+		<td><b>{project.TOTAL_TICKETS}</b></td>
 	</tr>
 <!-- BEGINELSE -->
 <tr style="height: 50px">

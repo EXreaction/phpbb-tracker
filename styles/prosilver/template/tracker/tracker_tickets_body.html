@@ -76,9 +76,9 @@
 					<strong><a href="{tickets.U_VIEW_TICKET}">{tickets.TICKET_TITLE}</a></strong><br />
 					<span class="small">{tickets.TICKET_USERNAME} {L_POSTED_ON_DATE} {tickets.TICKET_TIME}<!-- IF tickets.LAST_POST_USERNAME -->{L_TRACKER_LAST_POST_BY}{tickets.LAST_POST_USERNAME}<!-- ENDIF --></span>
 				</td>
-				<td align="center">{tickets.TICKET_COMPONENT}</td>
-				<td align="center">{tickets.TICKET_ASSIGNED_TO}</td>
-				<td align="center">{tickets.TICKET_STATUS}</td>
+				<td style="text-align: center;">{tickets.TICKET_COMPONENT}</td>
+				<td style="text-align: center;">{tickets.TICKET_ASSIGNED_TO}</td>
+				<td style="text-align: center; color: red;">{tickets.TICKET_STATUS}</td>
 			</tr>
 		<!-- BEGINELSE -->
 			<tr style="height: 50px">
