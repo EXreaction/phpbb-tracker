@@ -15,6 +15,7 @@ define('IN_PHPBB', true);
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 
+// Handle downloads before anything else, more efficient
 if (isset($_GET['mode']) && (string) $_GET['mode'] === 'download')
 {
 	require($phpbb_root_path . 'includes/tracker/tracker_download.' . $phpEx);
@@ -30,10 +31,10 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 
-//Initialize tracker class
+// Initialize tracker class
 $tracker = new tracker();
 
-//Get the varibles we will use to build the tracker pages
+// Get the varibles we will use to build the tracker pages
 $mode = request_var('mode', '');
 $term = request_var('term', '');
 $ticket_id	= request_var('t', 0);
@@ -52,16 +53,16 @@ $attachment_data = (isset($_POST['attachment_data'])) ? $_POST['attachment_data'
 $preview = (isset($_POST['preview'])) ? true : false;
 $errors = array();
 
-//Make sure the project exists and enabled...
+// Make sure the project exists and enabled...
 if (!empty($project_id))
 {
-	//Check if project actually exists...
+	// Check if project actually exists...
 	if (!isset($tracker->projects[$project_id]))
 	{
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
 	}
 
-	//Check if the project is enabled...
+	// Check if the project is enabled...
 	if ($tracker->projects[$project_id]['project_enabled'] == TRACKER_PROJECT_DISABLED)
 	{
 		if (!group_memberships($tracker->projects[$project_id]['project_group'], $user->data['user_id'], true))
@@ -70,7 +71,7 @@ if (!empty($project_id))
 		}
 	}
 
-	//Since the project exists and user can see it, set the staus types
+	// Since the project exists and user can see it, set the staus types
 	$tracker->set_type($project_id);
 }
 
@@ -79,13 +80,13 @@ if ($mode == 'statistics')
 	$tracker->display_statistics($project_id);
 }
 
-//Check if user can view tracker
+// Check if user can view tracker
 if (!$auth->acl_get('u_tracker_view'))
 {
 	trigger_error($user->lang['NO_PERMISSION_TRACKER_VIEW']);
 }
 
-//Check permissions here for adding tickets, posts, editing and deleting...
+// Check permissions here for adding tickets, posts, editing and deleting...
 if (($mode == 'reply' || $mode == 'add') && (!$auth->acl_get('u_tracker_post') || !$user->data['is_registered']))
 {
 	trigger_error($user->lang['NO_PERMISSION_TRACKER_POST']);
@@ -160,19 +161,19 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			$searchterm = str_replace('*', $db->any_char , $searchterm);
 			$searchterm = str_replace('?', $db->one_char , $searchterm);
 		}
-		
+
 		switch ($db->sql_layer)
 		{
 			case 'mssql':
 			case 'mssql_odbc':
 				$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(cast(t.ticket_desc as varchar(4000))) ' . $db->sql_like_expression($searchterm) . ')';
 			break;
-			
+
 			default:
 				$sql_array['WHERE'] .= ' AND (LOWER(t.ticket_title) ' . $db->sql_like_expression($searchterm) . ' OR LOWER(t.ticket_desc) ' . $db->sql_like_expression($searchterm) . ')';
 			break;
 		}
-		
+
 		$pagination_mode = 'mode=search&amp;term=' . $term;
 	}
 
@@ -515,7 +516,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				//If user can manage project check for updates
+				// If user can manage project check for updates
 				if (group_memberships($row['project_group'], $user->data['user_id'], true))
 				{
 					$data = array(
