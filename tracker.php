@@ -463,6 +463,15 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$tracker->posting_gen_attachment_data($attachment_data);
 			}
 		}
+		
+		$data = array(
+			'ticket_assigned_to'	=> request_var('au', 0),
+			'status_id'				=> request_var('cs', 0),
+			'priority_id'			=> request_var('pr', 0),
+			'severity_id'			=> request_var('s', 0),
+			'ticket_hidden'			=> request_var('ticket_hidden', 0),
+			'ticket_locked'			=> request_var('ticket_locked', 0),
+		);
 
 		if ($submit)
 		{
@@ -519,21 +528,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				// If user can manage project check for updates
 				if (group_memberships($row['project_group'], $user->data['user_id'], true))
 				{
-					$data = array(
-						'ticket_assigned_to'	=> request_var('au', 0),
-						'status_id'				=> request_var('cs', 0),
-						'priority_id'			=> request_var('pr', 0),
-						'severity_id'			=> request_var('s', 0),
-					);
-
 					$tracker->update_ticket($data, $ticket_id);
 					$tracker->process_notification($data, $row);
 
-					$ticket_reply_hidden = request_var('ticket_hidden', 0);
-					$tracker->hide_unhide((($ticket_reply_hidden) ? 'hide' : 'unhide'), $ticket_id);
-
-					$ticket_reply_locked = request_var('ticket_locked', 0);
-					$tracker->lock_unlock((($ticket_reply_locked) ? 'lock' : 'unlock'), $ticket_id);
+					$tracker->hide_unhide((($data['ticket_hidden']) ? 'hide' : 'unhide'), $ticket_id);
+					$tracker->lock_unlock((($data['ticket_locked']) ? 'lock' : 'unlock'), $ticket_id);
 
 				}
 
@@ -551,7 +550,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			}
 		}
 
-		if ($preview)
+		if ($preview && $post_data['post_desc'])
 		{
 			$preview_data = array(
 				'text'		=> $post_data['post_desc'],
@@ -731,7 +730,16 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$s_ticket_version = $tracker->get_type_option('version', $project_id);
 	$s_ticket_priority = $tracker->get_type_option('priority', $project_id);
 	$s_ticket_severity = $tracker->get_type_option('severity', $project_id);
-	$s_ticket_environment = $tracker->get_type_option('environment', $project_id);
+	$s_ticket_environment = $tracker->get_type_option('environment', $project_id);	
+
+	$option_data = array(
+		'status_id'				=> ($preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
+		'ticket_assigned_to'	=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
+		'severity_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
+		'priority_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
+		'ticket_hidden'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_locked'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_locked'] : $row['ticket_status'],
+	);
 
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
@@ -741,19 +749,20 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
+		'S_IS_LOCKED'				=> ($option_data['ticket_locked'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'U_UPDATE_ACTION'			=> ($can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
-		'S_STATUS_OPTIONS'			=> (!$can_manage) ? '' : $tracker->status_select_options($row['status_id']),
-		'S_ASSIGN_USER_OPTIONS'		=> (!$can_manage) ? '' : $tracker->user_select_options($row['ticket_assigned_to'], $row['project_group'], $project_id),
-		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$can_manage) ? '' : $tracker->select_options($project_id, 'severity', $row['severity_id']),
-		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$can_manage) ? '' : $tracker->select_options($project_id, 'priority', $row['priority_id']),
+		'S_STATUS_OPTIONS'			=> (!$can_manage) ? '' : $tracker->status_select_options($option_data['status_id']),
+		'S_ASSIGN_USER_OPTIONS'		=> (!$can_manage) ? '' : $tracker->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
+		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$can_manage) ? '' : $tracker->select_options($project_id, 'severity', $option_data['severity_id']),
+		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$can_manage) ? '' : $tracker->select_options($project_id, 'priority', $option_data['priority_id']),
+			
 		'S_TICKET_MOD' 				=> ($ticket_mod != '') ? '<select name="action">' . $ticket_mod . '</select>' : '',
 
 		'S_CAN_POST_TRACKER'		=> $auth->acl_get('u_tracker_post'),
 		'REPLY_IMG'					=> ($row['ticket_status'] == TRACKER_TICKET_LOCKED) ? $user->img('button_topic_locked', 'TOPIC_LOCKED') :$user->img('button_topic_reply', 'POST_REPLY'),
 		'EDIT_IMG' 					=> $user->img('icon_post_edit', 'EDIT_POST'),
 		'DELETE_IMG' 				=> $user->img('icon_post_delete', 'DELETE_POST'),
-		'S_IS_LOCKED'				=>($row['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'EDITED_MESSAGE'			=> $tracker->fetch_edited_by($row, 'ticket'),
 		'EDIT_REASON'				=> $row['edit_reason'],
@@ -779,11 +788,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_REPORTED_BY'		=> get_username_string('full', $row['ticket_user_id'], $row['ticket_username'], $row['ticket_user_colour']),
 		'TICKET_ID'					=> $row['ticket_id'],
 		'TICKET_TITLE'				=> $row['ticket_title'],
-		'TICKET_HIDDEN'				=> ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 		'TICKET_DESC'				=> generate_text_for_display($row['ticket_desc'], $row['ticket_desc_uid'], $row['ticket_desc_bitfield'], $row['ticket_desc_options']),
 		'TICKET_STATUS'				=> '(' . strtolower($tracker->set_status($row['status_id'])) . ')',
 		'TICKET_STATUS_DETAILS'		=> $tracker->set_status($row['status_id']),
 		'TICKET_CLOSED'				=> $tracker->is_closed($row['status_id']),
+		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,		
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
 
