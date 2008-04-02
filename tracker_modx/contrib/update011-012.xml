@@ -15,11 +15,7 @@
 				<contributions />
 			</author>
 		</author-group>
-		<author-notes><![CDATA[Thanks to evil3 for helping out with the mod.
-Username: evil3
-Email: evil@phpbbmodders.net
-Name: Igor Wiedler
-WWW: http://phpbbmodders.net ]]>
+		<author-notes><![CDATA[Thanks to evil3 for helping out with the mod.]]>
 		</author-notes>
 		<mod-version>
 			<major>0</major>
@@ -99,7 +95,6 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php" />
 			<file from="root/includes/tracker/tracker_status.php" to="includes/tracker/tracker_status.php" />
 			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php" />
-			<file from="root/includes/tracker/files/*.*" to="includes/tracker/files/*.*" />
 			<file from="root/language/en/acp/permissions_tracker.php" to="language/en/acp/permissions_tracker.php" />
 			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt" />
 			<file from="root/language/en/email/tracker_notify_comment.txt" to="language/en/email/tracker_notify_comment.txt" />
@@ -107,6 +102,7 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/language/en/email/tracker_notify_status_single.txt" to="language/en/email/tracker_notify_status_single.txt" />
 			<file from="root/language/en/mods/tracker.php" to="language/en/mods/tracker.php" />
 			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php" />
+			<file from="root/files/tracker/*.*" to="files/tracker/*.*" />
 			<file from="root/styles/prosilver/template/tracker/tracker_index_body.html" to="styles/prosilver/template/tracker/tracker_index_body.html" />
 			<file from="root/styles/prosilver/template/tracker/tracker_move.html" to="styles/prosilver/template/tracker/tracker_move.html" />
 			<file from="root/styles/prosilver/template/tracker/tracker_stats_body.html" to="styles/prosilver/template/tracker/tracker_stats_body.html" />
