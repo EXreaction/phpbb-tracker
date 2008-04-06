@@ -33,7 +33,7 @@
 					<strong>{L_TRACKER_FILTER_TICKET}:</strong>
 				</label>
 				<select id="st" name="st" onchange="document.getElementById('st_form').submit();">{S_STATUS_OPTIONS}</select>
-				<noscript><input type="submit" name="submit" value="OK" class="button2" /></noscript>
+				<noscript><input type="submit" name="submit" value="OK" class="btnlite" /></noscript>
 				<input type="hidden" name="p" value="{PROJECT_ID}" />
 				<input type="hidden" name="u" value="{TRACKER_USER_ID}" />
 				<input type="hidden" name="at" value="{TRACKER_ASSIGNED_USER_ID}" />
@@ -44,7 +44,7 @@
 			<form action="{S_ACTION_SEARCH}" method="post" id="search_tracker">
 				{S_HIDDEN_FIELDS_SEARCH}
 				<input type="text" name="term" maxlength="128" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="<!-- IF SEARCH_TERM-->{SEARCH_TERM}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" />
-				<input type="submit" value="{L_SEARCH}" />
+				<input type="submit" value="{L_SEARCH}" class="btnlite" />
 				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
 			</form>
 		</td>
