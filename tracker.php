@@ -430,7 +430,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				'post_desc_options'			=> 7,
 				'post_desc_uid'				=> '',
 				'ticket_id'					=> $ticket_id,
-				'edit_reason'				=> '',
 			);
 		}
 
@@ -470,7 +469,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'priority_id'			=> request_var('pr', 0),
 			'severity_id'			=> request_var('s', 0),
 			'ticket_hidden'			=> request_var('ticket_hidden', 0),
-			'ticket_locked'			=> request_var('ticket_locked', 0),
+			'ticket_status'			=> request_var('ticket_status', 0),
 		);
 
 		if ($submit)
@@ -532,7 +531,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 					$tracker->process_notification($data, $row);
 
 					$tracker->hide_unhide((($data['ticket_hidden']) ? 'hide' : 'unhide'), $ticket_id);
-					$tracker->lock_unlock((($data['ticket_locked']) ? 'lock' : 'unlock'), $ticket_id);
+					$tracker->lock_unlock((($data['ticket_status']) ? 'lock' : 'unlock'), $ticket_id);
 
 				}
 
@@ -738,7 +737,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'severity_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
 		'priority_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
 		'ticket_hidden'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
-		'ticket_locked'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_locked'] : $row['ticket_status'],
+		'ticket_status'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
 	$template->assign_vars(array(
@@ -749,7 +748,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
-		'S_IS_LOCKED'				=> ($option_data['ticket_locked'] == TRACKER_TICKET_LOCKED) ? true : false,
+		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'U_UPDATE_ACTION'			=> ($can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
 		'S_STATUS_OPTIONS'			=> (!$can_manage) ? '' : $tracker->status_select_options($option_data['status_id']),
@@ -906,18 +905,17 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'ticket_desc_uid'			=> '',
 			'status_id'					=> TRACKER_NEW_STATUS,
 			'project_id'				=> $project_id,
-			'edit_reason'				=> '',
 		);
 	}
 
 	if ($mode == 'edit' && ($preview || $submit || $add_attachment || $remove_attachment))
 	{
-		unset($ticket_data['ticket_user_id']);
-		unset($ticket_data['ticket_time']);
-		unset($ticket_data['status_id']);
-		$ticket_data['edit_reason'] = utf8_normalize_nfc(request_var('edit_reason', '', true));
-		$ticket_data['edit_time'] = time();
-		$ticket_data['edit_user'] = $user->data['user_id'];
+		unset($ticket_data['ticket_user_id'], $ticket_data['ticket_time'], $ticket_data['status_id']);
+		$ticket_data += array(
+			'edit_reason' => utf8_normalize_nfc(request_var('edit_reason', '', true)),
+			'edit_time' => time(),
+			'edit_user' => $user->data['user_id'],
+		);
 	}
 
 	if ($add_attachment)
