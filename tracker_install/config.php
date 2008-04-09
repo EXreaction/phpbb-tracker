@@ -17,7 +17,7 @@
 
 $CFG = array(
 	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.1.2',
+	'mod_version'				=> '0.1.3',
 	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.2 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
 	'mod_dir'					=> 'tracker_install',
 	'clear_cache_install'		=> true,
@@ -30,7 +30,7 @@ $CFG = array(
 	'module_remove'				=> array('tracker'),
 	'permission_options'		=> array(
 		'local'		=> array(),
-		'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_edit', 'u_tracker_attach', 'u_tracker_download', 'a_tracker'),
+		'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_attach', 'u_tracker_download', 'a_tracker'),
 	),
 	'mod_modules'				=> array(
 		array(
@@ -116,6 +116,12 @@ $CFG = array(
 					'project_name'		=> array('VCHAR', ''),
 				),		
 			),
+		),
+	),
+	'update_permission_options' => array(
+		'0.1.3'	=> array(
+			'local'		=> array(),
+			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all'),
 		),
 	),
 );

@@ -10,6 +10,6 @@ INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('send_email
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('tickets_per_page', '10');
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('posts_per_page', '10');
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('top_reporters', '10');
-INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('version', '0.1.2');
+INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('version', '0.1.3');
 
 # POSTGRES COMMIT #

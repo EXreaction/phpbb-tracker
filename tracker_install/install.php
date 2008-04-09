@@ -168,7 +168,10 @@ switch ($mode)
 					//This is need because of a bug when installing 0.1.1 new
 					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
 					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
-
+				case '0.1.2':
+					echo '<br /><h1>Updating database from version 0.1.2 to 0.1.3...</h1>';
+					$install_mod->add_permissions($CFG['update_permission_options']['0.1.3']);
+					
 				break;
 
 				default:
