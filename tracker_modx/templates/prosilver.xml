@@ -83,7 +83,7 @@ WWW: http://phpbbmodders.net ]]>
 			<edit>
 				<find><![CDATA[				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --></li>]]></find>
 				<action type="before-add"><![CDATA[			<!-- IF S_IN_TRACKER -->
-				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <strong>&#8249;</strong> <a href="{U_TRACKER}">{L_TRACKER}</a><!-- IF S_IN_STATS --> <strong>&#8249;</strong> <a href="{U_TRACKER_STATS}">{L_TRACKER_STATS}</a><!-- ENDIF --><!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --><!-- IF TRACKER_TICKET_ID --> <strong>&#8249;</strong> <a href="{U_VIEW_TRACKER_TICKET}">{L_TRACKER_NAV_TICKET}{TRACKER_TICKET_ID}</a><!-- ENDIF --></li>
+				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <strong>&#8249;</strong> <a href="{U_TRACKER}">{L_TRACKER_INDEX}</a><!-- IF S_IN_STATS --> <strong>&#8249;</strong> <a href="{U_TRACKER_STATS}">{L_TRACKER_STATS}</a><!-- ENDIF --><!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --><!-- IF TRACKER_TICKET_ID --> <strong>&#8249;</strong> <a href="{U_VIEW_TRACKER_TICKET}">{L_TRACKER_NAV_TICKET}{TRACKER_TICKET_ID}</a><!-- ENDIF --></li>
 			<!-- ELSE -->]]></action>
 			</edit>
 			<edit>

@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_TICKET'						=> 'Ticket',
 	'TRACKER_TICKETS'						=> 'Tickets',
 	'TRACKER'								=> 'Tracker',
+	'TRACKER_INDEX'							=> 'Tracker index',
 	'TRACKER_STATS'							=> 'Tracker Statistics',
 	'TRACKER_POST_TICKET'					=> 'Post a new ticket',
 	'TRACKER_FILTER_TICKET'					=> 'Filter tickets',
