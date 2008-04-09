@@ -96,7 +96,7 @@ $lang = array_merge($lang, array(
 	'acl_u_tracker_edit_all'		=> array('lang' => 'Can edit all tracker tickets/posts if in project group', 		'cat' => 'tracker'),
 	'acl_u_tracker_delete_all'		=> array('lang' => 'Can delete all tracker tickets/posts if in project group', 		'cat' => 'tracker'),
 	'acl_u_tracker_edit_global'		=> array('lang' => 'Can edit all tracker tickets/posts in any project', 			'cat' => 'tracker'),
-	'acl_u_tracker_delete_global'	=> array('lang' => 'Can delete all tracker tickets/posts if any project', 			'cat' => 'tracker'),
+	'acl_u_tracker_delete_global'	=> array('lang' => 'Can delete all tracker tickets/posts in any project', 			'cat' => 'tracker'),
 
 ));
 
