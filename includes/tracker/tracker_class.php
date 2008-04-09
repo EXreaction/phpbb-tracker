@@ -2048,7 +2048,7 @@ class tracker
 			}
 
 			$sql_array = array(
-				'SELECT'	=> 'u.user_id,
+				'SELECT'	=> 't.ticket_assigned_to,
 								u.user_colour,
 								u.username,
 								u.username_clean,
@@ -2067,7 +2067,7 @@ class tracker
 
 				'WHERE'		=> 't.project_id = ' . $project_id,
 
-				'GROUP_BY'	=> 'u.user_id, u.user_colour, u.username, u.username_clean',
+				'GROUP_BY'	=> 't.ticket_assigned_to, u.user_colour, u.username, u.username_clean',
 
 				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
@@ -2080,19 +2080,19 @@ class tracker
 
 			foreach ($row as $item)
 			{
-				if ($item['user_id'] == 0)
+				if ($item['ticket_assigned_to'] == 0)
 				{
 					continue;
 				}
 
 				$template->assign_block_vars('assigne', array(
-					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
+					'USERNAME'		=> $this->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
 
 			$sql_array = array(
-				'SELECT'	=> 'u.user_id,
+				'SELECT'	=> 't.ticket_user_id,
 								u.user_colour,
 								u.username,
 								u.username_clean,
@@ -2111,7 +2111,7 @@ class tracker
 
 				'WHERE'		=> 't.project_id = ' . $project_id,
 
-				'GROUP_BY'	=> 'u.user_id, u.user_colour, u.username, u.username_clean',
+				'GROUP_BY'	=> 't.ticket_user_id, u.user_colour, u.username, u.username_clean',
 
 				'ORDER_BY'	=>	'total_tickets DESC, u.username_clean ASC',
 
@@ -2126,13 +2126,13 @@ class tracker
 
 			foreach ($row as $item)
 			{
-				if ($item['user_id'] == 0)
+				if ($item['ticket_user_id'] == 0)
 				{
 					continue;
 				}
 
 				$template->assign_block_vars('top', array(
-					'USERNAME'		=> $this->get_assigned_to($project_id, $item['user_id'], $item['username'], $item['user_colour']),
+					'USERNAME'		=> $this->get_assigned_to($project_id, $item['ticket_user_id'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
