@@ -2403,7 +2403,7 @@ class tracker
 	{
 		global $user, $auth, $config;
 
-		if ($auth->acl_get('a_tracker') || $auth->acl_get('u_tracker_edit_global'))
+		if ($auth->acl_get('a_tracker') || $auth->acl_get('u_tracker_edit_global') || ($auth->acl_get('u_tracker_edit_all') && $this->can_manage))
 		{
 			return true;
 		}
@@ -2417,7 +2417,7 @@ class tracker
 			trigger_error('TRACKER_CANNOT_EDIT_TIME');
 		}
 		
-		if (($user->data['user_id'] != $user_id || !$auth->acl_get('u_tracker_edit')) || !$auth->acl_get('u_tracker_edit_all'))
+		if ($user->data['user_id'] != $user_id || !$auth->acl_get('u_tracker_edit'))
 		{
 			if ($bool)
 			{
@@ -2489,7 +2489,7 @@ class tracker
 	*/
 	function check_ticket_exists($id)
 	{
-		global $user, $db;
+		global $user, $db, $auth;
 
 		$sql_array = array(
 			'SELECT'	=> 't.ticket_title, t.ticket_status, p.project_group',
@@ -2517,8 +2517,13 @@ class tracker
 		{
 			trigger_error('TRACKER_TICKET_NO_EXIST');
 		}
+		
+		if ($auth->acl_get('u_tracker_edit_global') || ($this->can_manage && $auth->acl_get('u_tracker_edit_all')))
+		{
+			return true;
+		}
 
-		if ($row['ticket_status'] == TRACKER_TICKET_LOCKED && !group_memberships($row['project_group'], $user->data['user_id'], true))
+		if ($row['ticket_status'] == TRACKER_TICKET_LOCKED && !$this->can_manage)
 		{
 			trigger_error('TRACKER_TICKET_LOCKED_MESSAGE');
 		}
