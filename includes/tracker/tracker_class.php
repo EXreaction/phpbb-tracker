@@ -29,6 +29,7 @@ class tracker
 	var $status = array();
 	var $severity = array();
 	var $priority = array();
+	var $can_manage = false;
 
 	function tracker($in_tracker = true)
 	{
@@ -88,6 +89,13 @@ class tracker
 	function set_type($project_id)
 	{
 		$this->status = $this->get_type_option('status', $project_id);
+	}
+	
+	function set_manage($project_id)
+	{
+		global $user;
+		
+		$this->can_manage = group_memberships($this->projects[$project_id]['project_group'], $user->data['user_id'], true);
 	}
 
 	function set_severity()
@@ -1944,7 +1952,7 @@ class tracker
 			}
 
 			$template->assign_block_vars('comments', array(
-				'S_CAN_DELETE'			=> $auth->acl_get('a_tracker'),
+				'S_CAN_DELETE'			=> $this->check_delete(),
 				'U_DELETE'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=delete"),
 				'S_CAN_EDIT'			=> $this->check_edit($row['edit_time'], $row['post_user_id']),
 				'U_EDIT'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=edit"),
@@ -2395,18 +2403,9 @@ class tracker
 	{
 		global $user, $auth, $config;
 
-		if ($auth->acl_get('a_tracker'))
+		if ($auth->acl_get('a_tracker') || $auth->acl_get('u_tracker_edit_global'))
 		{
 			return true;
-		}
-
-		if (($user->data['user_id'] != $user_id) || !$auth->acl_get('u_tracker_edit'))
-		{
-			if ($bool)
-			{
-				return false;
-			}
-			trigger_error('TRACKER_USER_CANNOT_EDIT');
 		}
 
 		if (!($edit_time > time() - ($config['edit_time'] * 60) || !$config['edit_time']))
@@ -2417,8 +2416,33 @@ class tracker
 			}
 			trigger_error('TRACKER_CANNOT_EDIT_TIME');
 		}
+		
+		if (($user->data['user_id'] != $user_id || !$auth->acl_get('u_tracker_edit')) || !$auth->acl_get('u_tracker_edit_all'))
+		{
+			if ($bool)
+			{
+				return false;
+			}
+			trigger_error('TRACKER_USER_CANNOT_EDIT');
+		}
 
 		return true;
+
+	}
+	
+	/*
+	* Checks whether a user is allowed to delete posts/tickets
+	*/
+	function check_delete()
+	{
+		global $auth;
+
+		if ($auth->acl_get('a_tracker') || $auth->acl_get('u_tracker_delete_global') || ($auth->acl_get('u_tracker_delete_all') && $this->can_manage))
+		{
+			return true;
+		}
+
+		return false;
 
 	}
 

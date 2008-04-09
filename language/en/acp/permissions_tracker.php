@@ -73,6 +73,10 @@ INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only)
 INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_view', 1, 0, 0);
 INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_post', 1, 0, 0);
 INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit', 1, 0, 0);
+INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit_all', 1, 0, 0);
+INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_delete_all', 1, 0, 0);
+INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit_global', 1, 0, 0);
+INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_delete_global', 1, 0, 0);
 INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_attach', 1, 0, 0);
 INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_download', 1, 0, 0);
 */
@@ -83,12 +87,17 @@ $lang['permission_cat']['tracker'] = 'phpBB Tracker';
 
 // Admin Permissions
 $lang = array_merge($lang, array(
-	'acl_a_tracker'				=> array('lang' => 'Can manage tracker', 								'cat' => 'tracker'),
-	'acl_u_tracker_attach'		=> array('lang' => 'Can attach files to tracker tickets/posts', 		'cat' => 'tracker'),
-	'acl_u_tracker_download'	=> array('lang' => 'Can download files from tracker tickets/posts', 	'cat' => 'tracker'),
-	'acl_u_tracker_view'		=> array('lang' => 'Can view tracker tickets', 							'cat' => 'tracker'),
-	'acl_u_tracker_post'		=> array('lang' => 'Can post tracker tickets', 							'cat' => 'tracker'),
-	'acl_u_tracker_edit'		=> array('lang' => 'Can edit own tracker tickets/posts', 				'cat' => 'tracker'),
+	'acl_a_tracker'					=> array('lang' => 'Can manage tracker', 											'cat' => 'tracker'),
+	'acl_u_tracker_attach'			=> array('lang' => 'Can attach files to tracker tickets/posts', 					'cat' => 'tracker'),
+	'acl_u_tracker_download'		=> array('lang' => 'Can download files from tracker tickets/posts', 				'cat' => 'tracker'),
+	'acl_u_tracker_view'			=> array('lang' => 'Can view tracker tickets', 										'cat' => 'tracker'),
+	'acl_u_tracker_post'			=> array('lang' => 'Can post tracker tickets', 										'cat' => 'tracker'),
+	'acl_u_tracker_edit'			=> array('lang' => 'Can edit own tracker tickets/posts', 							'cat' => 'tracker'),
+	'acl_u_tracker_edit_all'		=> array('lang' => 'Can edit all tracker tickets/posts if in project group', 		'cat' => 'tracker'),
+	'acl_u_tracker_delete_all'		=> array('lang' => 'Can delete all tracker tickets/posts if in project group', 		'cat' => 'tracker'),
+	'acl_u_tracker_edit_global'		=> array('lang' => 'Can edit all tracker tickets/posts in any project', 			'cat' => 'tracker'),
+	'acl_u_tracker_delete_global'	=> array('lang' => 'Can delete all tracker tickets/posts if any project', 			'cat' => 'tracker'),
+
 ));
 
 ?>

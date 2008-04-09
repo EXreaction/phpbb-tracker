@@ -61,11 +61,12 @@ if (!empty($project_id))
 	{
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
 	}
-
+	
+	$tracker->set_manage($project_id);
 	// Check if the project is enabled...
 	if ($tracker->projects[$project_id]['project_enabled'] == TRACKER_PROJECT_DISABLED)
 	{
-		if (!group_memberships($tracker->projects[$project_id]['project_group'], $user->data['user_id'], true))
+		if (!$tracker->can_manage)
 		{
 			trigger_error('TRACKER_PROJECT_NO_EXIST');
 		}
@@ -92,12 +93,12 @@ if (($mode == 'reply' || $mode == 'add') && (!$auth->acl_get('u_tracker_post') |
 	trigger_error($user->lang['NO_PERMISSION_TRACKER_POST']);
 }
 
-if ($mode == 'edit' && (!$auth->acl_get('u_tracker_edit') || !$user->data['is_registered']))
+if ($mode == 'edit' && !$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_edit') && !$auth->acl_get('u_tracker_edit_all') && !$auth->acl_get('u_tracker_edit_global'))
 {
 	trigger_error($user->lang['NO_PERMISSION_TRACKER_EDIT']);
 }
 
-if ($mode == 'delete' && !$auth->acl_get('a_tracker'))
+if ($mode == 'delete' && !$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_delete_global') && !$auth->acl_get('u_tracker_delete_all'))
 {
 	trigger_error('TRACKER_DELETE_NO_PERMISSION');
 }
@@ -106,10 +107,9 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 {
 	$row = $tracker->projects[$project_id];
 	$tracker->generate_nav($row);
-	$can_manage = group_memberships($row['project_group'], $user->data['user_id'], true);
-	$hidden_tickets = (!$can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
-	$project_enabled = (!$can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
-	$ticket_security = (!$can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
+	$hidden_tickets = (!$tracker->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
+	$project_enabled = (!$tracker->can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
+	$ticket_security = (!$tracker->can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 
 	$my_tickets = ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$my_assigned_tickets = ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
@@ -276,7 +276,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$template->assign_vars(array(
 		'L_TITLE'						=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
 
-		'S_CAN_MANAGE'					=> $can_manage,
+		'S_CAN_MANAGE'					=> $tracker->can_manage,
 		'PROJECT_ID'					=> $project_id,
 		'TRACKER_USER_ID'				=> $user_id,
 		'TRACKER_ASSIGNED_USER_ID'		=> $assigned_to_user_id,
@@ -308,7 +308,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 }
 else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode == 'reply' || $mode == 'delete') || ($mode == 'edit' && $post_id)))
 {
-	if ($mode == 'delete' && $submit && $auth->acl_get('a_tracker'))
+	if ($mode == 'delete' && $submit && $tracker->check_delete())
 	{
 		if (confirm_box(true) && $post_id)
 		{
@@ -335,7 +335,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			trigger_error($message);
 		}
 	}
-	else if ($mode == 'delete' && $auth->acl_get('a_tracker'))
+	else if ($mode == 'delete' && $tracker->check_delete())
 	{
 		if ($post_id)
 		{
@@ -525,7 +525,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$db->sql_freeresult($result);
 
 				// If user can manage project check for updates
-				if (group_memberships($row['project_group'], $user->data['user_id'], true))
+				if ($tracker->can_manage)
 				{
 					$tracker->update_ticket($data, $ticket_id);
 					$tracker->process_notification($data, $row);
@@ -638,13 +638,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 
-	$can_manage = group_memberships($row['project_group'], $user->data['user_id'], true);
-	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$can_manage) || ($row['project_security'] && !$can_manage && $row['ticket_user_id'] != $user->data['user_id']))
+	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$tracker->can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$tracker->can_manage) || ($row['project_security'] && !$tracker->can_manage && $row['ticket_user_id'] != $user->data['user_id']))
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
 
-	if ($project_id && $ticket_id && !$mode && $can_manage)
+	if ($project_id && $ticket_id && !$mode && $tracker->can_manage)
 	{
 		$tracker->update_last_visit($ticket_id);
 	}
@@ -653,7 +652,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	if ($mode != 'reply' || $mode != 'edit')
 	{
-		if ($can_manage && $update && $user->data['is_registered'] && $auth->acl_get('u_tracker_view') && $auth->acl_get('u_tracker_post'))
+		if ($tracker->can_manage && $update && $user->data['is_registered'] && $auth->acl_get('u_tracker_view') && $auth->acl_get('u_tracker_post'))
 		{
 			if (!check_form_key('add_post'))
 			{
@@ -680,7 +679,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 	}
 
-	if ($submit_mod && $can_manage && (!$mode || $mode == 'history'))
+	if ($submit_mod && $tracker->can_manage && (!$mode || $mode == 'history'))
 	{
 		$action = request_var('action', '');
 		switch ($action)
@@ -708,9 +707,9 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	}
 
 	$ticket_mod = '';
-	$ticket_mod .= ($can_manage || ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED)) ? (($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>') : '';
-	$ticket_mod .= ($can_manage || ($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN)) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
-	$ticket_mod .= ($can_manage) ? '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>' : '';
+	$ticket_mod .= ($tracker->can_manage || ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED)) ? (($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>') : '';
+	$ticket_mod .= ($tracker->can_manage || ($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN)) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
+	$ticket_mod .= ($tracker->can_manage) ? '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>' : '';
 
 	$s_ticket_reply = ($mode == 'reply' || $mode == 'edit') ? true : false;
 
@@ -742,7 +741,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
-		'S_MANAGE_TICKET'			=> $can_manage,
+		'S_MANAGE_TICKET'			=> $tracker->can_manage,
 		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
 
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
@@ -750,11 +749,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
-		'U_UPDATE_ACTION'			=> ($can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
-		'S_STATUS_OPTIONS'			=> (!$can_manage) ? '' : $tracker->status_select_options($option_data['status_id']),
-		'S_ASSIGN_USER_OPTIONS'		=> (!$can_manage) ? '' : $tracker->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
-		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$can_manage) ? '' : $tracker->select_options($project_id, 'severity', $option_data['severity_id']),
-		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$can_manage) ? '' : $tracker->select_options($project_id, 'priority', $option_data['priority_id']),
+		'U_UPDATE_ACTION'			=> ($tracker->can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
+		'S_STATUS_OPTIONS'			=> (!$tracker->can_manage) ? '' : $tracker->status_select_options($option_data['status_id']),
+		'S_ASSIGN_USER_OPTIONS'		=> (!$tracker->can_manage) ? '' : $tracker->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
+		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$tracker->can_manage) ? '' : $tracker->select_options($project_id, 'severity', $option_data['severity_id']),
+		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$tracker->can_manage) ? '' : $tracker->select_options($project_id, 'priority', $option_data['priority_id']),
 			
 		'S_TICKET_MOD' 				=> ($ticket_mod != '') ? '<select name="action">' . $ticket_mod . '</select>' : '',
 
@@ -766,7 +765,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'EDITED_MESSAGE'			=> $tracker->fetch_edited_by($row, 'ticket'),
 		'EDIT_REASON'				=> $row['edit_reason'],
 
-		'S_CAN_DELETE'				=> $auth->acl_get('a_tracker'),
+		'S_CAN_DELETE'				=> $tracker->check_delete(),
 		'U_DELETE'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=delete"),
 		'S_CAN_EDIT'				=> $tracker->check_edit($row['edit_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit"),
