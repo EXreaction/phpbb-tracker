@@ -679,7 +679,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 	}
 
-	if ($submit_mod && $tracker->can_manage && (!$mode || $mode == 'history'))
+	if ($submit_mod && ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global')) && (!$mode || $mode == 'history'))
 	{
 		$action = request_var('action', '');
 		switch ($action)
@@ -692,8 +692,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 			case 'hide':
 			case 'unhide':
-				$tracker->hide_unhide($action, $ticket_id);
-				redirect(build_url());
+				if ($tracker->can_manage)
+				{
+					$tracker->hide_unhide($action, $ticket_id);
+					redirect(build_url());
+				}
 			break;
 
 			case 'move':
@@ -706,10 +709,14 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	}
 
+	
 	$ticket_mod = '';
-	$ticket_mod .= ($tracker->can_manage || ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED)) ? (($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>') : '';
-	$ticket_mod .= ($tracker->can_manage || ($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN)) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
-	$ticket_mod .= ($tracker->can_manage) ? '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>' : '';
+	if ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global'))
+	{
+		$ticket_mod .= ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>';
+		$ticket_mod .= ($tracker->can_manage) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
+		$ticket_mod .= '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>';
+	}
 
 	$s_ticket_reply = ($mode == 'reply' || $mode == 'edit') ? true : false;
 
@@ -742,6 +749,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
 		'S_MANAGE_TICKET'			=> $tracker->can_manage,
+		'S_MANAGE_TICKET_MOD'		=> ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
 
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
