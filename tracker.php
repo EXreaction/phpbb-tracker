@@ -738,12 +738,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$s_ticket_environment = $tracker->get_type_option('environment', $project_id);	
 
 	$option_data = array(
-		'status_id'				=> ($preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
-		'ticket_assigned_to'	=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
-		'severity_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
-		'priority_id'			=> ($preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
-		'ticket_hidden'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
-		'ticket_status'			=> ($preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
+		'status_id'				=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
+		'ticket_assigned_to'	=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
+		'severity_id'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
+		'priority_id'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
+		'ticket_hidden'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_status'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
 	$template->assign_vars(array(

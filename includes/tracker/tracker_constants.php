@@ -31,6 +31,8 @@ define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
 define('TRACKER_EXTENSION_ID', 9999);
 
 define('TRACKER_ASSIGNED_TO_GROUP', -1);
+define('TRACKER_PRIORITY_DEFAULT', 4);
+define('TRACKER_SEVERITY_DEFAULT', 3);
 
 define('TRACKER_TICKET_UNLOCKED', 0);
 define('TRACKER_TICKET_LOCKED', 1);

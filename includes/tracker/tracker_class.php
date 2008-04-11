@@ -622,6 +622,11 @@ class tracker
 	function add_ticket($data)
 	{
 		global $db;
+		
+		$data += array(
+			'severity_id'	=> TRACKER_SEVERITY_DEFAULT,
+			'priority_id'	=> TRACKER_PRIORITY_DEFAULT,
+		);
 
 		$sql = 'INSERT INTO ' . TRACKER_TICKETS_TABLE . ' ' .
 			$db->sql_build_array('INSERT', $data);
@@ -1591,6 +1596,11 @@ class tracker
 		else
 		{
 			$row = ($mode == 'severity') ? $this->severity : $this->priority;
+			if (!$selected_id)
+			{
+				$selected_id = ($mode == 'severity') ? TRACKER_SEVERITY_DEFAULT : TRACKER_PRIORITY_DEFAULT;
+			}
+			
 			foreach ($row as $key => $value)
 			{
 
