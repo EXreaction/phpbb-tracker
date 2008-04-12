@@ -59,8 +59,7 @@ switch ($mode)
 		}
 
 		echo '<br /><h1>Removing mod permissions...</h1>';
-		// Ok tables have been built, let's fill in the basic information
-		$install_mod->load_data($CFG['remove_permissions_file']);
+		$install_mod->remove_permissions($CFG['permission_options']);
 
 		echo '<br /><h1>Removing Mod modules and clearing module cache...</h1>';
 		$install_mod->remove_modules($CFG['parent_module_remove'], $CFG['module_remove']);
@@ -400,6 +399,63 @@ class install_mod
 		$auth_admin->acl_add_option($options);
 	}
 
+	function remove_permissions($options)
+	{
+		global $db, $cache;
+		
+		$auth_option_id = array();
+		if (!empty($options['local']))
+		{
+			foreach($options['local'] as $local)
+			{
+				$sql = 'SELECT auth_option_id
+					FROM ' . ACL_OPTIONS_TABLE . "
+				WHERE auth_option = '" . $db->sql_escape($local) . "'";
+
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$auth_option_id[] = $row['auth_option_id'];
+				}
+				$db->sql_freeresult($result);
+			}
+		}
+		
+		if (!empty($options['global']))
+		{
+			foreach($options['global'] as $global)
+			{
+				$sql = 'SELECT auth_option_id
+					FROM ' . ACL_OPTIONS_TABLE . "
+				WHERE auth_option = '" . $db->sql_escape($global) . "'";
+
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$auth_option_id[] = $row['auth_option_id'];
+				}
+				$db->sql_freeresult($result);
+			}
+		}
+		
+		//We now have a list of ids we need to remove from the auth tables...	
+		if (!empty($auth_option_id))
+		{			
+			$tables = array(ACL_OPTIONS_TABLE, ACL_GROUPS_TABLE, ACL_USERS_TABLE, ACL_ROLES_DATA_TABLE);
+			
+			foreach ($tables as $table)
+			{
+				$sql = "DELETE FROM $table
+					WHERE " . $db->sql_in_set('auth_option_id', array_map('intval', $auth_option_id));
+				$db->sql_query($sql);
+			}
+
+			$auth_admin = new auth_admin();
+			$cache->destroy('_acl_options');
+			$auth_admin->acl_clear_prefetch();		
+		}	
+	}
+	
 	function db_error($error, $sql, $line, $file)
 	{
 		global $db;
