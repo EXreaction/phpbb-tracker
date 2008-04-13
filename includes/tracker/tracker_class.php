@@ -1964,7 +1964,7 @@ class tracker
 			$template->assign_block_vars('comments', array(
 				'S_CAN_DELETE'			=> $this->check_delete(),
 				'U_DELETE'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=delete"),
-				'S_CAN_EDIT'			=> $this->check_edit($row['edit_time'], $row['post_user_id']),
+				'S_CAN_EDIT'			=> $this->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=edit"),
 				'COMMENT_POSTER'		=> get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']),
 				'COMMENT_TIME'			=> $user->format_date($row['post_time']),

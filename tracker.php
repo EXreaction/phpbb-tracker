@@ -404,7 +404,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				trigger_error('TRACKER_POST_NO_EXIST');
 			}
 
-			$tracker->check_edit($post_data['edit_time'], $post_data['post_user_id'], false);
+			$tracker->check_edit($post_data['post_time'], $post_data['post_user_id'], false);
 
 			if ($post_data['attach_id'])
 			{
@@ -775,7 +775,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		'S_CAN_DELETE'				=> $tracker->check_delete(),
 		'U_DELETE'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=delete"),
-		'S_CAN_EDIT'				=> $tracker->check_edit($row['edit_time'], $row['ticket_user_id']),
+		'S_CAN_EDIT'				=> $tracker->check_edit($row['ticket_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit"),
 
 		'L_TITLE'					=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
@@ -880,7 +880,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			trigger_error('TRACKER_TICKET_NO_EXIST');
 		}
 
-		$tracker->check_edit($ticket_data['edit_time'], $ticket_data['ticket_user_id'], false);
+		$tracker->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
 
 		if ($ticket_data['attach_id'])
 		{
