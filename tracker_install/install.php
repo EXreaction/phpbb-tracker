@@ -145,9 +145,9 @@ switch ($mode)
 
 					foreach ($row as $item)
 					{
-						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . '
-							SET project_name_clean = "' . $db->sql_escape(utf8_clean_string($item['project_name'])) . '"
-						WHERE project_id = ' . (int) $item['project_id'];
+						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . "
+							SET project_name_clean = '" . $db->sql_escape(utf8_clean_string($item['project_name'])) . "'
+						WHERE project_id = " . (int) $item['project_id'];
 						$db->sql_query($sql);
 					}
 					
@@ -307,8 +307,8 @@ class install_mod
 		if (in_array($table_prefix . 'tracker_config', $tables))
 		{
 			$sql = 'SELECT config_value
-				FROM ' . $table_prefix . 'tracker_config
-				WHERE config_name = "version"';
+				FROM ' . $table_prefix . "tracker_config
+				WHERE config_name = 'version'";
 			$result = $db->sql_query($sql);
 			$installed_version = (string) $db->sql_fetchfield('config_value');
 			$db->sql_freeresult($result);
@@ -480,8 +480,8 @@ class install_mod
 		if ($parent_module_data['module_class'] == 'acp')
 		{
 			$sql = 'SELECT module_id
-				FROM ' . MODULES_TABLE . '
-				WHERE module_langname = "ACP_CAT_DOT_MODS"';
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'ACP_CAT_DOT_MODS'";
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -503,8 +503,8 @@ class install_mod
 				$_module->update_module_data($dot_mods, true);
 
 				$sql = 'SELECT module_id
-					FROM ' . MODULES_TABLE . '
-					WHERE module_langname = "ACP_CAT_DOT_MODS"';
+					FROM ' . MODULES_TABLE . "
+					WHERE module_langname = 'ACP_CAT_DOT_MODS'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -530,9 +530,9 @@ class install_mod
 		}
 
 		$sql = 'SELECT module_id
-			FROM ' . MODULES_TABLE . '
-			WHERE module_langname = "' . $parent_module_data['module_langname'] . '"
-				AND module_class = "' . $parent_module_data['module_class'] .'"';
+			FROM ' . MODULES_TABLE . "
+			WHERE module_langname = '{$parent_module_data['module_langname']}'
+				AND module_class = '{$parent_module_data['module_class']}'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -568,9 +568,9 @@ class install_mod
 		$db->sql_error_triggered = false;
 
 		$sql = 'SELECT module_id
-			FROM ' . MODULES_TABLE . '
-			WHERE module_langname = "' . $parent_module_langname . '"
-				AND module_class = "' . $parent_module_class .'"';
+			FROM ' . MODULES_TABLE . "
+			WHERE module_langname = '$parent_module_langname'
+				AND module_class = '$parent_module_class'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);

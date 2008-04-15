@@ -287,10 +287,10 @@ class install_check
 			foreach ($value as $module_mode)
 			{
 				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . '
-					WHERE module_basename = "' . $module_basename . '"
-						AND module_class = "acp"
-						AND module_mode = "' . $module_mode . '"';
+					FROM ' . MODULES_TABLE . "
+					WHERE module_basename = '$module_basename'
+						AND module_class = 'acp'
+						AND module_mode = '$module_mode'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -309,10 +309,10 @@ class install_check
 			foreach ($value as $module_mode)
 			{
 				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . '
-					WHERE module_basename = "' . $module_basename . '"
-						AND module_class = "ucp"
-						AND module_mode = "' . $module_mode . '"';
+					FROM ' . MODULES_TABLE . "
+					WHERE module_basename = '$module_basename'
+						AND module_class = 'ucp'
+						AND module_mode = '$module_mode'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -345,8 +345,8 @@ class install_check
 		foreach ($this->install_permissions as $value)
 		{
 			$sql = 'SELECT auth_option_id
-				FROM ' . ACL_OPTIONS_TABLE . '
-				WHERE auth_option = "' . $value . '"';
+				FROM ' . ACL_OPTIONS_TABLE . "
+				WHERE auth_option = '$value'";
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
