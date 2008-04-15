@@ -367,6 +367,35 @@ class install_check
 		{
 			$this->display_success('All permissions exist');
 		}
+		
+		$sql = 'SELECT auth_option_id, auth_option
+			FROM ' . ACL_OPTIONS_TABLE . '
+			ORDER BY auth_option_id';
+		$result = $db->sql_query($sql);
+		$auth_option_id = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$auth_option_id[$row['auth_option_id']] = $row['auth_option'];
+		}
+		$db->sql_freeresult($result);
+		
+		$duplicate_auth = array_count_values($auth_option_id);
+		unset($auth_option_id);
+		
+		$auth_option_id = array();
+		foreach ($duplicate_auth as $key => $value)
+		{
+			if ($value > 1)
+			{
+				$auth_option_id[] = $key . ' was found ' . $value . ' times';
+			}
+		}
+		
+		if (!empty($auth_option_id))
+		{
+			$this->no_errors = false;
+			$this->display_error('Duplicate auth values can cause problems with permissions. The following duplicate auth values were found inside the ' . ACL_OPTIONS_TABLE . ':', $auth_option_id);
+		}
 	}
 
 	function display_success($text)
