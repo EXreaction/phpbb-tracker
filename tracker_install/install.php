@@ -224,6 +224,7 @@ class install_mod
 		require($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 		require($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 		require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
+		require($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 
 		$user->add_lang('acp/modules');
 
