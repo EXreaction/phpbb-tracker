@@ -28,7 +28,7 @@ WWW: http://phpbbmodders.net ]]>
 		</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>303</time>
+			<time>60</time>
 			<target-version>
 				<target-primary>3.0.0</target-primary>
 				<target-major allow="exact">3</target-major>
@@ -36,6 +36,56 @@ WWW: http://phpbbmodders.net ]]>
 				<target-revision allow="exact">0</target-revision>
 			</target-version>
 		</installation>
+		<history>
+			<entry>
+				<date>2008-03-04</date>
+				<rev-version>
+					<major>0</major>
+					<minor>1</minor>
+					<revision>0</revision>
+				</rev-version>
+				<changelog lang="en">
+					<change>Initial Beta Release</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2008-03-17</date>
+				<rev-version>
+					<major>0</major>
+					<minor>1</minor>
+					<revision>1</revision>
+				</rev-version>
+				<changelog lang="en">
+					<change>Added management options to ticket reply</change>
+					<change>Added attachement form to subsilver2 templates</change>
+					<change>Added htmlspecialchars_decode() for emails</change>
+					<change>Added check to block blank entries in ACP</change>
+					<change>Added visual update to search box</change>
+					<change>Fixed bug viewing all users tickets</change>
+					<change>Fixed bug with sort order for statistics</change>
+					<change>Fixed bug with pagination while sorting/filtering tickets</change>
+					<change>Fixed bug removing attachments for posts when deleting</change>
+					<change>Fixed bug with language variables when viewing statistics</change>
+					<change>Fixed bug with installation script and updating from older versions</change>
+					<change>Fixed bug causing tracker link to appearin viewonline breadcrumbs/nav links</change>
+					<change>Increased size of ticket and post description</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2008-03-18</date>
+				<rev-version>
+					<major>0</major>
+					<minor>1</minor>
+					<revision>2</revision>
+				</rev-version>
+				<changelog lang="en">
+					<change>Added group support to "Show tickets assigned to me"</change>
+					<change>Fixed bug causing missing column in project table</change>
+					<change>Fixed bug with missing htmlspecialchars_decode in email subject</change>
+					<change>Fixed various bugs with installer/updater</change>
+				</changelog>
+			</entry>
+		</history>
 	</header>
 	<action-group>
 		<copy>
@@ -49,7 +99,6 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php" />
 			<file from="root/includes/tracker/tracker_status.php" to="includes/tracker/tracker_status.php" />
 			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php" />
-			<file from="root/includes/tracker/files/*.*" to="includes/tracker/files/*.*" />
 			<file from="root/language/en/acp/permissions_tracker.php" to="language/en/acp/permissions_tracker.php" />
 			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt" />
 			<file from="root/language/en/email/tracker_notify_comment.txt" to="language/en/email/tracker_notify_comment.txt" />
@@ -57,6 +106,7 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/language/en/email/tracker_notify_status_single.txt" to="language/en/email/tracker_notify_status_single.txt" />
 			<file from="root/language/en/mods/tracker.php" to="language/en/mods/tracker.php" />
 			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php" />
+			<file from="root/files/tracker/*.*" to="files/tracker/*.*" />
 			<file from="root/styles/prosilver/template/tracker/tracker_index_body.html" to="styles/prosilver/template/tracker/tracker_index_body.html" />
 			<file from="root/styles/prosilver/template/tracker/tracker_move.html" to="styles/prosilver/template/tracker/tracker_move.html" />
 			<file from="root/styles/prosilver/template/tracker/tracker_stats_body.html" to="styles/prosilver/template/tracker/tracker_stats_body.html" />
@@ -72,28 +122,8 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_body.html" />
 			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_view_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_view_body.html" />
 			<file from="root/styles/subsilver2/template/tracker/tracker_header.html" to="styles/subsilver2/template/tracker/tracker_header.html" />
-		</copy>		
-		<open src="styles/subsilver2/template/overall_header.html">
-			<edit>
-		<find><![CDATA[</head>]]></find>
-				<action type="before-add"><![CDATA[<!-- IF S_IN_TRACKER -->
-<!-- INCLUDE tracker/tracker_header.html -->
-<!-- ENDIF -->]]></action>
-			</edit>
-		 <edit>
-				<find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>
-]]></find>
-				<action type="before-add"><![CDATA[<a href="{U_TRACKER}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_TRACKER}</a>&nbsp; &nbsp;]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	<!-- INCLUDE breadcrumbs.html -->]]></find>
-				<action type="replace-with"><![CDATA[	<!-- IF S_IN_TRACKER -->
-	<!-- INCLUDE tracker/tracker_breadcrumbs.html -->
-	<!-- ELSE -->
-	<!-- INCLUDE breadcrumbs.html -->
-	<!-- ENDIF -->]]></action>
-			</edit>
-		</open>
-		<diy-instructions lang="en">Once done make sure to purge the cache and/or refresh your styles.</diy-instructions>
+		</copy>
+		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/tracker_install/install.php and select the option to update to latest version.
+Once done make sure to remove tracker_install folder from your server.</diy-instructions>
 	</action-group>
 </mod>

@@ -23,12 +23,12 @@ WWW: http://phpbbmodders.net ]]>
 		</author-notes>
 		<mod-version>
 			<major>0</major>
-			<minor>2</minor>
-			<revision>0</revision>
+			<minor>1</minor>
+			<revision>2</revision>
 		</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>303</time>
+			<time>333</time>
 			<target-version>
 				<target-primary>3.0.0</target-primary>
 				<target-major allow="exact">3</target-major>
@@ -72,28 +72,13 @@ WWW: http://phpbbmodders.net ]]>
 			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_body.html" />
 			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_view_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_view_body.html" />
 			<file from="root/styles/subsilver2/template/tracker/tracker_header.html" to="styles/subsilver2/template/tracker/tracker_header.html" />
-		</copy>		
-		<open src="styles/subsilver2/template/overall_header.html">
-			<edit>
-		<find><![CDATA[</head>]]></find>
-				<action type="before-add"><![CDATA[<!-- IF S_IN_TRACKER -->
-<!-- INCLUDE tracker/tracker_header.html -->
-<!-- ENDIF -->]]></action>
-			</edit>
-		 <edit>
-				<find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>
-]]></find>
-				<action type="before-add"><![CDATA[<a href="{U_TRACKER}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_TRACKER}</a>&nbsp; &nbsp;]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	<!-- INCLUDE breadcrumbs.html -->]]></find>
-				<action type="replace-with"><![CDATA[	<!-- IF S_IN_TRACKER -->
-	<!-- INCLUDE tracker/tracker_breadcrumbs.html -->
-	<!-- ELSE -->
-	<!-- INCLUDE breadcrumbs.html -->
-	<!-- ENDIF -->]]></action>
-			</edit>
-		</open>
+		</copy>	
+	    <open src="styles/prosilver/template/overall_header.html">
+	      <edit>
+	        <find><![CDATA[&#8249; <a href="{U_TRACKER}">{L_TRACKER}</a>]]></find>
+	        <action type="replace-with"><![CDATA[&#8249; <a href="{U_TRACKER}">{L_TRACKER_INDEX}</a>]]></action>
+	      </edit>
+	    </open>
 		<diy-instructions lang="en">Once done make sure to purge the cache and/or refresh your styles.</diy-instructions>
 	</action-group>
 </mod>
