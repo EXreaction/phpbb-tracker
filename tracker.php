@@ -575,6 +575,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'U_ACTION'				=> ($mode == 'edit') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid=$post_id&amp;mode=edit") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
 		));
 	}
+	
+	if ($project_id && $ticket_id && !$mode && $tracker->can_manage)
+	{
+		$tracker->update_last_visit($ticket_id);
+	}
 
 	$sql_array = array(
 		'SELECT'	=> 't.*,
@@ -643,11 +648,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
 
-	if ($project_id && $ticket_id && !$mode && $tracker->can_manage)
-	{
-		$tracker->update_last_visit($ticket_id);
-	}
-
 	$tracker->generate_nav($row, $ticket_id);
 
 	if ($mode != 'reply' || $mode != 'edit')
@@ -708,7 +708,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 
 	}
-
 	
 	$ticket_mod = '';
 	if ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global'))
