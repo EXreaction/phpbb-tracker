@@ -18,14 +18,13 @@
 $CFG = array(
 	'mod_title'					=> 'phpBB Tracker',
 	'mod_version'				=> '0.1.3',
-	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.2 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
+	'mod_copyright'				=> 'Powered by phpBB Tracker 0.1.3 BETA &copy; 2008 <a href="http://www.jeffrusso.net">JRSweets</a><br />',
 	'mod_dir'					=> 'tracker_install',
 	'clear_cache_install'		=> true,
 	'clear_cache_uninstall'		=> true,
 	'clear_cache_update'		=> true,
 	'data_file'					=> 'schemas/schema_data.sql',
 	'remove_data_file'			=> 'schemas/remove_schema_data.sql',
-	'remove_permissions_file'	=> 'schemas/remove_permissions_data.sql',
 	'parent_module_remove'		=> array('ACP_TRACKER'),
 	'module_remove'				=> array('tracker'),
 	'permission_options'		=> array(
