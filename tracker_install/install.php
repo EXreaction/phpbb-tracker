@@ -288,7 +288,9 @@ class install_mod
 
 	<body>
 	<div id="wrap">
-		<div id="page-header">&nbsp;</div>
+		<div id="page-header">
+		<h1>Installation Panel</h1>
+		</div>
 
 		<div id="page-body">
 			<div id="acp">
