@@ -251,13 +251,12 @@ class install_check
 		$error = array();
 		foreach($this->install_edits as $key => $value)
 		{
-			$file = $key;
+			$content = file_get_contents($phpbb_root_path . $key);
 			foreach ($value as $edit)
 			{
-				$content = file_get_contents($phpbb_root_path . $file);
 				if (strpos($content, $edit) === false)
 				{
-					$error[] = 'phpbb_root_path/' . $file;
+					$error[] = 'phpbb_root_path/' . $key;
 					break;
 				}
 			}
