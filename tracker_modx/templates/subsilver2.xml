@@ -14,8 +14,15 @@
 				<homepage>http://www.jeffrusso.net</homepage>
 				<contributions />
 			</author>
+			<author>
+				<realname>Igor Wiedler</realname>
+				<email>evil3@phpbb.com</email>
+				<username>evil&lt;3</username>
+				<homepage>http://phpbbmodders.net</homepage>
+				<contributions />
+			</author>
 		</author-group>
-		<author-notes><![CDATA[Thanks to evil3 (Igor Wiedler) for helping out with the mod.]]>
+		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.
 		</author-notes>
 		<mod-version>
 			<major>0</major>
