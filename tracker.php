@@ -206,7 +206,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	foreach ($tickets as $item)
 	{
 		$template->assign_block_vars('tickets', array(
-			'U_VIEW_TICKET'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t={$item['ticket_id']}"),
+			'U_VIEW_TICKET'				=> $tracker->api->build_url('ticket', array($project_id, $item['ticket_id'])),
 
 			'LAST_POST_USERNAME'		=> (!empty($item['last_post_user_id'])) ? get_username_string('full', $item['last_post_user_id'], $item['last_post_username'], $item['last_post_user_colour']) : '',
 			'LAST_POST_TIME'			=> $user->format_date($item['last_post_time']),
@@ -285,20 +285,20 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'TRACKER_CURRENTLY_SHOWING'		=> $currently_showing,
 		'S_CAN_POST_TRACKER'			=> $auth->acl_get('u_tracker_post'),
 		'TICKET_IMG'					=> $user->img('button_topic_new', $user->lang['TRACKER_POST_TICKET']),
-		'U_POST_NEW_TICKET'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;mode=add"),
+		'U_POST_NEW_TICKET'				=> $tracker->api->build_url('add', array($project_id, $ticket_id)),
 		'U_MY_TICKETS'					=> ($user_id) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type" . (($assigned_to_user_id) ? "&amp;at=$assigned_to_user_id" : '')) : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type&amp;u={$user->data['user_id']}" . (($assigned_to_user_id) ? "&amp;at=$assigned_to_user_id" : '')),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],
 
 		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')) : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;at={$user->data['user_id']}&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
-		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=search&amp;term=$term") : append_sid("{$phpbb_root_path}tracker.$phpEx"),
+		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($term)) : $tracker->api->build_url('index'),
 		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
 		'S_ACTION_SEARCH' 				=> build_url(array('mode', 'term')),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 
 		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
-		'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=tracker.$phpEx"),
+		'S_LOGIN_ACTION'				=> $tracker->api->build_url('login'),
 	));
 
 	// Output page
@@ -319,10 +319,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			$tracker->api->delete_post($post_id, $ticket_id);
 
 			$message = $user->lang['TRACKER_DELETE_POST_SUCCESS'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+			$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
 
 			trigger_error($message);
 
@@ -332,9 +332,9 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			$tracker->api->delete_ticket($ticket_id);
 
 			$message = $user->lang['TRACKER_DELETE_TICKET_SUCCESS'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
 
 			trigger_error($message);
 		}
@@ -541,10 +541,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				}
 
 				$message = $user->lang['TRACKER_TICKET_REPLY_SUBMITTED'] . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+				$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
+				$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
+				$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
+				$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
 
 				trigger_error($message);
 			}
@@ -577,7 +577,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'S_EDIT_REASON'			=> ($mode == 'edit') ? true : false,
 			'EDIT_REASON_TEXT'		=> ($mode == 'edit') ? $post_data['edit_reason'] : '',
 			'REPLY_DESC'			=> $post_desc['text'],
-			'U_ACTION'				=> ($mode == 'edit') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid=$post_id&amp;mode=edit") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
+			'U_ACTION'				=> ($mode == 'edit') ? $tracker->api->build_url('edit_pid', array($project_id, $ticket_id, $post_id)) : $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		));
 	}
 
@@ -675,10 +675,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			$tracker->api->process_notification($data, $row);
 
 			$message = $user->lang['TRACKER_TICKET_UPDATED'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_UPDATED_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+			$message .= sprintf($user->lang['TRACKER_UPDATED_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
 
 			trigger_error($message);
 		}
@@ -779,7 +779,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
-		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
+		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : '',
 		'S_STATUS_OPTIONS'			=> (!$tracker->api->can_manage) ? '' : $tracker->api->status_select_options($option_data['status_id']),
 		'S_ASSIGN_USER_OPTIONS'		=> (!$tracker->api->can_manage) ? '' : $tracker->api->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
 		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$tracker->api->can_manage) ? '' : $tracker->api->select_options($project_id, 'severity', $option_data['severity_id']),
@@ -796,16 +796,16 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'EDIT_REASON'				=> $row['edit_reason'],
 
 		'S_CAN_DELETE'				=> $tracker->api->check_delete(),
-		'U_DELETE'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=delete"),
+		'U_DELETE'					=> $tracker->api->build_url('delete', array($project_id, $ticket_id)),
 		'S_CAN_EDIT'				=> $tracker->api->check_edit($row['ticket_time'], $row['ticket_user_id']),
-		'U_EDIT'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit"),
+		'U_EDIT'					=> $tracker->api->build_url('edit', array($project_id, $ticket_id)),
 
 		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
-		'U_POST_REPLY_TICKET'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
+		'U_POST_REPLY_TICKET'		=> $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		'U_SEND_PM'					=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $row['ticket_user_id']),
 		'U_REPORTERS_TICKETS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=" . TRACKER_ALL . "&amp;u={$row['ticket_user_id']}"),
-		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=history"),
+		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
 		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
@@ -1003,10 +1003,10 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			}
 
 			$message = $user->lang['TRACKER_TICKET_SUBMITTED'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_SUBMITTED_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+			$message .= sprintf($user->lang['TRACKER_SUBMITTED_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
+			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
 
 			trigger_error($message);
 		}
@@ -1071,7 +1071,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],
 		'TICKET_DBMS'				=> $ticket_data['ticket_dbms'],
 
-		'U_ACTION'					=> ($mode == 'edit') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;mode=add"),
+		'U_ACTION'					=> ($mode == 'edit') ? $tracker->api->build_url('edit', array($project_id, $ticket_id)) : $tracker->api->build_url('add', array($project_id)),
 	));
 
 	// Output page
@@ -1117,17 +1117,17 @@ else
 			$template->assign_block_vars($type['id'] . '.project', array(
 				'PROJECT_NAME'				=> $item['project_name'],
 				'PROJECT_DESC'				=> $item['project_desc'],
-				'U_PROJECT_STATISTICS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics&amp;p=' . $item['project_id']),
-				'U_PROJECT' 				=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $item['project_id']),
+				'U_PROJECT_STATISTICS'		=> $tracker->api->build_url('statistics_p', array($item['project_id'])),
+				'U_PROJECT' 				=> $tracker->api->build_url('project', array($item['project_id'])),
 			));
 		}
 	}
 
 	// Assign index specific vars
 	$template->assign_vars(array(
-		'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=statistics") . '">','</a>' ),
+		'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $tracker->api->build_url('statistics') . '">','</a>' ),
 		'S_DISPLAY_PROJECT'			=> $display_project,
-		'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=tracker.$phpEx"),
+		'S_LOGIN_ACTION'			=> $tracker->api->build_url('login'),
 	));
 
 	// Output page

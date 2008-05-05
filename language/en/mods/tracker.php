@@ -272,6 +272,10 @@ $lang = array_merge($lang, array(
 	'REPLYING_TRACKER_TICKET'			=> 'Replying to ticket in %s - %s',
 ));
 
+$lang = array_merge($lang, array(
+	'NO_URL_BUILDER'					=> 'No URL builder has been set for the tracker api.',
+));
+
 /**
  * Format a username correctly on localised basis
  */

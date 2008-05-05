@@ -17,6 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 include($phpbb_root_path . 'common.' . $phpEx);
+include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
 include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
 
 $download_id = request_var('id', 0);
@@ -28,7 +29,12 @@ $user->session_begin(false);
 $auth->acl($user->data);
 $user->setup('viewtopic');
 
+// instantiate url builder
+$url_builder = new tracker_url_builder();
+
+// instantiate tracker api
 $tracker_api = new tracker_api();
+$tracker_api->set_url_builder(array(&$url_builder, 'build'));
 
 if (!$download_id)
 {
@@ -106,7 +112,7 @@ if ($display_cat == ATTACHMENT_CATEGORY_FLASH && !$user->optionget('viewflash'))
 
 if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && $type == 'view' && (strpos($attachment['mimetype'], 'image') === 0) && strpos(strtolower($user->browser), 'msie') !== false)
 {
-	wrap_img_in_html(append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$attachment['attach_id']}"), $attachment['real_filename']);
+	wrap_img_in_html($tracker_api->build_url('download', array($attachment['attach_id'], '')), $attachment['real_filename']);
 }
 else
 {

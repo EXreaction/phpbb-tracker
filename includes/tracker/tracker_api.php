@@ -47,6 +47,11 @@ class tracker_api
 
 	public $can_manage = false;
 
+	protected $url_builder = false;
+
+	/**
+	 * Constructor
+	 */
 	public function __construct()
 	{
 		global $phpbb_root_path, $phpEx;
@@ -58,6 +63,24 @@ class tracker_api
 		$this->extensions	= $this->cache->obtain_attach_extensions(TRACKER_EXTENSION_ID);
 
 		$this->types = include($phpbb_root_path . 'includes/tracker/tracker_types.' . $phpEx);
+	}
+
+	/**
+	 * Set an URL builder function
+	 */
+	public function set_url_builder($callback)
+	{
+		$this->url_builder = $callback;
+	}
+
+	public function build_url($mode = NULL, $args = NULL)
+	{
+		if (!$this->url_builder)
+		{
+			trigger_error('NO_URL_BUILDER');
+		}
+
+		return call_user_func($this->url_builder, $mode, $args);
 	}
 
 	/**
@@ -96,6 +119,12 @@ class tracker_api
 	public function set_manage($project_id)
 	{
 		global $user;
+
+		if (!function_exists('group_memberships'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		}
 
 		$this->can_manage = group_memberships($this->projects[$project_id]['project_group'], $user->data['user_id'], true);
 	}
@@ -239,7 +268,7 @@ class tracker_api
 			$hidden .= '<input type="hidden" name="attachment_data[' . $key . ']" value="' . $value . '" />';
 		}
 
-		$download_link = append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$filedata['attach_id']}");
+		$download_link = $this->build_url('download', array($filedata['attach_id'], ''));
 
 		$template->assign_vars(array(
 			'FILENAME'			=> basename($filedata['real_filename']),
@@ -693,11 +722,11 @@ class tracker_api
 		$db->sql_query($sql);
 
 		$message = $user->lang['TRACKER_TICKET_MOVED'] . '<br /><br />';
-		$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$to_project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
-		$message .= sprintf($user->lang['TRACKER_MOVED_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
-		$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$to_project_id") . '">', '</a>') . '<br /><br />';
-		$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx") . '">', '</a>') . '<br /><br />';
-		$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx"). '">', '</a>');
+		$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . $this->build_url('ticket', $to_project_id, $ticket_id) . '">', '</a>') . '<br /><br />';
+		$message .= sprintf($user->lang['TRACKER_MOVED_RETURN'], '<a href="' . $this->build_url('project', $project_id) . '">', '</a>') . '<br /><br />';
+		$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $this->build_url('project', $to_project_id) . '">', '</a>') . '<br /><br />';
+		$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $this->build_url('index') . '">', '</a>') . '<br /><br />';
+		$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $this->build_url('board'). '">', '</a>');
 
 		trigger_error($message);
 
@@ -1614,12 +1643,12 @@ class tracker_api
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['project_name'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", (($in_stats) ? 'mode=statistics&amp;' : '' ) . 'p=' . $data['project_id']),
+			'U_VIEW_FORUM'	=> $this->build_url(($in_stats) ? 'statistics_p' : 'project', array($data['project_id'])),
 		));
 
 		$template->assign_vars(array(
 			'TRACKER_TICKET_ID'		=> $ticket_id,
-			'U_VIEW_TRACKER_TICKET'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $data['project_id'] . '&amp;t=' . $ticket_id),
+			'U_VIEW_TRACKER_TICKET'	=> $this->build_url('ticket', array($data['project_id'], $ticket_id)),
 		));
 
 		return;
@@ -1807,7 +1836,7 @@ class tracker_api
 		}
 		else if($user_id == TRACKER_ASSIGNED_TO_GROUP)
 		{
-			$string = '<a style="color:#' . $this->projects[$project_id]['group_colour'] . '" href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $this->projects[$project_id]['project_group']) . '" class="username-coloured">' . $this->set_lang_name($this->projects[$project_id]['group_name']) . '</a>';
+			$string = '<a style="color:#' . $this->projects[$project_id]['group_colour'] . '" href="' . $this->build_url('memberlist_group', array($this->projects[$project_id]['project_group'])) . '" class="username-coloured">' . $this->set_lang_name($this->projects[$project_id]['group_name']) . '</a>';
 			if ($mode == 'history')
 			{
 				$string = sprintf($user->lang['TRACKER_HISTORY_ASSIGNED_TO_GROUP'], $string);

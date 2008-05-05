@@ -23,6 +23,7 @@ if (!defined('IN_PHPBB'))
 class tracker
 {
 	public $api;
+	public $url_builder;
 
 	public function __construct($in_tracker = true)
 	{
@@ -34,17 +35,21 @@ class tracker
 		include($phpbb_root_path . 'includes/tracker/tracker_cache.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
-		include($phpbb_root_path . 'includes/tracker/tracker_types.' . $phpEx);
 
+		// make an url builder object
+		$this->url_builder = new tracker_url_builder();
+
+		// make an api object
 		$this->api = new tracker_api();
+		$this->api->set_url_builder(array(&$this->url_builder, 'build'));
 
 		// Add language vars to array
 		$user->add_lang('mods/tracker');
 
 		$template->assign_vars(array(
 			'S_IN_TRACKER'				=> $in_tracker,
-			'U_TRACKER' 				=> append_sid("{$phpbb_root_path}tracker.$phpEx"),
-			'U_TRACKER_STATS'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics'),
+			'U_TRACKER' 				=> $this->api->build_url('index'),
+			'U_TRACKER_STATS'			=> $this->api->build_url('statistics'),
 		));
 	}
 
@@ -55,8 +60,8 @@ class tracker
 	{
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
 
-		$total_posts = $this->get_total('posts', $project_id, $ticket_id);
-		$posts_per_page = $this->config['posts_per_page'];
+		$total_posts = $this->api->get_total('posts', $project_id, $ticket_id);
+		$posts_per_page = $this->api->config['posts_per_page'];
 
 		$template->assign_var('S_DISPLAY_COMMENTS', true);
 
@@ -102,22 +107,22 @@ class tracker
 			if ($row['attach_id'])
 			{
 				$download_type = '';
-				if ($this->extensions[$row['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
+				if ($this->api->extensions[$row['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
 				{
-					$download_type .= '&amp;type=view';
+					$download_type = 'view';
 				}
 
-				$u_download_link = append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$row['attach_id']}$download_type");
+				$u_download_link = $this->api->build_url('download', array($row['attach_id'], $download_type));
 
-				if (isset($this->extensions[$row['extension']]))
+				if (isset($this->api->extensions[$row['extension']]))
 				{
-					if ($user->img('icon_topic_attach', '') && !$this->extensions[$row['extension']]['upload_icon'])
+					if ($user->img('icon_topic_attach', '') && !$this->api->extensions[$row['extension']]['upload_icon'])
 					{
 						$upload_icon = $user->img('icon_topic_attach', '');
 					}
-					else if ($this->extensions[$row['extension']]['upload_icon'])
+					else if ($this->api->extensions[$row['extension']]['upload_icon'])
 					{
-						$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->extensions[$row['extension']]['upload_icon']) . '" alt="" />';
+						$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$row['extension']]['upload_icon']) . '" alt="" />';
 					}
 				}
 
@@ -127,14 +132,14 @@ class tracker
 			}
 
 			$template->assign_block_vars('comments', array(
-				'S_CAN_DELETE'			=> $this->check_delete(),
-				'U_DELETE'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=delete"),
-				'S_CAN_EDIT'			=> $this->check_edit($row['post_time'], $row['post_user_id']),
-				'U_EDIT'				=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid={$row['post_id']}&amp;mode=edit"),
+				'S_CAN_DELETE'			=> $this->api->check_delete(),
+				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
+				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
+				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'COMMENT_POSTER'		=> get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']),
 				'COMMENT_TIME'			=> $user->format_date($row['post_time']),
 				'COMMENT_DESC'			=> generate_text_for_display($row['post_desc'], $row['post_desc_uid'], $row['post_desc_bitfield'], $row['post_desc_options']),
-				'EDITED_MESSAGE'		=> $this->fetch_edited_by($row, 'post'),
+				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
 
 				'S_DISPLAY_NOTICE'		=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
@@ -162,7 +167,7 @@ class tracker
 		$template->assign_vars(array(
 			'PAGE_NUMBER'	=> ($posts_per_page > 0) ? on_page($total_posts, $posts_per_page, $start) : on_page($total_posts, $total_posts, $start),
 			'TOTAL_POSTS'	=> $l_total_posts,
-			'PAGINATION'	=> ($posts_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id"), $total_posts, $posts_per_page, $start) : false,
+			'PAGINATION'	=> ($posts_per_page > 0) ? generate_pagination($this->api->build_url('ticket', array($project_id, $ticket_id)), $total_posts, $posts_per_page, $start) : false,
 		));
 	}
 
@@ -210,19 +215,19 @@ class tracker
 			switch ($row['history_status'])
 			{
 				case TRACKER_HISTORY_ASSIGNED_TO:
-					$history_action = $this->get_assigned_to($project_id, $row['history_assigned_to'], $row['history_assigned_to_username'], $row['history_assigned_to_user_colour'], 'history');
+					$history_action = $this->api->get_assigned_to($project_id, $row['history_assigned_to'], $row['history_assigned_to_username'], $row['history_assigned_to_user_colour'], 'history');
 				break;
 
 				case TRACKER_HISTORY_STATUS_CHANGED:
-					$history_action = sprintf($user->lang['TRACKER_HISTORY_STATUS_CHANGED'], $this->set_status($row['history_old_status']), $this->set_status($row['history_new_status']));
+					$history_action = sprintf($user->lang['TRACKER_HISTORY_STATUS_CHANGED'], $this->api->set_status($row['history_old_status']), $this->api->set_status($row['history_new_status']));
 				break;
 
 				case TRACKER_HISTORY_SEVERITY_CHANGED:
-					$history_action = sprintf($user->lang['TRACKER_HISTORY_SEVERITY_CHANGED'], (!isset($this->severity[$row['history_old_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_old_severity']]), (!isset($this->severity[$row['history_new_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->severity[$row['history_new_severity']]));
+					$history_action = sprintf($user->lang['TRACKER_HISTORY_SEVERITY_CHANGED'], (!isset($this->api->severity[$row['history_old_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->api->set_lang_name($this->api->severity[$row['history_old_severity']]), (!isset($this->api->severity[$row['history_new_severity']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->api->set_lang_name($this->api->severity[$row['history_new_severity']]));
 				break;
 
 				case TRACKER_HISTORY_PRIORITY_CHANGED:
-					$history_action = sprintf($user->lang['TRACKER_HISTORY_PRIORITY_CHANGED'], (!isset($this->priority[$row['history_old_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_old_priority']]), (!isset($this->priority[$row['history_new_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->set_lang_name($this->priority[$row['history_new_priority']]));
+					$history_action = sprintf($user->lang['TRACKER_HISTORY_PRIORITY_CHANGED'], (!isset($this->api->priority[$row['history_old_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->api->set_lang_name($this->api->priority[$row['history_old_priority']]), (!isset($this->api->priority[$row['history_new_priority']])) ? $user->lang['TRACKER_UNKNOWN'] : $this->api->set_lang_name($this->api->priority[$row['history_new_priority']]));
 				break;
 
 				default:
@@ -350,7 +355,7 @@ class tracker
 			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
-					AND ' . $db->sql_in_set('status_id', $this->get_opened());
+					AND ' . $db->sql_in_set('status_id', $this->api->get_opened());
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -360,7 +365,7 @@ class tracker
 			$sql = 'SELECT COUNT(ticket_id) as total
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE project_id = ' . $project_id . '
-					AND ' . $db->sql_in_set('status_id', $this->get_opened(), true);
+					AND ' . $db->sql_in_set('status_id', $this->api->get_opened(), true);
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -368,7 +373,7 @@ class tracker
 
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
-				'L_TITLE'				=> $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'],
+				'L_TITLE'				=> $this->api->get_type_option('title', $project_id) . ' - ' . $this->api->projects[$project_id]['project_name'],
 
 				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
 				'TOTAL_OPENED'			=> $total_opened,
@@ -389,7 +394,7 @@ class tracker
 			}
 			$db->sql_freeresult($result);
 
-			foreach ($this->status as $item)
+			foreach ($this->api->status as $item)
 			{
 				if ($item['filter'])
 				{
@@ -398,7 +403,7 @@ class tracker
 
 				$template->assign_block_vars('status', array(
 					'STATUS_TOTAL'		=> (isset($status_count[$item['id']])) ? $status_count[$item['id']] : 0,
-					'STATUS_NAME'		=> $this->set_status($item['id']),
+					'STATUS_NAME'		=> $this->api->set_status($item['id']),
 					'STATUS_CLOSED'		=> ($item['open']) ? $user->lang['NO'] : $user->lang['YES'],
 				));
 			}
@@ -442,7 +447,7 @@ class tracker
 				}
 
 				$template->assign_block_vars('assigne', array(
-					'USERNAME'		=> $this->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['username'], $item['user_colour']),
+					'USERNAME'		=> $this->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
@@ -474,11 +479,11 @@ class tracker
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);
-			$result = $db->sql_query_limit($sql, $this->config['top_reporters']);
+			$result = $db->sql_query_limit($sql, $this->api->config['top_reporters']);
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 
-			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS_TITLE'], $this->config['top_reporters']));
+			$template->assign_var('TRACKER_TOP_REPORTERS', sprintf($user->lang['TRACKER_TOP_REPORTERS_TITLE'], $this->api->config['top_reporters']));
 
 			foreach ($row as $item)
 			{
@@ -488,7 +493,7 @@ class tracker
 				}
 
 				$template->assign_block_vars('top', array(
-					'USERNAME'		=> $this->get_assigned_to($project_id, $item['ticket_user_id'], $item['username'], $item['user_colour']),
+					'USERNAME'		=> $this->api->get_assigned_to($project_id, $item['ticket_user_id'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
@@ -519,7 +524,7 @@ class tracker
 			foreach ($row as $item)
 			{
 				$template->assign_block_vars('component', array(
-					'COMPONENT_NAME'		=> $this->set_lang_name($item['component_name']),
+					'COMPONENT_NAME'		=> $this->api->set_lang_name($item['component_name']),
 					'TOTAL'					=> (isset($component_count[$item['component_id']])) ? $component_count[$item['component_id']] : 0,
 				));
 			}
@@ -550,14 +555,14 @@ class tracker
 			foreach ($row as $item)
 			{
 				$template->assign_block_vars('version', array(
-					'VERSION_NAME'			=> $this->set_lang_name($item['version_name']),
+					'VERSION_NAME'			=> $this->api->set_lang_name($item['version_name']),
 					'TOTAL'					=> (isset($version_count[$item['version_id']])) ? $version_count[$item['version_id']] : 0,
 				));
 			}
 
-			$this->generate_nav($this->projects[$project_id], false, true);
+			$this->api->generate_nav($this->api->projects[$project_id], false, true);
 			// Output page
-			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->get_type_option('title', $project_id) . ' - ' . $this->projects[$project_id]['project_name'], false);
+			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->api->get_type_option('title', $project_id) . ' - ' . $this->api->projects[$project_id]['project_name'], false);
 
 		}
 		else
@@ -611,10 +616,10 @@ class tracker
 				}
 
 				$template->assign_block_vars('project', array(
-					'U_PROJECT'			=> append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=statistics&amp;p={$item['project_id']}"),
+					'U_PROJECT'			=> $this->api->build_url('statistics_p', array($item['project_id'])),
 					'PROJECT_NAME'		=> $item['project_name'],
 					'PROJECT_DESC'		=> $item['project_desc'],
-					'PROJECT_TYPE'		=> $this->set_lang_name($this->types[$item['project_type']]['title']),
+					'PROJECT_TYPE'		=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
 					'TOTAL_TICKETS'		=> (isset($item['total_tickets'])) ? $item['total_tickets'] : 0,
 				));
 			}
@@ -638,22 +643,22 @@ class tracker
 		$upload_icon = '';
 
 		$download_type = '';
-		if ($this->extensions[$attachment['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
+		if ($this->api->extensions[$attachment['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
 		{
-			$download_type .= '&amp;type=view';
+			$download_type = 'view';
 		}
 
-		$u_download_link = append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$attachment['attach_id']}$download_type");
+		$u_download_link = $this->api->build_url('download', array($attachment['attach_id'], $download_type));
 
-		if (isset($this->extensions[$attachment['extension']]))
+		if (isset($this->api->extensions[$attachment['extension']]))
 		{
-			if ($user->img('icon_topic_attach', '') && !$this->extensions[$attachment['extension']]['upload_icon'])
+			if ($user->img('icon_topic_attach', '') && !$this->api->extensions[$attachment['extension']]['upload_icon'])
 			{
 				$upload_icon = $user->img('icon_topic_attach', '');
 			}
-			else if ($this->extensions[$attachment['extension']]['upload_icon'])
+			else if ($this->api->extensions[$attachment['extension']]['upload_icon'])
 			{
-				$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->extensions[$attachment['extension']]['upload_icon']) . '" alt="" />';
+				$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$attachment['extension']]['upload_icon']) . '" alt="" />';
 			}
 		}
 
@@ -666,6 +671,76 @@ class tracker
 			'SIZE_LANG'				=> get_formatted_filesize($attachment['filesize']),
 			'DOWNLOAD_NAME'			=> basename($attachment['real_filename']),
 		));
+	}
+}
+
+/**
+ * URL builder is used to build urls (duh)
+ */
+class tracker_url_builder
+{
+	public $url_base;
+	public $url_ary = array();
+
+	public function __construct()
+	{
+		global $phpbb_root_path, $phpEx;
+
+		$this->url_base = "{$phpbb_root_path}tracker.$phpEx";
+
+		$this->url_ary = array(
+			'index'			=> '',
+			'project'		=> 'p=%1$s',
+			'ticket'		=> 'p=%1$s&amp;t=%2$s',
+			'history'		=> 'p=%1$s&amp;t=%2$s',
+			'statistics'	=> 'mode=statistics',
+			'statistics_p'	=> 'mode=statistics&amp;p=%1$s',
+			'download'		=> 'mode=download&amp;id=%1$s&amptype=%2$s',
+			'delete'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
+			'delete_pid'	=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+			'edit'			=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
+			'edit_pid'		=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+			'reply'			=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
+			'add'			=> 'mode=add&amp;p=%1$s',
+			'search'		=> 'mode=search&amp;term=%1$s',
+		);
+	}
+
+	public function build($mode, $args)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		switch ($mode)
+		{
+			case 'board':
+				return append_sid("{$phpbb_root_path}index.$phpEx");
+			break;
+			case 'memberlist_group':
+				return append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . array_shift($args));
+			break;
+			case 'login':
+				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
+			break;
+			default:
+				if (isset($this->url_ary[$mode]))
+				{
+					return $this->_build($mode, $args);
+				}
+				return $this->_build('index', NULL);
+			break;
+		}
+	}
+
+	public function _build($mode, $args)
+	{
+		if (is_array($args) && sizeof($args))
+		{
+			return append_sid($this->url_base, vsprintf($this->url_ary[$mode], $args));
+		}
+		else
+		{
+			return append_sid($this->url_base, $this->url_ary[$mode]);
+		}
 	}
 }
 
