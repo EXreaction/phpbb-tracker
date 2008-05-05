@@ -23,7 +23,7 @@ class acp_tracker
 {
 	public $u_action;
 	public $new_config;
-	public $tracker_api;
+	public $tracker;
 
 	public function main($id, $mode)
 	{
