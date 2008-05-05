@@ -24,33 +24,35 @@ if (isset($_GET['mode']) && (string) $_GET['mode'] === 'download')
 
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 
-// Initialize tracker class
+// Instantiate tracker
 $tracker = new tracker();
 
 // Get the varibles we will use to build the tracker pages
-$mode = request_var('mode', '');
-$term = request_var('term', '');
-$ticket_id	= request_var('t', 0);
-$project_id	= request_var('p', 0);
-$post_id	= request_var('pid', 0);
-$user_id	= request_var('u', 0);
+$mode					= request_var('mode', '');
+$term					= request_var('term', '');
+$ticket_id				= request_var('t', 0);
+$project_id				= request_var('p', 0);
+$post_id				= request_var('pid', 0);
+$user_id				= request_var('u', 0);
 $assigned_to_user_id	= request_var('at', 0);
-$status_type = request_var('st', TRACKER_ALL_OPENED);
-$start = request_var('start', 0);
-$submit = (isset($_POST['submit'])) ? true : false;
-$submit_mod = (isset($_POST['submit_mod'])) ? true : false;
-$update = (isset($_POST['update'])) ? true : false;
-$add_attachment = (isset($_POST['add_attachment'])) ? true : false;
-$remove_attachment = (isset($_POST['delete_attachment'])) ? true : false;
-$attachment_data = (isset($_POST['attachment_data'])) ? $_POST['attachment_data'] : array();
-$preview = (isset($_POST['preview'])) ? true : false;
+$status_type			= request_var('st', TRACKER_ALL_OPENED);
+$start					= request_var('start', 0);
+
+$submit					= (isset($_POST['submit'])) ? true : false;
+$submit_mod				= (isset($_POST['submit_mod'])) ? true : false;
+$update					= (isset($_POST['update'])) ? true : false;
+$add_attachment			= (isset($_POST['add_attachment'])) ? true : false;
+$remove_attachment		= (isset($_POST['delete_attachment'])) ? true : false;
+$attachment_data		= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
+$preview				= (isset($_POST['preview'])) ? true : false;
+
+// this will hold our errors
 $errors = array();
 
 // Make sure the project exists and enabled...
@@ -78,7 +80,7 @@ if (!empty($project_id))
 
 if ($mode == 'statistics')
 {
-	$tracker->api->display_statistics($project_id);
+	$tracker->display_statistics($project_id);
 }
 
 // Check if user can view tracker
@@ -305,6 +307,8 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_body.html')
 	);
+
+	page_footer();
 }
 else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode == 'reply' || $mode == 'delete') || ($mode == 'edit' && $post_id)))
 {
@@ -701,7 +705,25 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			break;
 
 			case 'move':
-				$tracker->api->move_ticket($project_id, $ticket_id);
+				if (!confirm_box(true))
+				{
+					$template->assign_vars(array(
+						'S_PROJECT_SELECT'		=> $this->project_select_options($this->get_projects(), $project_id),
+					));
+
+					confirm_box(false, '', build_hidden_fields(array(
+						'p'					=> $project_id,
+						't'					=> $ticket_id,
+						'submit_mod'		=> true,
+						'action'			=> 'move',
+					)), 'tracker/tracker_move.html');
+				}
+
+				if ($to_project_id = request_var('to_project_id', 0))
+				{
+					$tracker->api->move_ticket($project_id, $to_project_id, $ticket_id);
+				}
+
 			break;
 
 			default:
@@ -722,7 +744,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	if ($row['attach_id'] && $auth->acl_get('u_tracker_download'))
 	{
-		$tracker->api->display_ticket_attachment($row);
+		$tracker->display_ticket_attachment($row);
 	}
 
 	$can_attach = false;
@@ -731,11 +753,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
 
-	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
-	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
-	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
-	$s_ticket_severity = $tracker->api->get_type_option('severity', $project_id);
-	$s_ticket_environment = $tracker->api->get_type_option('environment', $project_id);
+	$s_ticket_component		= $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version		= $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_priority		= $tracker->api->get_type_option('priority', $project_id);
+	$s_ticket_severity		= $tracker->api->get_type_option('severity', $project_id);
+	$s_ticket_environment	= $tracker->api->get_type_option('environment', $project_id);
 
 	$option_data = array(
 		'status_id'				=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
@@ -822,11 +844,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		break;
 
 		case 'reply':
-			$tracker->api->display_review($ticket_id);
+			$tracker->display_review($ticket_id);
 		break;
 
 		default:
-			$tracker->api->display_comments($ticket_id, $project_id, $start);
+			$tracker->display_comments($ticket_id, $project_id, $start);
 		break;
 	}
 
@@ -836,6 +858,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_view_body.html')
 	);
+
+	page_footer();
 }
 else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 {
@@ -1058,6 +1082,8 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_add_body.html')
 	);
+
+	page_footer();
 }
 else
 {
@@ -1110,8 +1136,8 @@ else
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_index_body.html')
 	);
-}
 
-page_footer();
+	page_footer();
+}
 
 ?>
