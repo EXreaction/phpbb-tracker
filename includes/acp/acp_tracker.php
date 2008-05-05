@@ -75,7 +75,7 @@ class acp_tracker
 		}
 	}
 
-	protected function manage_version_check()
+	public function manage_version_check()
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
@@ -114,7 +114,7 @@ class acp_tracker
 		));
 	}
 
-	protected function manage_settings()
+	public function manage_settings()
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
@@ -233,7 +233,7 @@ class acp_tracker
 		));
 	}
 
-	protected function manage_attachments($action)
+	public function manage_attachments($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
@@ -333,7 +333,7 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-	protected function manage_project($action)
+	public function manage_project($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
@@ -539,7 +539,7 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-	protected function manage_component($action)
+	public function manage_component($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
@@ -718,7 +718,7 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-	protected function manage_version($action)
+	public function manage_version($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
