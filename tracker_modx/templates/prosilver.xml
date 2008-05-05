@@ -35,40 +35,8 @@
 	</header>
 	<action-group>
 		<copy>
-			<file from="root/tracker.php" to="tracker.php" />
-			<file from="root/adm/style/acp_tracker.html" to="adm/style/acp_tracker.html" />
-			<file from="root/tracker_install/*.*" to="tracker_install/*.*" />
-			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php" />
-			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php" />
-			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php" />
-			<file from="root/includes/tracker/tracker_constants.php" to="includes/tracker/tracker_constants.php" />
-			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php" />
-			<file from="root/includes/tracker/tracker_status.php" to="includes/tracker/tracker_status.php" />
-			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php" />
-			<file from="root/includes/tracker/files/*.*" to="includes/tracker/files/*.*" />
-			<file from="root/language/en/acp/permissions_tracker.php" to="language/en/acp/permissions_tracker.php" />
-			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt" />
-			<file from="root/language/en/email/tracker_notify_comment.txt" to="language/en/email/tracker_notify_comment.txt" />
-			<file from="root/language/en/email/tracker_notify_status_double.txt" to="language/en/email/tracker_notify_status_double.txt" />
-			<file from="root/language/en/email/tracker_notify_status_single.txt" to="language/en/email/tracker_notify_status_single.txt" />
-			<file from="root/language/en/mods/tracker.php" to="language/en/mods/tracker.php" />
-			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php" />
-			<file from="root/styles/prosilver/template/tracker/tracker_index_body.html" to="styles/prosilver/template/tracker/tracker_index_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_move.html" to="styles/prosilver/template/tracker/tracker_move.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_stats_body.html" to="styles/prosilver/template/tracker/tracker_stats_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_add_body.html" to="styles/prosilver/template/tracker/tracker_tickets_add_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_body.html" to="styles/prosilver/template/tracker/tracker_tickets_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_view_body.html" to="styles/prosilver/template/tracker/tracker_tickets_view_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_header.html" to="styles/prosilver/template/tracker/tracker_header.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_breadcrumbs.html" to="styles/subsilver2/template/tracker/tracker_breadcrumbs.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_index_body.html" to="styles/subsilver2/template/tracker/tracker_index_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_move.html" to="styles/subsilver2/template/tracker/tracker_move.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_stats_body.html" to="styles/subsilver2/template/tracker/tracker_stats_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_add_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_add_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_view_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_view_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_header.html" to="styles/subsilver2/template/tracker/tracker_header.html" />
-		</copy>	
+			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/*.*" />
+		</copy>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[</head>]]></find>

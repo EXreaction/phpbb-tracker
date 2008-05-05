@@ -11,10 +11,10 @@
 /**
 * @ignore
 */
-define('IN_PHPBB', 1);
+define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -33,7 +33,7 @@ if ($user->data['user_type'] != USER_FOUNDER)
 $cache->purge();
 
 $tracker = new install_check();
-$tracker->install_header("phpBB Tracker Installation Checking...");
+$tracker->install_header('phpBB Tracker Installation Checking...');
 $tracker->check_tables();
 $tracker->check_alter_db();
 $tracker->check_files();
@@ -119,8 +119,8 @@ class install_check
 			'<!-- IF S_IN_TRACKER -->',
 			'<!-- INCLUDE tracker/tracker_breadcrumbs.html -->',
 			'<!-- INCLUDE tracker/tracker_header.html -->',
-		);		
-				
+		);
+
 		$this->install_edits['viewonline.php'] = array(
 			'case \'tracker\':',
 			'include($phpbb_root_path . \'includes/tracker/tracker_class.\' . $phpEx);',
@@ -146,7 +146,6 @@ class install_check
 		$this->install_alter_db = array(
 			//USERS_TABLE		=> array('user_allow_pm'),
 		);
-
 	}
 
 	function check_tables()
@@ -366,7 +365,7 @@ class install_check
 		{
 			$this->display_success('All permissions exist');
 		}
-		
+
 		$sql = 'SELECT auth_option_id, auth_option
 			FROM ' . ACL_OPTIONS_TABLE . '
 			ORDER BY auth_option_id';
@@ -377,10 +376,10 @@ class install_check
 			$auth_option_id[$row['auth_option_id']] = $row['auth_option'];
 		}
 		$db->sql_freeresult($result);
-		
+
 		$duplicate_auth = array_count_values($auth_option_id);
 		unset($auth_option_id);
-		
+
 		$auth_option_id = array();
 		foreach ($duplicate_auth as $key => $value)
 		{
@@ -389,7 +388,7 @@ class install_check
 				$auth_option_id[] = $key . ' was found ' . $value . ' times';
 			}
 		}
-		
+
 		if (!empty($auth_option_id))
 		{
 			$this->no_errors = false;

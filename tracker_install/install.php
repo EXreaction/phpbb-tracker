@@ -12,14 +12,24 @@
 * @ignore
 */
 define('IN_PHPBB', true);
-$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 require($phpbb_root_path . 'common.' . $phpEx);
 require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
+
+/**
+ * @todo a proper install script without hardcoded stuff
+ */
 
 // Report all errors, except notices
 error_reporting(E_ALL);
 @set_time_limit(0);
+
+// check minimum PHP version for install
+if (version_compare(PHP_VERSION, '5.0.0') < 0)
+{
+	die('You are running an unsupported PHP version. Please upgrade to PHP 5.0.0 or higher before trying to install phpBB Tracker');
+}
 
 // Start session management
 $user->session_begin();
@@ -150,7 +160,7 @@ switch ($mode)
 						WHERE project_id = " . (int) $item['project_id'];
 						$db->sql_query($sql);
 					}
-					
+
 					if ($tracker->config['attachment_path'] == 'includes/tracker/files')
 					{
 						echo '<br /><h1>Moving attachments to new directory</h1>';
@@ -161,7 +171,7 @@ switch ($mode)
 						}
 						$tracker->set_config('attachment_path', 'files/tracker');
 					}
-				
+
 				case '0.1.1':
 					echo '<br /><h1>Updating database from version 0.1.1 to 0.1.2...</h1>';
 					//This is need because of a bug when installing 0.1.1 new
@@ -170,7 +180,7 @@ switch ($mode)
 				case '0.1.2':
 					echo '<br /><h1>Updating database from version 0.1.2 to 0.1.3...</h1>';
 					$install_mod->add_permissions($CFG['update_permission_options']['0.1.3']);
-					
+
 				break;
 
 				default:
@@ -405,7 +415,7 @@ class install_mod
 	function remove_permissions($options)
 	{
 		global $db, $cache;
-		
+
 		$auth_option_id = array();
 		if (!empty($options['local']))
 		{
@@ -423,7 +433,7 @@ class install_mod
 				$db->sql_freeresult($result);
 			}
 		}
-		
+
 		if (!empty($options['global']))
 		{
 			foreach($options['global'] as $global)
@@ -440,12 +450,12 @@ class install_mod
 				$db->sql_freeresult($result);
 			}
 		}
-		
-		//We now have a list of ids we need to remove from the auth tables...	
+
+		//We now have a list of ids we need to remove from the auth tables...
 		if (!empty($auth_option_id))
-		{			
+		{
 			$tables = array(ACL_OPTIONS_TABLE, ACL_GROUPS_TABLE, ACL_USERS_TABLE, ACL_ROLES_DATA_TABLE);
-			
+
 			foreach ($tables as $table)
 			{
 				$sql = "DELETE FROM $table
@@ -455,10 +465,10 @@ class install_mod
 
 			$auth_admin = new auth_admin();
 			$cache->destroy('_acl_options');
-			$auth_admin->acl_clear_prefetch();		
-		}	
+			$auth_admin->acl_clear_prefetch();
+		}
 	}
-	
+
 	function db_error($error, $sql, $line, $file)
 	{
 		global $db;
@@ -769,124 +779,124 @@ class install_mod
 
 /* Copies a dir to another. Optionally caching the dir/file structure, used to synchronize similar destination dir (web farm).
  * mzheng at [s-p-a-m dot ]procuri dot com
- * @param $src_dir str Source directory to copy. 
- * @param $dst_dir str Destination directory to copy to. 
+ * @param $src_dir str Source directory to copy.
+ * @param $dst_dir str Destination directory to copy to.
  * @param $verbose bool Show or hide file copied messages
  * @param $use_cached_dir_trees bool Set to true to cache src/dst dir/file structure. Used to sync to web farms
- *                     (avoids loading the same dir tree in web farms; making sync much faster). 
+ *                     (avoids loading the same dir tree in web farms; making sync much faster).
  * @return Number of files copied/updated.
- * @example 
- *     To copy a dir: 
- *         dircopy("c:\max\pics", "d:\backups\max\pics"); 
+ * @example
+ *     To copy a dir:
+ *         dircopy("c:\max\pics", "d:\backups\max\pics");
  *
- *     To sync to web farms (webfarm 2 to 4 must have same dir/file structure (run once with cache off to make sure if necessary)): 
- *        dircopy("//webfarm1/wwwroot", "//webfarm2/wwwroot", false, true); 
- *        dircopy("//webfarm1/wwwroot", "//webfarm3/wwwroot", false, true); 
- *        dircopy("//webfarm1/wwwroot", "//webfarm4/wwwroot", false, true); 
+ *     To sync to web farms (webfarm 2 to 4 must have same dir/file structure (run once with cache off to make sure if necessary)):
+ *        dircopy("//webfarm1/wwwroot", "//webfarm2/wwwroot", false, true);
+ *        dircopy("//webfarm1/wwwroot", "//webfarm3/wwwroot", false, true);
+ *        dircopy("//webfarm1/wwwroot", "//webfarm4/wwwroot", false, true);
  */
-function dircopy($src_dir, $dst_dir, $verbose = false, $use_cached_dir_trees = false) 
-{    
+function dircopy($src_dir, $dst_dir, $verbose = false, $use_cached_dir_trees = false)
+{
 	static $cached_src_dir;
-	static $src_tree; 
+	static $src_tree;
 	static $dst_tree;
 	$num = 0;
 
-	if (($slash = substr($src_dir, -1)) == "\\" || $slash == "/") 
+	if (($slash = substr($src_dir, -1)) == "\\" || $slash == "/")
 	{
-		$src_dir = substr($src_dir, 0, strlen($src_dir) - 1); 
+		$src_dir = substr($src_dir, 0, strlen($src_dir) - 1);
 	}
-	
-	if (($slash = substr($dst_dir, -1)) == "\\" || $slash == "/") 
+
+	if (($slash = substr($dst_dir, -1)) == "\\" || $slash == "/")
 	{
-		$dst_dir = substr($dst_dir, 0, strlen($dst_dir) - 1);  
+		$dst_dir = substr($dst_dir, 0, strlen($dst_dir) - 1);
 	}
 
 	if (!$use_cached_dir_trees || !isset($src_tree) || $cached_src_dir != $src_dir)
 	{
 		$src_tree = get_dir_tree($src_dir);
 		$cached_src_dir = $src_dir;
-		$src_changed = true;  
+		$src_changed = true;
 	}
-	
+
 	if (!$use_cached_dir_trees || !isset($dst_tree) || $src_changed)
 	{
 		$dst_tree = get_dir_tree($dst_dir);
 	}
-	
-	if (!is_dir($dst_dir)) 
+
+	if (!is_dir($dst_dir))
 	{
-		mkdir($dst_dir, 0777, true);  
+		mkdir($dst_dir, 0777, true);
 	}
-	
-	foreach ($src_tree as $file => $src_mtime) 
+
+	foreach ($src_tree as $file => $src_mtime)
 	{
 		if (!isset($dst_tree[$file]) && $src_mtime === false) // dir
 		{
-			mkdir("$dst_dir/$file"); 
+			mkdir("$dst_dir/$file");
 		}
 		elseif (!isset($dst_tree[$file]) && $src_mtime || isset($dst_tree[$file]) && $src_mtime > $dst_tree[$file])  // file
 		{
-			if (copy("$src_dir/$file", "$dst_dir/$file")) 
+			if (copy("$src_dir/$file", "$dst_dir/$file"))
 			{
-				if ($verbose) 
+				if ($verbose)
 				{
 					echo "Copied '$src_dir/$file' to '$dst_dir/$file'<br>\r\n";
 				}
-				touch("$dst_dir/$file", $src_mtime); 
-				$num++; 
-			} 
-			else 
+				touch("$dst_dir/$file", $src_mtime);
+				$num++;
+			}
+			else
 			{
 				echo "<font color='red'>File '$src_dir/$file' could not be copied!</font><br>\r\n";
 			}
-		}        
+		}
 	}
-	
-	return $num; 
+
+	return $num;
 }
 
 /* Creates a directory / file tree of a given root directory
  * mzheng at [s-p-a-m dot ]procuri dot com
  * @param $dir str Directory or file without ending slash
- * @param $root bool Must be set to true on initial call to create new tree. 
- * @return Directory & file in an associative array with file modified time as value. 
+ * @param $root bool Must be set to true on initial call to create new tree.
+ * @return Directory & file in an associative array with file modified time as value.
  */
-function get_dir_tree($dir, $root = true) 
+function get_dir_tree($dir, $root = true)
 {
 	static $tree;
-	static $base_dir_length; 
+	static $base_dir_length;
 
 	if ($root)
-	{ 
-		$tree = array();  
-		$base_dir_length = strlen($dir) + 1;  
+	{
+		$tree = array();
+		$base_dir_length = strlen($dir) + 1;
 	}
 
-	if (is_file($dir)) 
+	if (is_file($dir))
 	{
 		//if (substr($dir, -8) != "/CVS/Tag" && substr($dir, -9) != "/CVS/Root"  && substr($dir, -12) != "/CVS/Entries")
-		$tree[substr($dir, $base_dir_length)] = filemtime($dir); 
-	} 
+		$tree[substr($dir, $base_dir_length)] = filemtime($dir);
+	}
 	elseif (is_dir($dir) && $di = dir($dir)) // add after is_dir condition to ignore CVS folders: && substr($dir, -4) != "/CVS"
 	{
-		if (!$root) 
+		if (!$root)
 		{
-			$tree[substr($dir, $base_dir_length)] = false;  
+			$tree[substr($dir, $base_dir_length)] = false;
 		}
-		
+
 		while (($file = $di->read()) !== false)
 		{
 			if ($file != "." && $file != "..")
 			{
-				get_dir_tree("$dir/$file", false);  
+				get_dir_tree("$dir/$file", false);
 			}
 		}
-		$di->close(); 
+		$di->close();
 	}
 
 	if ($root)
 	{
-		return $tree;     
+		return $tree;
 	}
 }
 
@@ -920,7 +930,7 @@ function remove_dir($dir)
 			$error = true;
 		}
 	}
-	
+
 	return $error;
 }
 

@@ -13,7 +13,7 @@
 */
 class acp_tracker_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> 'acp_tracker',
@@ -29,11 +29,11 @@ class acp_tracker_info
 		);
 	}
 
-	function install()
+	public function install()
 	{
 	}
 
-	function uninstall()
+	public function uninstall()
 	{
 	}
 }

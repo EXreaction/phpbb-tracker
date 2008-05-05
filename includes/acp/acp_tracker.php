@@ -21,14 +21,18 @@ if (!defined('IN_PHPBB'))
 */
 class acp_tracker
 {
-	var $u_action;
+	public $u_action;
+	public $new_config;
+	public $tracker_api;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
 		global $config, $db, $user, $auth, $template, $cache;
-		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix;
+		global $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 		include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+
+		$this->tracker = new tracker();
 
 		$this->tpl_name = 'acp_tracker';
 		$action	= request_var('action', '');
@@ -71,16 +75,14 @@ class acp_tracker
 		}
 	}
 
-	function manage_version_check()
+	protected function manage_version_check()
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-		$tracker = new tracker();
-
 		$user->add_lang('install');
 		$this->page_title = 'ACP_VERSION_CHECK';
-		$current_version = str_replace(' ', '.', $tracker->config['version']);
+		$current_version = str_replace(' ', '.', $this->tracker->api->config['version']);
 
 		// Get current and latest version
 		$errstr = '';
@@ -112,12 +114,10 @@ class acp_tracker
 		));
 	}
 
-	function manage_settings()
+	protected function manage_settings()
 	{
-		global $db, $user, $auth, $template, $cache, $mode, $tracker;
+		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-		$tracker = new tracker();
 
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
@@ -142,7 +142,7 @@ class acp_tracker
 			)
 		);
 
-		$this->new_config = $tracker->config;
+		$this->new_config = $this->tracker->api->config;
 		$cfg_array = (isset($_REQUEST['config'])) ? utf8_normalize_nfc(request_var('config', array('' => ''), true)) : $this->new_config;
 		$error = array();
 
@@ -173,7 +173,7 @@ class acp_tracker
 
 			if ($submit)
 			{
-				$tracker->set_config($config_name, $config_value);
+				$this->tracker->api->set_config($config_name, $config_value);
 			}
 		}
 
@@ -196,8 +196,8 @@ class acp_tracker
 			{
 				$template->assign_block_vars('options', array(
 					'S_LEGEND'	=> true,
-					'LEGEND'		=> $user->lang[$vars])
-				);
+					'LEGEND'	=> $user->lang[$vars],
+				));
 
 				continue;
 			}
@@ -233,20 +233,19 @@ class acp_tracker
 		));
 	}
 
-	function manage_attachments($action)
+	protected function manage_attachments($action)
 	{
-		global $db, $user, $auth, $template, $cache, $mode, $tracker;
+		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-		$tracker = new tracker();
 
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
 		$this->page_title = 'ACP_TRACKER_ATTACHMENTS';
 
-		$submit	= (isset($_POST['submit'])) ? true : false;
-		$attach_ids	= (isset($_POST['attach_ids'])) ? request_var('attach_ids', array(0)) : array();
+		$submit			= (isset($_POST['submit'])) ? true : false;
+		$attach_ids		= (isset($_POST['attach_ids'])) ? request_var('attach_ids', array(0)) : array();
 		$extra_files	= (isset($_POST['extra_files'])) ? request_var('extra_files', array('')) : array();
+
 		$errors = array();
 
 		$template->assign_vars(array(
@@ -268,13 +267,13 @@ class acp_tracker
 					if (!empty($attach_ids))
 					{
 						//Remove attachments
-						$tracker->delete_orphan($attach_ids, $errors);
+						$this->tracker->api->delete_orphan($attach_ids, $errors);
 					}
 
 					if (!empty($extra_files))
 					{
 						//Delete files
-						$tracker->delete_extra_files($extra_files, $errors);
+						$this->tracker->api->delete_extra_files($extra_files, $errors);
 					}
 
 					if (!sizeof($errors))
@@ -297,7 +296,7 @@ class acp_tracker
 			break;
 		}
 
-		$orphaned = $tracker->get_orphaned();
+		$orphaned = $this->tracker->api->get_orphaned();
 		foreach ($orphaned as $item)
 		{
 			$filesize = $item['filesize'];
@@ -315,7 +314,7 @@ class acp_tracker
 			));
 		}
 
-		$extra_files = $tracker->get_extra_files();
+		$extra_files = $this->tracker->api->get_extra_files();
 		foreach ($extra_files as $key => $value)
 		{
 			$template->assign_block_vars('extra_files', array(
@@ -334,12 +333,10 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-	function manage_project($action)
+	protected function manage_project($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-		$tracker = new tracker();
 
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
@@ -371,13 +368,13 @@ class acp_tracker
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
 					);
-					
+
 					if (utf8_clean_string($project_data['project_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_PROJECT_NO_NAME'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$tracker->add_project($project_data);
+					$this->tracker->api->add_project($project_data);
 					add_log('admin', 'LOG_TRACKER_PROJECT_ADD', $project_data['project_name']);
 					trigger_error($user->lang['ACP_TRACKER_PROJECT_ADDED'] . adm_back_link($this->u_action));
 				}
@@ -405,7 +402,7 @@ class acp_tracker
 						'project_security'		=> request_var('project_security', 0),
 					);
 
-					$tracker->update_project($project_data, $project_id);
+					$this->tracker->api->update_project($project_data, $project_id);
 					add_log('admin', 'LOG_TRACKER_PROJECT_EDIT', $project_data['project_name']);
 					trigger_error($user->lang['ACP_TRACKER_PROJECT_EDITED'] . adm_back_link($this->u_action));
 				}
@@ -434,7 +431,7 @@ class acp_tracker
 
 					if ($row)
 					{
-						$tracker->delete_project($project_id);
+						$this->tracker->api->delete_project($project_id);
 						add_log('admin', 'LOG_TRACKER_PROJECT_DELETE', $row['project_name']);
 						trigger_error($user->lang['ACP_TRACKER_PROJECT_DELETED'] . adm_back_link($this->u_action));
 					}
@@ -481,7 +478,7 @@ class acp_tracker
 					'S_GROUP_OPTIONS'		=> group_select_options($project_data['project_group'], false, (($user->data['user_type'] == USER_FOUNDER) ? false : 0)),
 
 					'S_SELECT_TYPE'			=> true,
-					'S_TYPE_OPTIONS'		=> $tracker->type_select_options($project_data['project_type']),
+					'S_TYPE_OPTIONS'		=> $this->tracker->api->type_select_options($project_data['project_type']),
 				));
 
 				$template->assign_vars(array(
@@ -504,7 +501,7 @@ class acp_tracker
 
 			case 'enable':
 			case 'disable':
-				$tracker->set_project_enabled($project_id, $action);
+				$this->tracker->api->set_project_enabled($project_id, $action);
 				redirect($this->u_action);
 			break;
 
@@ -530,7 +527,7 @@ class acp_tracker
 			$template->assign_block_vars('project', array(
 				'PROJECT_NAME'		=> $item['project_name'],
 				'PROJECT_DESC'		=> $item['project_desc'],
-				'PROJECT_TYPE'		=> $tracker->set_lang_name($tracker->types[$item['project_type']]['title']),
+				'PROJECT_TYPE'		=> $this->tracker->api->set_lang_name($this->tracker->api->types[$item['project_type']]['title']),
 				'PROJECT_ENABLED'	=> $item['project_enabled'],
 				'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;project_id={$item['project_id']}",
 				'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;project_id={$item['project_id']}",
@@ -542,12 +539,10 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-	function manage_component($action)
+	protected function manage_component($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-		$tracker = new tracker();
 
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
@@ -557,7 +552,7 @@ class acp_tracker
 		$component_id = request_var('component_id', 0);
 		$submit	= (isset($_POST['submit'])) ? true : false;
 
-		$projects = $tracker->get_projects();
+		$projects = $this->tracker->api->get_projects();
 
 		$template->assign_var('S_IN_MANAGE_COMPONENT', true);
 
@@ -575,13 +570,13 @@ class acp_tracker
 						'component_name'		=> utf8_normalize_nfc(request_var('component_name', '', true)),
 						'project_id'			=> $project_id,
 					);
-					
+
 					if (utf8_clean_string($component_data['component_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_COMPONENT_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
 					}
 
-					$tracker->handle_project_items('add', $mode, $component_data);
+					$this->tracker->api->handle_project_items('add', $mode, $component_data);
 					add_log('admin', 'LOG_TRACKER_COMPONENT_ADD', $component_data['component_name']);
 					trigger_error($user->lang['ACP_TRACKER_COMPONENT_ADDED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 				}
@@ -604,8 +599,7 @@ class acp_tracker
 						'project_id'			=> $project_id,
 					);
 
-
-					$tracker->handle_project_items('update', $mode, $component_data, $component_id);
+					$this->tracker->api->handle_project_items('update', $mode, $component_data, $component_id);
 					add_log('admin', 'LOG_TRACKER_COMPONENT_EDIT', $component_data['component_name']);
 					trigger_error($user->lang['ACP_TRACKER_COMPONENT_EDITED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 				}
@@ -634,7 +628,7 @@ class acp_tracker
 
 					if ($row)
 					{
-						$tracker->handle_project_items('delete', $mode, false, $component_id);
+						$this->tracker->api->handle_project_items('delete', $mode, false, $component_id);
 						add_log('admin', 'LOG_TRACKER_COMPONENT_DELETE', $row['component_name']);
 						trigger_error($user->lang['ACP_TRACKER_COMPONENT_DELETED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 					}
@@ -701,7 +695,7 @@ class acp_tracker
 				foreach ($row as $item)
 				{
 						$template->assign_block_vars('component', array(
-							'COMPONENT_NAME'	=> $tracker->set_lang_name($item['component_name']),
+							'COMPONENT_NAME'	=> $this->tracker->api->set_lang_name($item['component_name']),
 							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;component_id={$item['component_id']}&amp;project_id={$item['project_id']}",
 							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;component_id={$item['component_id']}&amp;project_id={$item['project_id']}",
 						));
@@ -717,19 +711,17 @@ class acp_tracker
 
 		$template->assign_vars(array(
 			'S_IN_MANAGE_COMPONENT_DEFAULT'	=> true,
-			'S_PROJECT_OPTIONS'				=> $tracker->project_select_options($projects, false, $mode),
+			'S_PROJECT_OPTIONS'				=> $this->tracker->api->project_select_options($projects, false, $mode),
 			'U_ACTION' 						=> "{$this->u_action}&amp;action=view",
 		));
 
 		$this->set_template_title($mode);
 	}
 
-	function manage_version($action)
+	protected function manage_version($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-		$tracker = new tracker();
 
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
@@ -739,7 +731,7 @@ class acp_tracker
 		$version_id = request_var('version_id', 0);
 		$submit	= (isset($_POST['submit'])) ? true : false;
 
-		$projects = $tracker->get_projects();
+		$projects = $this->tracker->api->get_projects();
 
 		$template->assign_var('S_IN_MANAGE_VERSION', true);
 
@@ -757,13 +749,13 @@ class acp_tracker
 						'version_name'			=> utf8_normalize_nfc(request_var('version_name', '', true)),
 						'project_id'			=> $project_id,
 					);
-					
+
 					if (utf8_clean_string($version_data['version_name']) === '')
 					{
 						trigger_error($user->lang['TRACKER_VERSION_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
 					}
 
-					$tracker->handle_project_items('add', $mode, $version_data);
+					$this->tracker->api->handle_project_items('add', $mode, $version_data);
 					add_log('admin', 'LOG_TRACKER_VERSION_ADD', $version_data['version_name']);
 					trigger_error($user->lang['ACP_TRACKER_VERSION_ADDED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 				}
@@ -787,7 +779,7 @@ class acp_tracker
 					);
 
 
-					$tracker->handle_project_items('update', $mode, $version_data, $version_id);
+					$this->tracker->api->handle_project_items('update', $mode, $version_data, $version_id);
 					add_log('admin', 'LOG_TRACKER_VERSION_EDIT', $version_data['version_name']);
 					trigger_error($user->lang['ACP_TRACKER_VERSION_EDITED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 				}
@@ -816,7 +808,7 @@ class acp_tracker
 
 					if ($row)
 					{
-						$tracker->handle_project_items('delete', $mode, false, $version_id);
+						$this->tracker->api->handle_project_items('delete', $mode, false, $version_id);
 						add_log('admin', 'LOG_TRACKER_VERSION_DELETE', $row['version_name']);
 						trigger_error($user->lang['ACP_TRACKER_VERSION_DELETED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
 					}
@@ -882,7 +874,7 @@ class acp_tracker
 				foreach ($row as $item)
 				{
 						$template->assign_block_vars('version', array(
-							'VERSION_NAME'		=> $tracker->set_lang_name($item['version_name']),
+							'VERSION_NAME'		=> $this->tracker->api->set_lang_name($item['version_name']),
 							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 
@@ -900,14 +892,14 @@ class acp_tracker
 
 		$template->assign_vars(array(
 			'S_IN_MANAGE_VERSION_DEFAULT'	=> true,
-			'S_PROJECT_OPTIONS'				=> $tracker->project_select_options($projects, false, $mode),
+			'S_PROJECT_OPTIONS'				=> $this->tracker->api->project_select_options($projects, false, $mode),
 			'U_ACTION' 						=> "{$this->u_action}&amp;action=view",
 		));
 
 		$this->set_template_title($mode);
 	}
 
-	function set_template_title($mode)
+	public function set_template_title($mode)
 	{
 		global $user, $template;
 
@@ -920,11 +912,11 @@ class acp_tracker
 		));
 	}
 
-	function tracker_version()
+	public function tracker_version()
 	{
-		global $tracker, $user;
+		global $user;
 
-		return $tracker->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="version_check" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
+		return $this->tracker->api->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="version_check" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
 	}
 
 }

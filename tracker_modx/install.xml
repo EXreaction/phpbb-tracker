@@ -15,7 +15,9 @@
 				<contributions />
 			</author>
 		</author-group>
-		<author-notes><![CDATA[Thanks to evil3 (Igor Wiedler) for helping out with the mod.]]>
+		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.
+
+Thanks to evil3 (Igor Wiedler) for helping out with the mod.]]>
 		</author-notes>
 		<mod-version>
 			<major>0</major>
@@ -81,6 +83,17 @@
 					<change>Fixed various bugs with installer/updater</change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2008-xx-xx</date>
+				<rev-version>
+					<major>0</major>
+					<minor>1</minor>
+					<revision>3</revision>
+				</rev-version>
+				<changelog lang="en">
+					<change>Updated minimum PHP version to 5.0.0.</change>
+				</changelog>
+			</entry>
 		</history>
 	</header>
 	<action-group>
@@ -88,8 +101,11 @@
 			<file from="root/tracker.php" to="tracker.php" />
 			<file from="root/adm/style/acp_tracker.html" to="adm/style/acp_tracker.html" />
 			<file from="root/tracker_install/*.*" to="tracker_install/*.*" />
+			<file from="root/tracker_install/schemas/*.*" to="tracker_install/schemas/*.*" />
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php" />
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php" />
+			<file from="root/includes/tracker/tracker_api.php" to="includes/tracker/tracker_api.php" />
+			<file from="root/includes/tracker/tracker_cache.php" to="includes/tracker/tracker_cache.php" />
 			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php" />
 			<file from="root/includes/tracker/tracker_constants.php" to="includes/tracker/tracker_constants.php" />
 			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php" />
@@ -103,21 +119,6 @@
 			<file from="root/language/en/mods/tracker.php" to="language/en/mods/tracker.php" />
 			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php" />
 			<file from="root/files/tracker/*.*" to="files/tracker/*.*" />
-			<file from="root/styles/prosilver/template/tracker/tracker_index_body.html" to="styles/prosilver/template/tracker/tracker_index_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_move.html" to="styles/prosilver/template/tracker/tracker_move.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_stats_body.html" to="styles/prosilver/template/tracker/tracker_stats_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_add_body.html" to="styles/prosilver/template/tracker/tracker_tickets_add_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_body.html" to="styles/prosilver/template/tracker/tracker_tickets_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_tickets_view_body.html" to="styles/prosilver/template/tracker/tracker_tickets_view_body.html" />
-			<file from="root/styles/prosilver/template/tracker/tracker_header.html" to="styles/prosilver/template/tracker/tracker_header.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_breadcrumbs.html" to="styles/subsilver2/template/tracker/tracker_breadcrumbs.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_index_body.html" to="styles/subsilver2/template/tracker/tracker_index_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_move.html" to="styles/subsilver2/template/tracker/tracker_move.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_stats_body.html" to="styles/subsilver2/template/tracker/tracker_stats_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_add_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_add_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_tickets_view_body.html" to="styles/subsilver2/template/tracker/tracker_tickets_view_body.html" />
-			<file from="root/styles/subsilver2/template/tracker/tracker_header.html" to="styles/subsilver2/template/tracker/tracker_header.html" />
 		</copy>
 		<open src="includes/functions.php">
 			<edit>
@@ -190,7 +191,7 @@
 						$found_tracker = true;
 						if ($project_id)
 						{
-							$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+							$location = sprintf($user->lang[$lang], $tracker->api->get_type_option('title', $project_id), $tracker->api->projects[$project_id]['project_name']);
 							$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics&amp;p=' . $project_id);
 						}
 						else
@@ -202,13 +203,13 @@
 					else if ($param == 'mode=add' && $project_id)
 					{
 						$found_tracker = true;
-						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+						$location = sprintf($user->lang[$lang], $tracker->api->get_type_option('title', $project_id), $tracker->api->projects[$project_id]['project_name']);
 						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
 					}
 					else if ($param == 'mode=reply' && $project_id && $ticket_id)
 					{
 						$found_tracker = true;
-						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+						$location = sprintf($user->lang[$lang], $tracker->api->get_type_option('title', $project_id), $tracker->api->projects[$project_id]['project_name']);
 						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
 					}
 					break;
@@ -220,12 +221,12 @@
 				$lang = 'VIEWING_TRACKER';
 				if ($project_id && $ticket_id)
 				{
-					$location = sprintf($user->lang[$lang . '_TICKET'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+					$location = sprintf($user->lang[$lang . '_TICKET'], $tracker->api->get_type_option('title', $project_id), $tracker->api->projects[$project_id]['project_name']);
 					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
 				}
 				else if ($project_id && !$ticket_id)
 				{
-					$location = sprintf($user->lang[$lang . '_PROJECT'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+					$location = sprintf($user->lang[$lang . '_PROJECT'], $tracker->api->get_type_option('title', $project_id), $tracker->api->projects[$project_id]['project_name']);
 					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
 				}
 				else

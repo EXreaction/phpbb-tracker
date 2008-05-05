@@ -16,6 +16,8 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+global $table_prefix;
+
 define('TRACKER_CONFIG_TABLE',			$table_prefix . 'tracker_config');
 define('TRACKER_ATTACHMENTS_TABLE',		$table_prefix . 'tracker_attachments');
 define('TRACKER_PROJECT_TABLE',			$table_prefix . 'tracker_project');
@@ -25,9 +27,9 @@ define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
 define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
 
-//Used when returning allowed attachment extension
-//This will allow use to find all extensions that are
-//allowed board wide
+// Used when returning allowed attachment extension
+// This will allow use to find all extensions that are
+// allowed board wide
 define('TRACKER_EXTENSION_ID', 9999);
 
 define('TRACKER_ASSIGNED_TO_GROUP', -1);

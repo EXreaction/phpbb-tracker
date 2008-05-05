@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
 
 $download_id = request_var('id', 0);
 $mode = request_var('mode', '');
@@ -28,7 +28,7 @@ $user->session_begin(false);
 $auth->acl($user->data);
 $user->setup('viewtopic');
 
-$tracker = new tracker();
+$tracker_api = new tracker_api();
 
 if (!$download_id)
 {
@@ -57,7 +57,6 @@ if (!$attachment)
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
-
 $row = array();
 
 if ($attachment['is_orphan'])
@@ -76,7 +75,7 @@ if (!download_allowed())
 	trigger_error($user->lang['LINKAGE_FORBIDDEN']);
 }
 
-$download_mode = (int) $tracker->extensions[$attachment['extension']]['download_mode'];
+$download_mode = (int) $tracker_api->extensions[$attachment['extension']]['download_mode'];
 
 // Fetching filename here to prevent sniffing of filename
 $sql = 'SELECT attach_id, is_orphan, ticket_id, post_id, extension, physical_filename, real_filename, mimetype
@@ -92,7 +91,7 @@ if (!$attachment)
 }
 
 $attachment['physical_filename'] = basename($attachment['physical_filename']);
-$display_cat = $tracker->extensions[$attachment['extension']]['display_cat'];
+$display_cat = $tracker_api->extensions[$attachment['extension']]['display_cat'];
 
 if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && !$user->optionget('viewimg'))
 {
@@ -115,17 +114,17 @@ else
 	if ($download_mode == PHYSICAL_LINK)
 	{
 		// This presenting method should no longer be used
-		if (!@is_dir($phpbb_root_path . $tracker->config['upload_path']))
+		if (!@is_dir($phpbb_root_path . $tracker_api->config['upload_path']))
 		{
 			trigger_error($user->lang['PHYSICAL_DOWNLOAD_NOT_POSSIBLE']);
 		}
 
-		redirect($phpbb_root_path . $tracker->config['attachment_path'] . '/' . $attachment['physical_filename']);
+		redirect($phpbb_root_path . $tracker_api->config['attachment_path'] . '/' . $attachment['physical_filename']);
 		exit;
 	}
 	else
 	{
-		send_file_to_browser($attachment, $tracker->config['attachment_path'], $display_cat);
+		send_file_to_browser($attachment, $tracker_api->config['attachment_path'], $display_cat);
 		exit;
 	}
 }

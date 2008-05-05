@@ -16,6 +16,12 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+if (!isset($status_type))
+{
+	global $phpbb_root_path, $phpEx;
+	$status_type = include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
+}
+
 /*
 * Tracker types defined below
 */
@@ -54,5 +60,7 @@ $tracker_types[2] = array(
 	'show_environment' 	=> true,
 	'status' 			=> $status_type['issue'],
 );
+
+return $tracker_types;
 
 ?>

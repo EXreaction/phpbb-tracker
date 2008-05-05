@@ -57,28 +57,28 @@ $errors = array();
 if (!empty($project_id))
 {
 	// Check if project actually exists...
-	if (!isset($tracker->projects[$project_id]))
+	if (!isset($tracker->api->projects[$project_id]))
 	{
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
 	}
-	
-	$tracker->set_manage($project_id);
+
+	$tracker->api->set_manage($project_id);
 	// Check if the project is enabled...
-	if ($tracker->projects[$project_id]['project_enabled'] == TRACKER_PROJECT_DISABLED)
+	if ($tracker->api->projects[$project_id]['project_enabled'] == TRACKER_PROJECT_DISABLED)
 	{
-		if (!$tracker->can_manage)
+		if (!$tracker->api->can_manage)
 		{
 			trigger_error('TRACKER_PROJECT_NO_EXIST');
 		}
 	}
 
 	// Since the project exists and user can see it, set the staus types
-	$tracker->set_type($project_id);
+	$tracker->api->set_type($project_id);
 }
 
 if ($mode == 'statistics')
 {
-	$tracker->display_statistics($project_id);
+	$tracker->api->display_statistics($project_id);
 }
 
 // Check if user can view tracker
@@ -105,11 +105,11 @@ if ($mode == 'delete' && !$auth->acl_get('a_tracker') && !$auth->acl_get('u_trac
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 {
-	$row = $tracker->projects[$project_id];
-	$tracker->generate_nav($row);
-	$hidden_tickets = (!$tracker->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
-	$project_enabled = (!$tracker->can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
-	$ticket_security = (!$tracker->can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
+	$row = $tracker->api->projects[$project_id];
+	$tracker->api->generate_nav($row);
+	$hidden_tickets = (!$tracker->api->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
+	$project_enabled = (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
+	$ticket_security = (!$tracker->api->can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 
 	$my_tickets = ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$my_assigned_tickets = ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
@@ -145,7 +145,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			),
 		),
 
-		'WHERE'		=> 't.project_id = ' . $project_id . $project_enabled . $hidden_tickets . $ticket_security . $my_tickets . $my_assigned_tickets . $tracker->set_filter($status_type),
+		'WHERE'		=> 't.project_id = ' . $project_id . $project_enabled . $hidden_tickets . $ticket_security . $my_tickets . $my_assigned_tickets . $tracker->api->set_filter($status_type),
 
 		'ORDER_BY'	=> 't.ticket_time DESC',
 	);
@@ -177,8 +177,8 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$pagination_mode = 'mode=search&amp;term=' . $term;
 	}
 
-	$total_tickets = $tracker->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
-	$tickets_per_page = $tracker->config['tickets_per_page'];
+	$total_tickets = $tracker->api->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
+	$tickets_per_page = $tracker->api->config['tickets_per_page'];
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query_limit($sql, $tickets_per_page, $start);
@@ -214,9 +214,9 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			'TICKET_TITLE'				=> $item['ticket_title'],
 			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour']),
 			'TICKET_TIME'				=> $user->format_date($item['ticket_time']),
-			'TICKET_COMPONENT'			=> $tracker->set_component_name($item['component_id'], $components),
-			'TICKET_ASSIGNED_TO'		=> $tracker->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['assigned_username'], $item['assigned_user_colour']),
-			'TICKET_STATUS'				=> $tracker->set_status($item['status_id']),
+			'TICKET_COMPONENT'			=> $tracker->api->set_component_name($item['component_id'], $components),
+			'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['assigned_username'], $item['assigned_user_colour']),
+			'TICKET_STATUS'				=> $tracker->api->set_status($item['status_id']),
 		));
 	}
 
@@ -228,11 +228,11 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$filter_username = array();
 		$filter_user_id = $user_id;
 		user_get_id_name($filter_user_id, $filter_username);
-		$currently_showing = sprintf($user->lang['TRACKER_CURRENTLY_SHOWING_USER'], $tracker->format_username($filter_username[$user_id]), strtolower($tracker->set_status($status_type)));
+		$currently_showing = sprintf($user->lang['TRACKER_CURRENTLY_SHOWING_USER'], $tracker->api->format_username($filter_username[$user_id]), strtolower($tracker->api->set_status($status_type)));
 	}
 	else
 	{
-		$currently_showing = sprintf($user->lang['TRACKER_CURRENTLY_SHOWING'], $tracker->set_status($status_type));
+		$currently_showing = sprintf($user->lang['TRACKER_CURRENTLY_SHOWING'], $tracker->api->set_status($status_type));
 	}
 
 	if ($assigned_to_user_id)
@@ -274,9 +274,9 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	// Assign index specific vars
 	$template->assign_vars(array(
-		'L_TITLE'						=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
+		'L_TITLE'						=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
 
-		'S_CAN_MANAGE'					=> $tracker->can_manage,
+		'S_CAN_MANAGE'					=> $tracker->api->can_manage,
 		'PROJECT_ID'					=> $project_id,
 		'TRACKER_USER_ID'				=> $user_id,
 		'TRACKER_ASSIGNED_USER_ID'		=> $assigned_to_user_id,
@@ -295,12 +295,12 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'S_ACTION_SEARCH' 				=> build_url(array('mode', 'term')),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 
-		'S_STATUS_OPTIONS'				=> $tracker->status_select_options($status_type, true),
+		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
 		'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=tracker.$phpEx"),
 	));
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'], false);
+	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_body.html')
@@ -308,11 +308,11 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 }
 else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode == 'reply' || $mode == 'delete') || ($mode == 'edit' && $post_id)))
 {
-	if ($mode == 'delete' && $submit && $tracker->check_delete())
+	if ($mode == 'delete' && $submit && $tracker->api->check_delete())
 	{
 		if (confirm_box(true) && $post_id)
 		{
-			$tracker->delete_post($post_id, $ticket_id);
+			$tracker->api->delete_post($post_id, $ticket_id);
 
 			$message = $user->lang['TRACKER_DELETE_POST_SUCCESS'] . '<br /><br />';
 			$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
@@ -325,7 +325,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 		else if (confirm_box(true) && $ticket_id)
 		{
-			$tracker->delete_ticket($ticket_id);
+			$tracker->api->delete_ticket($ticket_id);
 
 			$message = $user->lang['TRACKER_DELETE_TICKET_SUCCESS'] . '<br /><br />';
 			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id") . '">', '</a>') . '<br /><br />';
@@ -335,7 +335,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			trigger_error($message);
 		}
 	}
-	else if ($mode == 'delete' && $tracker->check_delete())
+	else if ($mode == 'delete' && $tracker->api->check_delete())
 	{
 		if ($post_id)
 		{
@@ -364,7 +364,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	if ($mode == 'reply' || $mode == 'edit')
 	{
-		$tracker->check_ticket_exists($ticket_id);
+		$tracker->api->check_ticket_exists($ticket_id);
+
 		if ($mode == 'edit' && !$preview && !$submit)
 		{
 			$sql_array = array(
@@ -404,7 +405,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				trigger_error('TRACKER_POST_NO_EXIST');
 			}
 
-			$tracker->check_edit($post_data['post_time'], $post_data['post_user_id'], false);
+			$tracker->api->check_edit($post_data['post_time'], $post_data['post_user_id'], false);
 
 			if ($post_data['attach_id'])
 			{
@@ -445,24 +446,24 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($add_attachment)
 		{
-			$filedata = $tracker->add_attachment('attachment', $errors);
+			$filedata = $tracker->api->add_attachment('attachment', $errors);
 			if (sizeof($filedata))
 			{
-				$tracker->posting_gen_attachment_data($filedata);
+				$tracker->api->posting_gen_attachment_data($filedata);
 			}
 		}
 		else if (sizeof($attachment_data))
 		{
 			if ($remove_attachment)
 			{
-				$tracker->remove_attachment($attachment_data);
+				$tracker->api->remove_attachment($attachment_data);
 			}
 			else
 			{
-				$tracker->posting_gen_attachment_data($attachment_data);
+				$tracker->api->posting_gen_attachment_data($attachment_data);
 			}
 		}
-		
+
 		$data = array(
 			'ticket_assigned_to'	=> request_var('au', 0),
 			'status_id'				=> request_var('cs', 0),
@@ -485,18 +486,18 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 				if ($mode == 'reply')
 				{
-					$post_id = $tracker->add_post($post_data, $ticket_id);
+					$post_id = $tracker->api->add_post($post_data, $ticket_id);
 					if (sizeof($attachment_data))
 					{
-						$tracker->update_attachment($attachment_data, $ticket_id, $post_id);
+						$tracker->api->update_attachment($attachment_data, $ticket_id, $post_id);
 					}
 				}
 				else if ($mode == 'edit')
 				{
-					$tracker->update_post($post_data, $post_id);
+					$tracker->api->update_post($post_data, $post_id);
 					if (sizeof($attachment_data))
 					{
-						$tracker->update_attachment($attachment_data, $ticket_id, $post_id);
+						$tracker->api->update_attachment($attachment_data, $ticket_id, $post_id);
 					}
 				}
 
@@ -525,13 +526,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$db->sql_freeresult($result);
 
 				// If user can manage project check for updates
-				if ($tracker->can_manage)
+				if ($tracker->api->can_manage)
 				{
-					$tracker->update_ticket($data, $ticket_id);
-					$tracker->process_notification($data, $row);
+					$tracker->api->update_ticket($data, $ticket_id);
+					$tracker->api->process_notification($data, $row);
 
-					$tracker->hide_unhide((($data['ticket_hidden']) ? 'hide' : 'unhide'), $ticket_id);
-					$tracker->lock_unlock((($data['ticket_status']) ? 'lock' : 'unlock'), $ticket_id);
+					$tracker->api->hide_unhide((($data['ticket_hidden']) ? 'hide' : 'unhide'), $ticket_id);
+					$tracker->api->lock_unlock((($data['ticket_status']) ? 'lock' : 'unlock'), $ticket_id);
 
 				}
 
@@ -575,10 +576,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'U_ACTION'				=> ($mode == 'edit') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;pid=$post_id&amp;mode=edit") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
 		));
 	}
-	
-	if ($project_id && $ticket_id && !$mode && $tracker->can_manage)
+
+	if ($project_id && $ticket_id && !$mode && $tracker->api->can_manage)
 	{
-		$tracker->update_last_visit($ticket_id);
+		$tracker->api->update_last_visit($ticket_id);
 	}
 
 	$sql_array = array(
@@ -643,16 +644,16 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 
-	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$tracker->can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$tracker->can_manage) || ($row['project_security'] && !$tracker->can_manage && $row['ticket_user_id'] != $user->data['user_id']))
+	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$tracker->api->can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$tracker->api->can_manage) || ($row['project_security'] && !$tracker->api->can_manage && $row['ticket_user_id'] != $user->data['user_id']))
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
 
-	$tracker->generate_nav($row, $ticket_id);
+	$tracker->api->generate_nav($row, $ticket_id);
 
 	if ($mode != 'reply' || $mode != 'edit')
 	{
-		if ($tracker->can_manage && $update && $user->data['is_registered'] && $auth->acl_get('u_tracker_view') && $auth->acl_get('u_tracker_post'))
+		if ($tracker->api->can_manage && $update && $user->data['is_registered'] && $auth->acl_get('u_tracker_view') && $auth->acl_get('u_tracker_post'))
 		{
 			if (!check_form_key('add_post'))
 			{
@@ -666,8 +667,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				'severity_id'			=> request_var('s', 0),
 			);
 
-			$tracker->update_ticket($data, $ticket_id);
-			$tracker->process_notification($data, $row);
+			$tracker->api->update_ticket($data, $ticket_id);
+			$tracker->api->process_notification($data, $row);
 
 			$message = $user->lang['TRACKER_TICKET_UPDATED'] . '<br /><br />';
 			$message .= sprintf($user->lang['TRACKER_UPDATED_RETURN'], '<a href="' . append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") . '">', '</a>') . '<br /><br />';
@@ -679,28 +680,28 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 	}
 
-	if ($submit_mod && ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global')) && (!$mode || $mode == 'history'))
+	if ($submit_mod && ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) && (!$mode || $mode == 'history'))
 	{
 		$action = request_var('action', '');
 		switch ($action)
 		{
 			case 'lock':
 			case 'unlock':
-				$tracker->lock_unlock($action, $ticket_id);
+				$tracker->api->lock_unlock($action, $ticket_id);
 				redirect(build_url());
 			break;
 
 			case 'hide':
 			case 'unhide':
-				if ($tracker->can_manage)
+				if ($tracker->api->can_manage)
 				{
-					$tracker->hide_unhide($action, $ticket_id);
+					$tracker->api->hide_unhide($action, $ticket_id);
 					redirect(build_url());
 				}
 			break;
 
 			case 'move':
-				$tracker->move_ticket($project_id, $ticket_id);
+				$tracker->api->move_ticket($project_id, $ticket_id);
 			break;
 
 			default:
@@ -708,12 +709,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 
 	}
-	
+
 	$ticket_mod = '';
-	if ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global'))
+	if ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global'))
 	{
 		$ticket_mod .= ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>';
-		$ticket_mod .= ($tracker->can_manage) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
+		$ticket_mod .= ($tracker->api->can_manage) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
 		$ticket_mod .= '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>';
 	}
 
@@ -721,20 +722,20 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	if ($row['attach_id'] && $auth->acl_get('u_tracker_download'))
 	{
-		$tracker->display_ticket_attachment($row);
+		$tracker->api->display_ticket_attachment($row);
 	}
 
 	$can_attach = false;
 	if ($s_ticket_reply)
 	{
-		$can_attach = (file_exists($phpbb_root_path . $tracker->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
+		$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
 
-	$s_ticket_component = $tracker->get_type_option('component', $project_id);
-	$s_ticket_version = $tracker->get_type_option('version', $project_id);
-	$s_ticket_priority = $tracker->get_type_option('priority', $project_id);
-	$s_ticket_severity = $tracker->get_type_option('severity', $project_id);
-	$s_ticket_environment = $tracker->get_type_option('environment', $project_id);	
+	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
+	$s_ticket_severity = $tracker->api->get_type_option('severity', $project_id);
+	$s_ticket_environment = $tracker->api->get_type_option('environment', $project_id);
 
 	$option_data = array(
 		'status_id'				=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
@@ -747,8 +748,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
-		'S_MANAGE_TICKET'			=> $tracker->can_manage,
-		'S_MANAGE_TICKET_MOD'		=> ($tracker->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
+		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
+		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
 
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
@@ -756,12 +757,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
-		'U_UPDATE_ACTION'			=> ($tracker->can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
-		'S_STATUS_OPTIONS'			=> (!$tracker->can_manage) ? '' : $tracker->status_select_options($option_data['status_id']),
-		'S_ASSIGN_USER_OPTIONS'		=> (!$tracker->can_manage) ? '' : $tracker->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
-		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$tracker->can_manage) ? '' : $tracker->select_options($project_id, 'severity', $option_data['severity_id']),
-		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$tracker->can_manage) ? '' : $tracker->select_options($project_id, 'priority', $option_data['priority_id']),
-			
+		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : '',
+		'S_STATUS_OPTIONS'			=> (!$tracker->api->can_manage) ? '' : $tracker->api->status_select_options($option_data['status_id']),
+		'S_ASSIGN_USER_OPTIONS'		=> (!$tracker->api->can_manage) ? '' : $tracker->api->user_select_options($option_data['ticket_assigned_to'], $row['project_group'], $project_id),
+		'S_SEVERITY_OPTIONS'		=> (!$s_ticket_severity || !$tracker->api->can_manage) ? '' : $tracker->api->select_options($project_id, 'severity', $option_data['severity_id']),
+		'S_PRIORITY_OPTIONS'		=> (!$s_ticket_priority || !$tracker->api->can_manage) ? '' : $tracker->api->select_options($project_id, 'priority', $option_data['priority_id']),
+
 		'S_TICKET_MOD' 				=> ($ticket_mod != '') ? '<select name="action">' . $ticket_mod . '</select>' : '',
 
 		'S_CAN_POST_TRACKER'		=> $auth->acl_get('u_tracker_post'),
@@ -769,15 +770,15 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'EDIT_IMG' 					=> $user->img('icon_post_edit', 'EDIT_POST'),
 		'DELETE_IMG' 				=> $user->img('icon_post_delete', 'DELETE_POST'),
 
-		'EDITED_MESSAGE'			=> $tracker->fetch_edited_by($row, 'ticket'),
+		'EDITED_MESSAGE'			=> $tracker->api->fetch_edited_by($row, 'ticket'),
 		'EDIT_REASON'				=> $row['edit_reason'],
 
-		'S_CAN_DELETE'				=> $tracker->check_delete(),
+		'S_CAN_DELETE'				=> $tracker->api->check_delete(),
 		'U_DELETE'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=delete"),
-		'S_CAN_EDIT'				=> $tracker->check_edit($row['ticket_time'], $row['ticket_user_id']),
+		'S_CAN_EDIT'				=> $tracker->api->check_edit($row['ticket_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=edit"),
 
-		'L_TITLE'					=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
+		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=reply"),
 		'U_SEND_PM'					=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $row['ticket_user_id']),
@@ -785,19 +786,19 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id") : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;t=$ticket_id&amp;mode=history"),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
-		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
+		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
 
 		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		'PROJECT_NAME'				=> $row['project_name'],
-		'TICKET_ASSIGNED_TO'		=> $tracker->get_assigned_to($project_id, $row['ticket_assigned_to'], $row['assigned_username'], $row['assigned_user_colour']),
+		'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $row['ticket_assigned_to'], $row['assigned_username'], $row['assigned_user_colour']),
 		'TICKET_REPORTED_BY'		=> get_username_string('full', $row['ticket_user_id'], $row['ticket_username'], $row['ticket_user_colour']),
 		'TICKET_ID'					=> $row['ticket_id'],
 		'TICKET_TITLE'				=> $row['ticket_title'],
 		'TICKET_DESC'				=> generate_text_for_display($row['ticket_desc'], $row['ticket_desc_uid'], $row['ticket_desc_bitfield'], $row['ticket_desc_options']),
-		'TICKET_STATUS'				=> '(' . strtolower($tracker->set_status($row['status_id'])) . ')',
-		'TICKET_STATUS_DETAILS'		=> $tracker->set_status($row['status_id']),
-		'TICKET_CLOSED'				=> $tracker->is_closed($row['status_id']),
-		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,		
+		'TICKET_STATUS'				=> '(' . strtolower($tracker->api->set_status($row['status_id'])) . ')',
+		'TICKET_STATUS_DETAILS'		=> $tracker->api->set_status($row['status_id']),
+		'TICKET_CLOSED'				=> $tracker->api->is_closed($row['status_id']),
+		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
 
@@ -806,10 +807,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
 		'S_TICKET_SEVERITY'			=> $s_ticket_severity,
 
-		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['component_name']),
-		'TICKET_VERSION'			=> (empty($row['version_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($row['version_name']),
-		'TICKET_PRIORITY'			=> (!isset($tracker->priority[$row['priority_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($tracker->priority[$row['priority_id']]),
-		'TICKET_SEVERITY'			=> (!isset($tracker->severity[$row['severity_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->set_lang_name($tracker->severity[$row['severity_id']]),
+		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['component_name']),
+		'TICKET_VERSION'			=> (empty($row['version_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['version_name']),
+		'TICKET_PRIORITY'			=> (!isset($tracker->api->priority[$row['priority_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($tracker->api->priority[$row['priority_id']]),
+		'TICKET_SEVERITY'			=> (!isset($tracker->api->severity[$row['severity_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($tracker->api->severity[$row['severity_id']]),
 		'TICKET_PHP'				=> (empty($row['ticket_php'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_php'],
 		'TICKET_DBMS'				=> (empty($row['ticket_dbms'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_dbms'],
 	));
@@ -817,20 +818,20 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	switch ($mode)
 	{
 		case 'history':
-			$tracker->display_history($ticket_id, $project_id);
+			$tracker->api->display_history($ticket_id, $project_id);
 		break;
 
 		case 'reply':
-			$tracker->display_review($ticket_id);
+			$tracker->api->display_review($ticket_id);
 		break;
 
 		default:
-			$tracker->display_comments($ticket_id, $project_id, $start);
+			$tracker->api->display_comments($ticket_id, $project_id, $start);
 		break;
 	}
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'], false);
+	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_view_body.html')
@@ -879,7 +880,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			trigger_error('TRACKER_TICKET_NO_EXIST');
 		}
 
-		$tracker->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
+		$tracker->api->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
 
 		if ($ticket_data['attach_id'])
 		{
@@ -927,21 +928,21 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	if ($add_attachment)
 	{
 		$filedata = array();
-		$filedata = $tracker->add_attachment('attachment', $errors);
+		$filedata = $tracker->api->add_attachment('attachment', $errors);
 		if (sizeof($filedata))
 		{
-			$tracker->posting_gen_attachment_data($filedata);
+			$tracker->api->posting_gen_attachment_data($filedata);
 		}
 	}
 	else if (sizeof($attachment_data))
 	{
 		if ($remove_attachment)
 		{
-			$tracker->remove_attachment($attachment_data);
+			$tracker->api->remove_attachment($attachment_data);
 		}
 		else
 		{
-			$tracker->posting_gen_attachment_data($attachment_data);
+			$tracker->api->posting_gen_attachment_data($attachment_data);
 		}
 	}
 
@@ -958,18 +959,18 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 			if ($mode == 'add')
 			{
-				$ticket_id = $tracker->add_ticket($ticket_data);
+				$ticket_id = $tracker->api->add_ticket($ticket_data);
 				if (sizeof($attachment_data))
 				{
-					$tracker->update_attachment($attachment_data, $ticket_id);
+					$tracker->api->update_attachment($attachment_data, $ticket_id);
 				}
 			}
 			else if ($mode == 'edit')
 			{
-				$tracker->update_ticket($ticket_data, $ticket_id, true);
+				$tracker->api->update_ticket($ticket_data, $ticket_id, true);
 				if (sizeof($attachment_data))
 				{
-					$tracker->update_attachment($attachment_data, $ticket_id);
+					$tracker->api->update_attachment($attachment_data, $ticket_id);
 				}
 			}
 			else
@@ -1016,22 +1017,22 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		));
 	}
 
-	$s_ticket_component = $tracker->get_type_option('component', $project_id);
-	$s_ticket_version = $tracker->get_type_option('version', $project_id);
-	$s_ticket_environment = $tracker->get_type_option('environment', $project_id);
+	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_environment = $tracker->api->get_type_option('environment', $project_id);
 
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
-	$can_attach = (file_exists($phpbb_root_path . $tracker->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
+	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	$template->assign_vars(array(
-		'L_TITLE'					=> $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'],
-		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->projects[$project_id]['project_name'], $tracker->get_type_option('title', $project_id)) . (($tracker->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
+		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
+		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->api->projects[$project_id]['project_name'], $tracker->api->get_type_option('title', $project_id)) . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
 		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
 		'S_EDIT_REASON'				=> ($mode == 'edit') ? true : false,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
-		'S_COMPONENT_OPTIONS'		=> $tracker->select_options($project_id, 'component', $ticket_data['component_id']),
-		'S_VERSION_OPTIONS'			=> $tracker->select_options($project_id, 'version', $ticket_data['version_id']),
+		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
+		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
 		'S_TICKET_COMPONENT'		=> $s_ticket_component,
 		'S_TICKET_VERSION'			=> $s_ticket_version,
@@ -1039,8 +1040,8 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 		'EDIT_REASON_TEXT'			=> ($mode == 'edit') ? $ticket_data['edit_reason'] : '',
 		'PROJECT_ID'				=> $project_id,
-		'PROJECT_NAME'				=> $tracker->projects[$project_id]['project_name'],
-		'PROJECT_TYPE'				=> $tracker->get_type_option('title', $project_id),
+		'PROJECT_NAME'				=> $tracker->api->projects[$project_id]['project_name'],
+		'PROJECT_TYPE'				=> $tracker->api->get_type_option('title', $project_id),
 		'TICKET_TITLE'				=> $ticket_data['ticket_title'],
 		'TICKET_DESC'				=> $ticket_desc['text'],
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],
@@ -1050,9 +1051,9 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	));
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->get_type_option('title', $project_id) . ' - ' . $tracker->projects[$project_id]['project_name'], false);
+	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
 
-	$tracker->generate_nav($tracker->projects[$project_id]);
+	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_add_body.html')
@@ -1060,14 +1061,14 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 }
 else
 {
-	$row = $tracker->projects;
+	$row = $tracker->api->projects;
 	if (!sizeof($row))
 	{
 		trigger_error('TRACKER_NO_PROJECT_EXIST');
 	}
 
 	$display_project = false;
-	foreach ($tracker->types as $key => $type)
+	foreach ($tracker->api->types as $key => $type)
 	{
 		$template->assign_block_vars($type['id'], array());
 
