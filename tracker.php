@@ -223,10 +223,10 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	}
 
 	$currently_showing = '';
-	$sort_type = '';
+	$sort_type = array();
 	if ($user_id)
 	{
-		$sort_type = "&amp;u=$user_id";
+		$sort_type['u'] = $user_id;
 		$filter_username = array();
 		$filter_user_id = $user_id;
 		user_get_id_name($filter_user_id, $filter_username);
@@ -239,7 +239,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	if ($assigned_to_user_id)
 	{
-		$sort_type .= "&amp;at=$assigned_to_user_id";
+		$sort_type['at'] = $assigned_to_user_id;
 		$filter_username = array();
 		$filter_user_id = $assigned_to_user_id;
 		user_get_id_name($filter_user_id, $filter_username);
@@ -266,12 +266,18 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			'SEARCH_TERM'		=> $term,
 			'SEARCH_MATCHES' 	=> $search_matches,
 		));
+
+		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
+	}
+	else
+	{
+		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
 	}
 
 	$template->assign_vars(array(
 		'PAGE_NUMBER'	=> ($tickets_per_page > 0) ? on_page($total_tickets, $tickets_per_page, $start) : on_page($total_tickets, $total_tickets, $start),
 		'TOTAL_TICKETS'	=> $l_total_tickets,
-		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination(append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type$sort_type$pagination_mode"), $total_tickets, $tickets_per_page, $start) : false,
+		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination($pagination_url, $total_tickets, $tickets_per_page, $start) : false,
 	));
 
 	// Assign index specific vars
@@ -286,13 +292,13 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'S_CAN_POST_TRACKER'			=> $auth->acl_get('u_tracker_post'),
 		'TICKET_IMG'					=> $user->img('button_topic_new', $user->lang['TRACKER_POST_TICKET']),
 		'U_POST_NEW_TICKET'				=> $tracker->api->build_url('add', array($project_id, $ticket_id)),
-		'U_MY_TICKETS'					=> ($user_id) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type" . (($assigned_to_user_id) ? "&amp;at=$assigned_to_user_id" : '')) : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type&amp;u={$user->data['user_id']}" . (($assigned_to_user_id) ? "&amp;at=$assigned_to_user_id" : '')),
+		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'])),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],
 
-		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')) : append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;at={$user->data['user_id']}&amp;st=$status_type" . (($user_id) ? "&amp;u=$user_id" : '')),
+		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? $tracker->api->build_url('project_st_u', array($project_id, $status_type, $user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $user->data['user_id'], $user_id)),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
-		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($term)) : $tracker->api->build_url('index'),
+		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($project_id, $term)) : $tracker->api->build_url('index'),
 		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
 		'S_ACTION_SEARCH' 				=> build_url(array('mode', 'term')),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
@@ -803,8 +809,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> $tracker->api->build_url('reply', array($project_id, $ticket_id)),
-		'U_SEND_PM'					=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $row['ticket_user_id']),
-		'U_REPORTERS_TICKETS'		=> append_sid("{$phpbb_root_path}tracker.$phpEx", "p=$project_id&amp;st=" . TRACKER_ALL . "&amp;u={$row['ticket_user_id']}"),
+		'U_SEND_PM'					=> $tracker->api->build_url('compose_pm', array($row['ticket_user_id'])),
+		'U_REPORTERS_TICKETS'		=> $tracler->api->build_url('project_st_u', array($project_id, TRACKER_ALL, $row['ticket_user_id'])),
 		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 

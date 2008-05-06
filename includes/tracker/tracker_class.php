@@ -680,30 +680,33 @@ class tracker
 class tracker_url_builder
 {
 	public $url_base;
-	public $url_ary = array();
+	public $url_ary = array(
+		'index'				=> '',
+		'project'			=> 'p=%1$s',
+		'project_st'		=> 'p=%1$s&amp;st=%2$s',
+		'ticket'			=> 'p=%1$s&amp;t=%2$s',
+		'history'			=> 'p=%1$s&amp;t=%2$s',
+		'statistics'		=> 'mode=statistics',
+		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
+		'download'			=> 'mode=download&amp;id=%1$s&amptype=%2$s',
+		'delete'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
+		'delete_pid'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+		'edit'				=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
+		'edit_pid'			=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+		'reply'				=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
+		'add'				=> 'mode=add&amp;p=%1$s',
+		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%3$s',
+		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s',
+		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
+		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%4$s&amp;u=%3$s',
+		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
+	);
 
 	public function __construct()
 	{
 		global $phpbb_root_path, $phpEx;
 
 		$this->url_base = "{$phpbb_root_path}tracker.$phpEx";
-
-		$this->url_ary = array(
-			'index'			=> '',
-			'project'		=> 'p=%1$s',
-			'ticket'		=> 'p=%1$s&amp;t=%2$s',
-			'history'		=> 'p=%1$s&amp;t=%2$s',
-			'statistics'	=> 'mode=statistics',
-			'statistics_p'	=> 'mode=statistics&amp;p=%1$s',
-			'download'		=> 'mode=download&amp;id=%1$s&amptype=%2$s',
-			'delete'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
-			'delete_pid'	=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
-			'edit'			=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
-			'edit_pid'		=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
-			'reply'			=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
-			'add'			=> 'mode=add&amp;p=%1$s',
-			'search'		=> 'mode=search&amp;term=%1$s',
-		);
 	}
 
 	public function build($mode, $args)
@@ -718,6 +721,9 @@ class tracker_url_builder
 			case 'memberlist_group':
 				return append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . array_shift($args));
 			break;
+			case 'compose_pm':
+				return append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . array_shift($args));
+			break;
 			case 'login':
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
 			break;
@@ -726,20 +732,24 @@ class tracker_url_builder
 				{
 					return $this->_build($mode, $args);
 				}
+				else if (strpos($mode, 'clean_') === 0 && isset($this->url_ary[substr($mode, 0, strlen('clean_'))]))
+				{
+					return $this->_build(substr($mode, 0, strlen('clean_')), $args, false);
+				}
 				return $this->_build('index', NULL);
 			break;
 		}
 	}
 
-	public function _build($mode, $args)
+	public function _build($mode, $args, $append_sid = true)
 	{
 		if (is_array($args) && sizeof($args))
 		{
-			return append_sid($this->url_base, vsprintf($this->url_ary[$mode], $args));
+			return ($append_sid) ? append_sid($this->url_base, vsprintf($this->url_ary[$mode], $args)) : vsprintf($this->url_ary[$mode], $args);
 		}
 		else
 		{
-			return append_sid($this->url_base, $this->url_ary[$mode]);
+			return ($append_sid) ? append_sid($this->url_base, $this->url_ary[$mode]) : $this->url_ary[$mode];
 		}
 	}
 }

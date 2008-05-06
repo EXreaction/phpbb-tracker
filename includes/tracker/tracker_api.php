@@ -927,12 +927,12 @@ class tracker_api
 				strip_bbcode($data['ticket_desc'], $data['ticket_desc_uid']);
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user->data['username']),
-					'TICKET_URL'		=> "{$board_url}tracker.$phpEx?p={$data['project_id']}&t={$data['ticket_id']}",
+					'TICKET_URL'		=> $board_url . $this->build_url('clean_ticket', array($data['project_id'], $data['ticket_id'])),
 					'TICKET_ID'			=> $data['ticket_id'],
 					'PROJECT_NAME'		=> htmlspecialchars_decode($row['project_name']),
 					'TICKET_TITLE'		=> htmlspecialchars_decode($data['ticket_title']),
 					'TICKET_DESC'		=> $this->format_desc($data['ticket_desc']),
-					'TRACKER_URL'		=> "{$board_url}tracker.$phpEx",
+					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 				);
@@ -978,12 +978,12 @@ class tracker_api
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 					'CHANGE_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
-					'TICKET_URL'		=> $board_url . 'tracker.' . $phpEx . "?p={$row['project_id']}&t={$data['ticket_id']}",
+					'TICKET_URL'		=> $board_url . $this->build_url('clean_ticket', array($row['project_id'], $row['ticket_id'])),
 					'TICKET_ID'			=> $data['ticket_id'],
 					'TICKET_STATUS'		=> $this->set_status($row['status_id']),
 					'TICKET_TITLE'		=> htmlspecialchars_decode($row['ticket_title']),
 					'TICKET_DESC'		=> $this->format_desc($data['post_desc']),
-					'TRACKER_URL'		=> $board_url . 'tracker.' . $phpEx,
+					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $row['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 				);
@@ -1072,10 +1072,10 @@ class tracker_api
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 					'CHANGE_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
-					'TICKET_URL'		=> $board_url . 'tracker.' . $phpEx . "?p={$row['project_id']}&t={$data['ticket_id']}",
+					'TICKET_URL'		=> $board_url . $this->build_url('clean_ticket', array($row['project_id'], $row['ticket_id'])),
 					'TICKET_ID'			=> $data['ticket_id'],
 					'TICKET_TITLE'		=> htmlspecialchars_decode($row['ticket_title']),
-					'TRACKER_URL'		=> $board_url . 'tracker.' . $phpEx,
+					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $row['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 					'FIELD_NAME1'		=> htmlspecialchars_decode($field_name),
@@ -1157,10 +1157,10 @@ class tracker_api
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 					'CHANGE_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
-					'TICKET_URL'		=> $board_url . 'tracker.' . $phpEx . "?p={$row['project_id']}&t={$data['ticket_id']}",
+					'TICKET_URL'		=> $board_url . $this->build_url('clean_ticket', array($row['project_id'], $data['ticket_id'])),
 					'TICKET_ID'			=> $data['ticket_id'],
 					'TICKET_TITLE'		=> htmlspecialchars_decode($row['ticket_title']),
-					'TRACKER_URL'		=> $board_url . 'tracker.' . $phpEx,
+					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $row['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 					'FIELD_NAME1'		=> htmlspecialchars_decode($field_name1),
@@ -1176,7 +1176,11 @@ class tracker_api
 			break;
 		}
 
-		include_once($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
+		if (!class_exists('messenger'))
+		{
+			include($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
+		}
+
 		$messenger = new messenger(false);
 
 		$messenger->subject($subject);
