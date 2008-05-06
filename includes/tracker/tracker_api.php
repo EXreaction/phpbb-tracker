@@ -1388,7 +1388,7 @@ class tracker_api
 	{
 		global $user;
 
-		return (!empty($user->lang[$name])) ? $user->lang[$name] : $name;
+		return (!empty($user->lang[$name])) ? $user->lang[$name] : ((!empty($user->lang['G_'. $name])) ? $user->lang['G_' . $name] : $name);
 	}
 
 	/**
