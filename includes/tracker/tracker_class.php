@@ -25,6 +25,8 @@ class tracker
 	public $api;
 	public $url_builder;
 
+	public $errors;
+
 	public function __construct($in_tracker = true)
 	{
 		global $template, $user;
@@ -684,6 +686,9 @@ class tracker_url_builder
 		'index'				=> '',
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
+		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
+		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%4$s&amp;u=%3$s',
+		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
 		'ticket'			=> 'p=%1$s&amp;t=%2$s',
 		'history'			=> 'p=%1$s&amp;t=%2$s',
 		'statistics'		=> 'mode=statistics',
@@ -697,9 +702,6 @@ class tracker_url_builder
 		'add'				=> 'mode=add&amp;p=%1$s',
 		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%3$s',
 		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s',
-		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
-		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%4$s&amp;u=%3$s',
-		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
 	);
 
 	public function __construct()

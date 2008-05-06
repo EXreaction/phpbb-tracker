@@ -52,9 +52,6 @@ $remove_attachment		= (isset($_POST['delete_attachment'])) ? true : false;
 $attachment_data		= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
 $preview				= (isset($_POST['preview'])) ? true : false;
 
-// this will hold our errors
-$errors = array();
-
 // Make sure the project exists and enabled...
 if (!empty($project_id))
 {
@@ -300,7 +297,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($project_id, $term)) : $tracker->api->build_url('index'),
 		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
-		'S_ACTION_SEARCH' 				=> build_url(array('mode', 'term')),
+		'S_ACTION_SEARCH' 				=> $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user_id)),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 
 		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
@@ -456,7 +453,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($add_attachment)
 		{
-			$filedata = $tracker->api->add_attachment('attachment', $errors);
+			$filedata = $tracker->api->add_attachment('attachment', $tracker->errors);
 			if (sizeof($filedata))
 			{
 				$tracker->api->posting_gen_attachment_data($filedata);
@@ -487,10 +484,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		{
 			if (!check_form_key('add_post'))
 			{
-				$errors[] = $user->lang['FORM_INVALID'];
+				$tracker->errors[] = $user->lang['FORM_INVALID'];
 			}
 
-			if ($post_data['post_desc'] && !sizeof($errors))
+			if ($post_data['post_desc'] && !sizeof($tracker->errors))
 			{
 				generate_text_for_storage($post_data['post_desc'], $post_data['post_desc_uid'], $post_data['post_desc_bitfield'], $post_data['post_desc_options'], true, true, true);
 
@@ -556,7 +553,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			}
 			else if (!$post_data['post_desc'])
 			{
-				$errors[] = $user->lang['TRACKER_TICKET_MESSAGE_ERROR'];
+				$tracker->errors[] = $user->lang['TRACKER_TICKET_MESSAGE_ERROR'];
 			}
 		}
 
@@ -766,12 +763,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$s_ticket_environment	= $tracker->api->get_type_option('environment', $project_id);
 
 	$option_data = array(
-		'status_id'				=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
-		'ticket_assigned_to'	=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
-		'severity_id'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
-		'priority_id'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
-		'ticket_hidden'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
-		'ticket_status'			=> (sizeof($errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
+		'status_id'				=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
+		'ticket_assigned_to'	=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
+		'severity_id'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
+		'priority_id'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
+		'ticket_hidden'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_status'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
 	$template->assign_vars(array(
@@ -816,7 +813,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
 
-		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
 		'PROJECT_NAME'				=> $row['project_name'],
 		'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $row['ticket_assigned_to'], $row['assigned_username'], $row['assigned_user_colour']),
 		'TICKET_REPORTED_BY'		=> get_username_string('full', $row['ticket_user_id'], $row['ticket_username'], $row['ticket_user_colour']),
@@ -958,7 +955,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	if ($add_attachment)
 	{
 		$filedata = array();
-		$filedata = $tracker->api->add_attachment('attachment', $errors);
+		$filedata = $tracker->api->add_attachment('attachment', $tracker->errors);
 		if (sizeof($filedata))
 		{
 			$tracker->api->posting_gen_attachment_data($filedata);
@@ -980,10 +977,10 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	{
 		if (!check_form_key('add_ticket'))
 		{
-			$errors[] = $user->lang['FORM_INVALID'];
+			$tracker->errors[] = $user->lang['FORM_INVALID'];
 		}
 
-		if ($ticket_data['ticket_title'] && $ticket_data['ticket_desc'] && !sizeof($errors))
+		if ($ticket_data['ticket_title'] && $ticket_data['ticket_desc'] && !sizeof($tracker->errors))
 		{
 			generate_text_for_storage($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_bitfield'], $ticket_data['ticket_desc_options'], true, true, true);
 
@@ -1020,12 +1017,12 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		{
 			if (!$ticket_data['ticket_title'])
 			{
-				$errors[] = $user->lang['TRACKER_TICKET_TITLE_ERROR'];
+				$tracker->errors[] = $user->lang['TRACKER_TICKET_TITLE_ERROR'];
 			}
 
 			if (!$ticket_data['ticket_desc'])
 			{
-				$errors[] = $user->lang['TRACKER_TICKET_DESC_ERROR'];
+				$tracker->errors[] = $user->lang['TRACKER_TICKET_DESC_ERROR'];
 			}
 		}
 	}
@@ -1047,9 +1044,9 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		));
 	}
 
-	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
-	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
-	$s_ticket_environment = $tracker->api->get_type_option('environment', $project_id);
+	$s_ticket_component		= $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version		= $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_environment	= $tracker->api->get_type_option('environment', $project_id);
 
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
@@ -1057,7 +1054,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	$template->assign_vars(array(
 		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->api->projects[$project_id]['project_name'], $tracker->api->get_type_option('title', $project_id)) . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
-		'ERROR'						=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
 
 		'S_EDIT_REASON'				=> ($mode == 'edit') ? true : false,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
