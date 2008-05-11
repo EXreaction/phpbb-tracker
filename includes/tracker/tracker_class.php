@@ -56,6 +56,66 @@ class tracker
 	}
 
 	/**
+	 * Display the tracker index
+	 */
+	public function display_index()
+	{
+		global $user, $template;
+
+		$row = &$this->api->projects;
+		if (!sizeof($row))
+		{
+			trigger_error('TRACKER_NO_PROJECT_EXIST');
+		}
+
+		$display_project = false;
+		foreach ($this->api->types as $key => $type)
+		{
+			$template->assign_block_vars($type['id'], array());
+
+			foreach ($row as $item)
+			{
+				if ($item['project_type'] != $key)
+				{
+					continue;
+				}
+
+				if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
+				{
+					if (!group_memberships($item['project_group'], $user->data['user_id'], true))
+					{
+						continue;
+					}
+				}
+
+				$display_project = true;
+				$template->assign_block_vars($type['id'] . '.project', array(
+					'PROJECT_NAME'				=> $item['project_name'],
+					'PROJECT_DESC'				=> $item['project_desc'],
+					'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
+					'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
+				));
+			}
+		}
+
+		// Assign index specific vars
+		$template->assign_vars(array(
+			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
+			'S_DISPLAY_PROJECT'			=> $display_project,
+			'S_LOGIN_ACTION'			=> $this->api->build_url('login'),
+		));
+
+		// Output page
+		page_header($user->lang['TRACKER'], false);
+
+		$template->set_filenames(array(
+			'body' => 'tracker/tracker_index_body.html')
+		);
+
+		page_footer();
+	}
+
+	/**
 	* Displays a tickets comments/posts
 	*/
 	public function display_comments($ticket_id, $project_id, $start = 0)
@@ -351,6 +411,7 @@ class tracker
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
 
 		$template->assign_var('S_IN_STATS', true);
+
 		if ($project_id)
 		{
 			//Get total open
@@ -359,9 +420,8 @@ class tracker
 				WHERE project_id = ' . $project_id . '
 					AND ' . $db->sql_in_set('status_id', $this->api->get_opened());
 			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
+			$total_opened = $db->sql_fetchfield('total');
 			$db->sql_freeresult($result);
-			$total_opened = $row['total'];
 
 			//Get total closed
 			$sql = 'SELECT COUNT(ticket_id) as total
@@ -369,9 +429,8 @@ class tracker
 				WHERE project_id = ' . $project_id . '
 					AND ' . $db->sql_in_set('status_id', $this->api->get_opened(), true);
 			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
+			$total_closed = $db->sql_fetchfield('total');
 			$db->sql_freeresult($result);
-			$total_closed = $row['total'];
 
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
@@ -563,6 +622,7 @@ class tracker
 			}
 
 			$this->api->generate_nav($this->api->projects[$project_id], false, true);
+
 			// Output page
 			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->api->get_type_option('title', $project_id) . ' - ' . $this->api->projects[$project_id]['project_name'], false);
 
@@ -628,7 +688,6 @@ class tracker
 
 			// Output page
 			page_header($user->lang['TRACKER_STATS'], false);
-
 		}
 
 		$template->set_filenames(array(
@@ -673,6 +732,67 @@ class tracker
 			'SIZE_LANG'				=> get_formatted_filesize($attachment['filesize']),
 			'DOWNLOAD_NAME'			=> basename($attachment['real_filename']),
 		));
+	}
+
+	public function check_permission($mode, $project_id)
+	{
+		global $auth, $user;
+
+		// Check if user can view tracker
+		if (!$auth->acl_get('u_tracker_view'))
+		{
+			trigger_error('NO_PERMISSION_TRACKER_VIEW');
+		}
+
+		switch ($mode)
+		{
+			case 'reply':
+			case 'add':
+				if (!$auth->acl_get('u_tracker_post') || !$user->data['is_registered'])
+				{
+					trigger_error('NO_PERMISSION_TRACKER_POST');
+				}
+			break;
+
+			case 'edit':
+				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_edit') && !$auth->acl_get('u_tracker_edit_all') && !$auth->acl_get('u_tracker_edit_global'))
+				{
+					trigger_error('NO_PERMISSION_TRACKER_EDIT');
+				}
+			break;
+
+			case 'delete':
+				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_delete_global') && (!$auth->acl_get('u_tracker_delete_all') || !$this->can_manage))
+				{
+					trigger_error('TRACKER_DELETE_NO_PERMISSION');
+				}
+			break;
+		}
+	}
+
+	public function check_exists($project_id)
+	{
+		// Check if project actually exists...
+		if (!isset($this->api->projects[$project_id]))
+		{
+			return false;
+		}
+
+		$this->api->set_manage($project_id);
+
+		// Check if the project is enabled...
+		if ($this->api->projects[$project_id]['project_enabled'] == TRACKER_PROJECT_DISABLED)
+		{
+			if (!$this->api->can_manage)
+			{
+				return false;
+			}
+		}
+
+		// Since the project exists and user can see it, set the staus types
+		$this->api->set_type($project_id);
+
+		return true;
 	}
 }
 

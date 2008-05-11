@@ -737,7 +737,7 @@ class tracker_api
 	* @param string $action value must be either 'lock' or 'unlock'
 	* @param int $ticket_id id of ticket
 	*/
-	public function lock_unlock($action, $ticket_id)
+	public function manage_lock($action, $ticket_id)
 	{
 		global $db;
 
@@ -766,7 +766,7 @@ class tracker_api
 	* @param string $action value must be either 'hide' or 'unhide'
 	* @param int $ticket_id id of ticket
 	*/
-	public function hide_unhide($action, $ticket_id)
+	public function manage_hide($action, $ticket_id)
 	{
 		global $db;
 
@@ -1442,7 +1442,7 @@ class tracker_api
 	/**
 	* Set filter to display on required tickets
 	*/
-	public function set_filter($type)
+	public function get_filter_sql($type)
 	{
 		global $db;
 
@@ -1654,8 +1654,6 @@ class tracker_api
 			'TRACKER_TICKET_ID'		=> $ticket_id,
 			'U_VIEW_TRACKER_TICKET'	=> $this->build_url('ticket', array($data['project_id'], $ticket_id)),
 		));
-
-		return;
 	}
 
 	/**
@@ -1802,22 +1800,6 @@ class tracker_api
 		}
 
 		return true;
-
-	}
-
-	/*
-	* Checks whether a user is allowed to delete posts/tickets
-	*/
-	public function check_delete()
-	{
-		global $auth;
-
-		if ($auth->acl_get('a_tracker') || $auth->acl_get('u_tracker_delete_global') || ($auth->acl_get('u_tracker_delete_all') && $this->can_manage))
-		{
-			return true;
-		}
-
-		return false;
 
 	}
 
