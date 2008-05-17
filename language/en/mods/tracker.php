@@ -276,18 +276,22 @@ $lang = array_merge($lang, array(
 	'NO_URL_BUILDER'					=> 'No URL builder has been set for the tracker api.',
 ));
 
-/**
- * Format a username correctly on localised basis
- */
-function tracker_format_username($username)
+// in case add_lang is called twice
+if (!function_exists('tracker_format_username'))
 {
-	if (in_array(strtolower(substr($username, -1, 1)), array('s', 'x', 'z'), true))
+	/**
+	 * Format a username correctly on localised basis
+	 */
+	function tracker_format_username($username)
 	{
-		return $username . '\'';
-	}
-	else
-	{
-		return $username . '\'s';
+		if (in_array(strtolower(substr($username, -1, 1)), array('s', 'x', 'z'), true))
+		{
+			return $username . '\'';
+		}
+		else
+		{
+			return $username . '\'s';
+		}
 	}
 }
 
