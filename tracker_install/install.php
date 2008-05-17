@@ -37,15 +37,15 @@ $auth->acl($user->data);
 $user->setup();
 
 // is the user logged in?
-//This might be looked at later if people have problems, but I guess only the founder
-//should be using ftp and installing scripts anyway.
+// This might be looked at later if people have problems, but I guess only the founder
+// should be using ftp and installing scripts anyway.
 if ($user->data['user_type'] != USER_FOUNDER)
 {
-	die('You are not authorized to use this script.');
+	die('You are not authorised to use this script.');
 }
 
 $table_prefix = (!empty($table_prefix) ? $table_prefix : 'phpbb_');
-require('config.' . $phpEx);
+require('./config.' . $phpEx);
 $mode = request_var('mode', '');
 $db->sql_return_on_error(true);
 
@@ -110,10 +110,11 @@ switch ($mode)
 		$install_mod->add_permissions($CFG['permission_options']);
 
 		echo '<br /><h1>Inserting Mod modules and clearing module cache...</h1>';
-		//Create Mod Modules...
-		foreach($CFG['mod_modules'] as $modules)
+		// Create Mod Modules...
+		include('./functions_install.' . $phpEx);
+		foreach($CFG['mod_modules'] as $module)
 		{
-			$install_mod->create_modules($modules['parent_module_data'], $modules['module_data']);
+			install_module($module[0], $module[1], $error, 'ACP_TRACKER');
 		}
 
 		if ($CFG['clear_cache_install'])
@@ -174,7 +175,7 @@ switch ($mode)
 
 				case '0.1.1':
 					echo '<br /><h1>Updating database from version 0.1.1 to 0.1.2...</h1>';
-					//This is need because of a bug when installing 0.1.1 new
+					// This is need because of a bug when installing 0.1.1 new
 					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
 					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
 				case '0.1.2':
@@ -479,97 +480,6 @@ class install_mod
 		{
 			$db->sql_transaction('rollback');
 		}
-	}
-
-	function create_modules($parent_module_data, $module_data)
-	{
-		global $phpbb_root_path, $phpEx, $db;
-		$_module = &new acp_modules();
-		$_module->module_class = $parent_module_data['module_class'];
-
-		$db->sql_error_triggered = false;
-
-		//If the module class is acp we add it to the MODS tab in the ACP
-		if ($parent_module_data['module_class'] == 'acp')
-		{
-			$sql = 'SELECT module_id
-				FROM ' . MODULES_TABLE . "
-				WHERE module_langname = 'ACP_CAT_DOT_MODS'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-
-			//Create .MODS tab if missing and get id again
-			if (!$row)
-			{
-				$dot_mods = array(
-					'module_basename' 	=> '',
-					'module_enabled'	=> '1',
-					'module_display' 	=> '1',
-					'parent_id' 		=> '0',
-					'module_class' 		=> 'acp',
-					'module_langname' 	=> 'ACP_CAT_DOT_MODS',
-					'module_mode' 		=> '',
-					'module_auth' 		=> '',
-				);
-
-				$_module->update_module_data($dot_mods, true);
-
-				$sql = 'SELECT module_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_langname = 'ACP_CAT_DOT_MODS'";
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-			}
-
-			$parent_module_data['parent_id'] = $row['module_id'];
-		}
-
-		// Add category
-		$_module->update_module_data($parent_module_data, true);
-		$_module->remove_cache_file();
-
-		// Check for last sql error happened
-		if ($db->sql_error_triggered)
-		{
-			$db->sql_error_triggered = false;
-			$error = $db->sql_error($db->sql_error_sql);
-			$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
-		}
-		else
-		{
-			add_log('admin', 'LOG_MODULE_ADD', $_module->lang_name($parent_module_data['module_langname']));
-		}
-
-		$sql = 'SELECT module_id
-			FROM ' . MODULES_TABLE . "
-			WHERE module_langname = '{$parent_module_data['module_langname']}'
-				AND module_class = '{$parent_module_data['module_class']}'";
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
-		{
-			$module_data[$i]['parent_id'] = $row['module_id'];
-			$_module->update_module_data($module_data[$i], true);
-			$_module->remove_cache_file();
-
-			// Check for last sql error happened
-			if ($db->sql_error_triggered)
-			{
-				$db->sql_error_triggered = false;
-				$error = $db->sql_error($db->sql_error_sql);
-				$this->db_error($error['message'], $db->sql_error_sql, __LINE__, __FILE__);
-			}
-			else
-			{
-				add_log('admin', 'LOG_MODULE_ADD', $_module->lang_name($module_data[$i]['module_langname']));
-			}
-		}
-
-		return;
 	}
 
 	function update_modules($parent_module_langname, $parent_module_class, $module_data)

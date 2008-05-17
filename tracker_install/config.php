@@ -9,11 +9,21 @@
 */
 
 /**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/**
 * Some config values so the script can be used for different mods.
 * Currently only setup to add parent modules to .MODS tab in ACP
 * then add the mods modules to this new parent.
 * EDIT VALUES BELOW
 */
+
+global $table_prefix;
 
 $CFG = array(
 	'mod_title'					=> 'phpBB Tracker',
@@ -93,12 +103,12 @@ $CFG = array(
 		),
 	),
 	'update_schema_changes'	=> array(
-		//Change from version 0.1.0 to 0.1.1
+		// Change from version 0.1.0 to 0.1.1
 		'0.1.1'	=> array(
 			'add_columns'		=> array(
 				$table_prefix . 'tracker_project'	=> array(
 					'project_name_clean'		=> array('VCHAR', ''),
-				),		
+				),
 			),
 			'change_columns'		=> array(
 				$table_prefix . 'tracker_tickets'	=> array(
@@ -113,7 +123,7 @@ $CFG = array(
 			'change_columns'		=> array(
 				$table_prefix . 'tracker_project'	=> array(
 					'project_name'		=> array('VCHAR', ''),
-				),		
+				),
 			),
 		),
 	),

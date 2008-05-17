@@ -26,7 +26,7 @@ $user->setup();
 // should be using ftp and installing scripts anyway.
 if ($user->data['user_type'] != USER_FOUNDER)
 {
-	die('You are not authorized to use this script.');
+	die('You are not authorised to use this script.');
 }
 
 // Empty cache...
