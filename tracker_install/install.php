@@ -114,7 +114,7 @@ switch ($mode)
 		include('./functions_install.' . $phpEx);
 		foreach($CFG['mod_modules'] as $module)
 		{
-			install_module($module[0], $module[1], $error, 'ACP_TRACKER');
+			install_module($module[0], $module[1], $error, 'ACP_CAT_DOT_MODS');
 		}
 
 		if ($CFG['clear_cache_install'])

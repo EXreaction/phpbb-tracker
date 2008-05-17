@@ -71,13 +71,12 @@ if ($mode == 'statistics')
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 {
-	$row = &$tracker->api->projects[$project_id];
-	$tracker->api->generate_nav($row);
+	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
 
 	$sql_where = 't.project_id = ' . $project_id;
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' . TRACKER_PROJECT_ENABLED : '';
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
-	$sql_where .= (!$tracker->api->can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
+	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 	$sql_where .= ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$sql_where .= ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
 	$sql_where .= $tracker->api->get_filter_sql($status_type);
@@ -238,7 +237,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	}
 	else
 	{
-		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
+		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
 	}
 
 	$template->assign_vars(array(
@@ -623,10 +622,17 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			break;
 
 			case 'move':
+				$projects = $tracker->api->get_projects();
+
+				if (sizeof($projects) < 2)
+				{
+					trigger_error('TRACKER_NOT_ENOUGH_PROJECTS');
+				}
+
 				if (!confirm_box(true))
 				{
 					$template->assign_vars(array(
-						'S_PROJECT_SELECT'		=> $this->project_select_options($this->get_projects(), $project_id),
+						'S_PROJECT_SELECT'		=> $tracker->api->project_select_options($projects, $project_id),
 					));
 
 					confirm_box(false, '', build_hidden_fields(array(
@@ -641,7 +647,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				{
 					$tracker->api->move_ticket($project_id, $to_project_id, $ticket_id);
 				}
-
 			break;
 
 			default:
@@ -672,6 +677,9 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	}
 
 	$use_data = (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? true : false;
+
+	$s_ticket_severity = $tracker->api->get_type_option('severity', $project_id);
+	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
 
 	$option_data = array(
 		'status_id'				=> $use_data ? $data['status_id'] : $row['status_id'],
@@ -708,7 +716,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'EDITED_MESSAGE'			=> $tracker->api->fetch_edited_by($row, 'ticket'),
 		'EDIT_REASON'				=> $row['edit_reason'],
 
-		'S_CAN_DELETE'				=> $tracker->api->check_delete(),
+		'S_CAN_DELETE'				=> $tracker->check_permission('delete', $project_id),
 		'U_DELETE'					=> $tracker->api->build_url('delete', array($project_id, $ticket_id)),
 		'S_CAN_EDIT'				=> $tracker->api->check_edit($row['ticket_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> $tracker->api->build_url('edit', array($project_id, $ticket_id)),
@@ -739,8 +747,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
 		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
-		'S_TICKET_PRIORITY'			=> $tracker->api->get_type_option('priority', $project_id),
-		'S_TICKET_SEVERITY'			=> $tracker->api->get_type_option('severity', $project_id),
+		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
+		'S_TICKET_SEVERITY'			=> $s_ticket_severity,
 		'S_TICKET_ENVIRONMENT'		=> $tracker->api->get_type_option('environment', $project_id),
 
 		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['component_name']),

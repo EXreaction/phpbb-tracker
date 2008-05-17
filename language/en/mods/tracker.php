@@ -187,6 +187,8 @@ $lang = array_merge($lang, array(
 	'TRACKER_NO_STATUS_EXIST'				=> 'There are currently no status type in the tracker.',
 	'TRACKER_TICKET_LOCKED_MESSAGE'			=> 'This ticket is locked, you cannot edit posts or make further replies.',
 
+	'TRACKER_NOT_ENOUGH_PROJECTS'			=> 'There aren´t enough projects for your requested action.',
+
 	'TRACKER_TYPE'							=> 'Type',
 	'TRACKER_TOTAL_TICKETS'					=> 'Total Tickets',
 	'TRACKER_TOTAL_OPEN_TICKETS'			=> 'Total Open Tickets',

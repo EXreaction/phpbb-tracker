@@ -194,7 +194,7 @@ class tracker
 			}
 
 			$template->assign_block_vars('comments', array(
-				'S_CAN_DELETE'			=> $this->api->check_delete(),
+				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id),
 				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
@@ -846,7 +846,7 @@ class tracker
 	/**
 	 * Create a "back" link (with trigger_error)
 	 */
-	public function back_link($message = '', $return_msg = '', $project_id = false, $ticket_id = false, $index = true, $board = true)
+	public function back_link($message = '', $ticket_msg = '', $project_id = false, $ticket_id = false, $index = true, $board = true)
 	{
 		global $user;
 
@@ -879,7 +879,7 @@ class tracker
 			$return_msg[] = sprintf($user->lang['RETURN_INDEX'], '<a href="' . $this->api->build_url('board') . '">', '</a>');
 		}
 
-		return implode('<br /><br />', $return_msg);
+		trigger_error(implode('<br /><br />', $return_msg));
 	}
 }
 
@@ -897,7 +897,7 @@ class tracker_url_builder
 		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%4$s&amp;u=%3$s',
 		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
 		'ticket'			=> 'p=%1$s&amp;t=%2$s',
-		'history'			=> 'p=%1$s&amp;t=%2$s',
+		'history'			=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
 		'statistics'		=> 'mode=statistics',
 		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
 		'download'			=> 'mode=download&amp;id=%1$s&amptype=%2$s',
@@ -907,7 +907,7 @@ class tracker_url_builder
 		'edit_pid'			=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
 		'reply'				=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
 		'add'				=> 'mode=add&amp;p=%1$s',
-		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%3$s',
+		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%2$s',
 		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s',
 	);
 

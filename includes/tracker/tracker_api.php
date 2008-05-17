@@ -994,7 +994,7 @@ class tracker_api
 
 				$email_template = 'tracker_notify_status_single';
 
-				$sql = 'SELECT ticket_user_id, ticket_title, status_id, ticket_hidden, project_id
+				$sql = 'SELECT ticket_id, ticket_user_id, ticket_title, status_id, ticket_hidden, project_id
 							FROM ' . TRACKER_TICKETS_TABLE . '
 						WHERE ticket_id = ' . $data['ticket_id'];
 				$result = $db->sql_query($sql);
