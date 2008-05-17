@@ -734,6 +734,54 @@ class tracker
 		));
 	}
 
+	public function display_delete($project_id, $post_id, $ticket_id)
+	{
+		global $user;
+
+		if (confirm_box(true))
+		{
+			$message = $return_msg = '';
+
+			if ($post_id)
+			{
+				$this->api->delete_post($post_id, $ticket_id);
+
+				$message	= 'TRACKER_DELETE_POST_SUCCESS';
+				$return_msg	= 'TRACKER_REPLY_RETURN';
+			}
+			else if ($ticket_id)
+			{
+				$this->api->delete_ticket($ticket_id);
+
+				$message = 'TRACKER_DELETE_TICKET_SUCCESS';
+			}
+
+			$this->back_link($message, $return_msg, $project_id, $post_id ? $ticket_id : false);
+		}
+
+		if ($post_id)
+		{
+			$s_hidden_fields = build_hidden_fields(array(
+				'submit'	=> true,
+				't'			=> $ticket_id,
+				'p'			=> $project_id,
+				'pid'		=> $post_id,
+			));
+
+			confirm_box(false, 'TRACKER_DELETE_POST', $s_hidden_fields);
+		}
+		else if ($ticket_id)
+		{
+			$s_hidden_fields = build_hidden_fields(array(
+				'submit'	=> true,
+				't'			=> $ticket_id,
+				'p'			=> $project_id,
+			));
+
+			confirm_box(false, 'TRACKER_DELETE_TICKET', $s_hidden_fields);
+		}
+	}
+
 	public function check_permission($mode, $project_id)
 	{
 		global $auth, $user;
@@ -793,6 +841,45 @@ class tracker
 		$this->api->set_type($project_id);
 
 		return true;
+	}
+
+	/**
+	 * Create a "back" link (with trigger_error)
+	 */
+	public function back_link($message = '', $return_msg = '', $project_id = false, $ticket_id = false, $index = true, $board = true)
+	{
+		global $user;
+
+		$message	= (!empty($user->lang[$message])) ? $user->lang[$message] : $message;
+
+		$return_msg = array();
+
+		if ($message)
+		{
+			$return_msg[] = $message;
+		}
+
+		if ($project_id && $ticket_id)
+		{
+			$return_msg[] = sprintf($user->lang[$ticket_msg ? $ticket_msg : 'TRACKER_REPLY_RETURN'], '<a href="' . $this->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>');
+		}
+
+		if ($project_id)
+		{
+			$return_msg[] = sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $this->api->build_url('project', array($project_id)) . '">', '</a>');
+		}
+
+		if ($index)
+		{
+			$return_msg[] = sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $this->api->build_url('index') . '">', '</a>');
+		}
+
+		if ($board)
+		{
+			$return_msg[] = sprintf($user->lang['RETURN_INDEX'], '<a href="' . $this->api->build_url('board') . '">', '</a>');
+		}
+
+		return implode('<br /><br />', $return_msg);
 	}
 }
 

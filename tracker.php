@@ -287,52 +287,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 {
 	if ($mode == 'delete')
 	{
-		if (confirm_box(true))
-		{
-			$message = '';
-
-			if ($post_id)
-			{
-				$tracker->api->delete_post($post_id, $ticket_id);
-
-				$message .= $user->lang['TRACKER_DELETE_POST_SUCCESS'] . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
-			}
-			else if ($ticket_id)
-			{
-				$tracker->api->delete_ticket($ticket_id);
-
-				$message .= $user->lang['TRACKER_DELETE_TICKET_SUCCESS'] . '<br /><br />';
-			}
-
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
-
-			trigger_error($message);
-		}
-
-		if ($post_id)
-		{
-			$s_hidden_fields = build_hidden_fields(array(
-				'submit'	=> true,
-				't'			=> $ticket_id,
-				'p'			=> $project_id,
-				'pid'		=> $post_id,
-			));
-
-			confirm_box(false, 'TRACKER_DELETE_POST', $s_hidden_fields);
-		}
-		else if ($ticket_id)
-		{
-			$s_hidden_fields = build_hidden_fields(array(
-				'submit'	=> true,
-				't'			=> $ticket_id,
-				'p'			=> $project_id,
-			));
-
-			confirm_box(false, 'TRACKER_DELETE_TICKET', $s_hidden_fields);
-		}
+		$tracker->display_delete($project_id, $post_id, $ticket_id);
 	}
 
 	add_form_key('add_post');
@@ -515,13 +470,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 				}
 
-				$message = $user->lang['TRACKER_TICKET_REPLY_SUBMITTED'] . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_REPLY_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
-				$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
-
-				trigger_error($message);
+				$tracker->back_link('TRACKER_TICKET_REPLY_SUBMITTED', '', $project_id, $ticket_id);
 			}
 			else if (!$post_data['post_desc'])
 			{
@@ -649,13 +598,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			$tracker->api->update_ticket($data, $ticket_id);
 			$tracker->api->process_notification($data, $row);
 
-			$message = $user->lang['TRACKER_TICKET_UPDATED'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_UPDATED_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
-
-			trigger_error($message);
+			$tracker->back_link('TRACKER_TICKET_UPDATED', 'TRACKER_UPDATED_RETURN', $project_id, $ticket_id);
 		}
 	}
 
@@ -815,7 +758,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	switch ($mode)
 	{
 		case 'history':
-			$tracker->api->display_history($ticket_id, $project_id);
+			$tracker->display_history($ticket_id, $project_id);
 		break;
 
 		case 'reply':
@@ -980,13 +923,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 				trigger_error('NO_MODE');
 			}
 
-			$message = $user->lang['TRACKER_TICKET_SUBMITTED'] . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_SUBMITTED_RETURN'], '<a href="' . $tracker->api->build_url('ticket', array($project_id, $ticket_id)) . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_PROJECT_RETURN'], '<a href="' . $tracker->api->build_url('project', array($project_id)) . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['TRACKER_RETURN'], '<a href="' . $tracker->api->build_url('index') . '">', '</a>') . '<br /><br />';
-			$message .= sprintf($user->lang['RETURN_INDEX'], '<a href="' . $tracker->api->build_url('board') . '">', '</a>');
-
-			trigger_error($message);
+			$tracker->back_link('TRACKER_TICKET_SUBMITTED', 'TRACKER_SUBMITTED_RETURN', $project_id, $ticket_id);
 		}
 		else
 		{
