@@ -75,7 +75,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$tracker->api->generate_nav($row);
 
 	$sql_where = 't.project_id = ' . $project_id;
-	$sql_where .= (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' .TRACKER_PROJECT_ENABLED : '';
+	$sql_where .= (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' . TRACKER_PROJECT_ENABLED : '';
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
 	$sql_where .= (!$tracker->api->can_manage && $row['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 	$sql_where .= ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
@@ -157,7 +157,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	if ($tickets)
 	{
-		$sql = 'SELECT *
+		$sql = 'SELECT component_id, component_name
 			FROM ' . TRACKER_COMPONENTS_TABLE . '
 			WHERE project_id = ' . $project_id;
 		$result = $db->sql_query($sql);
@@ -671,26 +671,21 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
 
-	$s_ticket_component		= $tracker->api->get_type_option('component', $project_id);
-	$s_ticket_version		= $tracker->api->get_type_option('version', $project_id);
-	$s_ticket_priority		= $tracker->api->get_type_option('priority', $project_id);
-	$s_ticket_severity		= $tracker->api->get_type_option('severity', $project_id);
-	$s_ticket_environment	= $tracker->api->get_type_option('environment', $project_id);
+	$use_data = (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? true : false;
 
 	$option_data = array(
-		'status_id'				=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['status_id'] : $row['status_id'],
-		'ticket_assigned_to'	=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
-		'severity_id'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['severity_id'] : $row['severity_id'],
-		'priority_id'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['priority_id'] : $row['priority_id'],
-		'ticket_hidden'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_hidden'] : $row['ticket_hidden'],
-		'ticket_status'			=> (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? $data['ticket_status'] : $row['ticket_status'],
+		'status_id'				=> $use_data ? $data['status_id'] : $row['status_id'],
+		'ticket_assigned_to'	=> $use_data ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
+		'severity_id'			=> $use_data ? $data['severity_id'] : $row['severity_id'],
+		'priority_id'			=> $use_data ? $data['priority_id'] : $row['priority_id'],
+		'ticket_hidden'			=> $use_data ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_status'			=> $use_data ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
-		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
 
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
@@ -742,10 +737,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
 
-		'S_TICKET_COMPONENT'		=> $s_ticket_component,
-		'S_TICKET_VERSION'			=> $s_ticket_version,
-		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
-		'S_TICKET_SEVERITY'			=> $s_ticket_severity,
+		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
+		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
+		'S_TICKET_PRIORITY'			=> $tracker->api->get_type_option('priority', $project_id),
+		'S_TICKET_SEVERITY'			=> $tracker->api->get_type_option('severity', $project_id),
+		'S_TICKET_ENVIRONMENT'		=> $tracker->api->get_type_option('environment', $project_id),
 
 		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['component_name']),
 		'TICKET_VERSION'			=> (empty($row['version_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['version_name']),
@@ -956,10 +952,6 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		));
 	}
 
-	$s_ticket_component		= $tracker->api->get_type_option('component', $project_id);
-	$s_ticket_version		= $tracker->api->get_type_option('version', $project_id);
-	$s_ticket_environment	= $tracker->api->get_type_option('environment', $project_id);
-
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
 	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
@@ -973,9 +965,9 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
 		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
-		'S_TICKET_COMPONENT'		=> $s_ticket_component,
-		'S_TICKET_VERSION'			=> $s_ticket_version,
-		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
+		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
+		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
+		'S_TICKET_ENVIRONMENT'		=> $tracker->api->get_type_option('environment', $project_id),
 
 		'EDIT_REASON_TEXT'			=> ($mode == 'edit') ? $ticket_data['edit_reason'] : '',
 		'PROJECT_ID'				=> $project_id,
