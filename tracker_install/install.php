@@ -62,6 +62,15 @@ switch ($mode)
 
 		echo '<br /><h1>Removing mod database tables and data...</h1>';
 		$install_mod->load_data($CFG['remove_data_file']);
+		switch ($db->sql_layer)
+		{
+			case 'postgres':
+				$install_mod->load_data($CFG['pg_remove_data_file']);
+			break;
+			
+			default:
+			break;
+		}
 
 		if (isset($CFG['remove_schema_changes']))
 		{

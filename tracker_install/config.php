@@ -35,6 +35,7 @@ $CFG = array(
 	'clear_cache_update'		=> true,
 	'data_file'					=> 'schemas/schema_data.sql',
 	'remove_data_file'			=> 'schemas/remove_schema_data.sql',
+	'pg_remove_data_file'		=> 'schemas/postgres_remove_schema_data.sql',
 	'parent_module_remove'		=> array('ACP_TRACKER'),
 	'module_remove'				=> array('tracker'),
 	'permission_options'		=> array(
