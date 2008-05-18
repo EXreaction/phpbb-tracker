@@ -96,7 +96,7 @@ function module_exists($module_name, $parent = 0)
  * Install a single module into existing categories
  * and create categories if they don't exist
  *
- * @param string $module_class The module class, like ucp/mcp/ucp
+ * @param string $module_class The module class, like acp/mcp/ucp
  * @param string $module_name The modules filename minus extension and class_
  * @param array $error Passed by reference array for errors
  * @param mixed $main_category Only used for ACP if there's a category above the one stored in the file
