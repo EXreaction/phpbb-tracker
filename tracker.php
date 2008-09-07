@@ -35,7 +35,7 @@ $tracker = new tracker();
 
 // Get the varibles we will use to build the tracker pages
 $mode					= request_var('mode', '');
-$term					= request_var('term', '');
+$term					= utf8_normalize_nfc(request_var('term', '', true));
 $ticket_id				= request_var('t', 0);
 $project_id				= request_var('p', 0);
 $post_id				= request_var('pid', 0);
