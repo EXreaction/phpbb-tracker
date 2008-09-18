@@ -28,7 +28,7 @@
 				<!-- BEGIN project -->
 				<!-- IF bug.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 						<td style="width: 30%;"><a href="{bug.project.U_PROJECT}"><b>{bug.project.PROJECT_NAME}</b></a></td>
-						<td style="width: 60%;">{bug.project.PROJECT_DESC}</td>
+						<td style="width: 60%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_DESC}</a></td>
 						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
@@ -50,7 +50,7 @@
 				<!-- BEGIN project -->
 				<!-- IF feature.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 						<td style="width: 30%;"><a href="{feature.project.U_PROJECT}"><b>{feature.project.PROJECT_NAME}</b></a></td>
-						<td style="width: 60%;">{feature.project.PROJECT_DESC}</td>
+						<td style="width: 60%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_DESC}</a></td>
 						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
@@ -72,7 +72,7 @@
 				<!-- BEGIN project -->
 				<!-- IF issue.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 						<td style="width: 30%;"><a href="{issue.project.U_PROJECT}"><b>{issue.project.PROJECT_NAME}</b></a></td>
-						<td style="width: 60%;">{issue.project.PROJECT_DESC}</td>
+						<td style="width: 60%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_DESC}</a></td>
 						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 					</tr>
 				<!-- END project -->
