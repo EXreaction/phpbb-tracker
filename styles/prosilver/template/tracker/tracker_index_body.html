@@ -39,8 +39,8 @@
 					<tbody>
 						<!-- BEGIN project -->
 						<!-- IF bug.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 30%;"><a href="{bug.project.U_PROJECT}"><strong>{bug.project.PROJECT_NAME}</strong></a></td>
-								<td style="width: 60%;"><a href="{bug.project.U_PROJECT}">{bug.project.PROJECT_DESC}</a></td>
+								<td style="width: 30%;"><a href="{bug.project.U_PROJECT}"><strong>{bug.project.PROJECT_NAME}</strong></td>
+								<td style="width: 60%;">{bug.project.PROJECT_DESC}</a></td>
 								<td style="width: 10%; text-align: right;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
@@ -68,8 +68,8 @@
 					<tbody>
 						<!-- BEGIN project -->
 						<!-- IF feature.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-								<td style="width: 30%;"><a href="{feature.project.U_PROJECT}"><strong>{feature.project.PROJECT_NAME}</strong></a></td>
-								<td style="width: 60%;"><a href="{feature.project.U_PROJECT}">{feature.project.PROJECT_DESC}</a></td>
+								<td style="width: 30%;"><a href="{feature.project.U_PROJECT}"><strong>{feature.project.PROJECT_NAME}</strong></td>
+								<td style="width: 60%;">{feature.project.PROJECT_DESC}</a></td>
 								<td style="width: 10%; text-align: right;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
@@ -98,7 +98,7 @@
 						<!-- BEGIN project -->
 						<!-- IF issue.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 								<td style="width: 30%;"><a href="{issue.project.U_PROJECT}"><strong>{issue.project.PROJECT_NAME}</strong></a></td>
-								<td style="width: 60%;"><a href="{issue.project.U_PROJECT}">{issue.project.PROJECT_DESC}</a></td>
+								<td style="width: 60%;">{issue.project.PROJECT_DESC}</a></td>
 								<td style="width: 10%; text-align: right;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 							</tr>
 						<!-- END project -->
