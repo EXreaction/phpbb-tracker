@@ -17,7 +17,7 @@
 <div id="col1">
 <!-- IF not S_TICKET_REPLY -->
 	<h3 style="color: #D21A4E;"><!-- IF TICKET_CLOSED --><strike><!-- ENDIF -->{TICKET_TITLE}<span style="color: black;"> {TICKET_STATUS}</span><!-- IF TICKET_CLOSED --></strike><!-- ENDIF --></h3>
-	<div class="tickettext">
+	<div class="post bg2 tickettext">
 		<div class="inner"><span class="corners-top"><span></span></span>
 			<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
 					<!-- IF not S_IS_BOT -->
@@ -257,7 +257,7 @@
 
 <!-- BEGIN review -->
 
-<!-- IF review.S_LAST_ROW --><div class="tickettext"><!-- ELSE --><div class="post <!-- IF review.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->"><!-- ENDIF -->
+<!-- IF review.S_LAST_ROW --><div class="post bg2 tickettext"><!-- ELSE --><div class="post <!-- IF review.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->"><!-- ENDIF -->
 
 <div class="inner"><span class="corners-top"><span></span></span>
 
@@ -283,7 +283,7 @@
 
 </div>
 <div id="col2">
-	<div class="ticketdetail">
+	<div class="post bg2 ticketdetail">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<h3 style="border-bottom: none; margin-top: 5px;">{L_TRACKER_TICKET_DETAILS}</h3>
 			<ul class="menu">
@@ -308,7 +308,7 @@
 	</div>
 
 	<!-- IF S_MANAGE_TICKET --><form name="assign_user_form" action="{U_UPDATE_ACTION}" method="post"><!-- ENDIF -->
-	<div class="ticketmanage">
+	<div class="post bg2 ticketmanage">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<h3 style="border-bottom: none; margin-top: 5px;">{L_OPTIONS}</h3>
 		<ul class="menu">
