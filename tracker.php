@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id$
+* @version $Id: tracker.php 134 2008-09-07 08:29:33Z evil3 $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -41,7 +41,17 @@ $project_id				= request_var('p', 0);
 $post_id				= request_var('pid', 0);
 $user_id				= request_var('u', 0);
 $assigned_to_user_id	= request_var('at', 0);
-$status_type			= request_var('st', TRACKER_ALL_OPENED);
+// Added/changed by Daniel Young
+$viewall_enabled = $tracker->api->config['viewall_enabled'];
+if ($viewall_enabled && !$auth->acl_get('a_tracker')) {
+
+	$status_type = request_var('st', TRACKER_ALL);
+}
+else {
+
+	$status_type = request_var('st', TRACKER_ALL_OPENED);
+}
+// DY
 $start					= request_var('start', 0);
 
 $submit					= (isset($_POST['submit'])) ? true : false;
@@ -51,6 +61,17 @@ $add_attachment			= (isset($_POST['add_attachment'])) ? true : false;
 $remove_attachment		= (isset($_POST['delete_attachment'])) ? true : false;
 $attachment_data		= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
 $preview				= (isset($_POST['preview'])) ? true : false;
+// Added by Daniel Young
+// Used to completely enable/disable the enviromant section
+$environment_enabled = $tracker->api->config['environment_enabled'];
+// Used to enable/disable in the tracker list view
+$component_enabled = $tracker->api->config['component_enabled'];
+$version_enabled = $tracker->api->config['version_enabled'];
+$custom1_enabled = $tracker->api->config['custom1_enabled'];
+$custom2_enabled = $tracker->api->config['custom2_enabled'];
+// DY
+
+
 
 // check permissions
 $tracker->check_permission($mode, $project_id);
@@ -167,6 +188,55 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			$components[$row['component_id']] = $row['component_name'];
 		}
 		$db->sql_freeresult($result);
+
+
+
+
+
+
+// Added by Daniel Young
+		$sql = 'SELECT version_id, version_name
+			FROM ' . TRACKER_VERSION_TABLE . '
+			WHERE project_id = ' . $project_id;
+		$result = $db->sql_query($sql);
+
+		$version = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$version[$row['version_id']] = $row['version_name'];
+		}
+		$db->sql_freeresult($result);
+
+
+
+		$sql = 'SELECT custom1_id, custom1_name
+			FROM ' . TRACKER_CUSTOM1_TABLE . '
+			WHERE project_id = ' . $project_id;
+		$result = $db->sql_query($sql);
+
+		$custom1 = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$custom1[$row['custom1_id']] = $row['custom1_name'];
+		}
+		$db->sql_freeresult($result);
+
+
+		$sql = 'SELECT custom2_id, custom2_name
+			FROM ' . TRACKER_CUSTOM2_TABLE . '
+			WHERE project_id = ' . $project_id;
+		$result = $db->sql_query($sql);
+
+		$custom2 = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$custom2[$row['custom2_id']] = $row['custom2_name'];
+		}
+		$db->sql_freeresult($result);
+
+// DY
+
+
 	}
 
 	foreach ($tickets as $item)
@@ -183,6 +253,12 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour']),
 			'TICKET_TIME'				=> $user->format_date($item['ticket_time']),
 			'TICKET_COMPONENT'			=> $tracker->api->set_component_name($item['component_id'], $components),
+// Added by Daniel Young
+			'TICKET_VERSION'			=> $tracker->api->set_version_name($item['version_id'], $version),
+			
+			'TICKET_CUSTOM1'			=> $tracker->api->set_custom1_name($item['custom1_id'], $custom1),
+			'TICKET_CUSTOM2'			=> $tracker->api->set_custom2_name($item['custom2_id'], $custom2),
+// DY
 			'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['assigned_username'], $item['assigned_user_colour']),
 			'TICKET_STATUS'				=> $tracker->api->set_status($item['status_id']),
 		));
@@ -271,6 +347,18 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
 		'S_LOGIN_ACTION'				=> $tracker->api->build_url('login'),
+// Added by Daniel Young
+		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
+		'S_VERSION_OPTIONS'		=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
+		'S_CUSTOM1_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom1', $ticket_data['custom1_id']),
+		'S_CUSTOM2_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom2', $ticket_data['custom2_id']),
+
+		'S_COMPONENT_ENABLED'		=> $component_enabled,
+		'S_VERSION_ENABLED'		=> $version_enabled,
+		'S_CUSTOM1_ENABLED'		=> $custom1_enabled,
+		'S_CUSTOM2_ENABLED'		=> $custom2_enabled,
+
+// DY
 	));
 
 	// Output page
@@ -556,6 +644,17 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				'FROM'	=> array(TRACKER_COMPONENTS_TABLE => 'c'),
 				'ON'	=> 't.component_id = c.component_id',
 			),
+// Added by Daniel Young
+			array(
+				'FROM'	=> array(TRACKER_CUSTOM1_TABLE => 'c1'),
+				'ON'	=> 't.custom1_id = c1.custom1_id',
+			),
+
+			array(
+				'FROM'	=> array(TRACKER_CUSTOM2_TABLE => 'c2'),
+				'ON'	=> 't.custom2_id = c2.custom2_id',
+			),
+// DY
 			array(
 				'FROM'	=> array(TRACKER_VERSION_TABLE => 'v'),
 				'ON'	=> 't.version_id = v.version_id',
@@ -680,6 +779,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 	$s_ticket_severity = $tracker->api->get_type_option('severity', $project_id);
 	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
+// Added by Daniel Young
+	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_custom1 = $tracker->api->get_type_option('custom1', $project_id);
+	$s_ticket_custom2 = $tracker->api->get_type_option('custom2', $project_id);
+
+// DY
 
 	$option_data = array(
 		'status_id'				=> $use_data ? $data['status_id'] : $row['status_id'],
@@ -693,6 +799,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
+// Added by Daniel Young
+		'S_TICKET_ENVIRONMENT'		=> $s_ticket_environment,
+		'S_ENVIRONMENT_ENABLED'		=> $environment_enabled,
+// DY
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
@@ -750,8 +860,21 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
 		'S_TICKET_SEVERITY'			=> $s_ticket_severity,
 		'S_TICKET_ENVIRONMENT'		=> $tracker->api->get_type_option('environment', $project_id),
+// Added by Daniel Young
+		'S_TICKET_CUSTOM1'		=> $s_ticket_custom1,
+		'S_TICKET_CUSTOM2'		=> $s_ticket_custom2,
+// DY
 
 		'TICKET_COMPONENT'			=> (empty($row['component_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['component_name']),
+// Added by Daniel Young
+		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
+		'S_VERSION_OPTIONS'		=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
+		'S_CUSTOM1_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom1', $ticket_data['custom1_id']),
+		'S_CUSTOM2_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom2', $ticket_data['custom2_id']),
+	
+		'TICKET_CUSTOM1'			=> (empty($row['custom1_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['custom1_name']),
+		'TICKET_CUSTOM2'			=> (empty($row['custom2_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['custom2_name']),
+// DY
 		'TICKET_VERSION'			=> (empty($row['version_name'])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($row['version_name']),
 		'TICKET_PRIORITY'			=> (!isset($tracker->api->priority[$row['priority_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($tracker->api->priority[$row['priority_id']]),
 		'TICKET_SEVERITY'			=> (!isset($tracker->api->severity[$row['severity_id']])) ? $user->lang['TRACKER_UNKNOWN'] : $tracker->api->set_lang_name($tracker->api->severity[$row['severity_id']]),
@@ -851,6 +974,10 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'ticket_dbms'				=> utf8_normalize_nfc(request_var('ticket_dbms', '', true)),
 			'component_id'				=> request_var('component_id', 0),
 			'version_id'				=> request_var('version_id', 0),
+// Added by Daniel Young
+			'custom1_id'			=> request_var('custom1_id', 0),
+			'custom2_id'			=> request_var('custom2_id', 0),
+// DY	
 			'ticket_time'				=> time(),
 			'ticket_user_id'			=> $user->data['user_id'],
 			'ticket_desc_bitfield'		=> '',
@@ -959,7 +1086,14 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'TICKET_PREVIEW'	=> generate_text_for_display($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options']),
 		));
 	}
+// Added by Daniel Young
+	$s_ticket_component = $tracker->api->get_type_option('component', $project_id);
+	$s_ticket_version = $tracker->api->get_type_option('version', $project_id);
+	$s_ticket_environment = $tracker->api->get_type_option('environment', $project_id);
 
+	$s_ticket_custom1 = $tracker->api->get_type_option('custom1', $project_id);
+	$s_ticket_custom2 = $tracker->api->get_type_option('custom2', $project_id);
+// DY
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
 	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
@@ -971,12 +1105,22 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'S_EDIT_REASON'				=> ($mode == 'edit') ? true : false,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
+// Added by Daniel Young
+		'S_VERSION_OPTIONS'		=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
+		'S_CUSTOM1_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom1', $ticket_data['custom1_id']),
+		'S_CUSTOM2_OPTIONS'		=> $tracker->api->select_options($project_id, 'custom2', $ticket_data['custom2_id']),
+
+// DY
 		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
 		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
 		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
 		'S_TICKET_ENVIRONMENT'		=> $tracker->api->get_type_option('environment', $project_id),
-
+// Added by Daniel Young
+		'S_ENVIRONMENT_ENABLED'		=> $environment_enabled,
+		'S_TICKET_CUSTOM1'		=> $s_ticket_custom1,
+		'S_TICKET_CUSTOM2'		=> $s_ticket_custom2,
+// DY
 		'EDIT_REASON_TEXT'			=> ($mode == 'edit') ? $ticket_data['edit_reason'] : '',
 		'PROJECT_ID'				=> $project_id,
 		'PROJECT_NAME'				=> $tracker->api->projects[$project_id]['project_name'],

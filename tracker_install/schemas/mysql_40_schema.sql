@@ -61,6 +61,10 @@ CREATE TABLE phpbb_tracker_tickets (
 	status_id tinyint(4) DEFAULT '0' NOT NULL,
 	component_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	version_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+# Added by Daniel Young
+	custom1_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	custom2_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+# DY
 	severity_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	priority_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	ticket_php blob NOT NULL,
@@ -131,7 +135,28 @@ CREATE TABLE phpbb_tracker_version (
 	version_id mediumint(8) UNSIGNED NOT NULL auto_increment,
 	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	version_name blob NOT NULL,
+# Added by Daniel Young
+	version_postview tinyint(1) DEFAULT '0' NOT NULL,
+#DY
 	PRIMARY KEY (version_id)
 );
 
 
+# Added by Daniel Young
+# Table: 'phpbb_tracker_custom1'
+CREATE TABLE phpbb_tracker_custom1 (
+	custom1_id mediumint(8) UNSIGNED NOT NULL auto_increment,
+	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	custom1_name blob NOT NULL,
+	PRIMARY KEY (custom1_id)
+);
+
+# Table: 'phpbb_tracker_custom2'
+CREATE TABLE phpbb_tracker_custom2 (
+	custom2_id mediumint(8) UNSIGNED NOT NULL auto_increment,
+	projec2_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	custom2_name blob NOT NULL,
+	PRIMARY KEY (custom2_id)
+);
+
+# DY

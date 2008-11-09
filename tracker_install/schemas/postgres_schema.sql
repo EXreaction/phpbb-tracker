@@ -9,24 +9,21 @@ BEGIN;
 /*
 	Domain definition
 */
-/*
 CREATE DOMAIN varchar_ci AS varchar(255) NOT NULL DEFAULT ''::character varying;
-*/
+
 /*
 	Operation Functions
 */
-/*
 CREATE FUNCTION _varchar_ci_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) = LOWER($2)' LANGUAGE SQL STRICT;
 CREATE FUNCTION _varchar_ci_not_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) != LOWER($2)' LANGUAGE SQL STRICT;
 CREATE FUNCTION _varchar_ci_less_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) < LOWER($2)' LANGUAGE SQL STRICT;
 CREATE FUNCTION _varchar_ci_less_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) <= LOWER($2)' LANGUAGE SQL STRICT;
 CREATE FUNCTION _varchar_ci_greater_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) > LOWER($2)' LANGUAGE SQL STRICT;
 CREATE FUNCTION _varchar_ci_greater_equals(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) >= LOWER($2)' LANGUAGE SQL STRICT;
-*/
+
 /*
 	Operators
 */
-/*
 CREATE OPERATOR <(
   PROCEDURE = _varchar_ci_less_than,
   LEFTARG = varchar_ci,
@@ -83,7 +80,7 @@ CREATE OPERATOR =(
   HASHES,
   MERGES,
   SORT1= <);
-*/
+
 /*
 	Table: 'phpbb_tracker_project'
 */
@@ -157,6 +154,10 @@ CREATE TABLE phpbb_tracker_tickets (
 	status_id INT2 DEFAULT '0' NOT NULL,
 	component_id INT4 DEFAULT '0' NOT NULL CHECK (component_id >= 0),
 	version_id INT4 DEFAULT '0' NOT NULL CHECK (version_id >= 0),
+/* Added by Daniel Young */
+	custom1_id INT4 DEFAULT '0' NOT NULL CHECK (custom1_id >= 0),
+	custom2_id INT4 DEFAULT '0' NOT NULL CHECK (custom2_id >= 0),
+/* DY */
 	severity_id INT4 DEFAULT '0' NOT NULL CHECK (severity_id >= 0),
 	priority_id INT4 DEFAULT '0' NOT NULL CHECK (priority_id >= 0),
 	ticket_php varchar(255) DEFAULT '' NOT NULL,
@@ -243,9 +244,39 @@ CREATE TABLE phpbb_tracker_version (
 	version_id INT4 DEFAULT nextval('phpbb_tracker_version_seq'),
 	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
 	version_name varchar(255) DEFAULT '' NOT NULL,
+/* Added by Daniel Young */
+	version_postview INT2 DEFAULT '0' NOT NULL,
+/* DY */
 	PRIMARY KEY (version_id)
 );
 
+/* Added by Daniel Young */
+/*
+	Table: 'phpbb_tracker_custom1'
+*/
+CREATE SEQUENCE phpbb_tracker_custom1_seq;
+
+CREATE TABLE phpbb_tracker_custom1 (
+	custom1_id INT4 DEFAULT nextval('phpbb_tracker_custom1_seq'),
+	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
+	custom1_name varchar(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (custom1_id)
+);
+
+
+/*
+	Table: 'phpbb_tracker_custom2'
+*/
+CREATE SEQUENCE phpbb_tracker_custom2_seq;
+
+CREATE TABLE phpbb_tracker_custom2 (
+	custom2_id INT4 DEFAULT nextval('phpbb_tracker_custom2_seq'),
+	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
+	custom2_name varchar(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (custom2_id)
+);
+
+/* DY */
 
 
 COMMIT;

@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id$
+* @version $Id: tracker_api.php 131 2008-05-17 13:48:09Z evil3 $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -139,6 +139,10 @@ class tracker_api
 
 			case 'version':
 			case 'component':
+// Added by Daniel Young
+			case 'custom1':
+			case 'custom2':
+// DY
 			case 'priority':
 			case 'severity':
 			case 'environment':
@@ -701,6 +705,10 @@ class tracker_api
 		$data = array(
 			'project_id'				=> $to_project_id,
 			'component_id'				=> 0,
+// Added by Daniel Young
+					'custom1_id'				=> 0,
+					'custom2_id'				=> 0,
+// DY
 			'version_id'				=> 0,
 			'severity_id'				=> 0,
 			'priority_id'				=> 0,
@@ -1314,6 +1322,15 @@ class tracker_api
 			case 'component':
 				$table = TRACKER_COMPONENTS_TABLE;
 			break;
+// Added by Daniel Young
+			case 'custom1':
+				$table = TRACKER_CUSTOM1_TABLE;
+			break;
+
+			case 'custom2':
+				$table = TRACKER_CUSTOM2_TABLE;
+			break;
+// DY
 
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
@@ -1380,6 +1397,65 @@ class tracker_api
 			return $user->lang['TRACKER_UNKNOWN'];
 		}
 	}
+
+	// Added by Daniel Young
+	
+
+
+	/*
+	* Sets name of given version id
+	*/
+	function set_version_name($version_id, $version)
+	{
+		global $user;
+
+		if (isset($version[$version_id]))
+		{
+			return $this->set_lang_name($version[$version_id]);
+		}
+		else
+		{
+			return $user->lang['TRACKER_UNKNOWN'];
+		}
+	}
+
+
+
+	/*
+	* Sets name of given Custom 1 id
+	*/
+	function set_custom1_name($custom1_id, $custom1)
+	{
+		global $user;
+
+		if (isset($custom1[$custom1_id]))
+		{
+			return $this->set_lang_name($custom1[$custom1_id]);
+		}
+		else
+		{
+			return $user->lang['TRACKER_UNKNOWN'];
+		}
+	}
+
+	/*
+	* Sets name of given Custom 2 id
+	*/
+	function set_custom2_name($custom2_id, $custom2)
+	{
+		global $user;
+
+		if (isset($custom2[$custom2_id]))
+		{
+			return $this->set_lang_name($custom2[$custom2_id]);
+		}
+		else
+		{
+			return $user->lang['TRACKER_UNKNOWN'];
+		}
+	}
+// DY
+
 
 	/**
 	* Checks for lang variable if not set then uses the stored string
@@ -1501,6 +1577,10 @@ class tracker_api
 	{
 		global $db, $user;
 
+// Added by Daniel Young
+		$postmode = request_var('mode', '');
+// DY
+
 		switch ($mode)
 		{
 			case 'priority':
@@ -1515,14 +1595,55 @@ class tracker_api
 				$table = TRACKER_COMPONENTS_TABLE;
 			break;
 
+// Added by Daniel Young
+
+			case 'custom1':
+				$table = TRACKER_CUSTOM1_TABLE;
+			break;
+
+			case 'custom2':
+				$table = TRACKER_CUSTOM2_TABLE;
+			break;
+// DY
 			default:
 				trigger_error('NO_MODE');
 			break;
 		}
 
 		$options = '';
-		if ($mode == 'component' || $mode == 'version')
+// Changed by Daniel Young
+	
+		if ($mode == 'version' && $postmode == 'add')
+	      	{
+			$sql = 'SELECT * from ' . TRACKER_VERSION_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					AND Version_postview=1
+					ORDER BY ' . $mode . '_name ASC';
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if ($selected_id && $selected_id == $row[$mode . '_id'])
+				{
+					$selected = ' selected="selected"';
+				}
+				else
+				{
+					$selected = '';
+				}
+
+				$options .= '<option value="' . $row[$mode . '_id'] . '"' . $selected . '>' . $this->set_lang_name($row[$mode . '_name']) .'</option>';
+			}
+			$db->sql_freeresult($result);
+
+		}
+
+
+
+
+		else if ($mode == 'component' || $mode == 'custom1' || $mode == 'custom2' || $mode == 'version')
 		{
+// DY
+
 			$sql = 'SELECT * from ' . $table . '
 				WHERE project_id = ' . $project_id . '
 					ORDER BY ' . $mode . '_name ASC';

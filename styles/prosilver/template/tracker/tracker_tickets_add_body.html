@@ -47,11 +47,37 @@
 				</dd>
 			</dl>
 			<!-- ENDIF -->
+
+
+
+			<!-- IF S_CUSTOM1_OPTIONS and S_TICKET_CUSTOM1 -->
+			<dl>
+				<dt><label for="custom1_id">{L_TRACKER_CUSTOM1}:</label></dt>
+				<dd>
+					<select id="custom1_id" name="custom1_id">
+						{S_CUSTOM1_OPTIONS}
+					</select>
+				</dd>
+			</dl>
+			<!-- ENDIF -->
+
+			<!-- IF S_CUSTOM2_OPTIONS and S_TICKET_CUSTOM2 -->
+			<dl>
+				<dt><label for="custom2_id">{L_TRACKER_CUSTOM2}:</label></dt>
+				<dd>
+					<select id="custom2_id" name="custom2_id">
+						{S_CUSTOM2_OPTIONS}
+					</select>
+				</dd>
+			</dl>
+			<!-- ENDIF -->
+
+
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 
-	<!-- IF S_TICKET_ENVIRONMENT -->
+	<!-- IF S_TICKET_ENVIRONMENT and S_ENVIRONMENT_ENABLED -->
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
@@ -134,7 +160,7 @@
 		<fieldset>
 			<h3>{L_TRACKER_SUBMIT_TICKET}</h3>
 			<p>{L_TRACKER_SUBMIT_TICKET_EXPLAIN}</p>
-			<input type="submit" name="preview" value="{L_TRACKER_PREVIEW_TICKET}" class="button2" /> <input type="submit" name="submit" value="{L_TRACKER_SUBMIT_TICKET}" class="button1" accesskey="s" />
+			<center><input type="submit" name="preview" value="{L_TRACKER_PREVIEW_TICKET}" class="button1" /> <input type="submit" name="submit" value="{L_TRACKER_SUBMIT_TICKET}" class="button2" /></center>
 			{S_FORM_TOKEN}
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>

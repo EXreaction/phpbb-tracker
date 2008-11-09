@@ -92,7 +92,7 @@
 <!-- BEGIN component -->
 <!-- IF component.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 		<td>{component.COMPONENT_NAME}</td>
-		<td>{component.TOTAL}</td>
+		<td><b>{component.TOTAL}</b></td>
 	</tr>
 <!-- END component -->
 </table>
@@ -111,11 +111,60 @@
 <!-- BEGIN version -->
 <!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 		<td>{version.VERSION_NAME}</td>
-		<td>{version.TOTAL}</td>
+		<td><b>{version.TOTAL}</b></td>
 	</tr>
 <!-- END version -->
 </table>
 <!-- ENDIF -->
+
+
+
+<!-- IF .custom1 -->
+<br />
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_CUSTOM1_STATS}</b></td>
+</tr>
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_CUSTOM1_NAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN custom1 -->
+<!-- IF custom1.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{custom1.CUSTOM1_NAME}</td>
+		<td><b>{custom1.TOTAL}</b></td>
+	</tr>
+<!-- END custom1 -->
+</table>
+<!-- ENDIF -->
+
+
+
+
+
+<!-- IF .custom2 -->
+<br />
+<table class="tablebg" cellspacing="1" width="100%">
+<tr>
+	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_CUSTOM2_STATS}</b></td>
+</tr>
+<tr>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_CUSTOM2_NAME}</th>
+	<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
+</tr>
+<!-- BEGIN custom2 -->
+<!-- IF custom2.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{custom2.CUSTOM2_NAME}</td>
+		<td><b>{custom2.TOTAL}</b></td>
+	</tr>
+<!-- END custom2 -->
+</table>
+<!-- ENDIF -->
+
+
+
+
+
 <!-- ELSE -->
 <h2>{L_TRACKER}</h2>
 <p>{L_TRACKER_STATISTICS}</p>

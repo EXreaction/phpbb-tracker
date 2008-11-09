@@ -4,7 +4,7 @@
 * acp_permissions_tracker [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: permissions_tracker.php 97 2008-04-09 19:37:40Z jrsweets $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

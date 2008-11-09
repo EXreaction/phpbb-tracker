@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id$
+* @version $Id: install_check.php 70 2008-03-17 16:23:17Z jrsweets $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -11,10 +11,10 @@
 /**
 * @ignore
 */
-define('IN_PHPBB', true);
+define('IN_PHPBB', 1);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
-include($phpbb_root_path . 'common.' . $phpEx);
+include($phpbb_root_path . 'common.'.$phpEx);
 
 // Start session management
 $user->session_begin();
@@ -26,14 +26,14 @@ $user->setup();
 // should be using ftp and installing scripts anyway.
 if ($user->data['user_type'] != USER_FOUNDER)
 {
-	die('You are not authorised to use this script.');
+	die('You are not authorized to use this script.');
 }
 
 // Empty cache...
 $cache->purge();
 
 $tracker = new install_check();
-$tracker->install_header('phpBB Tracker Installation Checking...');
+$tracker->install_header("phpBB Tracker Installation Checking...");
 $tracker->check_tables();
 $tracker->check_alter_db();
 $tracker->check_files();
@@ -68,7 +68,10 @@ class install_check
 		define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
 		define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 		define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
-
+// Added by Daniel Young		
+		define('TRACKER_CUSTOM1_TABLE', 		$table_prefix . 'tracker_custom1');
+		define('TRACKER_CUSTOM2_TABLE', 		$table_prefix . 'tracker_custom2');
+// DY
 		$this->install_tables = array(
 			TRACKER_CONFIG_TABLE,
 			TRACKER_ATTACHMENTS_TABLE,
@@ -78,6 +81,10 @@ class install_check
 			TRACKER_COMPONENTS_TABLE,
 			TRACKER_HISTORY_TABLE,
 			TRACKER_VERSION_TABLE,
+// Added by Daniel Young
+			TRACKER_CUSTOM1_TABLE,
+			TRACKER_CUSTOM2_TABLE,
+// DY
 		);
 
 		$this->install_files = array(
@@ -119,8 +126,8 @@ class install_check
 			'<!-- IF S_IN_TRACKER -->',
 			'<!-- INCLUDE tracker/tracker_breadcrumbs.html -->',
 			'<!-- INCLUDE tracker/tracker_header.html -->',
-		);
-
+		);		
+				
 		$this->install_edits['viewonline.php'] = array(
 			'case \'tracker\':',
 			'include($phpbb_root_path . \'includes/tracker/tracker_class.\' . $phpEx);',
@@ -134,11 +141,11 @@ class install_check
 			'u_tracker_edit',
 			'a_tracker',
 		);
-
+// Changed by Daniel Young
 		$this->install_modules['acp'] = array(
-			'tracker' 	=> array('settings', 'project', 'component', 'version', 'severity', 'priority'),
+			'tracker' 	=> array('settings', 'project', 'component', 'version', 'custom1', 'custom2', 'severity', 'priority'),
 		);
-
+// DY
 		$this->install_modules['ucp'] = array(
 			//'tracker' => array('settings'),
 		);
@@ -146,6 +153,7 @@ class install_check
 		$this->install_alter_db = array(
 			//USERS_TABLE		=> array('user_allow_pm'),
 		);
+
 	}
 
 	function check_tables()
@@ -250,12 +258,13 @@ class install_check
 		$error = array();
 		foreach($this->install_edits as $key => $value)
 		{
-			$content = file_get_contents($phpbb_root_path . $key);
+			$file = $key;
 			foreach ($value as $edit)
 			{
+				$content = file_get_contents($phpbb_root_path . $file);
 				if (strpos($content, $edit) === false)
 				{
-					$error[] = 'phpbb_root_path/' . $key;
+					$error[] = 'phpbb_root_path/' . $file;
 					break;
 				}
 			}
@@ -285,10 +294,10 @@ class install_check
 			foreach ($value as $module_mode)
 			{
 				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_basename = '$module_basename'
-						AND module_class = 'acp'
-						AND module_mode = '$module_mode'";
+					FROM ' . MODULES_TABLE . '
+					WHERE module_basename = "' . $module_basename . '"
+						AND module_class = "acp"
+						AND module_mode = "' . $module_mode . '"';
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -307,10 +316,10 @@ class install_check
 			foreach ($value as $module_mode)
 			{
 				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_basename = '$module_basename'
-						AND module_class = 'ucp'
-						AND module_mode = '$module_mode'";
+					FROM ' . MODULES_TABLE . '
+					WHERE module_basename = "' . $module_basename . '"
+						AND module_class = "ucp"
+						AND module_mode = "' . $module_mode . '"';
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -343,8 +352,8 @@ class install_check
 		foreach ($this->install_permissions as $value)
 		{
 			$sql = 'SELECT auth_option_id
-				FROM ' . ACL_OPTIONS_TABLE . "
-				WHERE auth_option = '$value'";
+				FROM ' . ACL_OPTIONS_TABLE . '
+				WHERE auth_option = "' . $value . '"';
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -364,35 +373,6 @@ class install_check
 		else
 		{
 			$this->display_success('All permissions exist');
-		}
-
-		$sql = 'SELECT auth_option_id, auth_option
-			FROM ' . ACL_OPTIONS_TABLE . '
-			ORDER BY auth_option_id';
-		$result = $db->sql_query($sql);
-		$auth_option_id = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$auth_option_id[$row['auth_option_id']] = $row['auth_option'];
-		}
-		$db->sql_freeresult($result);
-
-		$duplicate_auth = array_count_values($auth_option_id);
-		unset($auth_option_id);
-
-		$auth_option_id = array();
-		foreach ($duplicate_auth as $key => $value)
-		{
-			if ($value > 1)
-			{
-				$auth_option_id[] = $key . ' was found ' . $value . ' times';
-			}
-		}
-
-		if (!empty($auth_option_id))
-		{
-			$this->no_errors = false;
-			$this->display_error('Duplicate auth values can cause problems with permissions. The following duplicate auth values were found inside the ' . ACL_OPTIONS_TABLE . ':', $auth_option_id);
 		}
 	}
 
@@ -472,9 +452,7 @@ class install_check
 
 	<body>
 	<div id="wrap">
-		<div id="page-header">
-		<h1>Installation Panel</h1>
-		</div>
+		<div id="page-header">&nbsp;</div>
 
 		<div id="page-body">
 			<div id="acp">

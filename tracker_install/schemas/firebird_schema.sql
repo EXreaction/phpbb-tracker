@@ -86,6 +86,10 @@ CREATE TABLE phpbb_tracker_tickets (
 	ticket_assigned_to INTEGER DEFAULT 0 NOT NULL,
 	status_id INTEGER DEFAULT 0 NOT NULL,
 	component_id INTEGER DEFAULT 0 NOT NULL,
+# Added by Daniel Young
+	custom1_id INTEGER DEFAULT 0 NOT NULL,
+	custom2_id INTEGER DEFAULT 0 NOT NULL,
+# DY
 	version_id INTEGER DEFAULT 0 NOT NULL,
 	severity_id INTEGER DEFAULT 0 NOT NULL,
 	priority_id INTEGER DEFAULT 0 NOT NULL,
@@ -204,10 +208,36 @@ END;;
 CREATE TABLE phpbb_tracker_version (
 	version_id INTEGER NOT NULL,
 	project_id INTEGER DEFAULT 0 NOT NULL,
-	version_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE
+	version_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE,
+# Added by Daniel Young
+	version_postview INTEGER DEFAULT 0 NOT NULL
+# DY
 );;
 
 ALTER TABLE phpbb_tracker_version ADD PRIMARY KEY (version_id);;
+
+
+# Added by Daniel Young
+# Table: 'phpbb_tracker_custom1'
+CREATE TABLE phpbb_tracker_custom1 (
+	custom1_id INTEGER NOT NULL,
+	project_id INTEGER DEFAULT 0 NOT NULL,
+	custom1_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE
+);;
+
+ALTER TABLE phpbb_tracker_custom1 ADD PRIMARY KEY (custom1_id);;
+
+
+# Table: 'phpbb_tracker_custom2'
+CREATE TABLE phpbb_tracker_custom2 (
+	custom2_id INTEGER NOT NULL,
+	project_id INTEGER DEFAULT 0 NOT NULL,
+	custom2_name VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE
+);;
+
+ALTER TABLE phpbb_tracker_custom2 ADD PRIMARY KEY (custom2_id);;
+
+# DY
 
 
 CREATE GENERATOR phpbb_tracker_version_gen;;

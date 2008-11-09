@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id$
+* @version $Id: acp_tracker.php 114 2008-05-05 20:07:38Z evil3 $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -24,6 +24,10 @@ class acp_tracker_info
 				'attachments'	=> array('title' => 'ACP_TRACKER_ATTACHMENTS', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'project'		=> array('title' => 'ACP_TRACKER_PROJECT', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'component'		=> array('title' => 'ACP_TRACKER_COMPONENT', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
+// Added by Daniel Young
+				'custom1'		=> array('title' => 'ACP_TRACKER_CUSTOM1',		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
+				'custom2'		=> array('title' => 'ACP_TRACKER_CUSTOM2',		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
+// DY
 				'version'		=> array('title' => 'ACP_TRACKER_VERSION', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 			),
 		);

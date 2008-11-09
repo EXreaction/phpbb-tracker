@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id$
+* @version $Id: install.php 133 2008-05-18 08:10:00Z jrsweets $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id$
+* @version $Id: tracker_class.php 131 2008-05-17 13:48:09Z evil3 $
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -589,6 +589,72 @@ class tracker
 					'TOTAL'					=> (isset($component_count[$item['component_id']])) ? $component_count[$item['component_id']] : 0,
 				));
 			}
+
+
+// Added by Daniel Young
+
+			// Get custom 1 stats
+			$sql = 'SELECT custom1_id, COUNT(ticket_id) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+				GROUP BY custom1_id
+					ORDER BY custom1_id';
+			$result = $db->sql_query($sql);
+
+			$custom1_count = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$custom1_count[$row['custom1_id']] = $row['total'];
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'SELECT custom1_id, custom1_name
+				FROM ' . TRACKER_CUSTOM1_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					ORDER BY custom1_name';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+
+			foreach ($row as $item)
+			{
+				$template->assign_block_vars('custom1', array(
+					'CUSTOM1_NAME'		=> $this->set_lang_name($item['custom1_name']),
+					'TOTAL'					=> (isset($custom1_count[$item['custom1_id']])) ? $custom1_count[$item['custom1_id']] : 0,
+				));
+			}
+
+			// Get custom 2 stats
+			$sql = 'SELECT custom2_id, COUNT(ticket_id) as total
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE project_id = ' . $project_id . '
+				GROUP BY custom2_id
+					ORDER BY custom2_id';
+			$result = $db->sql_query($sql);
+
+			$custom2_count = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$custom2_count[$row['custom2_id']] = $row['total'];
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'SELECT custom2_id, custom2_name
+				FROM ' . TRACKER_CUSTOM2_TABLE . '
+				WHERE project_id = ' . $project_id . '
+					ORDER BY custom2_name';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrowset($result);
+			$db->sql_freeresult($result);
+
+			foreach ($row as $item)
+			{
+				$template->assign_block_vars('custom2', array(
+					'CUSTOM2_NAME'		=> $this->set_lang_name($item['custom2_name']),
+					'TOTAL'					=> (isset($custom2_count[$item['custom2_id']])) ? $custom2_count[$item['custom2_id']] : 0,
+				));
+			}
+// DY
 
 			// Get version stats
 			$sql = 'SELECT version_id, COUNT(ticket_id) as total

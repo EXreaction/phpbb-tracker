@@ -2,7 +2,7 @@
 /**
 *
 * @package phpbbmodders_lib
-* @version $Id$
+* @version $Id: functions_install.php 132 2008-05-18 00:53:30Z evil3 $
 * @copyright (c) 2007, 2008 phpbbmodders
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -148,6 +148,10 @@ CREATE TABLE phpbb_tracker_tickets (
 	status_id number(4) DEFAULT '0' NOT NULL,
 	component_id number(8) DEFAULT '0' NOT NULL,
 	version_id number(8) DEFAULT '0' NOT NULL,
+/* Added by Daniel Young */
+	custom1_id number(8) DEFAULT '0' NOT NULL,
+	custom2_id number(8) DEFAULT '0' NOT NULL,
+/* DY */
 	severity_id number(8) DEFAULT '0' NOT NULL,
 	priority_id number(8) DEFAULT '0' NOT NULL,
 	ticket_php varchar2(765) DEFAULT '' ,
@@ -294,9 +298,37 @@ CREATE TABLE phpbb_tracker_version (
 	version_id number(8) NOT NULL,
 	project_id number(8) DEFAULT '0' NOT NULL,
 	version_name varchar2(765) DEFAULT '' ,
+/* Added by Daniel Young */
+	version_postview number(1) DEFAULT '0' NOT NULL,
+/* DY */
 	CONSTRAINT pk_phpbb_tracker_version PRIMARY KEY (version_id)
 )
 /
+
+/* Added by Daniel Young */
+/*
+	Table: 'phpbb_tracker_custom1'
+*/
+CREATE TABLE phpbb_tracker_custom1 (
+	custom1_id number(8) NOT NULL,
+	project_id number(8) DEFAULT '0' NOT NULL,
+	custom1_name varchar2(765) DEFAULT '' ,
+	CONSTRAINT pk_phpbb_tracker_custom1 PRIMARY KEY (custom1_id)
+)
+/
+
+/*
+	Table: 'phpbb_tracker_custom2'
+*/
+CREATE TABLE phpbb_tracker_custom2 (
+	custom2_id number(8) NOT NULL,
+	project_id number(8) DEFAULT '0' NOT NULL,
+	custom2_name varchar2(765) DEFAULT '' ,
+	CONSTRAINT pk_phpbb_tracker_custom2 PRIMARY KEY (custom2_id)
+)
+/
+
+/* DY */
 
 
 CREATE SEQUENCE phpbb_tracker_version_seq
