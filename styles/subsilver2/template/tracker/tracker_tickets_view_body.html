@@ -15,7 +15,7 @@
 	<table class="tablebg" width="100%" cellspacing="1">
 		<th><b><!-- IF TICKET_CLOSED --><strike><!-- ENDIF -->{TICKET_TITLE}<span> {TICKET_STATUS}</span><!-- IF TICKET_CLOSED --></strike><!-- ENDIF --></th>
 		<tr>
-			<td class="tickettext">
+			<td class="row1 tickettext">
 				<!-- IF not S_IS_BOT -->
 					<!-- IF S_CAN_DELETE or S_CAN_EDIT -->
 						<div class="postdetails" align="{S_CONTENT_FLOW_END}">
@@ -282,7 +282,7 @@
 			<!-- BEGIN review -->
 
 
-<!-- IF review.S_LAST_ROW --><td class="tickettext"><!-- ELSE --><td class="post <!-- IF review.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->"><!-- ENDIF -->
+<!-- IF review.S_LAST_ROW --><td class="row1 tickettext"><!-- ELSE --><td class="post <!-- IF review.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->"><!-- ENDIF -->
 
 
 
@@ -305,7 +305,7 @@
 <!-- ENDIF -->
 </div>
 <div id="col2">
-	<table class="ticketdetail" width="100%" cellspacing="1">
+	<table class="tablebg ticketdetail" width="100%" cellspacing="1">
 	<tr>
 		<th colspan="2"><b class="genmed">{L_TRACKER_TICKET_DETAILS}</b></th>
 	</tr>
@@ -400,7 +400,7 @@
 	</table>
 	<br />
 	<!-- IF S_MANAGE_TICKET --><form name="assign_user_form" action="{U_UPDATE_ACTION}" method="post"><!-- ENDIF -->
-	<table class="ticketmanage" width="100%" cellspacing="1">
+	<table class="tablebg ticketmanage" width="100%" cellspacing="1">
 	<tr>
 		<th colspan="2"><b class="genmed">{L_OPTIONS}</b></th>
 	</tr>
