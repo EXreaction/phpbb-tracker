@@ -22,18 +22,7 @@
 				<contributions />
 			</author>
 		</author-group>
-		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.
-
-Thanks to other for help with this mod.
-
-
-Username: dan1dyoung
-Email: daniel@dysolutions.co.uk
-Name: Daniel Young
-WWW: http://www.dysolutions.co.uk
-
-
-]]></author-notes>
+		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.]]></author-notes>
 		<mod-version>
 			<major>0</major>
 			<minor>1</minor>

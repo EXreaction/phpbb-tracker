@@ -24,12 +24,7 @@ class acp_tracker_info
 				'attachments'	=> array('title' => 'ACP_TRACKER_ATTACHMENTS', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'project'		=> array('title' => 'ACP_TRACKER_PROJECT', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
 				'component'		=> array('title' => 'ACP_TRACKER_COMPONENT', 		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-
 				'version'		=> array('title' => 'ACP_TRACKER_VERSION', 			'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-// Added by Daniel Young
-				'custom1'		=> array('title' => 'ACP_TRACKER_CUSTOM1',		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-				'custom2'		=> array('title' => 'ACP_TRACKER_CUSTOM2',		'auth' => 'acl_a_tracker', 'cat' => array('ACP_TRACKER')),
-// DY
 			),
 		);
 	}

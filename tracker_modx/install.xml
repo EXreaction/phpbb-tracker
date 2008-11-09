@@ -22,18 +22,7 @@
 				<contributions />
 			</author>
 		</author-group>
-		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.
-
-Thanks to others for helping out with the mod.
-
-Username: dan1dyoung
-Email: daniel@dysolutions.co.uk
-Name: Daniel Young
-WWW: http://www.dysolutions.co.uk
-
-
-
-]]>
+		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.]]>
 		</author-notes>
 		<mod-version>
 			<major>0</major>
@@ -108,23 +97,7 @@ WWW: http://www.dysolutions.co.uk
 				</rev-version>
 				<changelog lang="en">
 					<change>Updated minimum PHP version to 5.0.0.</change>
-				
-<change>Added 2 custom drop-down fields called custom1 & custom2.</change>
-<change>Added the ability to enable/disable the environment section totally from both the add and view ticket pages.</change>
-<change>Added the ability to enable/disable the component, version, custom1 & custom2 on the ticket list pages.</change>
-<change>Changed the templates so they do not show items that are not enabled/populated (Such as the component, version, custom1, custom2, php & database).</change>
-<change>Changed the template for the tickets so the ticket, ticket details & ticket management can be styled seperatly.</change>
-<change>Changed the NewPost button to a NewIssue button (Button from phpbb bug tracker).</change>
-<change>Fixed the Edit Reason not showing on the comments.</change>
-<change>Changed the template on SubSilver 2 to allow seperate styling for the ticket, ticket details & ticket manangement as changed on ProSilver previously.</change>
-<change>Changed both ProSilver & SubSilver2 styles to show the actual ticket in the Previous Posts with the same background colour as the actual ticket in the normal view page (Which can be different to the comments background colours).</change>
-<change>Added alternative row colours to the Previous Posts view to match the normal view for ProSilver.</change>
-<change>Added an option to the ACP to Show All or Show Only Open Tickets by Default, and if the user is logged in with permissions to manage the tracker then they are not affected by this setting (They always start with Open Tickets Only).</change>
-<change>Added an extra field to the version database that is configured in the ACP/MODS/Version to enable/disable the version in the New Posts drop-down.  The version still appears in the drop-down when editing old posts.</change>
-
-
-
-</changelog>
+				</changelog>
 			</entry>
 		</history>
 	</header>

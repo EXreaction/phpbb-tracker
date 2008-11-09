@@ -318,15 +318,13 @@
 		<thead>
 		<tr>
 			<th>{L_TRACKER_VERSION_NAME}</th>
-			<th>{L_TRACKER_VERSION_POSTVIEW}
 			<th>{L_OPTIONS}</th>
 		</tr>
 		</thead>
 		<tbody>
 			<!-- BEGIN version -->
 			<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-					<td>{version.VERSION_NAME}</td>
-					<td>{version.VERSION_POSTVIEW}</td>
+				<td>{version.VERSION_NAME}</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
 					<a href="{version.U_EDIT}">{ICON_EDIT}</a>
 					<a href="{version.U_DELETE}">{ICON_DELETE}</a>
@@ -349,15 +347,6 @@
 			<dt><label for="version_name">{L_TRACKER_VERSION_NAME}</label><br /><span>{L_TRACKER_VERSION_NAME_EXPLAIN}</span></dt>
 			<dd><input type="text" id="version_name" name="version_name" size="60" maxlength="255" value="{VERSION_NAME}" /></dd>
 		</dl>
-
-		<dl>
-			<dt><label for="version_postview">{L_TRACKER_VERSION_POSTVIEW}</label><br /><span>{L_TRACKER_VERSION_POSTVIEW_EXPLAIN}</span></dt>
-			<dd>
-			<label><input type="radio" class="radio" name="version_postview" value="1" id="version_postview" /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="version_postview" value="0" id="version_postview" checked="checked" /> {L_NO}</label>
-			</dd>
-		</dl>
-
 		</fieldset>
 
 		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
@@ -370,149 +359,6 @@
 		</fieldset>		
 	<!-- ENDIF -->
 		{S_FORM_TOKEN}
-	</form>
-
-
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM1 -->
-	<!-- IF S_IN_MANAGE_CUSTOM1_DEFAULT -->
-		<form id="acp_tracker" method="post" action="{U_ACTION}">
-
-		<fieldset>
-			<legend>{L_TITLE}</legend>
-			<dl>
-				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
-				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
-			</dl>
-		</fieldset>
-
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		</fieldset>
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM1_VIEW -->
-	<form id="acp_tracker" method="post" action="{U_ACTION}">
-		<fieldset class="tabulated">
-		<legend>{L_TITLE}</legend>
-
-		<table cellspacing="1">
-		<thead>
-		<tr>
-			<th>{L_TRACKER_CUSTOM1_NAME}</th>
-			<th>{L_OPTIONS}</th>
-		</tr>
-		</thead>
-		<tbody>
-			<!-- BEGIN custom1 -->
-			<!-- IF custom1.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-				<td>{custom1.CUSTOM1_NAME}</td>
-				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-					<a href="{custom1.U_EDIT}">{ICON_EDIT}</a>
-					<a href="{custom1.U_DELETE}">{ICON_DELETE}</a>
-				</td>
-			</tr>
-			<!-- END custom1 -->
-		</tbody>
-		</table>
-		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
-		<p class="quick">
-			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_CUSTOM1_ADD}" />
-		</p>
-		</fieldset>
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM1_ADD_EDIT -->
-		<form id="acp_tracker" method="post" action="{U_ACTION}">
-
-		<fieldset>
-			<legend>{L_TITLE}</legend>
-		<dl>
-			<dt><label for="custom1_name">{L_TRACKER_CUSTOM1_NAME}</label><br /><span>{L_TRACKER_CUSTOM1_NAME_EXPLAIN}</span></dt>
-			<dd><input type="text" id="Text1" name="custom1_name" size="60" maxlength="255" value="{CUSTOM1_NAME}" /></dd>
-		</dl>
-		</fieldset>
-
-		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
-		<input type="hidden" name="custom1_id" value="{CUSTOM1_ID}" />
-		
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>		
-	<!-- ENDIF -->
-		{S_FORM_TOKEN}
-	</form>
-
-
-
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM2 -->
-	<!-- IF S_IN_MANAGE_CUSTOM2_DEFAULT -->
-		<form id="acp_tracker" method="post" action="{U_ACTION}">
-
-		<fieldset>
-			<legend>{L_TITLE}</legend>
-			<dl>
-				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
-				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
-			</dl>
-		</fieldset>
-
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		</fieldset>
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM2_VIEW -->
-	<form id="acp_tracker" method="post" action="{U_ACTION}">
-		<fieldset class="tabulated">
-		<legend>{L_TITLE}</legend>
-
-		<table cellspacing="1">
-		<thead>
-		<tr>
-			<th>{L_TRACKER_CUSTOM2_NAME}</th>
-			<th>{L_OPTIONS}</th>
-		</tr>
-		</thead>
-		<tbody>
-			<!-- BEGIN custom2 -->
-			<!-- IF custom2.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-				<td>{custom2.CUSTOM2_NAME}</td>
-				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-					<a href="{custom2.U_EDIT}">{ICON_EDIT}</a>
-					<a href="{custom2.U_DELETE}">{ICON_DELETE}</a>
-				</td>
-			</tr>
-			<!-- END custom2 -->
-		</tbody>
-		</table>
-		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
-		<p class="quick">
-			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_CUSTOM2_ADD}" />
-		</p>
-		</fieldset>
-	<!-- ELSEIF S_IN_MANAGE_CUSTOM2_ADD_EDIT -->
-		<form id="acp_tracker" method="post" action="{U_ACTION}">
-
-		<fieldset>
-			<legend>{L_TITLE}</legend>
-		<dl>
-			<dt><label for="custom2_name">{L_TRACKER_CUSTOM2_NAME}</label><br /><span>{L_TRACKER_CUSTOM2_NAME_EXPLAIN}</span></dt>
-			<dd><input type="text" id="Text1" name="custom2_name" size="60" maxlength="255" value="{CUSTOM2_NAME}" /></dd>
-		</dl>
-		</fieldset>
-
-		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
-		<input type="hidden" name="custom2_id" value="{CUSTOM2_ID}" />
-		
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>		
-	<!-- ENDIF -->
-
-		{S_FORM_TOKEN}
-	</form>
-
-
-
+		</form>
 <!-- ENDIF -->
 <!-- INCLUDE overall_footer.html -->

@@ -15,19 +15,7 @@
 				<contributions />
 			</author>
 		</author-group>
-		<author-notes><![CDATA[Thanks to others for helping out with the mod.
-
-Username: evil3
-Email: evil@phpbbmodders.net
-Name: Igor Wiedler
-WWW: http://phpbbmodders.net
-
-
-Username: dan1dyoung
-Email: daniel@dysolutions.co.uk
-Name: Daniel Young
-WWW: http://www.dysolutions.co.uk
-]]>
+		<author-notes><![CDATA[Thanks to evil3 (Igor Wiedler) for helping out with the mod.]]>
 		</author-notes>
 		<mod-version>
 			<major>0</major>

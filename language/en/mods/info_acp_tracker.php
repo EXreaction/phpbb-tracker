@@ -42,10 +42,6 @@ $lang = array_merge($lang, array(
 
 	'ACP_TRACKER_PROJECT'					=> 'Manage projects',
 	'ACP_TRACKER_COMPONENT'					=> 'Manage components',
-// Added by Daniel Young
-	'ACP_TRACKER_CUSTOM1'				=> 'Manage Custom 1',
-	'ACP_TRACKER_CUSTOM2'				=> 'Manage Custom 2',
-// DY
 	'ACP_TRACKER_VERSION'					=> 'Manage versions',
 	'ACP_TRACKER_SETTINGS'					=> 'Manage settings',
 	'ACP_TRACKER_ATTACHMENTS'				=> 'Manage attachments',
@@ -55,10 +51,6 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_ATTACHMENTS_EXPLAIN'		=> 'View orphaned attachments and attachments in the upload folder that are not in the database.',
 	'ACP_TRACKER_PROJECT_EXPLAIN'			=> 'Add, delete and edit projects for the tracker.',
 	'ACP_TRACKER_COMPONENT_EXPLAIN'			=> 'Add, delete and edit components for a project in the tracker.',
-// Added by Daniel Young
-	'ACP_TRACKER_CUSTOM1_EXPLAIN'			=> 'Add, delete and edit Custom 1 for a project in the tracker.',
-	'ACP_TRACKER_CUSTOM2_EXPLAIN'			=> 'Add, delete and edit Custom 2 for a project in the tracker.',
-// DY
 	'ACP_TRACKER_VERSION_EXPLAIN'			=> 'Add, delete and edit versions for a project in the tracker.',
 
 	'ACP_TRACKER_PROJECT_ADD'				=> 'Add new project',
@@ -76,24 +68,6 @@ $lang = array_merge($lang, array(
 	'ACP_TRACKER_COMPONENT_DELETE_CONFIRM'	=> 'Are you sure you want to delete this component from the selected project in the tracker?',
 	'ACP_TRACKER_COMPONENT_DELETED'			=> 'Component succefully deleted.',
 	'ACP_TRACKER_COMPONENT_NO_ID'			=> 'The selected component does not exist in the database.',
-
-// Added by Daniel Young
-	'ACP_TRACKER_CUSTOM1_ADD'			=> 'Add new Custom 1',
-	'ACP_TRACKER_CUSTOM1_ADDED'			=> 'Custom 1 successfully added.',
-	'ACP_TRACKER_CUSTOM1_EDITED'			=> 'Custom 1 successfully edited.',
-	'ACP_TRACKER_CUSTOM1_DELETE'			=> 'Delete Custom 1',
-	'ACP_TRACKER_CUSTOM1_DELETE_CONFIRM'		=> 'Are you sure you want to delete this Custom 1 from the selected project in the tracker?',
-	'ACP_TRACKER_CUSTOM1_DELETED'			=> 'Custom 1 succefully deleted.',
-	'ACP_TRACKER_CUSTOM1_NO_ID'			=> 'The selected Custom 1 does not exist in the database.',
-
-	'ACP_TRACKER_CUSTOM2_ADD'			=> 'Add new Custom 2',
-	'ACP_TRACKER_CUSTOM2_ADDED'			=> 'Custom 2 successfully added.',
-	'ACP_TRACKER_CUSTOM2_EDITED'			=> 'Custom 2 successfully edited.',
-	'ACP_TRACKER_CUSTOM2_DELETE'			=> 'Delete Custom 2',
-	'ACP_TRACKER_CUSTOM2_DELETE_CONFIRM'		=> 'Are you sure you want to delete this Custom 2 from the selected project in the tracker?',
-	'ACP_TRACKER_CUSTOM2_DELETED'			=> 'Custom 2 succefully deleted.',
-	'ACP_TRACKER_CUSTOM2_NO_ID'			=> 'The selected Custom 2 does not exist in the database.',
-// DY
 
 	'ACP_TRACKER_VERSION_ADD'				=> 'Add new version',
 	'ACP_TRACKER_VERSION_ADDED'				=> 'Version successfully added.',
@@ -127,24 +101,11 @@ $lang = array_merge($lang, array(
 	'TRACKER_COMPONENT_NAME_EXPLAIN'		=> 'Name of the component to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_COMPONENT_DELETE_ERROR'		=> 'The selected component cannot be deleted because tickets exist that refer to this component.  Delete all tickets refering to this component first.',
 	'TRACKER_COMPONENT_NO_NAME'				=> 'There was no name entered for this component.  You must enter a name.',
-
-// Added by Daniel Young
-	'TRACKER_CUSTOM1_NAME_EXPLAIN'		=> 'Name of the Custom 1 to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
-	'TRACKER_CUSTOM1_DELETE_ERROR'		=> 'The selected Custom 1 cannot be deleted because tickets exist that refer to this Custom 1.  Delete all tickets refering to this Custom 1 first.',
-	'TRACKER_CUSTOM1_NO_NAME'		=> 'There was no name entered for this Custom 1.  You must enter a name.',
-
-	'TRACKER_CUSTOM2_NAME_EXPLAIN'		=> 'Name of the Custom 2 to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
-	'TRACKER_CUSTOM2_DELETE_ERROR'		=> 'The selected Custom 2 cannot be deleted because tickets exist that refer to this Custom 1.  Delete all tickets refering to this Custom 2 first.',
-	'TRACKER_CUSTOM2_NO_NAME'		=> 'There was no name entered for this Custom 2.  You must enter a name.',
-
-// DY
 	
 	'TRACKER_VERSION_NAME_EXPLAIN'			=> 'Name of the version to associate with the selected project. Use language constant if name is served from language file. Constant must be in mods/tracker.php file.',
 	'TRACKER_VERSION_DELETE_ERROR'			=> 'The selected version cannot be deleted because tickets exist that refer to this version.  Delete all tickets refering to this version first.',
 	'TRACKER_VERSION_NO_NAME'				=> 'There was no name entered for this version.  You must enter a name.',
-// Added by Daniel Young
-	'TRACKER_VERSION_POSTVIEW_EXPLAIN'		=> 'Selects if this version is displayed in the "New" posts page or just the "Edit" posts page',
-// DY
+
 	'TRACKER_FILENAME'						=> 'Filename',
 	'TRACKER_FILESIZE'						=> 'Filesize',
 
@@ -167,25 +128,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_POSTS_PER_PAGE_EXPLAIN'			=> 'Number of comment posts per page inside the ticket.',
 	'TRACKER_TOP_REPORTERS'						=> 'Number of top reporters',
 	'TRACKER_TOP_REPORTERS_EXPLAIN'				=> 'Sets the number of top reporters displayed on the statistics page.',
-// Added by Daniel Young
-	'TRACKER_ENVIRONMENT_ENABLED'						=> 'Enable the environment section',
-	'TRACKER_ENVIRONMENT_ENABLED_EXPLAIN'				=> 'Sets if the environment section is displayed in the add/view post pages.',
 
-	'TRACKER_COMPONENT_ENABLED'						=> 'Enable component in the tracker list',
-	'TRACKER_COMPONENT_ENABLED_EXPLAIN'				=> 'Sets if the component is displayed in the tracker list pages.',
-
-	'TRACKER_VERSION_ENABLED'						=> 'Enable version in the tracker list',
-	'TRACKER_VERSION_ENABLED_EXPLAIN'				=> 'Sets if the version is displayed in the tracker list pages.',
-
-	'TRACKER_CUSTOM1_ENABLED'						=> 'Enable custom1 in the tracker list',
-	'TRACKER_CUSTOM1_ENABLED_EXPLAIN'				=> 'Sets if the custom1 is displayed in the tracker list pages.',
-
-	'TRACKER_CUSTOM2_ENABLED'						=> 'Enable custom2 in the tracker list',
-	'TRACKER_CUSTOM2_ENABLED_EXPLAIN'				=> 'Sets if the custom2 is displayed in the tracker list pages.',
-
-	'TRACKER_VIEWALL_ENABLED'						=> 'Enable "All Tickets" in the tracker list instead of "All Open Tickets"',
-	'TRACKER_VIEWALL_ENABLED_EXPLAIN'				=> 'Sets if the tracker list pages show all tickets or just open tickets.',
-// DY
 	'TRACKER_VERSION_EXPLAIN'					=> 'Current installed version of the tracker.',
 	'ACP_TRACKER_VERSION_INFO'					=> 'Version Information',
 	'TRACKER_CHECK_UPDATES'						=> 'Check for updates',
@@ -229,16 +172,6 @@ $lang = array_merge($lang, array(
 	'LOG_TRACKER_COMPONENT_ADD'				=> '<strong>Added new component to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_EDIT'			=> '<strong>Altered tracker project component</strong><br />» %s',
 	'LOG_TRACKER_COMPONENT_DELETE'			=> '<strong>Deleted tracker project component</strong><br />» %s',
-
-// Added by Daniel Young	
-	'LOG_TRACKER_CUSTOM1_ADD'			=> '<strong>Added new Custom 1 to a project on the tracker</strong><br />» %s',
-	'LOG_TRACKER_CUSTOM1_EDIT'			=> '<strong>Altered tracker Custom 1</strong><br />» %s',
-	'LOG_TRACKER_CUSTOM1_DELETE'			=> '<strong>Deleted tracker Custom 1</strong><br />» %s',
-
-	'LOG_TRACKER_CUSTOM2_ADD'			=> '<strong>Added new Custom 2 to a project on the tracker</strong><br />» %s',
-	'LOG_TRACKER_CUSTOM2_EDIT'			=> '<strong>Altered tracker Custom 2</strong><br />» %s',
-	'LOG_TRACKER_CUSTOM2_DELETE'			=> '<strong>Deleted tracker Custom 2</strong><br />» %s',
-// DY
 
 	'LOG_TRACKER_VERSION_ADD'				=> '<strong>Added new version to a project on the tracker</strong><br />» %s',
 	'LOG_TRACKER_VERSION_EDIT'				=> '<strong>Altered tracker project version</strong><br />» %s',

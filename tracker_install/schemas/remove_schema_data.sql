@@ -13,9 +13,5 @@ DROP TABLE phpbb_tracker_components;
 DROP TABLE phpbb_tracker_posts;
 DROP TABLE phpbb_tracker_history;
 DROP TABLE phpbb_tracker_version;
-# Added by Daniel Young
-DROP TABLE phpbb_tracker_custom1;
-DROP TABLE phpbb_tracker_custom2;
-# DY
 
 # POSTGRES COMMIT #

@@ -64,15 +64,6 @@ class acp_tracker
 			case 'component':
 				$this->manage_component($action);
 			break;
-// Added by Daniel Young
-			case 'custom1':
-				$this->manage_custom1($action);
-			break;
-
-			case 'custom2':
-				$this->manage_custom2($action);
-			break;
-// DY	
 
 			case 'version':
 				$this->manage_version($action);
@@ -148,19 +139,6 @@ class acp_tracker
 				'tickets_per_page'		=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'posts_per_page'		=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'top_reporters'			=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-// Added by Daniel Young
-				'environment_enabled'			=> array('lang' => 'TRACKER_ENVIRONMENT_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-
-				'component_enabled'			=> array('lang' => 'TRACKER_COMPONENT_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-
-				'version_enabled'			=> array('lang' => 'TRACKER_VERSION_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-
-				'custom1_enabled'			=> array('lang' => 'TRACKER_CUSTOM1_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-
-				'custom2_enabled'			=> array('lang' => 'TRACKER_CUSTOM2_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-				
-				'viewall_enabled'			=> array('lang' => 'TRACKER_VIEWALL_ENABLED',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),				
-// DY
 			)
 		);
 
@@ -740,379 +718,6 @@ class acp_tracker
 		$this->set_template_title($mode);
 	}
 
-
-// Added by Daniel Young
-	public function  manage_custom1($action)
-	{
-		global $db, $user, $auth, $template, $cache, $mode;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-
-		$form_key = 'acp_tracker';
-		add_form_key($form_key);
-		$this->page_title = 'ACP_TRACKER_CUSTOM1';
-
-		$project_id = request_var('project_id', 0);
-		$custom1_id = request_var('custom1_id', 0);
-		$submit	= (isset($_POST['submit'])) ? true : false;
-
-		$projects = $this->tracker->api->get_projects();
-
-		$template->assign_var('S_IN_MANAGE_CUSTOM1', true);
-
-		switch ($action)
-		{
-			case 'add':
-				if ($submit)
-				{
-					if (!check_form_key($form_key))
-					{
-						trigger_error('FORM_INVALID', E_USER_WARNING);
-					}
-
-					$custom1_data = array(
-						'custom1_name'		=> utf8_normalize_nfc(request_var('custom1_name', '', true)),
-						'project_id'			=> $project_id,
-					);
-					
-					if (utf8_clean_string($custom1_data['custom1_name']) === '')
-					{
-						trigger_error($user->lang['TRACKER_CUSTOM1_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
-					}
-
-					$this->tracker->api->handle_project_items('add', $mode, $custom1_data);
-					add_log('admin', 'LOG_TRACKER_CUSTOM1_ADD', $custom1_data['custom1_name']);
-					trigger_error($user->lang['ACP_TRACKER_CUSTOM1_ADDED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-				}
-				else
-				{
-					$custom1_data = array();
-				}
-			break;
-
-			case 'edit':
-				if ($submit)
-				{
-					if (!check_form_key($form_key))
-					{
-						trigger_error('FORM_INVALID', E_USER_WARNING);
-					}
-
-					$custom1_data = array(
-						'custom1_name'		=> utf8_normalize_nfc(request_var('custom1_name', '', true)),
-						'project_id'			=> $project_id,
-					);
-
-
-					$this->tracker->api->handle_project_items('update', $mode, $custom1_data, $custom1_id);
-					add_log('admin', 'LOG_TRACKER_CUSTOM1_EDIT', $custom1_data['custom1_name']);
-					trigger_error($user->lang['ACP_TRACKER_CUSTOM1_EDITED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-				}
-				else
-				{
-					$sql = 'SELECT *
-							FROM ' . TRACKER_CUSTOM1_TABLE . '
-							WHERE custom1_id = ' . $custom1_id;
-					$result = $db->sql_query($sql);
-					$row = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-
-					$custom1_data = $row;
-				}
-			break;
-
-			case 'delete':
-				if (confirm_box(true) && $submit)
-				{
-					$sql = 'SELECT *
-							FROM ' . TRACKER_CUSTOM1_TABLE . '
-							WHERE custom1_id = ' . $custom1_id;
-					$result = $db->sql_query($sql);
-					$row = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-
-					if ($row)
-					{
-						$this->tracker->api->handle_project_items('delete', $mode, false, $custom1_id);
-						add_log('admin', 'LOG_TRACKER_CUSTOM1_DELETE', $row['custom1_name']);
-						trigger_error($user->lang['ACP_TRACKER_CUSTOM1_DELETED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-					}
-					else
-					{
-						trigger_error($user->lang['ACP_TRACKER_CUSTOM1_NO_ID'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
-					}
-				}
-			break;
-
-			default:
-			break;
-		}
-
-		switch ($action)
-		{
-			case 'delete':
-				$s_hidden_fields = array(
-					'action'		=> 'delete',
-					'submit'		=> true,
-					'custom1_id'	=> $custom1_id,
-				);
-				confirm_box(false, 'ACP_TRACKER_CUSTOM1_DELETE', build_hidden_fields($s_hidden_fields));
-			break;
-
-			case 'edit':
-				$template->assign_var('CUSTOM1_ID', $custom1_data['custom1_id']);
-			case 'add':
-				if ($action == 'add')
-				{
-					$custom1_data['custom1_name'] = '';
-				}
-
-				$template->assign_vars(array(
-					'S_IN_MANAGE_CUSTOM1_ADD_EDIT'	=> true,
-					'U_BACK'							=> $this->u_action,
-					'U_ACTION'							=> $this->u_action . '&amp;action=' . $action,
-
-					'CUSTOM1_NAME'					=> $custom1_data['custom1_name'],
-					'PROJECT_ID'						=> $project_id,
-				));
-
-				$this->set_template_title($mode);
-
-				return;
-			break;
-
-			case 'view':
-				$template->assign_vars(array(
-					'S_IN_MANAGE_CUSTOM1_VIEW'	=> true,
-					'PROJECT_ID'					=> $project_id,
-					'U_ACTION' 						=> "{$this->u_action}&amp;action=add",
-				));
-
-				$sql = 'SELECT *
-					FROM ' . TRACKER_CUSTOM1_TABLE . '
-						WHERE project_id = ' . $project_id . '
-						ORDER BY custom1_name';
-				$result = $db->sql_query($sql);
-
-				$row = $db->sql_fetchrowset($result);
-				$db->sql_freeresult($result);
-
-				foreach ($row as $item)
-				{
-						$template->assign_block_vars('custom1', array(
-							'CUSTOM1_NAME'	=> $this->tracker->api->set_lang_name($item['custom1_name']),
-							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;custom1_id={$item['custom1_id']}&amp;project_id={$item['project_id']}",
-							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;custom1_id={$item['custom1_id']}&amp;project_id={$item['project_id']}",
-						));
-				}
-
-				$this->set_template_title($mode);
-				return;
-			break;
-
-			default:
-			break;
-		}
-
-		$template->assign_vars(array(
-			'S_IN_MANAGE_CUSTOM1_DEFAULT'	=> true,
-			'S_PROJECT_OPTIONS'				=> $this->tracker->api->project_select_options($projects, false, $mode),
-			'U_ACTION' 						=> "{$this->u_action}&amp;action=view",
-		));
-
-		$this->set_template_title($mode);
-	}
-
-
-
-
-
-
-
-
-	public function  manage_custom2($action)
-	{
-		global $db, $user, $auth, $template, $cache, $mode;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-
-
-		$form_key = 'acp_tracker';
-		add_form_key($form_key);
-		$this->page_title = 'ACP_TRACKER_CUSTOM2';
-
-		$project_id = request_var('project_id', 0);
-		$custom2_id = request_var('custom2_id', 0);
-		$submit	= (isset($_POST['submit'])) ? true : false;
-
-		$projects = $this->tracker->api->get_projects();
-
-		$template->assign_var('S_IN_MANAGE_CUSTOM2', true);
-
-		switch ($action)
-		{
-			case 'add':
-				if ($submit)
-				{
-					if (!check_form_key($form_key))
-					{
-						trigger_error('FORM_INVALID', E_USER_WARNING);
-					}
-
-					$custom2_data = array(
-						'custom2_name'		=> utf8_normalize_nfc(request_var('custom2_name', '', true)),
-						'project_id'			=> $project_id,
-					);
-					
-					if (utf8_clean_string($custom2_data['custom2_name']) === '')
-					{
-						trigger_error($user->lang['TRACKER_CUSTOM2_NO_NAME'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
-					}
-
-					$this->tracker->api->handle_project_items('add', $mode, $custom2_data);
-					add_log('admin', 'LOG_TRACKER_CUSTOM2_ADD', $custom2_data['custom2_name']);
-					trigger_error($user->lang['ACP_TRACKER_CUSTOM2_ADDED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-				}
-				else
-				{
-					$custom2_data = array();
-				}
-			break;
-
-			case 'edit':
-				if ($submit)
-				{
-					if (!check_form_key($form_key))
-					{
-						trigger_error('FORM_INVALID', E_USER_WARNING);
-					}
-
-					$custom2_data = array(
-						'custom2_name'		=> utf8_normalize_nfc(request_var('custom2_name', '', true)),
-						'project_id'			=> $project_id,
-					);
-
-
-					$this->tracker->api->handle_project_items('update', $mode, $custom2_data, $custom2_id);
-					add_log('admin', 'LOG_TRACKER_CUSTOM2_EDIT', $custom2_data['custom2_name']);
-					trigger_error($user->lang['ACP_TRACKER_CUSTOM2_EDITED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-				}
-				else
-				{
-					$sql = 'SELECT *
-							FROM ' . TRACKER_CUSTOM2_TABLE . '
-							WHERE custom2_id = ' . $custom2_id;
-					$result = $db->sql_query($sql);
-					$row = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-
-					$custom2_data = $row;
-				}
-			break;
-
-			case 'delete':
-				if (confirm_box(true) && $submit)
-				{
-					$sql = 'SELECT *
-							FROM ' . TRACKER_CUSTOM2_TABLE . '
-							WHERE custom2_id = ' . $custom2_id;
-					$result = $db->sql_query($sql);
-					$row = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-
-					if ($row)
-					{
-						$this->tracker->api->handle_project_items('delete', $mode, false, $custom2_id);
-						add_log('admin', 'LOG_TRACKER_CUSTOM2_DELETE', $row['custom2_name']);
-						trigger_error($user->lang['ACP_TRACKER_CUSTOM2_DELETED'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"));
-					}
-					else
-					{
-						trigger_error($user->lang['ACP_TRACKER_CUSTOM2_NO_ID'] . adm_back_link($this->u_action . "&amp;action=view&amp;project_id=$project_id"), E_USER_WARNING);
-					}
-				}
-			break;
-
-			default:
-			break;
-		}
-
-		switch ($action)
-		{
-			case 'delete':
-				$s_hidden_fields = array(
-					'action'		=> 'delete',
-					'submit'		=> true,
-					'custom2_id'	=> $custom2_id,
-				);
-				confirm_box(false, 'ACP_TRACKER_CUSTOM2_DELETE', build_hidden_fields($s_hidden_fields));
-			break;
-
-			case 'edit':
-				$template->assign_var('CUSTOM2_ID', $custom2_data['custom2_id']);
-			case 'add':
-				if ($action == 'add')
-				{
-					$custom2_data['custom2_name'] = '';
-				}
-
-				$template->assign_vars(array(
-					'S_IN_MANAGE_CUSTOM2_ADD_EDIT'	=> true,
-					'U_BACK'							=> $this->u_action,
-					'U_ACTION'							=> $this->u_action . '&amp;action=' . $action,
-
-					'CUSTOM2_NAME'					=> $custom2_data['custom2_name'],
-					'PROJECT_ID'						=> $project_id,
-				));
-
-				$this->set_template_title($mode);
-
-				return;
-			break;
-
-			case 'view':
-				$template->assign_vars(array(
-					'S_IN_MANAGE_CUSTOM2_VIEW'	=> true,
-					'PROJECT_ID'					=> $project_id,
-					'U_ACTION' 						=> "{$this->u_action}&amp;action=add",
-				));
-
-				$sql = 'SELECT *
-					FROM ' . TRACKER_CUSTOM2_TABLE . '
-						WHERE project_id = ' . $project_id . '
-						ORDER BY custom2_name';
-				$result = $db->sql_query($sql);
-
-				$row = $db->sql_fetchrowset($result);
-				$db->sql_freeresult($result);
-
-				foreach ($row as $item)
-				{
-						$template->assign_block_vars('custom2', array(
-							'CUSTOM2_NAME'	=> $this->tracker->api->set_lang_name($item['custom2_name']),
-							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;custom2_id={$item['custom2_id']}&amp;project_id={$item['project_id']}",
-							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;custom2_id={$item['custom2_id']}&amp;project_id={$item['project_id']}",
-						));
-				}
-
-				$this->set_template_title($mode);
-				return;
-			break;
-
-			default:
-			break;
-		}
-
-		$template->assign_vars(array(
-			'S_IN_MANAGE_CUSTOM2_DEFAULT'	=> true,
-			'S_PROJECT_OPTIONS'				=> $this->tracker->api->project_select_options($projects, false, $mode),
-			'U_ACTION' 						=> "{$this->u_action}&amp;action=view",
-		));
-
-		$this->set_template_title($mode);
-	}
-// DY
-
-
 	public function manage_version($action)
 	{
 		global $db, $user, $auth, $template, $cache, $mode;
@@ -1143,9 +748,6 @@ class acp_tracker
 					$version_data = array(
 						'version_name'			=> utf8_normalize_nfc(request_var('version_name', '', true)),
 						'project_id'			=> $project_id,
-// Added by Daniel Young
-						'version_postview'			=> request_var('version_postview', '', true),
-// DY
 					);
 
 					if (utf8_clean_string($version_data['version_name']) === '')
@@ -1174,9 +776,6 @@ class acp_tracker
 					$version_data = array(
 						'version_name'			=> utf8_normalize_nfc(request_var('version_name', '', true)),
 						'project_id'			=> $project_id,
-// Added by Daniel Young
-						'version_postview'			=> request_var('version_postview', '', true),
-// DY
 					);
 
 
@@ -1249,9 +848,6 @@ class acp_tracker
 					'U_ACTION'							=> $this->u_action . '&amp;action=' . $action,
 
 					'VERSION_NAME'						=> $version_data['version_name'],
-// Added by Daniel Young
-					'VERSION_POSTVIEW'						=> $version_data['version_postview'],
-// DY
 					'PROJECT_ID'						=> $project_id,
 				));
 
@@ -1279,9 +875,6 @@ class acp_tracker
 				{
 						$template->assign_block_vars('version', array(
 							'VERSION_NAME'		=> $this->tracker->api->set_lang_name($item['version_name']),
-// Added by Daniel Young
-							'VERSION_POSTVIEW'		=> $this->tracker->api->set_lang_name($item['version_postview']),
-// DY
 							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 

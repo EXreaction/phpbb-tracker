@@ -19,7 +19,7 @@
 <div class="topic-actions">
 	<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT -->
 		<div class="buttons">
-			<div class="ticket-icon"><a href="{U_POST_NEW_TICKET}" title="{L_TRACKER_POST_TICKET}"><span></span>{L_TRACKER_POST_TICKET}</a></div>
+			<div class="post-icon"><a href="{U_POST_NEW_TICKET}" title="{L_TRACKER_POST_TICKET}"><span></span>{L_TRACKER_POST_TICKET}</a></div>
 		</div>
 	<!-- ENDIF -->
 
@@ -62,13 +62,9 @@
 		<thead>
 			<tr>
 				<th style="text-align: left; width: 5%;">#</th>
-				<th style="text-align: left; width: 25%;">{L_TRACKER_TICKET_TITLE}</th>
-				<!-- IF S_COMPONENT_OPTIONS and S_COMPONENT_ENABLED --><th style="text-align: center; width: 10%;">{L_TRACKER_COMPONENT}</th><!-- ENDIF -->
-				<!-- IF S_VERSION_OPTIONS and S_VERSION_ENABLED --><th style="text-align: center; width: 10%;">{L_TRACKER_VERSION}</th><!-- ENDIF -->
-				<!-- IF S_CUSTOM1_OPTIONS and S_CUSTOM1_ENABLED --><th style="text-align: center; width: 10%;">{L_TRACKER_CUSTOM1}</th><!-- ENDIF -->
-				<!-- IF S_CUSTOM2_OPTIONS and S_CUSTOM2_ENABLED --><th style="text-align: center; width: 10%;">{L_TRACKER_CUSTOM2}</th><!-- ENDIF -->
-				
-				<th style="text-align: center; width: 15%;">{L_TRACKER_ASSIGNED_TO}</th>
+				<th style="text-align: left; width: 45%;">{L_TRACKER_TICKET_TITLE}</th>
+				<th style="text-align: center; width: 15%;">{L_TRACKER_COMPONENT}</th>
+				<th style="text-align: center; width: 20%;">{L_TRACKER_ASSIGNED_TO}</th>
 				<th style="text-align: center; width: 15%;">{L_TRACKER_STATUS}</th>
 			</tr>
 		</thead>
@@ -80,16 +76,13 @@
 					<strong><a href="{tickets.U_VIEW_TICKET}">{tickets.TICKET_TITLE}</a></strong><br />
 					<span class="small">{tickets.TICKET_USERNAME} {L_POSTED_ON_DATE} {tickets.TICKET_TIME}<!-- IF tickets.LAST_POST_USERNAME -->{L_TRACKER_LAST_POST_BY}{tickets.LAST_POST_USERNAME}<!-- ENDIF --></span>
 				</td>
-				<!-- IF S_COMPONENT_OPTIONS and S_COMPONENT_ENABLED --><td align="center">{tickets.TICKET_COMPONENT}</td><!-- ENDIF -->
-				<!-- IF S_VERSION_OPTIONS and S_VERSION_ENABLED --><td align="center">{tickets.TICKET_VERSION}</td><!-- ENDIF -->
-				<!-- IF S_CUSTOM1_OPTIONS and S_CUSTOM1_ENABLED --><td align="center">{tickets.TICKET_CUSTOM1}</td><!-- ENDIF -->
-				<!-- IF S_CUSTOM2_OPTIONS and S_CUSTOM2_ENABLED --><td align="center">{tickets.TICKET_CUSTOM2}</td><!-- ENDIF -->
-				<td align="center">{tickets.TICKET_ASSIGNED_TO}</td>
-				<td align="center">{tickets.TICKET_STATUS}</td>
+				<td style="text-align: center;">{tickets.TICKET_COMPONENT}</td>
+				<td style="text-align: center;">{tickets.TICKET_ASSIGNED_TO}</td>
+				<td style="text-align: center; color: red;">{tickets.TICKET_STATUS}</td>
 			</tr>
 		<!-- BEGINELSE -->
 			<tr style="height: 50px">
-				<td class="bg1" colspan="8" align="center">
+				<td class="bg1" colspan="5" align="center">
 					<strong>{L_TRACKER_NO_TICKETS}</strong>
 				</td>
 			</tr>

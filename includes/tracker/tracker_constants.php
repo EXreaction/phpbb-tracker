@@ -24,10 +24,6 @@ define('TRACKER_PROJECT_TABLE',			$table_prefix . 'tracker_project');
 define('TRACKER_TICKETS_TABLE',			$table_prefix . 'tracker_tickets');
 define('TRACKER_POSTS_TABLE',			$table_prefix . 'tracker_posts');
 define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
-// Added by Daniel Young
-define('TRACKER_CUSTOM1_TABLE',		$table_prefix . 'tracker_custom1');
-define('TRACKER_CUSTOM2_TABLE',		$table_prefix . 'tracker_custom2');
-// DY
 define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
 

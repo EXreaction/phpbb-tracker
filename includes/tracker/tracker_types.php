@@ -33,10 +33,6 @@ $tracker_types[0] = array(
 	'title' 			=> 'BUG_TRACKER',
 	'show_version' 		=> true,
 	'show_component' 	=> true,
-// Added by Daniel Young
-	'show_custom1' 	=> true,
-	'show_custom2' 	=> true,
-// DY
 	'show_priority' 	=> true,
 	'show_severity'		=> true,
 	'show_environment' 	=> true,
@@ -48,10 +44,6 @@ $tracker_types[1] = array(
 	'title' 			=> 'FEATURE_TRACKER',
 	'show_version' 		=> true,
 	'show_component'	=> true,
-// Added by Daniel Young
-	'show_custom1' 	=> true,
-	'show_custom2' 	=> true,
-// DY
 	'show_priority' 	=> true,
 	'show_severity' 	=> false,
 	'show_environment' 	=> false,
@@ -63,10 +55,6 @@ $tracker_types[2] = array(
 	'title' 			=> 'ISSUE_TRACKER',
 	'show_version' 		=> true,
 	'show_component' 	=> true,
-// Added by Daniel Young
-	'show_custom1' 	=> true,
-	'show_custom2' 	=> true,
-// DY
 	'show_priority' 	=> true,
 	'show_severity' 	=> true,
 	'show_environment' 	=> true,

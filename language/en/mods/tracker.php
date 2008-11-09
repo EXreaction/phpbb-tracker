@@ -50,14 +50,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_ASSIGNED_TO_USERNAME'			=> ' assigned to %s',
 	'TRACKER_EVERYONES_ASSIGNED_TICKETS'	=> 'Show all tickets',
 	'TRACKER_COMPONENT'						=> 'Component',
-// Added by Daniel Young
-	'TRACKER_CUSTOM1'						=> 'Custom 1',
-	'TRACKER_CUSTOM2'						=> 'Custom 2',
-// DY
 	'TRACKER_VERSION'						=> 'Version',
-// Added by Daniel Young
-	'TRACKER_VERSION_POSTVIEW'						=> 'Post View',
-// DY
 	'TRACKER_PRIORITY'						=> 'Priority',
 	'TRACKER_SEVERITY'						=> 'Severity',
 	'TRACKER_ASSIGNED_TO'					=> 'Assigned to',
@@ -212,16 +205,8 @@ $lang = array_merge($lang, array(
 	'TRACKER_ATTACHMENTS_ADD'				=> 'Add attachment',
 
 	'TRACKER_COMPONENT_NAME' 				=> 'Component Name',
-// Added by Daniel Young
-	'TRACKER_CUSTOM1_NAME' 				=> 'Custom 1 Name',
-	'TRACKER_CUSTOM2_NAME' 				=> 'Custom 2 Name',
-// DY
 	'TRACKER_VERSION_NAME' 					=> 'Version Name',
 	'TRACKER_COMPONENT_STATS' 				=> 'Tickets by component',
-// Added by Daniel Young
-	'TRACKER_CUSTOM1_STATS' 				=> 'Tickets by Custom 1',
-	'TRACKER_CUSTOM2_STATS' 				=> 'Tickets by Custom 2',
-// DY
 	'TRACKER_VERSION_STATS' 				=> 'Tickets by version',
 ));
 

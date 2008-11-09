@@ -54,34 +54,7 @@
 	<td class="row2" width="78%"><select id="version_id" name="version_id">{S_VERSION_OPTIONS}</select></td>
 </tr>
 <!-- ENDIF -->
-
-			<!-- IF S_CUSTOM1_OPTIONS and S_TICKET_CUSTOM1 -->
-
-
-<tr>
-	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_CUSTOM1}:</b></td>
-	<td class="row2" width="78%"><select id="custom1_id" name="custom1_id">{S_CUSTOM1_OPTIONS}</select></td>
-</tr>
-
-
-			<!-- ENDIF -->
-
-			<!-- IF S_CUSTOM2_OPTIONS and S_TICKET_CUSTOM2 -->
-
-
-<tr>
-	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_CUSTOM2}:</b></td>
-	<td class="row2" width="78%"><select id="custom2_id" name="custom2_id">{S_CUSTOM2_OPTIONS}</select></td>
-</tr>
-
-
-
-			<!-- ENDIF -->
-
-
-
-
-	<!-- IF S_TICKET_ENVIRONMENT and S_ENVIRONMENT_ENABLED -->
+<!-- IF S_TICKET_ENVIRONMENT -->
 <tr>
 	<th colspan="2"><b>{L_TRACKER_ENVIRONMENT}</b></th>
 </tr>
@@ -123,7 +96,7 @@
 	<td class="row2" width="78%"><input type="file" name="attachment" id="attachment" size="45" /></td>
 </tr>
 <tr>
-<td class="row1" colspan="2" align="center"><input type="submit" name="add_attachment" value="{L_TRACKER_ATTACHMENTS_ADD}" class="btnlite" /></td>
+	<td class="row1" colspan="2"><input type="submit" name="add_attachment" value="{L_TRACKER_ATTACHMENTS_ADD}" class="btnlite" /></td>
 </tr>
 <!-- ENDIF -->
 <!-- IF S_HAS_ATTACHMENTS -->

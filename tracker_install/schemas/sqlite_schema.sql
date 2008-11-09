@@ -61,10 +61,6 @@ CREATE TABLE phpbb_tracker_tickets (
 	status_id tinyint(4) NOT NULL DEFAULT '0',
 	component_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	version_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-# Added by Daniel Young
-	custom1_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	custom2_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-# DY
 	severity_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	priority_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	ticket_php text(65535) NOT NULL DEFAULT '',
@@ -130,33 +126,9 @@ CREATE TABLE phpbb_tracker_history (
 CREATE TABLE phpbb_tracker_version (
 	version_id INTEGER PRIMARY KEY NOT NULL ,
 	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	version_name varchar(255) NOT NULL DEFAULT '',
-# Added by Daniel Young
-	version_postview tinyint(1) NOT NULL DEFAULT '0'
-# DY
+	version_name varchar(255) NOT NULL DEFAULT ''
 );
-
-
-# Added by Daniel Young
-# Table: 'phpbb_tracker_custom1'
-CREATE TABLE phpbb_tracker_custom1 (
-	custom1_id INTEGER PRIMARY KEY NOT NULL ,
-	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	custom1_name varchar(255) NOT NULL DEFAULT ''
-);
-
-
-# Table: 'phpbb_tracker_custom2'
-CREATE TABLE phpbb_tracker_custom2 (
-	custom2_id INTEGER PRIMARY KEY NOT NULL ,
-	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	custom2_name varchar(255) NOT NULL DEFAULT ''
-);
-
-
-# DY
 
 
 
 COMMIT;
-

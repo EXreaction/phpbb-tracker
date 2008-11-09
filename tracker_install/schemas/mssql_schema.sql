@@ -105,10 +105,6 @@ CREATE TABLE [phpbb_tracker_tickets] (
 	[status_id] [int] DEFAULT (0) NOT NULL ,
 	[component_id] [int] DEFAULT (0) NOT NULL ,
 	[version_id] [int] DEFAULT (0) NOT NULL ,
-/* Added by Daniel Young */
-	[custom1_id] [int] DEFAULT (0) NOT NULL ,
-	[custom2_id] [int] DEFAULT (0) NOT NULL ,
-/* DY */
 	[severity_id] [int] DEFAULT (0) NOT NULL ,
 	[priority_id] [int] DEFAULT (0) NOT NULL ,
 	[ticket_php] [varchar] (255) DEFAULT ('') NOT NULL ,
@@ -214,10 +210,7 @@ GO
 CREATE TABLE [phpbb_tracker_version] (
 	[version_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[version_name] [varchar] (255) DEFAULT ('') NOT NULL,
-/* Added by Daniel Young */
-	[version_postview] [int] DEFAULT (0) NOT NULL
-/* DY */
+	[version_name] [varchar] (255) DEFAULT ('') NOT NULL 
 ) ON [PRIMARY]
 GO
 
@@ -228,43 +221,7 @@ ALTER TABLE [phpbb_tracker_version] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-/* Added by Daniel Young */
-/*
-	Table: 'phpbb_tracker_custom1'
-*/
-CREATE TABLE [phpbb_tracker_custom1] (
-	[custom1_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[custom1_name] [varchar] (255) DEFAULT ('') NOT NULL 
-) ON [PRIMARY]
-GO
 
-ALTER TABLE [phpbb_tracker_custom1] WITH NOCHECK ADD 
-	CONSTRAINT [PK_phpbb_tracker_custom1] PRIMARY KEY  CLUSTERED 
-	(
-		[custom1_id]
-	)  ON [PRIMARY] 
-GO
-
-
-/*
-	Table: 'phpbb_tracker_custom2'
-*/
-CREATE TABLE [phpbb_tracker_custom2] (
-	[custom2_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[custom2_name] [varchar] (255) DEFAULT ('') NOT NULL 
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [phpbb_tracker_custom2] WITH NOCHECK ADD 
-	CONSTRAINT [PK_phpbb_tracker_custom2] PRIMARY KEY  CLUSTERED 
-	(
-		[custom2_id]
-	)  ON [PRIMARY] 
-GO
-
-/* DY */
 
 COMMIT
 GO

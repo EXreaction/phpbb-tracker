@@ -55,13 +55,9 @@
 <table class="tablebg" cellspacing="1" width="100%">
 <tr>
 	<th width="5%" style="text-align: left;">#</th>
-	<th width="25%" style="text-align: left;">{L_TRACKER_TICKET_TITLE}</th>
-	<!-- IF S_COMPONENT_OPTIONS and S_COMPONENT_ENABLED --><th width="10%" align="center">{L_TRACKER_COMPONENT}</th><!-- ENDIF -->
-	<!-- IF S_VERSION_OPTIONS and S_VERSION_ENABLED --><th width="10%" align="center">{L_TRACKER_VERSION}</th><!-- ENDIF -->
-	<!-- IF S_CUSTOM1_OPTIONS and S_CUSTOM1_ENABLED --><th width="10%" align="center">{L_TRACKER_CUSTOM1}</th><!-- ENDIF -->
-	<!-- IF S_CUSTOM2_OPTIONS and S_CUSTOM2_ENABLED --><th width="10%" align="center">{L_TRACKER_CUSTOM2}</th><!-- ENDIF -->
-
-	<th width="15%" align="center">{L_TRACKER_ASSIGNED_TO}</th>
+	<th width="45%" style="text-align: left;">{L_TRACKER_TICKET_TITLE}</th>
+	<th width="15%" align="center">{L_TRACKER_COMPONENT}</th>
+	<th width="20%" align="center">{L_TRACKER_ASSIGNED_TO}</th>
 	<th width="15%" align="center">{L_TRACKER_STATUS}</th>
 </tr>
 <!-- BEGIN tickets -->
@@ -76,17 +72,13 @@
 			<strong><a href="{tickets.U_VIEW_TICKET}">{tickets.TICKET_TITLE}</a></strong><br />
 			<span class="small">{tickets.TICKET_USERNAME} {L_POSTED_ON_DATE} {tickets.TICKET_TIME}<!-- IF tickets.LAST_POST_USERNAME -->{L_TRACKER_LAST_POST_BY}{tickets.LAST_POST_USERNAME}<!-- ENDIF --></span>
 		</td>
-		<!-- IF S_COMPONENT_OPTIONS and S_COMPONENT_ENABLED --><td align="center">{tickets.TICKET_COMPONENT}</td><!-- ENDIF -->
-		<!-- IF S_VERSION_OPTIONS and S_VERSION_ENABLED --><td align="center">{tickets.TICKET_VERSION}</td><!-- ENDIF -->
-		<!-- IF S_CUSTOM1_OPTIONS and S_CUSTOM1_ENABLED --><td align="center">{tickets.TICKET_CUSTOM1}</td><!-- ENDIF -->
-		<!-- IF S_CUSTOM2_OPTIONS and S_CUSTOM2_ENABLED --><td align="center">{tickets.TICKET_CUSTOM2}</td><!-- ENDIF -->
-		
+		<td align="center">{tickets.TICKET_COMPONENT}</td>
 		<td align="center">{tickets.TICKET_ASSIGNED_TO}</td>
 		<td align="center" style="color: red;">{tickets.TICKET_STATUS}</td>
 	</tr>
 <!-- BEGINELSE -->
 	<tr style="height: 50px">
-		<td class="row1" colspan="8" align="center">
+		<td class="row1" colspan="5" align="center">
 			<strong>{L_TRACKER_NO_TICKETS}</strong>
 		</td>
 	</tr>
