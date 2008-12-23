@@ -600,7 +600,7 @@ class install_mod
 		}
 		// Ok we have the db info go ahead and read in the relevant schema
 		// and work on building the table
-		$dbms_schema = 'schemas/' . $available_dbms[$dbms]['SCHEMA'] . '_schema.sql';
+		$dbms_schema = 'schemas/tracker/' . $available_dbms[$dbms]['SCHEMA'] . '_schema.sql';
 
 		// How should we treat this schema?
 		$remove_remarks = $available_dbms[$dbms]['COMMENTS'];

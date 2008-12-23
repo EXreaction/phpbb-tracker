@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './../install/schemas/';
+$schema_path = './../install/schemas/tracker/';
 
 if (!is_writable($schema_path))
 {
