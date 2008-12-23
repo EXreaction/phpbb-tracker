@@ -1649,11 +1649,14 @@ class tracker_api
 			'FORUM_NAME'	=> $data['project_name'],
 			'U_VIEW_FORUM'	=> $this->build_url(($in_stats) ? 'statistics_p' : 'project', array($data['project_id'])),
 		));
-
-		$template->assign_vars(array(
-			'TRACKER_TICKET_ID'		=> $ticket_id,
-			'U_VIEW_TRACKER_TICKET'	=> $this->build_url('ticket', array($data['project_id'], $ticket_id)),
-		));
+		
+		if ($ticket_id)
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'  	 => $user->lang['TRACKER_NAV_TICKET'] . $ticket_id,
+				'U_VIEW_FORUM'   => $this->build_url('ticket', array($data['project_id'], $ticket_id)),
+			));
+		}
 	}
 
 	/**

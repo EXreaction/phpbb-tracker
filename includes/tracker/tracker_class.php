@@ -53,6 +53,11 @@ class tracker
 			'U_TRACKER' 				=> $this->api->build_url('index'),
 			'U_TRACKER_STATS'			=> $this->api->build_url('statistics'),
 		));
+	
+	   $template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'   		=> $user->lang['TRACKER_INDEX'],
+			'U_VIEW_FORUM'  	=> $this->api->build_url('index'),
+		));
 	}
 
 	/**
@@ -411,6 +416,11 @@ class tracker
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
 
 		$template->assign_var('S_IN_STATS', true);
+		
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'   		=> $user->lang['TRACKER_STATS'],
+			'U_VIEW_FORUM'  	=> $this->api->build_url('statistics'),
+		));
 
 		if ($project_id)
 		{
