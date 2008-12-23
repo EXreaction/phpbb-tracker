@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id: install_check.php 128 2008-05-17 12:25:07Z evil3 $
+* @version $Id$
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
