@@ -203,8 +203,37 @@ class install_update extends module
 			switch ($this->p_master->installed_version)
 			{
 				case '0.1.0':
-					//$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.2.0']);
-					//$this->p_master->set_config('download_list', false);
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
+
+					$sql = 'SELECT project_name, project_id
+						FROM ' . TRACKER_PROJECT_TABLE;
+					$result = $db->sql_query($sql);
+
+					$row = $db->sql_fetchrowset($result);
+					$db->sql_freeresult($result);
+
+					foreach ($row as $item)
+					{
+						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . "
+							SET project_name_clean = '" . $db->sql_escape(utf8_clean_string($item['project_name'])) . "'
+						WHERE project_id = " . (int) $item['project_id'];
+						$db->sql_query($sql);
+					}
+
+					if ($tracker->config['attachment_path'] == 'includes/tracker/files')
+					{
+						file_functions::copy_dir('./../includes/tracker/files', './../files/tracker', true, false);
+						file_functions::delete_dir('./../includes/tracker/files');
+						$this->p_master->set_config('attachment_path', 'files/tracker');
+					}
+					
+				case '0.1.1':
+					// This is need because of a bug when installing 0.1.1 new
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
+				
+				case '0.1.2':
+					$install_mod->add_permissions($CFG['update_permission_options']['0.1.3']);
 									
 				break;
 

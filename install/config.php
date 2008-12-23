@@ -25,9 +25,7 @@ if (!defined('IN_PHPBB'))
 * EDIT VALUES BELOW
 */
 
-global $table_prefix;
-
-$CFG = array(
+$mod_config = array(
 	'mod_title'					=> 'phpBB Tracker',
 	'mod_version'				=> '0.1.3',
 	'phpbb_version'				=> '3.0.0',
@@ -130,6 +128,78 @@ $CFG = array(
 		'0.1.3'	=> array(
 			'local'		=> array(),
 			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all'),
+		),
+	),
+);
+
+$mod_config['install_check'] = array(
+	'tables'		=> array(TRACKER_CONFIG_TABLE, TRACKER_ATTACHMENTS_TABLE, TRACKER_PROJECT_TABLE, TRACKER_TICKETS_TABLE, TRACKER_POSTS_TABLE, TRACKER_COMPONENTS_TABLE, TRACKER_HISTORY_TABLE, TRACKER_VERSION_TABLE),
+	'files' 		=> array(
+		'core'			=> array(
+			'tracker.php',
+			'adm/style/acp_tracker.html',
+			'includes/acp/acp_tracker.php',
+			'includes/acp/info/acp_tracker.php',
+			'includes/tracker/tracker_api.php',
+			'includes/tracker/tracker_cache.php',
+			'includes/tracker/tracker_class.php',
+			'includes/tracker/tracker_constants.php',
+			'includes/tracker/tracker_download.php',
+			'includes/tracker/tracker_status.php',
+			'includes/tracker/tracker_types.php',
+			'language/en/email/tracker_notify.txt',
+			'language/en/email/tracker_notify_comment.txt',
+			'language/en/email/tracker_notify_status_double.txt',
+			'language/en/email/tracker_notify_status_single.txt',
+			'language/en/mods/tracker.php',
+			'language/en/mods/tracker_install.php',
+			'language/en/mods/permissions_tracker.php',
+			'language/en/mods/info_acp_tracker.php',
+		),
+		'styles'			=> array(
+			'prosilver'			=> array(
+				'styles/prosilver/template/tracker/tracker_index_body.html',
+				'styles/prosilver/template/tracker/tracker_tickets_add_body.html',
+				'styles/prosilver/template/tracker/tracker_tickets_body.html',
+				'styles/prosilver/template/tracker/tracker_tickets_view_body.html',
+				'styles/prosilver/template/tracker/tracker_header.html',
+				'styles/prosilver/template/tracker/tracker_move.html',
+			),
+			'subsilver2'		=> array(		
+				'styles/subsilver2/template/tracker/tracker_index_body.html',
+				'styles/subsilver2/template/tracker/tracker_tickets_add_body.html',
+				'styles/subsilver2/template/tracker/tracker_tickets_body.html',
+				'styles/subsilver2/template/tracker/tracker_tickets_view_body.html',
+				'styles/subsilver2/template/tracker/tracker_header.html',
+				'styles/subsilver2/template/tracker/tracker_move.html',
+			),
+		),
+	),
+	'edits'	=> array(
+		'core'		=> array(
+			'viewonline.php' => array(
+				'case \'arcade\':',
+				'include($phpbb_root_path . \'includes/arcade/arcade_viewonline.\' . $phpEx);',
+			),
+		),
+		'styles'		=> array(
+			'prosilver'		=> array(
+				'styles/prosilver/template/overall_header.html' => array(
+					'<!-- IF S_IN_TRACKER -->',
+					'<!-- INCLUDE tracker/tracker_header.html -->',
+				),
+			),
+			'subsilver2'	=> array(
+				'styles/subsilver2/template/overall_header.html' => array(
+					'<!-- IF S_IN_TRACKER -->',
+					'<!-- INCLUDE tracker/tracker_header.html -->',
+				),
+			),
+		),
+	),
+	'modules'		=> array(
+		'acp' => array(
+			'tracker' 					=> array('settings', 'project', 'component', 'version', 'severity', 'priority'),
 		),
 	),
 );

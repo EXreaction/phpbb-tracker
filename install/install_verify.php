@@ -362,89 +362,98 @@ class install_verify extends module
 		));
 		
 		// Check other db data
-		$error = array();
-		foreach ($mod_config['install_check']['alter_db'] as $key => $value)
+		if (isset($mod_config['install_check']['alter_db']))
 		{
-			$table = $key;
-			foreach ($value as $column)
+			$error = array();
+			foreach ($mod_config['install_check']['alter_db'] as $key => $value)
 			{
-				$sql = 'SELECT ' . $column . '
-					FROM ' . $table;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if ($db->sql_error_triggered)
+				$table = $key;
+				foreach ($value as $column)
 				{
-					$db->sql_error_triggered = false;
-					$error[] = $column;
+					$sql = 'SELECT ' . $column . '
+						FROM ' . $table;
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+
+					if ($db->sql_error_triggered)
+					{
+						$db->sql_error_triggered = false;
+						$error[] = $column;
+					}
+					unset($row);
 				}
-				unset($row);
+				
+				if (sizeof($error))
+				{
+					$passed['mod'] = false;
+					$result = '<strong style="color:red">' . sprintf($user->lang['VERIFY_TABLE_NOT_ALTERED'], $table, implode('<br />', $error)) . '</strong>';
+				}
+				else
+				{
+					$result = '<strong style="color:green">' . sprintf($user->lang['VERIFY_TABLE_ALTERED'], $table) . '</strong>';
+				}
+				unset($error);
 			}
 			
-			if (sizeof($error))
-			{
-				$passed['mod'] = false;
-				$result = '<strong style="color:red">' . sprintf($user->lang['VERIFY_TABLE_NOT_ALTERED'], $table, implode('<br />', $error)) . '</strong>';
-			}
-			else
-			{
-				$result = '<strong style="color:green">' . sprintf($user->lang['VERIFY_TABLE_ALTERED'], $table) . '</strong>';
-			}
-			unset($error);
-		}
-		
-		$template->assign_block_vars('checks', array(
-			'TITLE'			=> $user->lang['VERIFY_OTHER_DB_DATA'],
-			'RESULT'		=> $result,
+			$template->assign_block_vars('checks', array(
+				'TITLE'			=> $user->lang['VERIFY_OTHER_DB_DATA'],
+				'RESULT'		=> $result,
 
-			'S_EXPLAIN'		=> false,
-			'S_LEGEND'		=> false,
-		));
+				'S_EXPLAIN'		=> false,
+				'S_LEGEND'		=> false,
+			));
+		}
 		
 		// Check if modules are present
 		$error = array();
-		foreach($mod_config['install_check']['modules']['acp'] as $key => $value)
+		if (isset($mod_config['install_check']['modules']['acp']))
 		{
-			$module_basename = $key;
-			foreach ($value as $module_mode)
+			foreach($mod_config['install_check']['modules']['acp'] as $key => $value)
 			{
-				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_basename = '$module_basename'
-						AND module_class = 'acp'
-						AND module_mode = '$module_mode'";
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if (!$row)
+				$module_basename = $key;
+				foreach ($value as $module_mode)
 				{
-					$error[] = $user->lang['MODULE_ACP'] . ': module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
+					$sql = 'SELECT parent_id
+						FROM ' . MODULES_TABLE . "
+						WHERE module_basename = '$module_basename'
+							AND module_class = 'acp'
+							AND module_mode = '$module_mode'";
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+
+					if (!$row)
+					{
+						$error[] = $user->lang['MODULE_ACP'] . ': module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
+					}
+					unset($row);
 				}
-				unset($row);
 			}
 		}
 
-		foreach($mod_config['install_check']['modules']['ucp'] as $key => $value)
+		if (isset($mod_config['install_check']['modules']['ucp']))
 		{
-			$module_basename = $key;
-			foreach ($value as $module_mode)
+			foreach($mod_config['install_check']['modules']['ucp'] as $key => $value)
 			{
-				$sql = 'SELECT parent_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_basename = '$module_basename'
-						AND module_class = 'ucp'
-						AND module_mode = '$module_mode'";
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if (!$row)
+				$module_basename = $key;
+				foreach ($value as $module_mode)
 				{
-					$error[] = $user->lang['MODULE_UCP'] . ': module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
+					$sql = 'SELECT parent_id
+						FROM ' . MODULES_TABLE . "
+						WHERE module_basename = '$module_basename'
+							AND module_class = 'ucp'
+							AND module_mode = '$module_mode'";
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+
+					if (!$row)
+					{
+						$error[] = $user->lang['MODULE_UCP'] . ': module_basename = ' . $module_basename . ', module_mode = ' . $module_mode;
+					}
+					unset($row);
 				}
-				unset($row);
 			}
 		}
 		
