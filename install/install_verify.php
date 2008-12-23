@@ -268,7 +268,6 @@ class install_verify extends module
 					if (strpos($content, $edit) === false)
 					{
 						$error[] = 'phpbb_root_path/' . $key . ' - <span style="color: black;">' . htmlspecialchars($edit) . '</span>';
-						break;
 					}
 				}
 			}
@@ -291,7 +290,6 @@ class install_verify extends module
 							if (strpos($content, $edit) === false)
 							{
 								$error[] = 'phpbb_root_path/' . $key . ' - <span style="color: black;">' . htmlspecialchars($edit) . '</span>';
-								break;
 							}
 						}
 					}

@@ -181,6 +181,11 @@ $mod_config['install_check'] = array(
 				'case \'tracker\':',
 				'include($phpbb_root_path . \'includes/tracker/tracker_viewonline.\' . $phpEx);',
 			),
+			'includes/functions.php' => array(
+				'global $tracker;',
+				'$user->add_lang(\'mods/tracker\');',
+				'$template->assign_var(\'U_TRACKER\', append_sid("{$phpbb_root_path}tracker.$phpEx"));',
+			),
 		),
 		'styles'		=> array(
 			'prosilver'		=> array(
@@ -199,7 +204,7 @@ $mod_config['install_check'] = array(
 	),
 	'modules'		=> array(
 		'acp' => array(
-			'tracker' 					=> array('settings', 'project', 'component', 'version', 'severity', 'priority'),
+			'tracker' 					=> array('settings', 'project', 'component', 'version'),
 		),
 	),
 );

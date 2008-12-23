@@ -176,8 +176,8 @@ class install_install extends module
 		}
 
 		$s_hidden_fields = '';
-		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
-		$submit = (!in_array(false, $passed)) ? $user->lang['UPDATE_START'] : $user->lang['INSTALL_TEST'];
+		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=install" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
 			'L_SUBMIT'	=> $submit,
@@ -222,7 +222,7 @@ class install_install extends module
 		
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-			'BODY'		=> $user->lang['STAGE_INSTALL_TRACKR_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], $mod_config['mod_version']),
+			'BODY'		=> $user->lang['STAGE_INSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], $mod_config['mod_version']),
 			'L_SUBMIT'	=> $user->lang['INSTALL_LOGIN'],
 			'U_ACTION'	=> append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id),
 		));
