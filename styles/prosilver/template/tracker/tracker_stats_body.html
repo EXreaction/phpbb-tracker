@@ -167,7 +167,7 @@
 			<!-- BEGIN project -->
 			<!-- IF project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 					<td><a href="{project.U_PROJECT}"><strong>{project.PROJECT_NAME}</strong></a></td>
-					<td>{project.PROJECT_DESC}</td>
+					<td><!-- IF project.PROJECT_DESC -->{project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
 					<td>{project.PROJECT_TYPE}</td>
 					<td><strong>{project.TOTAL_TICKETS}</strong></td>
 				</tr>
