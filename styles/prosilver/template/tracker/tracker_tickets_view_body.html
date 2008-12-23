@@ -258,9 +258,9 @@
 				<div class="inner"><span class="corners-top"><span></span></span>
 				<!-- BEGIN review -->
 				<div class="postbody">
-					<p class="author">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_POSTED_ON_DATE} {review.POST_TIME}</p>
+					<p class="author<!-- IF review.S_LAST_ROW --> current<!-- ENDIF -->">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_POSTED_ON_DATE} {review.POST_TIME}</p>
 
-					<div class="content">{review.POST_TEXT}</div>
+					<div class="content<!-- IF review.S_LAST_ROW --> current<!-- ENDIF -->">{review.POST_TEXT}</div>
 				</div>
 				<!-- IF not review.S_LAST_ROW --><hr /><!-- ENDIF -->
 				<!-- END -->
