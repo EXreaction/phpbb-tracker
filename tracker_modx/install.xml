@@ -89,6 +89,7 @@
 			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php" />
 			<file from="root/includes/tracker/tracker_constants.php" to="includes/tracker/tracker_constants.php" />
 			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php" />
+			<file from="root/includes/tracker/tracker_viewonline.php" to="includes/tracker/tracker_viewonline.php" />
 			<file from="root/includes/tracker/tracker_status.php" to="includes/tracker/tracker_status.php" />
 			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php" />
 			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt" />
@@ -143,7 +144,7 @@
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;]]></find>
 				<action type="after-add"><![CDATA[		case 'tracker':
-			include($phpbb_root_path . 'includes/tracker/tracker_online.' . $phpEx);
+			include($phpbb_root_path . 'includes/tracker/tracker_viewonline.' . $phpEx);
 		break;]]></action>
 			</edit>
 		</open>

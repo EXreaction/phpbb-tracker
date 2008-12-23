@@ -120,12 +120,6 @@ class tracker_api
 	{
 		global $user;
 
-		if (!function_exists('group_memberships'))
-		{
-			global $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
-		}
-
 		$this->can_manage = group_memberships($this->projects[$project_id]['project_group'], $user->data['user_id'], true);
 	}
 

@@ -147,6 +147,8 @@ $mod_config['install_check'] = array(
 			'includes/tracker/tracker_download.php',
 			'includes/tracker/tracker_status.php',
 			'includes/tracker/tracker_types.php',
+			'includes/tracker/tracker_viewonline.php',
+			'includes/tracker/functions_files.php',
 			'language/en/email/tracker_notify.txt',
 			'language/en/email/tracker_notify_comment.txt',
 			'language/en/email/tracker_notify_status_double.txt',

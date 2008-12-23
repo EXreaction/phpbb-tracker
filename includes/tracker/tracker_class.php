@@ -31,6 +31,11 @@ class tracker
 	{
 		global $template, $user;
 		global $phpbb_root_path, $phpEx;
+		
+		if (!function_exists('group_memberships'))
+		{
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		}
 
 		// Do not change order of following includes
 		include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
