@@ -77,7 +77,9 @@ $lang = array_merge($lang, array(
 	'OVERVIEW_BODY'							=> 'Welcome to phpBB Tracker!<br /><br />phpBB Tracker is feature-rich, user-friendly, and is fully supported.<br /><br />This installation system will guide you through installing phpBB Tracker, updating to the latest version of phpBB Tracker from past releases, uninstalling phpBB Tracker and verifying phpBB Tracker is installed correctly. To read the phpBB Tracker license or learn about obtaining support and our stance on it, please select the respective options from the side menu. To continue, please select the appropriate tab above.',
 
 	'PHPBB_VERSION_REQD'					=> 'phpBB version >= %s',
-
+	'PHP_SETTINGS'							=> 'phpBB version',
+	'PHP_SETTINGS_EXPLAIN'					=> '<strong>Required</strong> - You must be running at least version %s of phpBB in order to install phpBB Tracker.',
+	
 	'REQUIREMENTS_EXPLAIN'					=> 'Before proceeding with the full installation phpBB Tracker will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Tracker. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed. If you wish to use any of the features depending on the optional tests, you should ensure that these tests are passed also.',
 	'REQUIREMENTS_TITLE'					=> 'Installation compatibility',
 

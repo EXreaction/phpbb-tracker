@@ -178,8 +178,8 @@ $mod_config['install_check'] = array(
 	'edits'	=> array(
 		'core'		=> array(
 			'viewonline.php' => array(
-				'case \'arcade\':',
-				'include($phpbb_root_path . \'includes/arcade/arcade_viewonline.\' . $phpEx);',
+				'case \'tracker\':',
+				'include($phpbb_root_path . \'includes/tracker/tracker_viewonline.\' . $phpEx);',
 			),
 		),
 		'styles'		=> array(

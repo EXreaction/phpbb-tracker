@@ -119,45 +119,6 @@ class install_verify extends module
 			'S_LEGEND'		=> false,
 		));
 
-		// Check for url_fopen
-		if (@ini_get('allow_url_fopen') == '1' || strtolower(@ini_get('allow_url_fopen')) == 'on')
-		{
-			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
-		}
-		else
-		{
-			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
-		}
-
-		$template->assign_block_vars('checks', array(
-			'TITLE'			=> $user->lang['PHP_URL_FOPEN_SUPPORT'],
-			'TITLE_EXPLAIN'	=> $user->lang['PHP_URL_FOPEN_SUPPORT_EXPLAIN'],
-			'RESULT'		=> $result,
-
-			'S_EXPLAIN'		=> true,
-			'S_LEGEND'		=> false,
-		));
-
-
-		// Check for curl
-		if (function_exists('curl_init') && !@ini_get('safe_mode') && !@ini_get('open_basedir'))
-		{
-			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
-		}
-		else
-		{
-			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
-		}
-
-		$template->assign_block_vars('checks', array(
-			'TITLE'			=> $user->lang['PHP_CURL_SUPPORT'],
-			'TITLE_EXPLAIN'	=> $user->lang['PHP_CURL_SUPPORT_EXPLAIN'],
-			'RESULT'		=> $result,
-
-			'S_EXPLAIN'		=> true,
-			'S_LEGEND'		=> false,
-		));
-
 		// Check permissions on files/directories we need access to
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
@@ -165,7 +126,7 @@ class install_verify extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array('arcade', 'arcade/gamedata', 'arcade/games', 'arcade/install');
+		$directories = array('files', 'files/tracker');
 
 		umask(0);
 
@@ -218,8 +179,8 @@ class install_verify extends module
 
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
-			'LEGEND'			=> $user->lang['VERIFY_ARCADE_INSTALLATION'],
-			'LEGEND_EXPLAIN'	=> $user->lang['VERIFY_ARCADE_INSTALLATION_EXPLAIN'],
+			'LEGEND'			=> $user->lang['VERIFY_TRACKER_INSTALLATION'],
+			'LEGEND_EXPLAIN'	=> $user->lang['VERIFY_TRACKER_INSTALLATION_EXPLAIN'],
 		));
 		
 		// Check files exist
@@ -494,23 +455,6 @@ class install_verify extends module
 			unset($row);
 		}
 
-		foreach ($mod_config['arcade_permission_options']['local'] as $value)
-		{
-			$sql = 'SELECT auth_option_id
-				FROM ' . ACL_ARCADE_OPTIONS_TABLE . "
-				WHERE auth_option = '$value'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-
-			if (!$row || $db->sql_error_triggered)
-			{
-				$db->sql_error_triggered = false;
-				$error[] = $value;
-			}
-			unset($row);
-		}
-
 		if (sizeof($error))
 		{
 			$passed['mod'] = false;
@@ -530,7 +474,7 @@ class install_verify extends module
 			'S_LEGEND'		=> false,
 		));
 
-		$tables = array(ACL_OPTIONS_TABLE, ACL_ARCADE_OPTIONS_TABLE);
+		$tables = array(ACL_OPTIONS_TABLE);
 		foreach ($tables as $table)
 		{
 			$sql = 'SELECT auth_option_id, auth_option
@@ -567,7 +511,7 @@ class install_verify extends module
 			}
 			
 			$template->assign_block_vars('checks', array(
-				'TITLE'			=> ($table == ACL_OPTIONS_TABLE) ? $user->lang['VERIFY_DUPLICATE_PERMISSIONS'] : $user->lang['VERIFY_DUPLICATE_ARCADE_PERMISSIONS'],
+				'TITLE'			=> $user->lang['VERIFY_DUPLICATE_PERMISSIONS'],
 				'RESULT'		=> $result,
 
 				'S_EXPLAIN'		=> false,
