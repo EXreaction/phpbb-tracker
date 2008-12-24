@@ -26,6 +26,8 @@ define('TRACKER_POSTS_TABLE',			$table_prefix . 'tracker_posts');
 define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');
 define('TRACKER_HISTORY_TABLE', 		$table_prefix . 'tracker_history');
 define('TRACKER_VERSION_TABLE', 		$table_prefix . 'tracker_version');
+define('TRACKER_PROJECT_WATCH_TABLE', 	$table_prefix . 'tracker_project_watch');
+define('TRACKER_TICKET_WATCH_TABLE', 	$table_prefix . 'tracker_ticket_watch');
 
 // Used when returning allowed attachment extension
 // This will allow use to find all extensions that are
