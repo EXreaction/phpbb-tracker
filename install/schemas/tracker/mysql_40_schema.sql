@@ -131,6 +131,7 @@ CREATE TABLE phpbb_tracker_version (
 	version_id mediumint(8) UNSIGNED NOT NULL auto_increment,
 	project_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	version_name blob NOT NULL,
+	version_enabled tinyint(4) DEFAULT '1' NOT NULL,
 	PRIMARY KEY (version_id)
 );
 

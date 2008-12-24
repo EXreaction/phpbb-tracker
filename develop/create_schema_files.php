@@ -936,6 +936,7 @@ function get_schema_struct()
 			'version_id'			=> array('UINT', NULL, 'auto_increment'),
 			'project_id'			=> array('UINT', 0),
 			'version_name'			=> array('VCHAR_UNI', ''),
+			'version_enabled'		=> array('TINT:4', 1),
 		),
 		'PRIMARY_KEY'	=> 'version_id',
 	);

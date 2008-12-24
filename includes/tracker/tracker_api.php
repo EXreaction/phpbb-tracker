@@ -543,15 +543,35 @@ class tracker_api
 	* @param int $project_id id of project id
 	* @param string $action value must be either 'enable' or 'disable'
 	*/
-	public function set_project_enabled($project_id, $action)
+	public function set_enabled($type, $id, $action)
 	{
 		global $db, $cache;
 
-		if (!$project_id)
+		if (!$id)
 		{
 			return;
 		}
 
+		$type = strtolower($type);
+		$table = $column = $id_name = '';
+		switch ($type)
+		{
+			case 'project':
+				$table = TRACKER_PROJECT_TABLE;
+				$column = 'project_enabled';
+				$id_name = 'project_id';
+			break;
+			
+			case 'version':
+				$table = TRACKER_VERSION_TABLE;
+				$column = 'version_enabled';
+				$id_name = 'version_id';			
+			break;
+			
+			default:
+				trigger_error('NO_MODE');
+			break;
+		}
 		$action = strtolower($action);
 		if ($action == 'enable')
 		{
@@ -566,12 +586,15 @@ class tracker_api
 			return;
 		}
 
-		$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . '
-			SET project_enabled = ' . $status . '
-			WHERE project_id = ' . (int) $project_id;
+		$sql = "UPDATE $table
+			SET $column = $status
+			WHERE $id_name = " . (int) $id;
 		$db->sql_query($sql);
 
-		$cache->destroy('_tracker_projects');
+		if ($type == 'project')
+		{
+			$cache->destroy('_tracker_projects');		
+		}
 	}
 
 	/**
@@ -1495,6 +1518,7 @@ class tracker_api
 	{
 		global $db, $user;
 
+		$where = '';
 		switch ($mode)
 		{
 			case 'priority':
@@ -1503,6 +1527,7 @@ class tracker_api
 
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
+				$where = ' AND version_enabled = ' . TRACKER_PROJECT_ENABLED;
 			break;
 
 			case 'component':
@@ -1518,7 +1543,7 @@ class tracker_api
 		if ($mode == 'component' || $mode == 'version')
 		{
 			$sql = 'SELECT * from ' . $table . '
-				WHERE project_id = ' . $project_id . '
+				WHERE project_id = ' . $project_id . $where . '
 					ORDER BY ' . $mode . '_name ASC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))

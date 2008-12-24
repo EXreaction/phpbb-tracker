@@ -243,6 +243,7 @@ CREATE TABLE phpbb_tracker_version (
 	version_id INT4 DEFAULT nextval('phpbb_tracker_version_seq'),
 	project_id INT4 DEFAULT '0' NOT NULL CHECK (project_id >= 0),
 	version_name varchar(255) DEFAULT '' NOT NULL,
+	version_enabled INT2 DEFAULT '1' NOT NULL,
 	PRIMARY KEY (version_id)
 );
 

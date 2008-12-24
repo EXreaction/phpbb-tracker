@@ -234,7 +234,8 @@ class install_update extends module
 				
 				case '0.1.2':
 					$install_mod->add_permissions($CFG['update_permission_options']['0.1.3']);
-									
+					$this->p_master->set_config('project_view', false);
+					
 				break;
 
 				default:

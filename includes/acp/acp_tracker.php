@@ -139,6 +139,7 @@ class acp_tracker
 				'tickets_per_page'		=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'posts_per_page'		=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'top_reporters'			=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
+				'project_view'			=> array('lang' => 'TRACKER_PROJECT_VIEW',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 			)
 		);
 
@@ -501,7 +502,7 @@ class acp_tracker
 
 			case 'enable':
 			case 'disable':
-				$this->tracker->api->set_project_enabled($project_id, $action);
+				$this->tracker->api->set_enabled('project', $project_id, $action);
 				redirect($this->u_action);
 			break;
 
@@ -875,14 +876,23 @@ class acp_tracker
 				{
 						$template->assign_block_vars('version', array(
 							'VERSION_NAME'		=> $this->tracker->api->set_lang_name($item['version_name']),
+							'VERSION_ENABLED'	=> $item['version_enabled'],
 							'U_EDIT' 			=> "{$this->u_action}&amp;action=edit&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 							'U_DELETE' 			=> "{$this->u_action}&amp;action=delete&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
+							'U_ENABLE' 			=> "{$this->u_action}&amp;action=enable&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
+							'U_DISABLE' 		=> "{$this->u_action}&amp;action=disable&amp;version_id={$item['version_id']}&amp;project_id={$item['project_id']}",
 
 						));
 				}
 
 				$this->set_template_title($mode);
 				return;
+			break;
+			
+			case 'enable':
+			case 'disable':
+				$this->tracker->api->set_enabled('version', $version_id, $action);
+				redirect($this->u_action . "&amp;action=view&amp;project_id=$project_id");
 			break;
 
 			default:

@@ -210,7 +210,8 @@ GO
 CREATE TABLE [phpbb_tracker_version] (
 	[version_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[project_id] [int] DEFAULT (0) NOT NULL ,
-	[version_name] [varchar] (255) DEFAULT ('') NOT NULL 
+	[version_name] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[version_enabled] [int] DEFAULT (1) NOT NULL 
 ) ON [PRIMARY]
 GO
 

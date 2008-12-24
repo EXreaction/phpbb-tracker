@@ -123,6 +123,13 @@ $mod_config = array(
 				),
 			),
 		),
+		'0.1.3'	=> array(
+			'change_columns'		=> array(
+				TRACKER_VERSION_TABLE	=> array(
+					'version_enabled'		=> array('TINT:4', 1),
+				),
+			),
+		),
 	),
 	'update_permission_options' => array(
 		'0.1.3'	=> array(

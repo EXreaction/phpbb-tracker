@@ -79,40 +79,80 @@ class tracker
 		}
 
 		$display_project = false;
-		foreach ($this->api->types as $key => $type)
+		if ($this->api->config['project_view'])
 		{
-			$template->assign_block_vars($type['id'], array());
+			$project_array = array();
 
 			foreach ($row as $item)
 			{
-				if ($item['project_type'] != $key)
-				{
-					continue;
-				}
-
 				if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
 				{
 					if (!group_memberships($item['project_group'], $user->data['user_id'], true))
 					{
 						continue;
 					}
-				}
-
+				}					
+				$project_array[$item['project_name_clean']][] =  $item;				
+			}
+			
+			foreach ($project_array as $projects)
+			{
 				$display_project = true;
-				$template->assign_block_vars($type['id'] . '.project', array(
-					'PROJECT_NAME'				=> $item['project_name'],
-					'PROJECT_DESC'				=> $item['project_desc'],
-					'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
-					'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
+				$template->assign_block_vars('project', array(
+					'PROJECT_NAME'		=> $projects[0]['project_name'],
 				));
+
+				foreach ($projects as $item)
+				{
+					$template->assign_block_vars('project.item', array(
+						'PROJECT_TYPE'				=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
+						'PROJECT_DESC'				=> $item['project_desc'],
+						'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
+						'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
+					));	
+				}
+			}			
+
+		}
+		else
+		{
+			foreach ($this->api->types as $key => $type)
+			{
+				$template->assign_block_vars($type['id'], array());
+
+				foreach ($row as $item)
+				{
+					if ($item['project_type'] != $key)
+					{
+						continue;
+					}
+
+					if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
+					{
+						if (!group_memberships($item['project_group'], $user->data['user_id'], true))
+						{
+							continue;
+						}
+					}
+
+					$display_project = true;
+					$template->assign_block_vars($type['id'] . '.project', array(
+						'PROJECT_NAME'				=> $item['project_name'],
+						'PROJECT_DESC'				=> $item['project_desc'],
+						'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
+						'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
+					));
+				}
 			}
 		}
 
 		// Assign index specific vars
 		$template->assign_vars(array(
-			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
+			'S_TRACKER_PROJECT_VIEW'	=> $this->api->config['project_view'],
 			'S_DISPLAY_PROJECT'			=> $display_project,
 			'S_LOGIN_ACTION'			=> $this->api->build_url('login'),
+			
+			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
 		));
 
 		// Output page

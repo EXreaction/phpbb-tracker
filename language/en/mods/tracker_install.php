@@ -79,7 +79,7 @@ $lang = array_merge($lang, array(
 	'PHPBB_VERSION_REQD'					=> 'phpBB version >= %s',
 	'PHP_SETTINGS'							=> 'phpBB version',
 	'PHP_SETTINGS_EXPLAIN'					=> '<strong>Required</strong> - You must be running at least version %s of phpBB in order to install phpBB Tracker.',
-	
+
 	'REQUIREMENTS_EXPLAIN'					=> 'Before proceeding with the full installation phpBB Tracker will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Tracker. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed. If you wish to use any of the features depending on the optional tests, you should ensure that these tests are passed also.',
 	'REQUIREMENTS_TITLE'					=> 'Installation compatibility',
 
@@ -120,8 +120,6 @@ $lang = array_merge($lang, array(
 	'VERIFY_ALL_MODULES'					=> 'All modules found',
 	'VERIFY_ALL_PERMISSIONS'				=> 'All permissions found',
 	'VERIFY_ALL_TABLES'						=> 'All tables found',
-	'VERIFY_TRACKER_INSTALLATION'			=> 'Verify tracker installation',
-	'VERIFY_TRACKER_INSTALLATION_EXPLAIN'	=> 'This will check to make sure all the tracker is installed correctly.',
 	'VERIFY_CONGRATS_EXPLAIN'				=> '
 		<p>You have now successfully verified the installation of phpBB Tracker %1$s.</p>
 		<p>Clicking the button below will take you to your Administration Control Panel (ACP).</p><p><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong></p>',
@@ -147,6 +145,8 @@ $lang = array_merge($lang, array(
 	'VERIFY_TABLES_EXIST'					=> 'Checking if tables exist',
 	'VERIFY_TABLE_ALTERED'					=> '%s table correctly altered',
 	'VERIFY_TABLE_NOT_ALTERED'				=> 'The following columns are missing from the %s table:<br />%s',
+	'VERIFY_TRACKER_INSTALLATION'			=> 'Verify tracker installation',
+	'VERIFY_TRACKER_INSTALLATION_EXPLAIN'	=> 'This will check to make sure all the tracker is installed correctly.',
 	'VERSION'								=> 'Version',
 
 	'WELCOME_INSTALL'						=> 'Welcome to phpBB Tracker Installation',

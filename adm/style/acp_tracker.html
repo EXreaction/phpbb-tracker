@@ -318,6 +318,7 @@
 		<thead>
 		<tr>
 			<th>{L_TRACKER_VERSION_NAME}</th>
+			<th>{L_TRACKER_VERSION_ENABLED}</th>
 			<th>{L_OPTIONS}</th>
 		</tr>
 		</thead>
@@ -325,6 +326,13 @@
 			<!-- BEGIN version -->
 			<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 				<td>{version.VERSION_NAME}</td>
+				<td>
+					<!-- IF version.VERSION_ENABLED -->
+						<a href="{version.U_DISABLE}">{L_DISABLE}</a>
+					<!-- ELSE -->
+						<a href="{version.U_ENABLE}">{L_ENABLE}</a>
+					<!-- ENDIF -->
+				</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
 					<a href="{version.U_EDIT}">{ICON_EDIT}</a>
 					<a href="{version.U_DELETE}">{ICON_DELETE}</a>

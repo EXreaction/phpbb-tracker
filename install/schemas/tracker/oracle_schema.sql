@@ -294,6 +294,7 @@ CREATE TABLE phpbb_tracker_version (
 	version_id number(8) NOT NULL,
 	project_id number(8) DEFAULT '0' NOT NULL,
 	version_name varchar2(765) DEFAULT '' ,
+	version_enabled number(4) DEFAULT '1' NOT NULL,
 	CONSTRAINT pk_phpbb_tracker_version PRIMARY KEY (version_id)
 )
 /

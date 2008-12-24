@@ -126,7 +126,8 @@ CREATE TABLE phpbb_tracker_history (
 CREATE TABLE phpbb_tracker_version (
 	version_id INTEGER PRIMARY KEY NOT NULL ,
 	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	version_name varchar(255) NOT NULL DEFAULT ''
+	version_name varchar(255) NOT NULL DEFAULT '',
+	version_enabled tinyint(4) NOT NULL DEFAULT '1'
 );
 
 
