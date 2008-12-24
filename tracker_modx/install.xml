@@ -135,6 +135,30 @@
 		$db->sql_query($sql);]]></action>
 			</edit>
 		</open>
+		<open src="includes/acp/acp_language.php">
+			<edit>
+				<find><![CDATA[, 'button_topic_reply']]></find>
+				<inline-edit>
+				<inline-find><![CDATA[, 'button_topic_reply']]></inline-find>
+				<inline-action type="after-add"><![CDATA[, 'button_issue_new']]></inline-action>
+		</inline-edit>
+			</edit>
+		</open>
+		<open src="includes/acp/acp_styles.php">
+			<edit>
+				<find><![CDATA[, 'button_topic_reply']]></find>
+				<inline-edit>
+				<inline-find><![CDATA[, 'button_topic_reply']]></inline-find>
+				<inline-action type="after-add"><![CDATA[, 'button_issue_new']]></inline-action>
+		</inline-edit>
+			</edit>
+		</open>
+		<open src="language/en/acp/styles.php">
+			<edit>
+				<find><![CDATA[	'IMG_BUTTON_TOPIC_REPLY'	=> 'Reply topic',]]></find>
+				<action type="after-add"><![CDATA[	'IMG_BUTTON_NEW_ISSUE'	=> 'New issue',]]></action>
+			</edit>
+		</open>
 		<open src="viewonline.php">
 			<edit>
 				<find><![CDATA[		case 'ucp':

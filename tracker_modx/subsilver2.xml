@@ -23,7 +23,7 @@
 			</author>
 		</author-group>
 		<author-notes><![CDATA[This MOD requires a minimum PHP version of 5.0.0.]]></author-notes>
-		<mod-version>0.1.3</mod-version>
+		<mod-version>0.2.0</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -32,7 +32,7 @@
 	</header>
 	<action-group>
 		<copy>
-			<file from="root/styles/subsilver2/template/tracker/*.*" to="styles/subsilver2/template/tracker/" />
+			<file from="root/styles/subsilver2/*.*" to="styles/subsilver2/" />
 		</copy>
 		<open src="styles/subsilver2/template/overall_header.html">
 			<edit>
@@ -45,6 +45,12 @@
 				<find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>
 ]]></find>
 				<action type="before-add"><![CDATA[<a href="{U_TRACKER}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_TRACKER}</a>&nbsp; &nbsp;]]></action>
+			</edit>
+		</open>
+		<open src="styles/subsilver2/imageset/en/imageset.cfg">
+			<edit>
+				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
+				<action type="after-add"><![CDATA[img_button_issue_new = button_issue_new.gif]]></action>
 			</edit>
 		</open>
 		<diy-instructions lang="en">Once done make sure to purge the cache and/or refresh your styles.</diy-instructions>

@@ -256,7 +256,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'TRACKER_ASSIGNED_USER_ID'		=> $assigned_to_user_id,
 		'TRACKER_CURRENTLY_SHOWING'		=> $currently_showing,
 		'S_CAN_POST_TRACKER'			=> $auth->acl_get('u_tracker_post'),
-		'TICKET_IMG'					=> $user->img('button_topic_new', $user->lang['TRACKER_POST_TICKET']),
+		'TICKET_IMG'					=> $user->img('button_issue_new', $user->lang['TRACKER_POST_TICKET']),
 		'U_POST_NEW_TICKET'				=> $tracker->api->build_url('add', array($project_id, $ticket_id)),
 		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'])),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],

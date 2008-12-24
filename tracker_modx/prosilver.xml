@@ -32,7 +32,7 @@
 	</header>
 	<action-group>
 		<copy>
-			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/" />
+			<file from="root/styles/prosilver/*.*" to="styles/prosilver/" />
 		</copy>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
@@ -45,6 +45,28 @@
 				<find><![CDATA[				<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
 				<action type="before-add"><![CDATA[				<li class="icon-faq"><a href="{U_TRACKER}" title="{L_TRACKER}">{L_TRACKER}</a></li>
 ]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/imageset/en/imageset.cfg">
+			<edit>
+				<find>img_button_topic_reply = button_topic_reply.gif*25*96</find>
+				<action type="after-add">img_button_issue_new = button_issue_new.gif*25*95</action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/theme/buttons.css">
+			<edit>
+				<find><![CDATA[.reply-icon span	{ background: transparent none 0 0 no-repeat; }]]></find>
+				<action type="after-add"><![CDATA[.issue-icon span	{ background: transparent none 0 0 no-repeat; }]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[.buttons div.reply-icon		{ width: {IMG_BUTTON_TOPIC_REPLY_WIDTH}px; height: {IMG_BUTTON_TOPIC_REPLY_HEIGHT}px; }]]></find>
+				<action type="after-add"><![CDATA[.buttons div.issue-icon	{ width: {IMG_BUTTON_ISSUE_NEW_WIDTH}px; height: {IMG_BUTTON_ISSUE_NEW_HEIGHT}px; }]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/theme/colours.css">
+			<edit>
+				<find><![CDATA[.reply-icon span	{ background-image: url("{IMG_BUTTON_TOPIC_REPLY_SRC}"); }]]></find>
+				<action type="after-add"><![CDATA[.issue-icon span	{ background-image: url("{IMG_BUTTON_ISSUE_NEW_SRC}"); }]]></action>
 			</edit>
 		</open>
 		<diy-instructions lang="en">Once done make sure to purge the cache and/or refresh your styles.</diy-instructions>
