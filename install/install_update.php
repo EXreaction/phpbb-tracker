@@ -233,7 +233,8 @@ class install_update extends module
 					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
 				
 				case '0.1.2':
-					$install_mod->add_permissions($CFG['update_permission_options']['0.1.3']);
+					$this->p_master->add_permissions($CFG['update_permission_options']['0.2.0']);
+					$this->p_master->load_tables('0.2.0');
 					$this->p_master->set_config('project_view', false);
 					
 				break;

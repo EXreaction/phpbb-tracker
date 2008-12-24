@@ -23,7 +23,13 @@ if (!is_writable($schema_path))
 	die('Schema path not writable');
 }
 
-$schema_data = get_schema_struct();
+$update = '';
+if (isset($_GET['update']))
+{
+	$update = (string) $_GET['update'];
+}
+
+$schema_data = get_schema_struct($update);
 $dbms_type_map = array(
 	'mysql_41'	=> array(
 		'INT:'		=> 'int(%d)',
@@ -243,7 +249,7 @@ $supported_dbms = array('firebird', 'mssql', 'mysql_40', 'mysql_41', 'oracle', '
 foreach ($supported_dbms as $dbms)
 {
 	//$fp = fopen($schema_path . '_' . $dbms . '_schema.sql', 'wt');
-	$fp = fopen($schema_path . $dbms . '_schema.sql', 'wt');
+	$fp = fopen($schema_path . $update . $dbms . '_schema.sql', 'wt');
 
 	$line = '';
 
@@ -799,10 +805,35 @@ foreach ($supported_dbms as $dbms)
 *	VCHAR_UNI	=> varchar(255) BINARY
 *	VCHAR_CI	=> varchar_ci for postgresql, others VCHAR
 */
-function get_schema_struct()
+function get_schema_struct($update)
 {
 	$schema_data = array();
 
+	switch ($update)
+	{
+		case '0.2.0':
+			$schema_data['phpbb_tracker_project_watch'] = array(
+				'COLUMNS'		=> array(
+					'user_id'		=> array('UINT', 0),
+					'project_id'	=> array('UINT', 0),
+				),
+				'PRIMARY_KEY'	=> array('user_id', 'project_id'),
+			);
+		
+			$schema_data['phpbb_tracker_ticket_watch'] = array(
+				'COLUMNS'		=> array(
+					'user_id'		=> array('UINT', 0),
+					'ticket_id'		=> array('UINT', 0),
+				),
+				'PRIMARY_KEY'	=> array('user_id', 'ticket_id'),
+			);
+
+			return $schema_data;
+		break;
+		
+		default:
+		break;
+	}
 
 	$schema_data['phpbb_tracker_project'] = array(
 		'COLUMNS'		=> array(
@@ -939,6 +970,22 @@ function get_schema_struct()
 			'version_enabled'		=> array('TINT:4', 1),
 		),
 		'PRIMARY_KEY'	=> 'version_id',
+	);
+
+	$schema_data['phpbb_tracker_project_watch'] = array(
+		'COLUMNS'		=> array(
+			'user_id'		=> array('UINT', 0),
+			'project_id'	=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'	=> array('user_id', 'project_id'),
+	);
+
+	$schema_data['phpbb_tracker_ticket_watch'] = array(
+		'COLUMNS'		=> array(
+			'user_id'		=> array('UINT', 0),
+			'ticket_id'		=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'	=> array('user_id', 'ticket_id'),
 	);
 
 	return $schema_data;

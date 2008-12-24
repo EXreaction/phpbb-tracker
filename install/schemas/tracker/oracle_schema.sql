@@ -316,3 +316,25 @@ END;
 /
 
 
+/*
+	Table: 'phpbb_tracker_project_watch'
+*/
+CREATE TABLE phpbb_tracker_project_watch (
+	user_id number(8) DEFAULT '0' NOT NULL,
+	project_id number(8) DEFAULT '0' NOT NULL,
+	CONSTRAINT pk_phpbb_tracker_project_watch PRIMARY KEY (user_id, project_id)
+)
+/
+
+
+/*
+	Table: 'phpbb_tracker_ticket_watch'
+*/
+CREATE TABLE phpbb_tracker_ticket_watch (
+	user_id number(8) DEFAULT '0' NOT NULL,
+	ticket_id number(8) DEFAULT '0' NOT NULL,
+	CONSTRAINT pk_phpbb_tracker_ticket_watch PRIMARY KEY (user_id, ticket_id)
+)
+/
+
+

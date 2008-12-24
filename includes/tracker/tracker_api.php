@@ -1198,7 +1198,7 @@ class tracker_api
 			include($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
 		}
 
-		$messenger = new messenger(false);
+		$messenger = new messenger();
 
 		$messenger->subject($subject);
 		$messenger->template($email_template, 'en');
@@ -1206,7 +1206,8 @@ class tracker_api
 
 		$messenger->assign_vars($email_template_vars);
 
-		$messenger->send(NOTIFY_EMAIL);
+		$messenger->send();
+		$messenger->save_queue();
 	}
 
 	public function process_notification($data, $ticket)

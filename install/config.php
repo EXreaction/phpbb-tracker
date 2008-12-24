@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 
 $mod_config = array(
 	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.1.3',
+	'mod_version'				=> '0.2.0',
 	'phpbb_version'				=> '3.0.0',
 	'data_file'					=> 'schemas/tracker/schema_data.sql',
 	'remove_data_file'			=> 'schemas/tracker/remove_schema_data.sql',
@@ -123,7 +123,7 @@ $mod_config = array(
 				),
 			),
 		),
-		'0.1.3'	=> array(
+		'0.2.0'	=> array(
 			'change_columns'		=> array(
 				TRACKER_VERSION_TABLE	=> array(
 					'version_enabled'		=> array('TINT:4', 1),
@@ -132,7 +132,7 @@ $mod_config = array(
 		),
 	),
 	'update_permission_options' => array(
-		'0.1.3'	=> array(
+		'0.2.0'	=> array(
 			'local'		=> array(),
 			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all'),
 		),
