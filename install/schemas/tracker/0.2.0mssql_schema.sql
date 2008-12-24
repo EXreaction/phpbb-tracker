@@ -26,16 +26,16 @@ GO
 
 
 /*
-	Table: 'phpbb_tracker_ticket_watch'
+	Table: 'phpbb_tracker_tickets_watch'
 */
-CREATE TABLE [phpbb_tracker_ticket_watch] (
+CREATE TABLE [phpbb_tracker_tickets_watch] (
 	[user_id] [int] DEFAULT (0) NOT NULL ,
 	[ticket_id] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [phpbb_tracker_ticket_watch] WITH NOCHECK ADD 
-	CONSTRAINT [PK_phpbb_tracker_ticket_watch] PRIMARY KEY  CLUSTERED 
+ALTER TABLE [phpbb_tracker_tickets_watch] WITH NOCHECK ADD 
+	CONSTRAINT [PK_phpbb_tracker_tickets_watch] PRIMARY KEY  CLUSTERED 
 	(
 		[user_id],
 		[ticket_id]

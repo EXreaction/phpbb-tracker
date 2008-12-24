@@ -139,8 +139,8 @@ CREATE TABLE phpbb_tracker_project_watch (
 );
 
 
-# Table: 'phpbb_tracker_ticket_watch'
-CREATE TABLE phpbb_tracker_ticket_watch (
+# Table: 'phpbb_tracker_tickets_watch'
+CREATE TABLE phpbb_tracker_tickets_watch (
 	user_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	ticket_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (user_id, ticket_id)

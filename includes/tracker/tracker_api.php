@@ -914,7 +914,7 @@ class tracker_api
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
 		
-		$table = ($mode == 'ticket') ? TRACKER_TICKET_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
+		$table = ($mode == 'ticket') ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
 		$column = ($mode == 'ticket') ? 'ticket_id' : 'project_id';
 		
 		$sql = "SELECT user_id FROM $table
@@ -939,7 +939,7 @@ class tracker_api
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
 		
-		$table = ($project_id && $ticket_id) ? TRACKER_TICKET_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
+		$table = ($project_id && $ticket_id) ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
 		$column = ($project_id && $ticket_id) ? 'ticket_id' : 'project_id';
 		$id = ($project_id && $ticket_id) ? $ticket_id : $project_id;
 		
@@ -969,7 +969,7 @@ class tracker_api
 	}
 
 	/**
-	*Send email notification to required parties
+	* Send email notification to required parties
 	*/
 	public function send_notification($data, $type)
 	{
@@ -983,6 +983,8 @@ class tracker_api
 		$subject = $email_template = $email_address = '';
 		$email_template_vars = array();
 		$board_url = generate_board_url() . '/';
+		
+		$send = true;
 
 		switch ($type)
 		{
@@ -996,9 +998,12 @@ class tracker_api
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
+				
+				$data['ticket_user_id'] =  $user->data['user_id'];
 
 				$subject = $this->format_subject($data['ticket_title'], $data['project_id'], $data['ticket_id']);
 				$email_address = $user->data['user_email'];
+				$email_lang = $user->data['user_lang'];
 				strip_bbcode($data['ticket_desc'], $data['ticket_desc_uid']);
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user->data['username']),
@@ -1025,22 +1030,28 @@ class tracker_api
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
+				$data['ticket_user_id'] = $row['ticket_user_id'];
+				$data['project_id'] = $row['project_id'];
+				$data['ticket_title'] = $row['ticket_title'];
+				
 				// We don't need to let the user know if they post in there own ticket
 				if ($row['ticket_user_id'] == $user->data['user_id'])
 				{
-					return;
+					$send = false;
+					break;
 				}
-
+				
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
 					if (!group_memberships($this->projects[$row['project_id']]['project_group'], $row['ticket_user_id'], true))
 					{
-						return;
+						$send = false;
+						break;
 					}
 				}
 
-				$sql = 'SELECT username, user_email
+				$sql = 'SELECT username, user_email, user_lang
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
@@ -1049,6 +1060,7 @@ class tracker_api
 
 				$subject = $this->format_subject($row['ticket_title'], $row['project_id'], $data['ticket_id']);
 				$email_address = $user_row['user_email'];
+				$email_lang = $user_row['user_lang'];
 				strip_bbcode($data['post_desc'], $data['post_desc_uid']);
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
@@ -1075,17 +1087,22 @@ class tracker_api
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
-
+				
+				$data['ticket_user_id'] =  $row['ticket_user_id'];
+				$data['ticket_title'] = $row['ticket_title'];
+				$data['project_id'] = $row['project_id'];
+				
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
 					if (!group_memberships($this->projects[$row['project_id']]['project_group'], $row['ticket_user_id'], true))
 					{
-						return;
+						$send = false;
+						break;
 					}
 				}
 
-				$sql = 'SELECT username, user_email
+				$sql = 'SELECT username, user_email, user_lang
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
@@ -1144,6 +1161,7 @@ class tracker_api
 
 				$subject = $this->format_subject($row['ticket_title'], $row['project_id'], $data['ticket_id']);
 				$email_address = $user_row['user_email'];
+				$email_lang = $user_row['user_lang'];
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 					'CHANGE_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
@@ -1170,16 +1188,21 @@ class tracker_api
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
+				$data['ticket_user_id'] =  $row['ticket_user_id'];
+				$data['ticket_title'] = $row['ticket_title'];
+				$data['project_id'] = $row['project_id'];
+				
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
 					if (!group_memberships($this->projects[$row['project_id']]['project_group'], $row['ticket_user_id'], true))
 					{
-						return;
+						$send = false;
+						break;
 					}
 				}
 
-				$sql = 'SELECT username, user_email
+				$sql = 'SELECT username, user_email, user_lang
 							FROM ' . USERS_TABLE . '
 						WHERE user_id = ' . $row['ticket_user_id'];
 				$result = $db->sql_query($sql);
@@ -1229,6 +1252,7 @@ class tracker_api
 
 				$subject = $this->format_subject($row['ticket_title'], $row['project_id'], $data['ticket_id']);
 				$email_address = $user_row['user_email'];
+				$email_lang = $user_row['user_lang'];
 				$email_template_vars = array(
 					'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 					'CHANGE_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
@@ -1251,21 +1275,162 @@ class tracker_api
 			break;
 		}
 
-		if (!class_exists('messenger'))
+		if ($send)
 		{
-			include($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
+			if (!class_exists('messenger'))
+			{
+				include($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
+			}
+
+			$messenger = new messenger();
+
+			$messenger->subject($subject);
+			$messenger->template($email_template, $email_lang);
+			$messenger->to($email_address);
+
+			$messenger->assign_vars($email_template_vars);
+
+			$messenger->send();
+			$messenger->save_queue();
 		}
+		
+		$this->send_subscription($data);
+	}
+	
+	public function send_subscription($data)
+	{
+		global $phpbb_root_path, $phpEx, $user, $config, $db;
+		
+		// Do not notify banned users, the user who triggered the notice
+		// or the original user who placed the ticket they will get a notice
+		// anyways
+		$sql = 'SELECT ban_userid
+			FROM ' . BANLIST_TABLE . '
+			WHERE ban_userid <> 0
+				AND ban_exclude <> 1';
+		$result = $db->sql_query($sql);
 
-		$messenger = new messenger();
+		$sql_ignore_users = ANONYMOUS . ', ' . $user->data['user_id']. ', ' . $data['ticket_user_id'];
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$sql_ignore_users .= ', ' . (int) $row['ban_userid'];
+		}
+		$db->sql_freeresult($result);
+		
+		// If ticket is hidden then we won't notify anyone
+		if (isset($data['ticket_hidden']) && $data['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
+		{
+			return;
+			//if (!group_memberships($this->projects[$data['project_id']]['project_group'], $row['ticket_user_id'], true))
+			//{
+			//	$send = false;
+			//	break;
+			//}
+		}
+		
+		$user_ids = array();
+		$sql_array = array(
+			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang',
 
-		$messenger->subject($subject);
-		$messenger->template($email_template, 'en');
-		$messenger->to($email_address);
+			'FROM'		=> array(
+				TRACKER_PROJECT_WATCH_TABLE	=> 'p',
+			),
 
-		$messenger->assign_vars($email_template_vars);
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'p.user_id = u.user_id',
+				),
+			),
 
-		$messenger->send();
-		$messenger->save_queue();
+			'WHERE'		=> 'p.project_id = ' . $data['project_id'] . '
+				AND u.user_id NOT IN('. $sql_ignore_users .')',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
+		
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$user_ids[$row['user_id']] = array(
+				'user_id'		=> $row['user_id'],
+				'username'		=> $row['username'],
+				'user_email'	=> $row['user_email'],
+			);
+		}
+		$db->sql_freeresult($result);
+		
+		$sql_array = array(
+			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang',
+
+			'FROM'		=> array(
+				TRACKER_TICKETS_WATCH_TABLE	=> 't',
+			),
+
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 't.user_id = u.user_id',
+				),
+			),
+
+			'WHERE'		=> 't.ticket_id = ' . $data['ticket_id'] . '
+				AND u.user_id NOT IN('. $sql_ignore_users .')',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
+		
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if (!isset($user_ids[$row['user_id']]))
+			{
+				$user_ids[$row['user_id']] = array(
+					'user_id'		=> $row['user_id'],
+					'username'		=> $row['username'],
+					'user_email'	=> $row['user_email'],
+					'user_lang'		=> $row['user_lang'],
+				);
+			}
+		}
+		$db->sql_freeresult($result);
+		
+		// Alright we should now have all the user we want to notify
+		// So we can now get ready to send...
+		
+		if (sizeof($user_ids))
+		{
+			if (!class_exists('messenger'))
+			{
+				include($phpbb_root_path . 'includes/functions_messenger.'.$phpEx);
+			}
+
+			$messenger = new messenger();
+
+			foreach ($user_ids as $users)
+			{
+				$subject = $this->format_subject($data['ticket_title'], $data['project_id'], $data['ticket_id']);
+				$email_address = $users['user_email'];
+				strip_bbcode($data['ticket_desc'], $data['ticket_desc_uid']);
+				$email_template_vars = array(
+					'USERNAME'					=> htmlspecialchars_decode($users['username']),
+					'TICKET_URL'				=> $board_url . $this->build_url('clean_ticket', array($data['project_id'], $data['ticket_id'])),
+					'TICKET_ID'					=> $data['ticket_id'],
+					'PROJECT_UNSUBSCRIBE_URL'	=> $board_url . $this->build_url('unsubscribe_p', array($data['project_id'])),
+					'TICKET_UNSUBSCRIBE_URL'	=> $board_url . $this->build_url('unsubscribe_t', array($data['project_id'], $data['ticket_id'])),
+					'TICKET_TITLE'				=> htmlspecialchars_decode($data['ticket_title']),		
+					'TRACKER_URL'				=> $board_url . $this->build_url('clean_index'),
+					'TRACKER_TYPE'				=> $this->get_type_option('title', $data['project_id']),
+					'SITE_NAME'					=> htmlspecialchars_decode($config['sitename']),
+				);
+			
+				$messenger->subject($subject);
+				$messenger->template('tracker_notify_watch', $users['user_lang']);
+				$messenger->to($email_address);
+
+				$messenger->assign_vars($email_template_vars);
+
+				$messenger->send();
+			}
+			$messenger->save_queue();
+		}
+		
 	}
 
 	public function process_notification($data, $ticket)

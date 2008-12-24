@@ -820,7 +820,7 @@ function get_schema_struct($update)
 				'PRIMARY_KEY'	=> array('user_id', 'project_id'),
 			);
 		
-			$schema_data['phpbb_tracker_ticket_watch'] = array(
+			$schema_data['phpbb_tracker_tickets_watch'] = array(
 				'COLUMNS'		=> array(
 					'user_id'		=> array('UINT', 0),
 					'ticket_id'		=> array('UINT', 0),
@@ -980,7 +980,7 @@ function get_schema_struct($update)
 		'PRIMARY_KEY'	=> array('user_id', 'project_id'),
 	);
 
-	$schema_data['phpbb_tracker_ticket_watch'] = array(
+	$schema_data['phpbb_tracker_tickets_watch'] = array(
 		'COLUMNS'		=> array(
 			'user_id'		=> array('UINT', 0),
 			'ticket_id'		=> array('UINT', 0),
