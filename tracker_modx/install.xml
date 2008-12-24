@@ -71,7 +71,11 @@
 				<date>2008-xx-xx</date>
 				<rev-version>0.1.3</rev-version>
 				<changelog lang="en">
-					<change>Updated minimum PHP version to 5.0.0.</change>
+					<change>Added selectable project view type inside acp</change>
+					<change>Added ability to enable/disable versions</change>
+					<change>Updated modx to version 1.2.1</change>
+					<change>Updated installation script</change>
+					<change>Updated minimum PHP version to 5.0.0.</change>				
 				</changelog>
 			</entry>
 		</history>
@@ -116,6 +120,19 @@
 		$user->add_lang('mods/tracker');
 		$template->assign_var('U_TRACKER', append_sid("{$phpbb_root_path}tracker.$phpEx"));
 	}]]></action>
+			</edit>
+		</open>
+		<open src="includes/fuctions_user.php">
+			<edit>
+				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+				<action type="after-add"><![CDATA[		
+		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
+		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
+		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE . " SET last_visit_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('last_visit_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
 			</edit>
 		</open>
 		<open src="viewonline.php">
