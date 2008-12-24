@@ -53,6 +53,6 @@
 				<action type="after-add"><![CDATA[img_button_issue_new = button_issue_new.gif]]></action>
 			</edit>
 		</open>
-		<diy-instructions lang="en">Once done make sure to purge the cache and/or refresh your styles.</diy-instructions>
+		<diy-instructions lang="en">Once done make sure to purge the cache and refresh your styles templates, themes and imageset.</diy-instructions>
 	</action-group>
 </mod>
