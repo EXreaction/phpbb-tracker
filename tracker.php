@@ -43,6 +43,8 @@ $user_id				= request_var('u', 0);
 $assigned_to_user_id	= request_var('at', 0);
 $status_type			= request_var('st', TRACKER_ALL_OPENED);
 $start					= request_var('start', 0);
+$subscribe				= request_var('subscribe', '');
+$unsubscribe			= request_var('unsubscribe', '');
 
 $submit					= (isset($_POST['submit'])) ? true : false;
 $submit_mod				= (isset($_POST['submit_mod'])) ? true : false;
@@ -71,6 +73,17 @@ if ($mode == 'statistics')
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 {
+	if ($subscribe != '')
+	{
+		$tracker->api->subscribe('subscribe', $project_id, $ticket_id);
+	}
+	else if ($unsubscribe != '')
+	{
+		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);	
+	}
+	
+	$is_subscribed = $tracker->api->is_subscribed('project', $project_id);
+	
 	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
 
 	$sql_where = 't.project_id = ' . $project_id;
@@ -261,6 +274,9 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'])),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],
 
+		'U_WATCH_PROJECT'				=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_p', array($project_id)) : $tracker->api->build_url('subscribe_p', array($project_id)),		
+		'L_WATCH_PROJECT'				=> ($is_subscribed) ? $user->lang['TRACKER_UNWATCH_PROJECT'] : $user->lang['TRACKER_WATCH_PROJECT'],
+	
 		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? $tracker->api->build_url('project_st_u', array($project_id, $status_type, $user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $user->data['user_id'], $user_id)),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
@@ -284,6 +300,17 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 }
 else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode == 'reply' || $mode == 'delete') || ($mode == 'edit' && $post_id)))
 {
+	if ($subscribe != '')
+	{
+		$tracker->api->subscribe('subscribe', $project_id, $ticket_id);
+	}
+	else if ($unsubscribe != '')
+	{
+		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);	
+	}
+	
+	$is_subscribed = $tracker->api->is_subscribed('ticket', $ticket_id);
+	
 	if ($mode == 'delete')
 	{
 		$tracker->display_delete($project_id, $post_id, $ticket_id);
@@ -726,9 +753,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'U_POST_REPLY_TICKET'		=> $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		'U_SEND_PM'					=> $tracker->api->build_url('compose_pm', array($row['ticket_user_id'])),
 		'U_REPORTERS_TICKETS'		=> $tracker->api->build_url('project_st_u', array($project_id, TRACKER_ALL, $row['ticket_user_id'])),
-		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),
+
+		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),		
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
+		'U_WATCH_TICKET'			=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_t', array($project_id, $ticket_id)) : $tracker->api->build_url('subscribe_t', array($project_id, $ticket_id)),		
+		'L_WATCH_TICKET'			=> ($is_subscribed) ? $user->lang['TRACKER_UNWATCH_TICKET'] : $user->lang['TRACKER_WATCH_TICKET'],
+		
 		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
 
 		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',

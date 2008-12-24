@@ -909,6 +909,64 @@ class tracker_api
 			$db->sql_build_array('INSERT', $data);
 		$db->sql_query($sql);
 	}
+	
+	public function is_subscribed($mode, $id)
+	{
+		global $phpbb_root_path, $phpEx, $user, $config, $db;
+		
+		$table = ($mode == 'ticket') ? TRACKER_TICKET_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
+		$column = ($mode == 'ticket') ? 'ticket_id' : 'project_id';
+		
+		$sql = "SELECT user_id FROM $table
+			WHERE $column = '$id'
+				AND user_id = '" . $user->data['user_id'] . "'";
+		$result = $db->sql_query($sql);
+
+		$row = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+
+		if (!$row)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	public function subscribe($mode, $project_id, $ticket_id)
+	{
+		global $phpbb_root_path, $phpEx, $user, $config, $db;
+		
+		$table = ($project_id && $ticket_id) ? TRACKER_TICKET_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
+		$column = ($project_id && $ticket_id) ? 'ticket_id' : 'project_id';
+		$id = ($project_id && $ticket_id) ? $ticket_id : $project_id;
+		
+		if ($mode == 'subscribe')
+		{
+			$sql = "UPDATE $table
+				SET $column = '$id'
+				WHERE user_id = '" . $user->data['user_id'] . "'";
+			$db->sql_query($sql);
+
+			if (!$db->sql_affectedrows())
+			{
+				$sql = 'INSERT INTO ' . $table . ' ' . $db->sql_build_array('INSERT', array(
+					'user_id'	=> $user->data['user_id'],
+					$column		=> $id,
+				));
+				$db->sql_query($sql);
+			}
+		}
+		else
+		{
+			$sql = "DELETE FROM $table
+				WHERE $column = '$id' 
+					AND user_id = '" . $user->data['user_id'] . "'";
+			$db->sql_query($sql);
+		}		
+	}
 
 	/**
 	*Send email notification to required parties

@@ -299,6 +299,7 @@
 		<h3 style="border-bottom: none; margin-top: 5px;">{L_OPTIONS}</h3>
 		<ul class="menu">
 				<li<!-- IF not S_MANAGE_TICKET or S_TICKET_REPLY --> class="last"<!-- ENDIF -->><a href="{U_VIEW_TICKET_HISTORY}">{L_TICKET_HISTORY}</a></li>
+				<li><a href="{U_WATCH_TICKET}">{L_WATCH_TICKET}</a></li>
 				<!-- IF not S_TICKET_REPLY -->
 					<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><li><label for="au"><strong>{L_TRACKER_ASSIGN_USER}:</strong></label> <select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></li><!-- ENDIF -->
 					<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS --><li><label for="cs"><strong>{L_TRACKER_CHANGE_STATUS}:</strong></label> <select id="cs" name="cs">{S_STATUS_OPTIONS}</select></li><!-- ENDIF -->
