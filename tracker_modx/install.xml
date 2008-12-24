@@ -80,8 +80,8 @@
 		<copy>
 			<file from="root/tracker.php" to="tracker.php" />
 			<file from="root/adm/style/acp_tracker.html" to="adm/style/acp_tracker.html" />
-			<file from="root/tracker_install/*.*" to="tracker_install/" />
-			<file from="root/tracker_install/schemas/*.*" to="tracker_install/schemas/" />
+			<file from="root/install/*.*" to="install/" />
+			<file from="root/install/schemas/*.*" to="install/schemas/" />
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php" />
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php" />
 			<file from="root/includes/tracker/tracker_api.php" to="includes/tracker/tracker_api.php" />
@@ -148,7 +148,7 @@
 		break;]]></action>
 			</edit>
 		</open>
-		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/tracker_install/install.php
-Once done make sure to remove tracker_install folder from your server.</diy-instructions>
+		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/install/index.php
+Once done make sure to remove install folder from your server.</diy-instructions>
 	</action-group>
 </mod>
