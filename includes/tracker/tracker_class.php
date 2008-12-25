@@ -837,14 +837,21 @@ class tracker
 		}
 	}
 
-	public function check_permission($mode, $project_id)
+	public function check_permission($mode, $project_id, $return = true)
 	{
 		global $auth, $user;
 
 		// Check if user can view tracker
 		if (!$auth->acl_get('u_tracker_view'))
 		{
-			trigger_error('NO_PERMISSION_TRACKER_VIEW');
+			if ($return)
+			{
+				return false;
+			}
+			else
+			{
+				trigger_error('NO_PERMISSION_TRACKER_VIEW');
+			}
 		}
 
 		switch ($mode)
@@ -853,24 +860,49 @@ class tracker
 			case 'add':
 				if (!$auth->acl_get('u_tracker_post') || !$user->data['is_registered'])
 				{
-					trigger_error('NO_PERMISSION_TRACKER_POST');
+					if ($return)
+					{
+						return false;
+					}
+					else
+					{
+						trigger_error('NO_PERMISSION_TRACKER_POST');
+					}
 				}
 			break;
 
 			case 'edit':
 				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_edit') && !$auth->acl_get('u_tracker_edit_all') && !$auth->acl_get('u_tracker_edit_global'))
 				{
-					trigger_error('NO_PERMISSION_TRACKER_EDIT');
+					if ($return)
+					{
+						return false;
+					}
+					else
+					{
+						trigger_error('NO_PERMISSION_TRACKER_EDIT');
+					}
 				}
 			break;
 
 			case 'delete':
 				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_delete_global') && (!$auth->acl_get('u_tracker_delete_all') || !$this->can_manage))
 				{
-					trigger_error('TRACKER_DELETE_NO_PERMISSION');
+					if ($return)
+					{
+						return false;
+					}
+					else
+					{
+						trigger_error('TRACKER_DELETE_NO_PERMISSION');
+					}
 				}
 			break;
+			
+			default:
+			break;
 		}
+		return true;
 	}
 
 	public function check_exists($project_id)
