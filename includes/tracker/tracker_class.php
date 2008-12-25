@@ -38,8 +38,8 @@ class tracker
 		}
 
 		// Do not change order of following includes
-		include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_cache.' . $phpEx);
+		include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
 		include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
 
@@ -237,11 +237,11 @@ class tracker
 						$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$row['extension']]['upload_icon']) . '" alt="" />';
 					}
 				}
-
-				$filesize = $row['filesize'];
-				$size_lang = ($filesize >= 1048576) ? $user->lang['MB'] : ( ($filesize >= 1024) ? $user->lang['KB'] : $user->lang['BYTES'] );
-				$filesize = ($filesize >= 1048576) ? round((round($filesize / 1048576 * 100) / 100), 2) : (($filesize >= 1024) ? round((round($filesize / 1024 * 100) / 100), 2) : $filesize);
 			}
+			
+			$filesize = $row['filesize'];
+			$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
+			$filesize = get_formatted_filesize($filesize, false);
 
 			$template->assign_block_vars('comments', array(
 				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id),
@@ -260,7 +260,7 @@ class tracker
 
 				'UPLOAD_ICON'			=> ($row['attach_id']) ? $upload_icon : '',
 				'FILESIZE'				=> ($row['attach_id']) ? $filesize : '',
-				'SIZE_LANG'				=> ($row['attach_id']) ? $size_lang : '',
+				'SIZE_LANG'				=> ($row['attach_id']) ? $size_lang: '',
 				'DOWNLOAD_NAME'			=> ($row['attach_id']) ? basename($row['real_filename']) : '',
 			));
 		}
@@ -777,14 +777,18 @@ class tracker
 				$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$attachment['extension']]['upload_icon']) . '" alt="" />';
 			}
 		}
+		
+		$filesize = $attachment['filesize'];
+		$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
+		$filesize = get_formatted_filesize($filesize, false);
 
 		$template->assign_vars(array(
 			'S_SHOW_ATTACHMENTS'	=> true,
 			'U_DOWNLOAD_LINK'		=> $u_download_link,
 
 			'UPLOAD_ICON'			=> $upload_icon,
-			'FILESIZE'				=> $attachment['filesize'],
-			'SIZE_LANG'				=> get_formatted_filesize($attachment['filesize']),
+			'FILESIZE'				=> $filesize,
+			'SIZE_LANG'				=> $size_lang,
 			'DOWNLOAD_NAME'			=> basename($attachment['real_filename']),
 		));
 	}
@@ -837,7 +841,7 @@ class tracker
 		}
 	}
 
-	public function check_permission($mode, $project_id, $return = true)
+	public function check_permission($mode, $project_id, $return = false)
 	{
 		global $auth, $user;
 
