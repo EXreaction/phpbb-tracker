@@ -945,6 +945,7 @@ class tracker_url_builder
 {
 	public $url_base;
 	public $url_ary = array(
+		'index'				=> '',
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
 		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
