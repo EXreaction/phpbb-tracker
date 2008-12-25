@@ -74,6 +74,7 @@
 					<change>Added selectable project view type inside acp</change>
 					<change>Added new issue buttons to prosilver and subsilver2</change>
 					<change>Added ability to enable/disable versions</change>
+					<change>Added ticket and project subscriptions</change>
 					<change>Updated modx to version 1.2.1</change>
 					<change>Updated installation script</change>
 					<change>Updated minimum PHP version to 5.0.0.</change>				
