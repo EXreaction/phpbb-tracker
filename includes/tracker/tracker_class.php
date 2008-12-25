@@ -946,7 +946,7 @@ class tracker_url_builder
 	public $url_base;
 	public $clean_url_base;
 	public $url_ary = array(
-		'index'				=> '',
+		'index'				=> false,
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
 		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
@@ -1019,7 +1019,7 @@ class tracker_url_builder
 		}
 		else
 		{
-			return ($append_sid) ? (($this->url_ary[$mode]) ? append_sid($this->url_base, $this->url_ary[$mode]) : append_sid($this->url_base)) : (($this->url_ary[$mode]) ? $this->clean_url_base . '?' . $this->url_ary[$mode] : $this->clean_url_base);
+			return ($append_sid) ? append_sid($this->url_base, $this->url_ary[$mode]) : $this->clean_url_base . (($this->url_ary[$mode]) ? '?' . $this->url_ary[$mode] : '');
 		}
 	}
 }
