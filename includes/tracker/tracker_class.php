@@ -945,11 +945,10 @@ class tracker_url_builder
 {
 	public $url_base;
 	public $url_ary = array(
-		'index'				=> '',
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
 		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
-		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%4$s&amp;u=%3$s',
+		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;u=%4$s',
 		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
 		'ticket'			=> 'p=%1$s&amp;t=%2$s',
 		'subscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;subscribe=true',
@@ -994,6 +993,9 @@ class tracker_url_builder
 			break;
 			case 'login':
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
+			break;
+			case 'index':
+				return append_sid("{$phpbb_root_path}tracker.$phpEx");
 			break;
 			default:
 				if (isset($this->url_ary[$mode]))
