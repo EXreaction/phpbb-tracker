@@ -944,6 +944,7 @@ class tracker
 class tracker_url_builder
 {
 	public $url_base;
+	public $clean_url_base;
 	public $url_ary = array(
 		'index'				=> '',
 		'project'			=> 'p=%1$s',
@@ -975,6 +976,7 @@ class tracker_url_builder
 		global $phpbb_root_path, $phpEx;
 
 		$this->url_base = "{$phpbb_root_path}tracker.$phpEx";
+		$this->clean_url_base = "tracker.$phpEx";
 	}
 
 	public function build($mode, $args)
@@ -995,17 +997,14 @@ class tracker_url_builder
 			case 'login':
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
 			break;
-			case 'index':
-				return append_sid("{$phpbb_root_path}tracker.$phpEx");
-			break;
 			default:
 				if (isset($this->url_ary[$mode]))
 				{
 					return $this->_build($mode, $args);
 				}
-				else if (strpos($mode, 'clean_') === 0 && isset($this->url_ary[substr($mode, 0, strlen('clean_'))]))
+				else if (strpos($mode, 'clean_') === 0 && isset($this->url_ary[substr($mode, strlen('clean_'))]))
 				{
-					return $this->_build(substr($mode, 0, strlen('clean_')), $args, false);
+					return $this->_build(substr($mode, strlen('clean_')), $args, false);
 				}
 				return $this->_build('index', NULL);
 			break;
@@ -1016,11 +1015,11 @@ class tracker_url_builder
 	{
 		if (is_array($args) && sizeof($args))
 		{
-			return ($append_sid) ? append_sid($this->url_base, vsprintf($this->url_ary[$mode], $args)) : vsprintf($this->url_ary[$mode], $args);
+			return ($append_sid) ? append_sid($this->url_base, vsprintf($this->url_ary[$mode], $args)) : $this->clean_url_base . '?' . str_replace('&amp;', '&', vsprintf($this->url_ary[$mode], $args));
 		}
 		else
 		{
-			return ($append_sid) ? append_sid($this->url_base, $this->url_ary[$mode]) : $this->url_ary[$mode];
+			return ($append_sid) ? (($this->url_ary[$mode]) ? append_sid($this->url_base, $this->url_ary[$mode]) : append_sid($this->url_base)) : (($this->url_ary[$mode]) ? $this->clean_url_base . '?' . $this->url_ary[$mode] : $this->clean_url_base);
 		}
 	}
 }
