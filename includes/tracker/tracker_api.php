@@ -1302,8 +1302,7 @@ class tracker_api
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
 		
 		// Do not notify banned users, the user who triggered the notice
-		// or the original user who placed the ticket they will get a notice
-		// anyways
+		// or the original user who placed the ticket (they will get a notice anyways)
 		$sql = 'SELECT ban_userid
 			FROM ' . BANLIST_TABLE . '
 			WHERE ban_userid <> 0
