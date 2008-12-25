@@ -218,13 +218,14 @@ class tracker
 			$upload_icon = $filesize = $size_lang = $u_download_link = '';
 			if ($row['attach_id'])
 			{
-				$download_type = '';
 				if ($this->api->extensions[$row['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
 				{
-					$download_type = 'view';
+					$u_download_link = $this->api->build_url('download_type', array($row['attach_id'], 'view'));
 				}
-
-				$u_download_link = $this->api->build_url('download', array($row['attach_id'], $download_type));
+				else
+				{
+					$u_download_link = $this->api->build_url('download', array($row['attach_id']));
+				}
 
 				if (isset($this->api->extensions[$row['extension']]))
 				{
@@ -758,13 +759,14 @@ class tracker
 
 		$upload_icon = '';
 
-		$download_type = '';
 		if ($this->api->extensions[$attachment['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
 		{
-			$download_type = 'view';
+			$u_download_link = $this->api->build_url('download_type', array($attachment['attach_id'], 'view'));
 		}
-
-		$u_download_link = $this->api->build_url('download', array($attachment['attach_id'], $download_type));
+		else
+		{
+			$u_download_link = $this->api->build_url('download', array($attachment['attach_id']));
+		}
 
 		if (isset($this->api->extensions[$attachment['extension']]))
 		{
@@ -996,7 +998,8 @@ class tracker_url_builder
 		'history'			=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
 		'statistics'		=> 'mode=statistics',
 		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
-		'download'			=> 'mode=download&amp;id=%1$s&amptype=%2$s',
+		'download'			=> 'mode=download&amp;id=%1$s',
+		'download_type'		=> 'mode=download&amp;id=%1$s&amp;type=%2$s',
 		'delete'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
 		'delete_pid'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
 		'edit'				=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
