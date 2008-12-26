@@ -1,34 +1,45 @@
 <!-- IF S_IN_CHANGELOG -->
 <!-- INCLUDE simple_header.html -->
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js"></script>
+	<!-- IF S_HAS_CHANGELOG -->
+		<script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js"></script>
 
-<h2>{PAGE_TITLE}</h2>
-<h3>{L_TRACKER_CHANGELOG_EXAMPLE}</h3>
-<div class="post bg1">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
-			<div class="content">{OUTPUT}</div>
+		<h2>{PAGE_TITLE}</h2>
+		<h3>{L_TRACKER_CHANGELOG_EXAMPLE}</h3>
+		<div class="post bg1">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
+					<div class="content">{OUTPUT}</div>
+				</div>
+			<span class="corners-bottom"><span></span></span></div>
 		</div>
-	<span class="corners-bottom"><span></span></span></div>
-</div>
 
-<h3>{L_TRACKER_CHANGELOG_HTML}</h3>
-<div class="post bg1">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
-			<div class="content">{HTML_CHANGELOG}</div>
+		<h3>{L_TRACKER_CHANGELOG_HTML}</h3>
+		<div class="post bg1">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
+					<div class="content">{HTML_CHANGELOG}</div>
+				</div>
+			<span class="corners-bottom"><span></span></span></div>
 		</div>
-	<span class="corners-bottom"><span></span></span></div>
-</div>
 
-<h3>{L_TRACKER_CHANGELOG_BBCODE}</h3>
-<div class="post bg1">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
-			<div class="content">{BBCODE_CHANGELOG}</div>
+		<h3>{L_TRACKER_CHANGELOG_BBCODE}</h3>
+		<div class="post bg1">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
+					<div class="content">{BBCODE_CHANGELOG}</div>
+				</div>
+			<span class="corners-bottom"><span></span></span></div>
 		</div>
-	<span class="corners-bottom"><span></span></span></div>
-</div>
+	<!-- ELSE -->
+		<h3>{PAGE_TITLE}</h3>
+		<div class="post bg1">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto; ">
+					<div class="content" style="text-align: center;">{L_TRACKER_NO_CHANGELOG}</div>
+				</div>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+	<!-- ENDIF -->
 <br /><br /><div class="genmed" style="text-align: center;"><a href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a></div><br /><br />
 <!-- INCLUDE simple_footer.html -->
 <!-- ELSE -->
@@ -173,7 +184,7 @@
 			<tbody>
 				<!-- BEGIN version -->
 				<!-- IF version.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 700, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}">{version.VERSION_NAME}</a></td>
+						<td><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
 						<td>{version.TOTAL}</td>
 					</tr>
 				<!-- END version -->

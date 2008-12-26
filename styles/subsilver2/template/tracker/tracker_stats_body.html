@@ -1,5 +1,6 @@
 <!-- IF S_IN_CHANGELOG -->
 <!-- INCLUDE simple_header.html -->
+	<!-- IF S_HAS_CHANGELOG -->
 	<table class="tablebg" cellspacing="1" width="100%">
 		<tr>
 			<td class="cat"><b class="genmed">{PAGE_TITLE}</b></td>
@@ -23,7 +24,16 @@
 			<td><div class="postbody">{BBCODE_CHANGELOG}</div></td>
 		</tr>
 	</table>
-	
+	<!-- ELSE -->
+	<table class="tablebg" cellspacing="1" width="100%">
+		<tr>
+			<td class="cat"><b class="genmed">{PAGE_TITLE}</b></td>
+		</tr>
+		<tr class="row1">
+			<td><div class="postbody" style="text-align: center;">{L_TRACKER_NO_CHANGELOG}</div></td>
+		</tr>
+	</table>
+	<!-- ENDIF -->
 	<br /><br /><div class="genmed" style="text-align: center;"><a href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a></div><br /><br />
 <!-- INCLUDE simple_footer.html -->
 <!-- ELSE -->
@@ -140,7 +150,7 @@
 	</tr>
 	<!-- BEGIN version -->
 	<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 700, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}">{version.VERSION_NAME}</a></td>
+			<td><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
 			<td><b>{version.TOTAL}</b></td>
 		</tr>
 	<!-- END version -->

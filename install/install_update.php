@@ -238,6 +238,7 @@ class install_update extends module
 					$this->p_master->add_permissions($mod_config['update_permission_options']['0.2.0']);
 					$this->p_master->load_tables('0.2.0');
 					$this->p_master->set_config('project_view', false);
+					$this->p_master->set_config('default_status_type', TRACKER_ALL_OPENED);
 					
 				break;
 

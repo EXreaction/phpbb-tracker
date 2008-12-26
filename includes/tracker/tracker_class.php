@@ -797,54 +797,58 @@ class tracker
 			$changes['bbcode'][] = '[list]';
 			$changes['html'][] = '<span style="font-size: 120%; line-height: normal; font-weight: bold;">' . $page_title . '</span>';
 			$changes['html'][] = '<ul>';
-		}
 		
-		foreach ($row as $fixed)
-		{
-			$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
-			$changes['bbcode'][] = "[*][url=$ticket_url]{$fixed['ticket_title']}[/url]";
-			$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
-		}
+			foreach ($row as $fixed)
+			{
+				$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
+				$changes['bbcode'][] = "[*][url=$ticket_url]{$fixed['ticket_title']}[/url]";
+				$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
+			}
 		
-		if (sizeof($row))
-		{
+
 			$changes['bbcode'][] = '[/list]';
 			$changes['html'][] = '</ul>';
+		
+			// Output
+			$output = implode("\n", $changes['bbcode']);		
+			$uid = $bitfield = $options = ''; 
+			$allow_bbcode = $allow_urls = $allow_smilies = true;
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
+
+			// BBCode
+			
+			$uid = $bitfield = $options = ''; 
+			$allow_bbcode = $allow_urls = $allow_smilies = true;
+			$output = '[code]' . implode("\n", $changes['bbcode']) . '[/code]';
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			$bbcode_output = generate_text_for_display($output, $uid, $bitfield, $options);
+			
+			// HTML
+			$uid = $bitfield = $options = ''; 
+			$allow_bbcode = $allow_urls = $allow_smilies = true;
+			$output = '[code]' . $output_text . '[/code]';
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			$html_output = generate_text_for_display($output, $uid, $bitfield, $options);
+			
+					
+			$template->assign_vars(array(
+				'S_HAS_CHANGELOG'		=> true,
+				'OUTPUT'				=> $output_text,
+				'BBCODE_CHANGELOG'		=> $bbcode_output,
+				'HTML_CHANGELOG'		=> $html_output,
+			));
+		
 		}
+		
 		
 		// Output page
 		page_header($page_title, false);
-		
-		// Output
-		$output = implode("\n", $changes['bbcode']);		
-		$uid = $bitfield = $options = ''; 
-		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
-		$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
-
-		// BBCode
-		
-		$uid = $bitfield = $options = ''; 
-		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		$output = '[code]' . implode("\n", $changes['bbcode']) . '[/code]';
-		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
-		$bbcode_output = generate_text_for_display($output, $uid, $bitfield, $options);
-		
-		// HTML
-		$uid = $bitfield = $options = ''; 
-		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		$output = '[code]' . $output_text . '[/code]';
-		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
-		$html_output = generate_text_for_display($output, $uid, $bitfield, $options);
-		
 		
 		$template->assign_vars(array(
 			'S_IN_CHANGELOG'		=> true,
 			
 			'PAGE_TITLE'			=> $page_title,
-			'OUTPUT'				=> $output_text,
-			'BBCODE_CHANGELOG'		=> $bbcode_output,
-			'HTML_CHANGELOG'		=> $html_output,
 		));
 
 		$template->set_filenames(array(

@@ -130,16 +130,17 @@ class acp_tracker
 			'title'			=> 'ACP_TRACKER_SETTINGS',
 			'title_explain'	=> 'ACP_TRACKER_SETTINGS_EXPLAIN',
 			'vars'	=> array(
-				'legend1'				=> 'ACP_TRACKER_VERSION_INFO',
-				'version'				=> array('lang' => 'TRACKER_VERSION', 	'validate' => 'string', 'type' => 'custom', 'method' => 'tracker_version', 'explain' => true),
+				'legend1'					=> 'ACP_TRACKER_VERSION_INFO',
+				'version'					=> array('lang' => 'TRACKER_VERSION', 	'validate' => 'string', 'type' => 'custom', 'method' => 'tracker_version', 'explain' => true),
 
-				'legend2'				=> 'ACP_TRACKER_SETTINGS_GENERAL',
-				'attachment_path'		=> array('lang' => 'TRACKER_ATTACHMENT_PATH',		'validate' => 'path', 	'type' => 'text:30:65', 	'explain' => true),
-				'send_email'			=> array('lang' => 'TRACKER_SEND_EMAIL',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-				'tickets_per_page'		=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-				'posts_per_page'		=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-				'top_reporters'			=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-				'project_view'			=> array('lang' => 'TRACKER_PROJECT_VIEW',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
+				'legend2'					=> 'ACP_TRACKER_SETTINGS_GENERAL',
+				'attachment_path'			=> array('lang' => 'TRACKER_ATTACHMENT_PATH',		'validate' => 'path', 	'type' => 'text:30:65', 	'explain' => true),
+				'send_email'				=> array('lang' => 'TRACKER_SEND_EMAIL',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
+				'tickets_per_page'			=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
+				'posts_per_page'			=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
+				'top_reporters'				=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
+				'project_view'				=> array('lang' => 'TRACKER_PROJECT_VIEW',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
+				'default_status_type'		=> array('lang' => 'TRACKER_DEFAULT_STATUS_TYPE',	'validate' => 'int', 	'type' => 'select', 		'explain' => true, 'method' => 'default_status_type_select'),
 		));
 
 		$this->new_config = $this->tracker->api->config;
@@ -943,6 +944,13 @@ class acp_tracker
 		global $user;
 
 		return $this->tracker->api->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="version_check" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
+	}
+	
+	function default_status_type_select($value, $key = '')
+	{
+		global $user;
+
+		return '<option value="' . TRACKER_ALL . '"' . (($value == TRACKER_ALL) ? ' selected="selected"' : '') . '>' . $user->lang['TRACKER_ALL'] . '</option><option value="' . TRACKER_ALL_OPENED . '"' . (($value == TRACKER_ALL_OPENED) ? ' selected="selected"' : '') . '>' . $user->lang['TRACKER_ALL_OPENED'] . '</option><option value="' . TRACKER_ALL_CLOSED . '"' . (($value == TRACKER_ALL_CLOSED) ? ' selected="selected"' : '') . '>' . $user->lang['TRACKER_ALL_CLOSED'] . '</option>';
 	}
 
 }
