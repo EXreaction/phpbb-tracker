@@ -368,8 +368,8 @@ class acp_tracker
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
 						'show_php'				=> request_var('show_php', 0),
-						'show_dbms'				=> request_var('show_php', 0),
-						'lang_php'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
+						'show_dbms'				=> request_var('show_dbms', 0),
+						'lang_php'				=> utf8_normalize_nfc(request_var('lang_php', '', true)),
 						'lang_dbms'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
 					);
 
@@ -405,8 +405,8 @@ class acp_tracker
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
 						'show_php'				=> request_var('show_php', 0),
-						'show_dbms'				=> request_var('show_php', 0),
-						'lang_php'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
+						'show_dbms'				=> request_var('show_dbms', 0),
+						'lang_php'				=> utf8_normalize_nfc(request_var('lang_php', '', true)),
 						'lang_dbms'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
 					);
 

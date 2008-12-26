@@ -46,7 +46,7 @@ $tracker_types[1] = array(
 	'show_component'	=> true,
 	'show_priority' 	=> true,
 	'show_severity' 	=> false,
-	'show_environment' 	=> false,
+	'show_environment' 	=> true,
 	'status' 			=> $status_type['feature'],
 );
 

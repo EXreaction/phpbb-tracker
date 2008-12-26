@@ -97,6 +97,10 @@ class tracker_cache extends cache
 					'project_type'			=> $row['project_type'],
 					'project_security'		=> $row['project_security'],
 					'project_group'			=> $row['project_group'],
+					'show_php'				=> $row['show_php'],
+					'lang_php'				=> $row['lang_php'],
+					'show_dbms'				=> $row['show_dbms'],
+					'lang_dbms'				=> $row['lang_dbms'],
 					'group_name'			=> $row['group_name'],
 					'group_colour'			=> $row['group_colour'],
 				);

@@ -728,6 +728,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 
+		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
+		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
+		
+		'L_TRACKER_TICKET_PHP_DETAIL'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_DETAIL'),
+		'L_TRACKER_TICKET_DBMS_DETAIL'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_DETAIL'),
+		
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
@@ -1018,6 +1024,20 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'PROJECT_ID'				=> $project_id,
 		'PROJECT_NAME'				=> $tracker->api->projects[$project_id]['project_name'],
 		'PROJECT_TYPE'				=> $tracker->api->get_type_option('title', $project_id),
+		
+		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
+		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],		
+		
+		'L_TRACKER_TICKET_PHP'					=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php']),
+		'L_TRACKER_TICKET_PHP_EXPLAIN'			=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN'),
+		'L_TRACKER_TICKET_PHP_EXPLAIN_BAD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN_BAD'),
+		'L_TRACKER_TICKET_PHP_EXPLAIN_GOOD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN_GOOD'),
+		
+		'L_TRACKER_TICKET_DBMS'					=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms']),
+		'L_TRACKER_TICKET_DBMS_EXPLAIN'			=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN'),
+		'L_TRACKER_TICKET_DBMS_EXPLAIN_BAD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN_BAD'),
+		'L_TRACKER_TICKET_DBMS_EXPLAIN_GOOD'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN_GOOD'),
+		
 		'TICKET_TITLE'				=> $ticket_data['ticket_title'],
 		'TICKET_DESC'				=> $ticket_desc['text'],
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],

@@ -51,20 +51,24 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 
-	<!-- IF S_TICKET_ENVIRONMENT -->
+	<!-- IF S_TICKET_ENVIRONMENT and (S_SHOW_PHP or S_SHOW_DBMS) -->
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
 			<h3>{L_TRACKER_ENVIRONMENT}</h3>
 			<p>{L_TRACKER_ENVIRONMENT_EXPLAIN}</p>
+			<!-- IF S_SHOW_PHP -->
 			<dl>
 				<dt><label for="ticket_php">{L_TRACKER_TICKET_PHP}:</label><br /><span>{L_TRACKER_TICKET_PHP_EXPLAIN}</span></dt>
 				<dd><input type="text" id="ticket_php" name="ticket_php" value="{TICKET_PHP}" class="inputbox narrow" /><br /><span class="small">{L_TRACKER_TICKET_PHP_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_PHP_EXPLAIN_GOOD}</span></dd>
 			</dl>
+			<!-- ENDIF -->
+			<!-- IF S_SHOW_DBMS -->
 			<dl>
 				<dt><label for="ticket_dbms">{L_TRACKER_TICKET_DBMS}:</label><br /><span>{L_TRACKER_TICKET_DBMS_EXPLAIN}</span></dt>
 				<dd><input type="text" id="ticket_dbms" name="ticket_dbms" value="{TICKET_DBMS}" class="inputbox narrow" /><br /><span class="small">{L_TRACKER_TICKET_DBMS_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_DBMS_EXPLAIN_GOOD}</span></dd>
 			</dl>
+			<!-- ENDIF -->
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>

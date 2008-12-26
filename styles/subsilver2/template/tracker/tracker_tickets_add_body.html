@@ -54,21 +54,25 @@
 	<td class="row2" width="78%"><select id="version_id" name="version_id">{S_VERSION_OPTIONS}</select></td>
 </tr>
 <!-- ENDIF -->
-<!-- IF S_TICKET_ENVIRONMENT -->
+<!-- IF S_TICKET_ENVIRONMENT and (S_SHOW_PHP or S_SHOW_DBMS) -->
 <tr>
 	<th colspan="2"><b>{L_TRACKER_ENVIRONMENT}</b></th>
 </tr>
 <tr>
 	<td class="row2" colspan="2" align="center"><span class="genmed">{L_TRACKER_ENVIRONMENT_EXPLAIN}</span></td>
 </tr>
+<!-- IF S_SHOW_PHP -->
 <tr>
 	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_PHP}:</b><br />{L_TRACKER_TICKET_PHP_EXPLAIN}</td>
 	<td class="row2" width="78%"><input type="text" id="ticket_php" name="ticket_php" value="{TICKET_PHP}" size="45" maxlength="60" /><br /><span class="small">{L_TRACKER_TICKET_PHP_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_PHP_EXPLAIN_GOOD}</span></td>
 </tr>
+<!-- ENDIF -->
+<!-- IF S_SHOW_DBMS -->
 <tr>
 	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_DBMS}:</b><br />{L_TRACKER_TICKET_DBMS_EXPLAIN}</td>
 	<td class="row2" width="78%"><input type="text" id="ticket_dbms" name="ticket_dbms" value="{TICKET_DBMS}" size="45" maxlength="60" /><br /><span class="small">{L_TRACKER_TICKET_DBMS_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_DBMS_EXPLAIN_GOOD}</span></td>
 </tr>
+<!-- ENDIF -->
 <!-- ENDIF -->
 <tr>
 	<th colspan="2"><b>{L_TRACKER_TICKET}</b></th>
