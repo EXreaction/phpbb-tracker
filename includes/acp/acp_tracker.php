@@ -140,8 +140,7 @@ class acp_tracker
 				'posts_per_page'		=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'top_reporters'			=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'project_view'			=> array('lang' => 'TRACKER_PROJECT_VIEW',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
-			)
-		);
+		));
 
 		$this->new_config = $this->tracker->api->config;
 		$cfg_array = (isset($_REQUEST['config'])) ? utf8_normalize_nfc(request_var('config', array('' => ''), true)) : $this->new_config;
@@ -368,6 +367,10 @@ class acp_tracker
 						'project_type'			=> request_var('project_type', 0),
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
+						'show_php'				=> request_var('show_php', 0),
+						'show_dbms'				=> request_var('show_php', 0),
+						'lang_php'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
+						'lang_dbms'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
 					);
 
 					if (utf8_clean_string($project_data['project_name']) === '')
@@ -401,6 +404,10 @@ class acp_tracker
 						'project_type'			=> request_var('project_type', 0),
 						'project_enabled'		=> request_var('project_enabled', 0),
 						'project_security'		=> request_var('project_security', 0),
+						'show_php'				=> request_var('show_php', 0),
+						'show_dbms'				=> request_var('show_php', 0),
+						'lang_php'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
+						'lang_dbms'				=> utf8_normalize_nfc(request_var('lang_dbms', '', true)),
 					);
 
 					$this->tracker->api->update_project($project_data, $project_id);
@@ -471,6 +478,10 @@ class acp_tracker
 						'project_type'		=> 0,
 						'project_enabled'	=> false,
 						'project_security'	=> false,
+						'show_php'			=> true,
+						'show_dbms'			=> true,
+						'lang_php'			=> 'TRACKER_TICKET_PHP',
+						'lang_dbms'			=> 'TRACKER_TICKET_DBMS',
 					));
 				}
 
@@ -493,6 +504,11 @@ class acp_tracker
 					'PROJECT_TYPE'					=> $project_data['project_type'],
 					'PROJECT_ENABLED'				=> $project_data['project_enabled'],
 					'PROJECT_SECURITY'				=> $project_data['project_security'],
+					
+					'SHOW_PHP'						=> $project_data['show_php'],
+					'LANG_PHP'						=> $project_data['lang_php'],
+					'SHOW_DBMS'						=> $project_data['show_dbms'],
+					'LANG_DBMS'						=> $project_data['lang_dbms'],
 				));
 
 				$this->set_template_title($mode);

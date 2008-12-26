@@ -214,6 +214,22 @@
 			<dt><label for="project_security">{L_TRACKER_PROJECT_SECURITY}</label><br /><span>{L_TRACKER_PROJECT_SECURITY_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" name="project_security" <!-- IF PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_security" <!-- IF not PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
 		</dl>
+		<dl>
+			<dt><label for="show_php">{L_TRACKER_PROJECT_SHOW_PHP}</label><br /><span>{L_TRACKER_PROJECT_SHOW_PHP_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" name="show_php" <!-- IF SHOW_PHP -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_php" <!-- IF not SHOW_PHP -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+		</dl>
+		<dl>
+			<dt><label for="lang_php">{L_TRACKER_PROJECT_LANG_PHP}</label><br /><span>{L_TRACKER_PROJECT_LANG_PHP_EXPLAIN}</span></dt>
+			<dd><input type="text" id="lang_php" name="lang_php" size="60" maxlength="255" value="{LANG_PHP}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="show_dbms">{L_TRACKER_PROJECT_SHOW_DBMS}</label><br /><span>{L_TRACKER_PROJECT_SHOW_DBMS_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" name="show_dbms" <!-- IF SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_dbms" <!-- IF not SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+		</dl>
+		<dl>
+			<dt><label for="lang_dbms">{L_TRACKER_PROJECT_LANG_DBMS}</label><br /><span>{L_TRACKER_PROJECT_LANG_DBMS_EXPLAIN}</span></dt>
+			<dd><input type="text" id="lang_dbms" name="lang_dbms" size="60" maxlength="255" value="{LANG_DBMS}" /></dd>
+		</dl>
 		</fieldset>
 
 		<input type="hidden" name="project_id" value="{PROJECT_ID}" />

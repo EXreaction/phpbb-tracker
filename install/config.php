@@ -124,9 +124,15 @@ $mod_config = array(
 			),
 		),
 		'0.2.0'	=> array(
-			'change_columns'		=> array(
+			'add_columns'		=> array(
 				TRACKER_VERSION_TABLE	=> array(
 					'version_enabled'		=> array('TINT:4', 1),
+				),
+				TRACKER_PROJECT_TABLE	=> array(
+					'show_php'				=> array('TINT:4', 0),
+					'show_dbms'				=> array('TINT:4', 0),
+					'lang_php'				=> array('VCHAR', 'TRACKER_TICKET_PHP'),
+					'lang_dbms'				=> array('VCHAR', 'TRACKER_TICKET_DBMS'),
 				),
 			),
 		),

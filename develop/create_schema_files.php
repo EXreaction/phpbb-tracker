@@ -845,7 +845,10 @@ function get_schema_struct($update)
 			'project_type'			=> array('TINT:4', 0),
 			'project_enabled'		=> array('TINT:4', 0),
 			'project_security'		=> array('TINT:4', 0),
-
+			'show_php'				=> array('TINT:4', 0),
+			'show_dbms'				=> array('TINT:4', 0),
+			'lang_php'				=> array('VCHAR', ''),
+			'lang_dbms'				=> array('VCHAR', ''),
 		),
 		'PRIMARY_KEY'	=> 'project_id',
 	);

@@ -203,7 +203,7 @@ class install_update extends module
 			switch ($this->p_master->installed_version)
 			{
 				case '0.1.0':
-					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.1']);
 
 					$sql = 'SELECT project_name, project_id
 						FROM ' . TRACKER_PROJECT_TABLE;
@@ -229,12 +229,13 @@ class install_update extends module
 					
 				case '0.1.1':
 					// This is need because of a bug when installing 0.1.1 new
-					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.1']);
-					$phpbb_db_tools->perform_schema_changes($CFG['update_schema_changes']['0.1.2']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.2']);
 				
 				case '0.1.2':
 				case '0.1.3':
-					$this->p_master->add_permissions($CFG['update_permission_options']['0.2.0']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.2.0']);
+					$this->p_master->add_permissions($mod_config['update_permission_options']['0.2.0']);
 					$this->p_master->load_tables('0.2.0');
 					$this->p_master->set_config('project_view', false);
 					

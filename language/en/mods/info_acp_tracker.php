@@ -87,6 +87,16 @@ $lang = array_merge($lang, array(
 	'LOG_TRACKER_VERSION_DELETE'				=> '<strong>Deleted tracker project version</strong><br />» %s',
 	'LOG_TRACKER_VERSION_EDIT'					=> '<strong>Altered tracker project version</strong><br />» %s',
 
+	'TRACKER_PROJECT_SHOW_PHP'					=> 'Show PHP version in project',
+	'TRACKER_PROJECT_SHOW_PHP_EXPLAIN'			=> 'If enabled this will allow the users to enter this information with the ticket and be displayed throughout the tracker.',
+	'TRACKER_PROJECT_LANG_PHP'					=> 'PHP version language variable',
+	'TRACKER_PROJECT_LANG_PHP_EXPLAIN'			=> 'By default this is TRACKER_TICKET_PHP, to change add another value to the language file.  You will have to add 5 language string.  For example if you change this to NEW_LANG you will need to add NEW_LANG, NEW_LANG_DETAIL, NEW_LANG_EXPLAIN, NEW_LANG_EXPLAIN_BAD, NEW_LANG_EXPLAIN_GOOD to the language file.',
+	
+	'TRACKER_PROJECT_SHOW_DBMS'					=> 'Show DBMS version in project',
+	'TRACKER_PROJECT_SHOW_DBMS_EXPLAIN'			=> 'If enabled this will allow the users to enter this information with the ticket and be displayed throughout the tracker.',
+	'TRACKER_PROJECT_LANG_DBMS'					=> 'DBMS version language variable',
+	'TRACKER_PROJECT_LANG_DBMS_EXPLAIN'			=> 'By default this is TRACKER_TICKET_DBMS, to change add another value to the language file.  You will have to add 5 language string.  For example if you change this to NEW_LANG you will need to add NEW_LANG, NEW_LANG_DETAIL, NEW_LANG_EXPLAIN, NEW_LANG_EXPLAIN_BAD, NEW_LANG_EXPLAIN_GOOD to the language file.',
+	
 	'TRACKER_ATTACHMENT_PATH'					=> 'Attachment path',
 	'TRACKER_ATTACHMENT_PATH_EXPLAIN'			=> 'Path where the attachments for the tracker will be uploaded.',
 	'TRACKER_CHECK_UPDATES'						=> 'Check for updates',
