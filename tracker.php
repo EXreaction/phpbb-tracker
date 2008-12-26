@@ -38,6 +38,7 @@ $mode					= request_var('mode', '');
 $term					= utf8_normalize_nfc(request_var('term', '', true));
 $ticket_id				= request_var('t', 0);
 $project_id				= request_var('p', 0);
+$version_id				= request_var('v', 0);
 $post_id				= request_var('pid', 0);
 $user_id				= request_var('u', 0);
 $assigned_to_user_id	= request_var('at', 0);
@@ -69,6 +70,11 @@ if (!empty($project_id))
 if ($mode == 'statistics')
 {
 	$tracker->display_statistics($project_id);
+}
+
+if ($mode == 'changelog' && $project_id && $version_id)
+{
+	$tracker->display_changelog($project_id, $version_id);
 }
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)

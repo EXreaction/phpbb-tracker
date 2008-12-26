@@ -672,6 +672,8 @@ class tracker
 			foreach ($row as $item)
 			{
 				$template->assign_block_vars('version', array(
+					'U_VIEW_CHANGELOG'		=> $this->api->build_url('changelog', array($project_id, $item['version_id'])),
+					
 					'VERSION_NAME'			=> $this->api->set_lang_name($item['version_name']),
 					'TOTAL'					=> (isset($version_count[$item['version_id']])) ? $version_count[$item['version_id']] : 0,
 				));
@@ -751,6 +753,106 @@ class tracker
 		);
 
 		page_footer();
+	}
+	
+	public function display_changelog($project_id, $version_id)
+	{
+		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
+		
+		$sql = 'SELECT version_name
+			FROM ' . TRACKER_VERSION_TABLE . "
+			WHERE version_id = $version_id";
+		$result = $db->sql_query($sql);
+		$version_name = (string) $db->sql_fetchfield('version_name');
+		$db->sql_freeresult($result);
+		
+		$sql_array = array(
+			'SELECT'	=> 't.ticket_id,
+							t.ticket_title,
+							t.status_id,
+							t.version_id',
+
+			'FROM'		=> array(
+				TRACKER_TICKETS_TABLE => 't',
+			),
+			
+			'WHERE'		=> "t.version_id = $version_id AND " . $db->sql_in_set('t.status_id', array(15, 16)),
+
+			'ORDER_BY'	=>	't.ticket_id ASC',
+
+		);
+
+		$sql = $db->sql_build_query('SELECT', $sql_array);
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+
+		$changes = array();
+		$board_url = generate_board_url() . '/';
+		$page_title = sprintf($user->lang['TRACKER_VERSION_CHANGELOG'], $this->api->projects[$project_id]['project_name'], $version_name);
+		
+		if (sizeof($row))
+		{
+			$changes['bbcode'][] = '[size=120][b]' . $page_title . '[/b][/size]';
+			$changes['bbcode'][] = '[list]';
+			$changes['html'][] = '<span style="font-size: 120%; line-height: normal; font-weight: bold;">' . $page_title . '</span>';
+			$changes['html'][] = '<ul>';
+		}
+		
+		foreach ($row as $fixed)
+		{
+			$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
+			$changes['bbcode'][] = "[*][url=$ticket_url]{$fixed['ticket_title']}[/url]";
+			$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
+		}
+		
+		if (sizeof($row))
+		{
+			$changes['bbcode'][] = '[/list]';
+			$changes['html'][] = '</ul>';
+		}
+		
+		// Output page
+		page_header($page_title, false);
+		
+		// Output
+		$output = implode("\n", $changes['bbcode']);		
+		$uid = $bitfield = $options = ''; 
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+		$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
+
+		// BBCode
+		
+		$uid = $bitfield = $options = ''; 
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		$output = '[code]' . implode("\n", $changes['bbcode']) . '[/code]';
+		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+		$bbcode_output = generate_text_for_display($output, $uid, $bitfield, $options);
+		
+		// HTML
+		$uid = $bitfield = $options = ''; 
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		$output = '[code]' . $output_text . '[/code]';
+		generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+		$html_output = generate_text_for_display($output, $uid, $bitfield, $options);
+		
+		
+		$template->assign_vars(array(
+			'S_IN_CHANGELOG'		=> true,
+			
+			'PAGE_TITLE'			=> $page_title,
+			'OUTPUT'				=> $output_text,
+			'BBCODE_CHANGELOG'		=> $bbcode_output,
+			'HTML_CHANGELOG'		=> $html_output,
+		));
+
+		$template->set_filenames(array(
+			'body' => 'tracker/tracker_stats_body.html')
+		);
+
+		page_footer();
+		
 	}
 
 	public function display_ticket_attachment($attachment)
@@ -995,6 +1097,7 @@ class tracker_url_builder
 		'unsubscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;unsubscribe=true',
 		'subscribe_p'		=> 'p=%1$s&amp;subscribe=true',
 		'unsubscribe_p'		=> 'p=%1$s&amp;unsubscribe=true',
+		'changelog'			=> 'mode=changelog&amp;p=%1$s&amp;v=%2$s',
 		'history'			=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
 		'statistics'		=> 'mode=statistics',
 		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',

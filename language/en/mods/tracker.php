@@ -242,11 +242,17 @@ $lang = array_merge($lang, array(
 	'TRACKER_VERSION'						=> 'Version',
 	'TRACKER_VERSION_NAME'					=> 'Version Name',
 	'TRACKER_VERSION_STATS'					=> 'Tickets by version',
+	'TRACKER_VERSION_VIEW_CHANGELOG'		=> 'View changelog',
+	'TRACKER_VERSION_CHANGELOG'				=> '%s - version %s changelog',
 	'TRACKER_VIEW_STATISTICS'				=> 'View statistics',
 	'TRACKER_VIEW_TICKET_HISTORY'			=> 'View ticket history',
 	'TRACKER_WILL_NOT_FIX'					=> 'Will not fix',
 	'TRACKER_WILL_NOT_IMPLEMENT'			=> 'Will not implement',
 
+	'TRACKER_CHANGELOG_EXAMPLE'				=> 'Example output',
+	'TRACKER_CHANGELOG_HTML'				=> 'HTML',
+	'TRACKER_CHANGELOG_BBCODE'				=> 'BBCode',
+	
 	'VIEWING_TRACKER'						=> 'Viewing tracker',
 	'VIEWING_TRACKER_PROJECT'				=> 'Viewing %s - %s',
 	'VIEWING_TRACKER_STATISTICS'			=> 'Viewing tracker statistics for %s - %s',
