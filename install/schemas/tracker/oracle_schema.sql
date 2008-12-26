@@ -53,6 +53,10 @@ CREATE TABLE phpbb_tracker_project (
 	project_type number(4) DEFAULT '0' NOT NULL,
 	project_enabled number(4) DEFAULT '0' NOT NULL,
 	project_security number(4) DEFAULT '0' NOT NULL,
+	show_php number(4) DEFAULT '0' NOT NULL,
+	show_dbms number(4) DEFAULT '0' NOT NULL,
+	lang_php varchar2(255) DEFAULT '' ,
+	lang_dbms varchar2(255) DEFAULT '' ,
 	CONSTRAINT pk_phpbb_tracker_project PRIMARY KEY (project_id)
 )
 /

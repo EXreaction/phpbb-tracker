@@ -13,7 +13,11 @@ CREATE TABLE phpbb_tracker_project (
 	project_group INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	project_type tinyint(4) NOT NULL DEFAULT '0',
 	project_enabled tinyint(4) NOT NULL DEFAULT '0',
-	project_security tinyint(4) NOT NULL DEFAULT '0'
+	project_security tinyint(4) NOT NULL DEFAULT '0',
+	show_php tinyint(4) NOT NULL DEFAULT '0',
+	show_dbms tinyint(4) NOT NULL DEFAULT '0',
+	lang_php varchar(255) NOT NULL DEFAULT '',
+	lang_dbms varchar(255) NOT NULL DEFAULT ''
 );
 
 

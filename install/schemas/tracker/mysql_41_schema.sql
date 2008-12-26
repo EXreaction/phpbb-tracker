@@ -12,6 +12,10 @@ CREATE TABLE phpbb_tracker_project (
 	project_type tinyint(4) DEFAULT '0' NOT NULL,
 	project_enabled tinyint(4) DEFAULT '0' NOT NULL,
 	project_security tinyint(4) DEFAULT '0' NOT NULL,
+	show_php tinyint(4) DEFAULT '0' NOT NULL,
+	show_dbms tinyint(4) DEFAULT '0' NOT NULL,
+	lang_php varchar(255) DEFAULT '' NOT NULL,
+	lang_dbms varchar(255) DEFAULT '' NOT NULL,
 	PRIMARY KEY (project_id)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 

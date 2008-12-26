@@ -98,6 +98,10 @@ CREATE TABLE phpbb_tracker_project (
 	project_type INT2 DEFAULT '0' NOT NULL,
 	project_enabled INT2 DEFAULT '0' NOT NULL,
 	project_security INT2 DEFAULT '0' NOT NULL,
+	show_php INT2 DEFAULT '0' NOT NULL,
+	show_dbms INT2 DEFAULT '0' NOT NULL,
+	lang_php varchar(255) DEFAULT '' NOT NULL,
+	lang_dbms varchar(255) DEFAULT '' NOT NULL,
 	PRIMARY KEY (project_id)
 );
 

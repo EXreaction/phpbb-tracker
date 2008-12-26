@@ -12,7 +12,11 @@ CREATE TABLE phpbb_tracker_project (
 	project_group INTEGER DEFAULT 0 NOT NULL,
 	project_type INTEGER DEFAULT 0 NOT NULL,
 	project_enabled INTEGER DEFAULT 0 NOT NULL,
-	project_security INTEGER DEFAULT 0 NOT NULL
+	project_security INTEGER DEFAULT 0 NOT NULL,
+	show_php INTEGER DEFAULT 0 NOT NULL,
+	show_dbms INTEGER DEFAULT 0 NOT NULL,
+	lang_php VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
+	lang_dbms VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL
 );;
 
 ALTER TABLE phpbb_tracker_project ADD PRIMARY KEY (project_id);;
