@@ -16,7 +16,7 @@
 
 <div id="col1">
 <!-- IF not S_TICKET_REPLY -->
-	<h3 style="color: #D21A4E;"><!-- IF TICKET_CLOSED --><strike><!-- ENDIF -->{TICKET_TITLE}<span style="color: black;"> {TICKET_STATUS}</span><!-- IF TICKET_CLOSED --></strike><!-- ENDIF --></h3>
+	<h3 style="color: #D21A4E;<!-- IF TICKET_CLOSED --> text-decoration: line-through;<!-- ENDIF -->">{TICKET_TITLE}<span style="color: black;"> {TICKET_STATUS}</span></h3>
 	<div class="post bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 			<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">

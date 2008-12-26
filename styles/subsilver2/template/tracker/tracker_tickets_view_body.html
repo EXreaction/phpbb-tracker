@@ -13,7 +13,7 @@
 <div id="col1">
 <!-- IF not S_TICKET_REPLY -->
 	<table class="tablebg" width="100%" cellspacing="1">
-		<th><b><!-- IF TICKET_CLOSED --><strike><!-- ENDIF -->{TICKET_TITLE}<span> {TICKET_STATUS}</span><!-- IF TICKET_CLOSED --></strike><!-- ENDIF --></th>
+		<th><b<!-- IF TICKET_CLOSED --> style="text-decoration: line-through;"<!-- ENDIF -->>{TICKET_TITLE}<span> {TICKET_STATUS}</span></b></th>
 		<tr>
 			<td class="row1">
 				<!-- IF not S_IS_BOT -->
