@@ -158,7 +158,7 @@ class tracker_api
 
 		if (!$config['allow_attachments'])
 		{
-			$errors[] = $user->lang['ATTACHMENT_public functionALITY_DISABLED'];
+			$errors[] = $user->lang['ATTACHMENT_FUNCTIONALITY_DISABLED'];
 			return;
 		}
 
@@ -218,7 +218,7 @@ class tracker_api
 		$file->clean_filename('unique', $user->data['user_id'] . '_');
 
 		// Move file and overwrite any existing image
-		$file->move_file($this->config['attachment_path'], true, true, 0755);
+		$file->move_file($this->config['attachment_path'], true, true);
 
 		if (sizeof($file->error))
 		{
