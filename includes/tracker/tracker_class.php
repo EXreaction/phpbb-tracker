@@ -1093,9 +1093,9 @@ class tracker_url_builder
 		'index'				=> false,
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
-		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s',
-		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;u=%4$s',
-		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s',
+		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;v=%4$s&amp;c=%5$s',
+		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;u=%4$s&amp;v=%5$s&amp;c=%6$s',
+		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s&amp;v=%4$s&amp;c=%5$s',
 		'ticket'			=> 'p=%1$s&amp;t=%2$s',
 		'subscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;subscribe=true',
 		'unsubscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;unsubscribe=true',
@@ -1114,7 +1114,7 @@ class tracker_url_builder
 		'reply'				=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
 		'add'				=> 'mode=add&amp;p=%1$s',
 		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%2$s',
-		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s',
+		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s&amp;v=%6$s&amp;c=%7$s',
 	);
 
 	public function __construct()

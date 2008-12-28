@@ -29,7 +29,9 @@
 			<label for="st">
 				<strong>{L_TRACKER_FILTER_TICKET}:</strong>
 			</label>
-			<select id="st" name="st" onchange="document.getElementById('st_form').submit();">{S_STATUS_OPTIONS}</select>
+			<select id="st" name="st" onchange="document.getElementById('st_form').submit();">{S_STATUS_OPTIONS}</select>&nbsp;
+			<!-- IF S_VERSION_OPTIONS --><select id="v" name="v" onchange="document.getElementById('st_form').submit();">{S_VERSION_OPTIONS}</select>&nbsp;<!-- ENDIF -->
+			<!-- IF S_COMPONENT_OPTIONS --><select id="c" name="c" onchange="document.getElementById('st_form').submit();">{S_COMPONENT_OPTIONS}</select><!-- ENDIF -->
 			<noscript><p><input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /></p></noscript>
 			<input type="hidden" name="p" value="{PROJECT_ID}" />
 			<input type="hidden" name="u" value="{TRACKER_USER_ID}" />
@@ -44,13 +46,12 @@
 				{S_HIDDEN_FIELDS_SEARCH}
 				<input type="text" name="term" maxlength="128" title="{L_TRACKER_SEARCH_DESCRIPTION}" value="<!-- IF SEARCH_TERM-->{SEARCH_TERM}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" class="inputbox autowidth search" />
 				<input class="button2" type="submit" value="{L_SEARCH}" />
-				<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS -->&nbsp;&nbsp;<a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a><!-- ENDIF -->
 			</fieldset>
 		</form>
 	</div>
 
 	<div class="pagination">
-		<a href="{U_MY_TICKETS}" title="{TRACKER_MY_TICKETS}">{TRACKER_MY_TICKETS}</a>
+		<!-- IF S_CAN_MANAGE and U_MY_ASSIGNED_TICKETS --><a href="{U_MY_ASSIGNED_TICKETS}" title="{TRACKER_MY_ASSIGNED_TICKETS}">{TRACKER_MY_ASSIGNED_TICKETS}</a>&nbsp;&bull;&nbsp;<!-- ENDIF --><a href="{U_MY_TICKETS}" title="{TRACKER_MY_TICKETS}">{TRACKER_MY_TICKETS}</a>
 	</div>
 </div>
 

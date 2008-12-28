@@ -52,6 +52,8 @@ $lang = array_merge($lang, array(
 
 	'REPLYING_TRACKER_TICKET'				=> 'Replying to ticket in %s - %s',
 
+	'TRACKER_FILTER_VERSION'				=> ', version %s',
+	'TRACKER_FILTER_COMPONENT'				=> ', component %s',
 	'TRACKER'								=> 'Tracker',
 	'TRACKER_ADD_EXPLAIN'					=> 'Thank you for taking time to submit a ticket about the %s project to our %s. Complete the form below to submit your ticket, and please try to include as much information as possible when describing the issue you are sending a ticket about.<br /><br />Please allow at least 24 hours before we respond to your ticket.',
 	'TRACKER_ADD_EXPLAIN_EMAIL'				=> ' You will be notified by email whenever a team representative makes a change to your ticket, or posts a reply. We will send you a copy of your ticket by email for your records.',
@@ -97,7 +99,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_EMAIL_SUBJECT'					=> '[%s %s - #%s] %s',
 	'TRACKER_ENVIRONMENT'					=> 'Environment',
 	'TRACKER_ENVIRONMENT_EXPLAIN'			=> 'This information about your environment may provide us with additional details that can help us in solving this ticket',
-	'TRACKER_EVERYONES_ASSIGNED_TICKETS'	=> 'Show all tickets',
+	'TRACKER_EVERYONES_ASSIGNED_TICKETS'	=> 'All tickets',
 	'TRACKER_EVERYONES_TICKETS'				=> 'Everyone\'s tickets',
 	'TRACKER_FILTER_TICKET'					=> 'Filter tickets',
 	'TRACKER_FIX_COMPLETED'					=> 'Fix completed',
@@ -129,7 +131,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_MOVE_TICKET'					=> 'Move ticket',
 	'TRACKER_MOVE_TICKET_CONFIRM'			=> 'Once moved the assigned user, status, component, version, priority, serverity, and ticket history will be reset. Are you sure you want to move the selected ticket to the selected project?',
 	'TRACKER_MOVE_TICKET_SELECT'			=> 'Select a destination project',
-	'TRACKER_MY_ASSIGNED_TICKETS'			=> 'Show tickets only assigned to me',
+	'TRACKER_MY_ASSIGNED_TICKETS'			=> 'My assigned tickets',
 	'TRACKER_MY_TICKETS'					=> 'My tickets',
 	'TRACKER_NAV_TICKET'					=> 'Ticket #',
 	'TRACKER_NEW'							=> 'New',

@@ -1682,7 +1682,7 @@ class tracker_api
 	/**
 	* Set filter to display on required tickets
 	*/
-	public function get_filter_sql($type)
+	public function get_filter_sql($type, $version_id, $component_id)
 	{
 		global $db;
 
@@ -1703,6 +1703,16 @@ class tracker_api
 			default:
 				$filter = ' AND status_id = ' . $type;
 			break;
+		}
+		
+		if ($version_id)
+		{
+			$filter .= ' AND version_id = ' . (int) $version_id;
+		}
+		
+		if ($component_id)
+		{
+			$filter .= ' AND component_id = ' . (int) $component_id;
 		}
 
 		return $filter;
@@ -1733,11 +1743,42 @@ class tracker_api
 		return $options;
 
 	}
+	
+	public function get_name($mode, $project_id, $id)
+	{
+		global $db;
+		
+		$mode = strtolower($mode);
+		$table = '';
+		switch ($mode)
+		{
+			case 'component':
+				$table = TRACKER_COMPONENTS_TABLE;
+			break;
+			
+			case 'version':
+				$table = TRACKER_VERSION_TABLE;
+			break;
+			
+			default:
+				trigger_error('NO_MODE');
+			break;
+		}
+		
+		$sql = "SELECT {$mode}_name as name from $table
+			WHERE project_id = $project_id
+				AND {$mode}_id = $id";
+		$result = $db->sql_query($sql);
+		$name = (string) $db->sql_fetchfield('name');
+		$db->sql_freeresult($result);
+		
+		return $this->set_lang_name($name);
+	}
 
 	/**
 	* Display select options for priorities, severities, components and versions
 	*/
-	public function select_options($project_id, $mode, $selected_id = false)
+	public function select_options($project_id, $mode, $selected_id = false, $version_enabled = true)
 	{
 		global $db, $user;
 
@@ -1750,7 +1791,10 @@ class tracker_api
 
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
-				$where = ' AND version_enabled = ' . TRACKER_PROJECT_ENABLED;
+				if ($version_enabled)
+				{
+					$where = ' AND version_enabled = ' . TRACKER_PROJECT_ENABLED;
+				}
 			break;
 
 			case 'component':

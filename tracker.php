@@ -39,6 +39,7 @@ $term					= utf8_normalize_nfc(request_var('term', '', true));
 $ticket_id				= request_var('t', 0);
 $project_id				= request_var('p', 0);
 $version_id				= request_var('v', 0);
+$component_id			= request_var('c', 0);
 $post_id				= request_var('pid', 0);
 $user_id				= request_var('u', 0);
 $assigned_to_user_id	= request_var('at', 0);
@@ -98,7 +99,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
 	$sql_where .= ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$sql_where .= ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
-	$sql_where .= $tracker->api->get_filter_sql($status_type);
+	$sql_where .= $tracker->api->get_filter_sql($status_type, $version_id, $component_id);
 
 	$sql_array = array(
 		'SELECT'	=> 't.*,
@@ -230,6 +231,16 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		user_get_id_name($filter_user_id, $filter_username);
 		$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
 	}
+	
+	if ($version_id)
+	{
+		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_VERSION'], $tracker->api->get_name('version', $project_id, $version_id));;
+	}
+	
+	if ($component_id)
+	{
+		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_COMPONENT'], $tracker->api->get_name('component', $project_id, $component_id));
+	}
 
 	$l_total_tickets = false;
 	if ($total_tickets == 1)
@@ -252,11 +263,11 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			'SEARCH_MATCHES' 	=> $search_matches,
 		));
 
-		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
+		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : '', $version_id, $component_id));
 	}
 	else
 	{
-		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : ''));
+		$pagination_url = $tracker->api->build_url('search_st_at_u', array($project_id, $term, $status_type, isset($sort_type['at']) ? $sort_type['at'] : '', isset($sort_type['u']) ? $sort_type['u'] : '', $version_id, $component_id));
 	}
 
 	$template->assign_vars(array(
@@ -277,21 +288,23 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'S_CAN_POST_TRACKER'			=> $auth->acl_get('u_tracker_post'),
 		'TICKET_IMG'					=> $user->img('button_issue_new', $user->lang['TRACKER_POST_TICKET']),
 		'U_POST_NEW_TICKET'				=> $tracker->api->build_url('add', array($project_id, $ticket_id)),
-		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'])),
+		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id, $version_id, $component_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'], $version_id, $component_id)),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],
 
 		'U_WATCH_PROJECT'				=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_p', array($project_id)) : $tracker->api->build_url('subscribe_p', array($project_id)),		
 		'L_WATCH_PROJECT'				=> ($is_subscribed) ? $user->lang['TRACKER_UNWATCH_PROJECT'] : $user->lang['TRACKER_WATCH_PROJECT'],
 	
-		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? $tracker->api->build_url('project_st_u', array($project_id, $status_type, $user_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $user->data['user_id'], $user_id)),
+		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? $tracker->api->build_url('project_st_u', array($project_id, $status_type, $user_id, $version_id, $component_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $user->data['user_id'], $user_id, $version_id, $component_id)),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
 		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($project_id, $term)) : $tracker->api->build_url('index'),
 		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
-		'S_ACTION_SEARCH' 				=> $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user_id)),
+		'S_ACTION_SEARCH' 				=> $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user_id, $version_id, $component_id)),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 
 		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
+		'S_VERSION_OPTIONS'				=> $tracker->api->select_options($project_id, 'version', $version_id, false),
+		'S_COMPONENT_OPTIONS'			=> $tracker->api->select_options($project_id, 'component', $component_id),
 		'S_LOGIN_ACTION'				=> $tracker->api->build_url('login'),
 	));
 
