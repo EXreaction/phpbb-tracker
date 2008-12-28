@@ -98,7 +98,7 @@ $lang = array_merge($lang, array(
 	'SUB_INTRO'								=> 'Introduction',
 	'SUB_LICENSE'							=> 'License',
 	'SUB_SUPPORT'							=> 'Support',
-	'SUPPORT_BODY'							=> 'Full support will be provided for the current stable and development release of phpBB Tracker, free of charge. This includes:</p><ul><li>installation</li><li>configuration</li><li>technical questions</li><li>problems relating to potential bugs in the software</li><li>updating from older versions to the latest version</li></ul><p>I encourage users still running older versions of phpBB Tracker to update their installation with the latest version.</p><h2>Obtaining Support</h2><p><a href="http://www.jeffrusso.net/forum/viewforum.php?f=20">Main Development Site</a><br /><a href="http://www.phpbb.com/community/viewtopic.php?f=70&amp;t=685225">phpBB.com Development Topic</a><br />User guide (located inside phpBB Tracker ACP)<br /><br />',
+	'SUPPORT_BODY'							=> 'Full support will be provided for the current stable and development release of phpBB Tracker, free of charge. This includes:</p><ul><li>installation</li><li>configuration</li><li>technical questions</li><li>problems relating to potential bugs in the software</li><li>updating from older versions to the latest version</li></ul><p>I encourage users still running older versions of phpBB Tracker to update their installation with the latest version.</p><h2>Obtaining Support</h2><p><a href="http://www.jeffrusso.net/forum/viewforum.php?f=21">Main Development Site</a><br /><a href="http://www.phpbb.com/community/viewtopic.php?f=70&amp;t=808995">phpBB.com Development Topic</a><br />User guide (located inside phpBB Tracker ACP)<br /><br />',
 
 	'UNAVAILABLE'							=> 'Unavailable',
 	'UNINSTALL_CONGRATS_EXPLAIN'			=> '
