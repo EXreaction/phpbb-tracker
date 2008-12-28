@@ -52,6 +52,8 @@ $lang = array_merge($lang, array(
 
 	'REPLYING_TRACKER_TICKET'				=> 'Replying to ticket in %s - %s',
 
+	'TRACKER_SECURITY_TICKET'				=> 'Security ticket',
+	'TRACKER_UNSECURITY_TICKET'				=> 'Normal ticket',
 	'TRACKER_FILTER_VERSION'				=> ', version %s',
 	'TRACKER_FILTER_COMPONENT'				=> ', component %s',
 	'TRACKER'								=> 'Tracker',
@@ -203,6 +205,7 @@ $lang = array_merge($lang, array(
 	'TRACKER_TICKET_DESC_ERROR'				=> 'Your description contains too few characters',
 	'TRACKER_TICKET_DESC_EXPLAIN'			=> 'Your actual report. Please try to be as detailed as possible; the more information you provide, the faster we can help you.',
 	'TRACKER_TICKET_DETAILS'				=> 'Ticket details',
+	'TRACKER_TICKET_SECURITY_FROM_VIEW'		=> 'This ticket is a security ticket and is hidden from public view.  It is only viewable by project members and the original poster.',
 	'TRACKER_TICKET_HIDDEN_FROM_VIEW'		=> 'This ticket is hidden from public view.  It is only viewable by project members.',
 	'TRACKER_TICKET_HISTORY'				=> 'History',
 	'TRACKER_TICKET_ID'						=> 'Ticket ID',

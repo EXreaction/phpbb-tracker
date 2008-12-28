@@ -806,6 +806,35 @@ class tracker_api
 			WHERE ' . $db->sql_in_set('ticket_id', $ticket_id);
 		$db->sql_query($sql);
 	}
+	
+	/**
+	* Sets security/unsecurity of ticket
+	* @param string $action value must be either 'security' or 'unsecurity'
+	* @param int $ticket_id id of ticket
+	*/
+	public function manage_security($action, $ticket_id)
+	{
+		global $db;
+
+		$data = array();
+		if ($action == 'security')
+		{
+			$data['ticket_security'] = TRACKER_TICKET_SECURITY;
+		}
+		else if ($action == 'unsecurity')
+		{
+			$data['ticket_security'] = TRACKER_TICKET_UNSECURITY;
+		}
+		else
+		{
+			return;
+		}
+
+		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
+			SET ' . $db->sql_build_array('UPDATE', $data) . '
+			WHERE ' . $db->sql_in_set('ticket_id', $ticket_id);
+		$db->sql_query($sql);
+	}
 
 	/**
 	* Add a post to the bug tracker also

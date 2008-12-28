@@ -73,13 +73,13 @@
 {S_FORM_TOKEN}
 </form>
 <!-- ELSEIF S_IN_MANAGE_ATTACHMENTS -->
-	<!-- IF S_IN_MANAGE_ATTACHMENTS_DEFAULT -->	
+	<!-- IF S_IN_MANAGE_ATTACHMENTS_DEFAULT -->
 		<!-- IF S_ERROR -->
 			<div class="errorbox">
 				<h3>{L_WARNING}</h3>
 				<p>{ERROR_MSG}</p>
 			</div>
-		<!-- ENDIF -->	
+		<!-- ENDIF -->
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 			<fieldset class="tabulated">
 				<h3>{L_TRACKER_ORPHAN}</h3>
@@ -110,7 +110,7 @@
 				<fieldset class="quick">
 					<b class="small"><a href="#" onclick="marklist('acp_tracker', 'attach_ids', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('acp_tracker', 'attach_ids', false); return false;">{L_UNMARK_ALL}</a></b>
 				</fieldset>
-				
+
 				<br />
 				<h3>{L_TRACKER_EXTRA_FILES}</h3>
 				<table cellspacing="1">
@@ -134,7 +134,7 @@
 				<fieldset class="quick">
 					<b class="small"><a href="#" onclick="marklist('acp_tracker', 'extra_files', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('acp_tracker', 'extra_files', false); return false;">{L_UNMARK_ALL}</a></b>
 				</fieldset>
-					
+
 				<p class="quick">
 					<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_DELETE_MARKED}" />
 				</p>
@@ -201,22 +201,26 @@
 		<dl>
 			<dt><label for="project_group">{L_TRACKER_PROJECT_GROUP}</label><br /><span>{L_TRACKER_PROJECT_GROUP_EXPLAIN}</span></dt>
 			<dd><select name="project_group" id="project_group">{S_GROUP_OPTIONS}</select></dd>
-		</dl>		
+		</dl>
 		<dl>
 			<dt><label for="project_type">{L_TRACKER_PROJECT_TYPE}</label><br /><span>{L_TRACKER_PROJECT_TYPE_EXPLAIN}</span></dt>
 			<dd><select name="project_type" id="project_type">{S_TYPE_OPTIONS}</select></dd>
-		</dl>	
+		</dl>
 		<dl>
 			<dt><label for="project_enabled">{L_TRACKER_PROJECT_ENABLED}</label><br /><span>{L_TRACKER_PROJECT_ENABLED_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" name="project_enabled" <!-- IF PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_enabled" <!-- IF not PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+			<dd><label><input type="radio" name="project_enabled" <!-- IF PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_enabled" <!-- IF not PROJECT_ENABLED -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="project_security">{L_TRACKER_PROJECT_SECURITY}</label><br /><span>{L_TRACKER_PROJECT_SECURITY_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" name="project_security" <!-- IF PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_security" <!-- IF not PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+			<dd><label><input type="radio" name="project_security" <!-- IF PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="project_security" <!-- IF not PROJECT_SECURITY -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="ticket_security">{L_TRACKER_TICKET_SECURITY}</label><br /><span>{L_TRACKER_TICKET_SECURITY_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" name="ticket_security" <!-- IF TICKET_SECURITY -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="ticket_security" <!-- IF not TICKET_SECURITY -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="show_php">{L_TRACKER_PROJECT_SHOW_PHP}</label><br /><span>{L_TRACKER_PROJECT_SHOW_PHP_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" name="show_php" <!-- IF SHOW_PHP -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_php" <!-- IF not SHOW_PHP -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+			<dd><label><input type="radio" name="show_php" <!-- IF SHOW_PHP -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_php" <!-- IF not SHOW_PHP -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="lang_php">{L_TRACKER_PROJECT_LANG_PHP}</label><br /><span>{L_TRACKER_PROJECT_LANG_PHP_EXPLAIN}</span></dt>
@@ -224,7 +228,7 @@
 		</dl>
 		<dl>
 			<dt><label for="show_dbms">{L_TRACKER_PROJECT_SHOW_DBMS}</label><br /><span>{L_TRACKER_PROJECT_SHOW_DBMS_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" name="show_dbms" <!-- IF SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_dbms" <!-- IF not SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>	
+			<dd><label><input type="radio" name="show_dbms" <!-- IF SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="1" class="radio" />{L_YES}</label><label><input type="radio" name="show_dbms" <!-- IF not SHOW_DBMS -->checked="checked" <!-- ENDIF -->value="0" class="radio" />{L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="lang_dbms">{L_TRACKER_PROJECT_LANG_DBMS}</label><br /><span>{L_TRACKER_PROJECT_LANG_DBMS_EXPLAIN}</span></dt>
@@ -300,12 +304,12 @@
 
 		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
 		<input type="hidden" name="component_id" value="{COMPONENT_ID}" />
-		
+
 		<fieldset class="submit-buttons">
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>		
+		</fieldset>
 	<!-- ENDIF -->
 		{S_FORM_TOKEN}
 		</form>
@@ -375,12 +379,12 @@
 
 		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
 		<input type="hidden" name="version_id" value="{VERSION_ID}" />
-		
+
 		<fieldset class="submit-buttons">
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>		
+		</fieldset>
 	<!-- ENDIF -->
 		{S_FORM_TOKEN}
 		</form>

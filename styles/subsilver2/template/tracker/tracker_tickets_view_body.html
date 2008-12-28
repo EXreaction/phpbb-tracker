@@ -2,9 +2,11 @@
 
 <h2>{L_TITLE}</h2>
 
-<!-- IF TICKET_HIDDEN -->
+<!-- IF TICKET_HIDDEN or TICKET_SECURITY -->
 	<div class="forumrules">
-		{L_TRACKER_TICKET_HIDDEN_FROM_VIEW}
+		<!-- IF TICKET_HIDDEN -->{L_TRACKER_TICKET_HIDDEN_FROM_VIEW}<!-- ENDIF -->
+		<!-- IF TICKET_HIDDEN and TICKET_SECURITY --><br /><!-- ENDIF -->
+		<!-- IF TICKET_SECURITY -->{L_TRACKER_TICKET_SECURITY_FROM_VIEW}<!-- ENDIF -->
 	</div>
 
 	<br clear="all" />
@@ -256,6 +258,10 @@
 			<td class="row2" width="78%"><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
+		<tr>
+			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_SECURITY_TICKET}:</b></td>
+			<td class="row2" width="78%"><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></td>
+		</tr>
 		<tr>
 			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_HIDE_TICKET}:</b></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></td>

@@ -5,10 +5,12 @@
 	<p>{L_TITLE_EXPLAIN}</p>
 <!-- ENDIF -->
 
-<!-- IF TICKET_HIDDEN -->
+<!-- IF TICKET_HIDDEN or TICKET_SECURITY -->
 <div class="rules" align="center">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		{L_TRACKER_TICKET_HIDDEN_FROM_VIEW}
+		<!-- IF TICKET_HIDDEN -->{L_TRACKER_TICKET_HIDDEN_FROM_VIEW}<!-- ENDIF -->
+		<!-- IF TICKET_HIDDEN and TICKET_SECURITY --><br /><!-- ENDIF -->
+		<!-- IF TICKET_SECURITY -->{L_TRACKER_TICKET_SECURITY_FROM_VIEW}<!-- ENDIF -->
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 <br />
@@ -227,6 +229,10 @@
 					<dd><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></dd>
 				</dl>
 				<!-- ENDIF -->
+				<dl>
+					<dt><label for="ticket_security">{L_TRACKER_SECURITY_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
 				<dl>
 					<dt><label for="ticket_hidden">{L_TRACKER_HIDE_TICKET}:</label></dt>
 					<dd><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></dd>

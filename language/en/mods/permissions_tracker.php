@@ -66,26 +66,9 @@ if (empty($lang) || !is_array($lang))
 *	</code>
 */
 
-/*
-#The following muse be inserted into the db and then the cache must be cleared for the permissions to show up...
-#If you used the installer ignore this
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('a_tracker', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_view', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_post', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit_all', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_delete_all', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_edit_global', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_delete_global', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_attach', 1, 0, 0);
-INSERT INTO `phpbb_acl_options` (auth_option, is_global, is_local, founder_only) VALUES ('u_tracker_download', 1, 0, 0);
-*/
-
 // Define categories and permission types
 $lang['permission_cat']['tracker'] = 'phpBB Tracker';
 
-
-// Admin Permissions
 $lang = array_merge($lang, array(
 	'acl_a_tracker'					=> array('lang' => 'Can manage tracker', 											'cat' => 'tracker'),
 	'acl_u_tracker_attach'			=> array('lang' => 'Can attach files to tracker tickets/posts', 					'cat' => 'tracker'),
@@ -97,7 +80,7 @@ $lang = array_merge($lang, array(
 	'acl_u_tracker_delete_all'		=> array('lang' => 'Can delete all tracker tickets/posts if in project group', 		'cat' => 'tracker'),
 	'acl_u_tracker_edit_global'		=> array('lang' => 'Can edit all tracker tickets/posts in any project', 			'cat' => 'tracker'),
 	'acl_u_tracker_delete_global'	=> array('lang' => 'Can delete all tracker tickets/posts in any project', 			'cat' => 'tracker'),
-
+	'acl_u_tracker_ticket_security'	=> array('lang' => 'Can specify security tickets if enabled for project',			'cat' => 'tracker'),
 ));
 
 ?>

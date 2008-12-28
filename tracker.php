@@ -97,6 +97,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' . TRACKER_PROJECT_ENABLED : '';
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
 	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
+	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['ticket_security']) ? ' AND t.ticket_security = ' . TRACKER_TICKET_UNSECURITY . ' OR (t.ticket_security = ' . TRACKER_TICKET_SECURITY . ' AND t.ticket_user_id = ' . $user->data['user_id'] . ')' : '';
 	$sql_where .= ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$sql_where .= ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
 	$sql_where .= $tracker->api->get_filter_sql($status_type, $version_id, $component_id);
@@ -447,6 +448,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'priority_id'			=> request_var('pr', 0),
 			'severity_id'			=> request_var('s', 0),
 			'ticket_hidden'			=> request_var('ticket_hidden', 0),
+			'ticket_security'		=> request_var('ticket_security', 0),
 			'ticket_status'			=> request_var('ticket_status', 0),
 		);
 
@@ -569,6 +571,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						p.project_name,
 						p.project_group,
 						p.project_security,
+						p.ticket_security as project_ticket_security,
 						p.project_enabled,
 						u1.user_colour as ticket_user_colour,
 						u1.username as ticket_username,
@@ -617,7 +620,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 
-	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$tracker->api->can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$tracker->api->can_manage) || ($row['project_security'] && !$tracker->api->can_manage && $row['ticket_user_id'] != $user->data['user_id']))
+	if (!$row || ($row['ticket_hidden'] == TRACKER_TICKET_HIDDEN && !$tracker->api->can_manage) || ($row['project_enabled'] == TRACKER_PROJECT_DISABLED && !$tracker->api->can_manage) || (($row['project_security'] || $row['ticket_security']) && !$tracker->api->can_manage && $row['ticket_user_id'] != $user->data['user_id']))
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
@@ -657,7 +660,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$tracker->api->manage_lock($action, $ticket_id);
 				redirect(build_url());
 			break;
-
+			
+			case 'security':
+			case 'unsecurity':
+				$tracker->api->manage_security($action, $ticket_id);
+				redirect(build_url());
+			break;
+			
 			case 'hide':
 			case 'unhide':
 				if ($tracker->api->can_manage)
@@ -705,6 +714,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	if ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global'))
 	{
 		$ticket_mod .= ($row['ticket_status'] == TRACKER_TICKET_UNLOCKED) ? '<option value="lock">' . $user->lang['TRACKER_LOCK_TICKET'] . '</option>' : '<option value="unlock">' . $user->lang['TRACKER_UNLOCK_TICKET'] . '</option>';
+		$ticket_mod .= ($tracker->api->can_manage && $row['project_ticket_security']) ? (($row['ticket_security'] == TRACKER_TICKET_UNSECURITY) ? '<option value="security">' . $user->lang['TRACKER_SECURITY_TICKET'] . '</option>' : '<option value="unsecurity">' . $user->lang['TRACKER_UNSECURITY_TICKET'] . '</option>') : '';
 		$ticket_mod .= ($tracker->api->can_manage) ? (($row['ticket_hidden'] == TRACKER_TICKET_UNHIDDEN) ? '<option value="hide">' . $user->lang['TRACKER_HIDE_TICKET'] . '</option>' : '<option value="unhide">' . $user->lang['TRACKER_UNHIDE_TICKET'] . '</option>') : '';
 		$ticket_mod .= '<option value="move">' . $user->lang['TRACKER_MOVE_TICKET'] . '</option>';
 	}
@@ -733,6 +743,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'severity_id'			=> $use_data ? $data['severity_id'] : $row['severity_id'],
 		'priority_id'			=> $use_data ? $data['priority_id'] : $row['priority_id'],
 		'ticket_hidden'			=> $use_data ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_security'		=> $use_data ? $data['ticket_security'] : $row['ticket_security'],
 		'ticket_status'			=> $use_data ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
@@ -777,7 +788,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		'U_SEND_PM'					=> $tracker->api->build_url('compose_pm', array($row['ticket_user_id'])),
-		'U_REPORTERS_TICKETS'		=> $tracker->api->build_url('project_st_u', array($project_id, TRACKER_ALL, $row['ticket_user_id'])),
+		'U_REPORTERS_TICKETS'		=> $tracker->api->build_url('project_st_u', array($project_id, TRACKER_ALL, $row['ticket_user_id'], $version_id, $component_id)),
 
 		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),		
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
@@ -798,6 +809,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_STATUS_DETAILS'		=> $tracker->api->set_status($row['status_id']),
 		'TICKET_CLOSED'				=> $tracker->api->is_closed($row['status_id']),
 		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
+		'TICKET_SECURITY'			=> ($option_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
 

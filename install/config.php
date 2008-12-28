@@ -36,7 +36,7 @@ $mod_config = array(
 	'module_remove'				=> array('tracker'),
 	'permission_options'		=> array(
 		'local'		=> array(),
-		'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_attach', 'u_tracker_download', 'a_tracker'),
+		'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_attach', 'u_tracker_download', 'u_tracker_ticket_security', 'a_tracker'),
 	),
 	'mod_modules'				=> array(
 		array(
@@ -140,7 +140,7 @@ $mod_config = array(
 	'update_permission_options' => array(
 		'0.2.0'	=> array(
 			'local'		=> array(),
-			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all'),
+			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_ticket_security'),
 		),
 	),
 );

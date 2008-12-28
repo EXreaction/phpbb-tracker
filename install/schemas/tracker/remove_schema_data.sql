@@ -13,5 +13,6 @@ DROP TABLE phpbb_tracker_components;
 DROP TABLE phpbb_tracker_posts;
 DROP TABLE phpbb_tracker_history;
 DROP TABLE phpbb_tracker_version;
-
+DROP TABLE phpbb_tracker_project_watch;
+DROP TABLE phpbb_tracker_tickets_watch;
 # POSTGRES COMMIT #
