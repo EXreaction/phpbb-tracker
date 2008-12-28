@@ -100,6 +100,7 @@
 			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php" />
 			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt" />
 			<file from="root/language/en/email/tracker_notify_comment.txt" to="language/en/email/tracker_notify_comment.txt" />
+			<file from="root/language/en/email/tracker_notify_watch.txt" to="language/en/email/tracker_notify_watch.txt" />
 			<file from="root/language/en/email/tracker_notify_status_double.txt" to="language/en/email/tracker_notify_status_double.txt" />
 			<file from="root/language/en/email/tracker_notify_status_single.txt" to="language/en/email/tracker_notify_status_single.txt" />
 			<file from="root/language/en/mods/permissions_tracker.php" to="language/en/mods/permissions_tracker.php" />
