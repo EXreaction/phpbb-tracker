@@ -79,7 +79,7 @@ if ($mode == 'changelog' && $project_id && $version_id)
 }
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
-{
+{	
 	if ($subscribe != '')
 	{
 		$tracker->api->subscribe('subscribe', $project_id, $ticket_id);
