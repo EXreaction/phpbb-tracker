@@ -1000,7 +1000,7 @@ class tracker_api
 	/**
 	* Send email notification to required parties
 	*/
-	public function send_notification($data, $type)
+	public function send_notification($data, $type, $send_subscription = true)
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
 
@@ -1305,7 +1305,10 @@ class tracker_api
 			$messenger->save_queue();
 		}
 		
-		$this->send_subscription($data);
+		if ($send_subscription)
+		{
+			$this->send_subscription($data);
+		}
 	}
 	
 	public function send_subscription($data)
@@ -1335,7 +1338,7 @@ class tracker_api
 			$members = array();
 			$members = group_memberships($this->projects[$data['project_id']]['project_group']);
 			
-			if (sizeof($members)
+			if (sizeof($members))
 			{	
 				foreach ($members as $item)
 				{
@@ -1460,7 +1463,7 @@ class tracker_api
 		
 	}
 
-	public function process_notification($data, $ticket)
+	public function process_notification($data, $ticket, $send_subscription = true)
 	{
 		global $user;
 
@@ -1528,16 +1531,16 @@ class tracker_api
 		if ($history_at && !$history_ts)
 		{
 			$history_data['history_old_assigned_to'] = $ticket['ticket_assigned_to'];
-			$this->send_notification($history_data, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
+			$this->send_notification($history_data, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE, $send_subscription);
 		}
 		else if ($history_ts && !$history_at)
 		{
-			$this->send_notification($history_status, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE);
+			$this->send_notification($history_status, TRACKER_EMAIL_NOTIFY_STATUS_SINGLE, $send_subscription);
 		}
 		else if ($history_at && $history_ts)
 		{
 			$history_data['history_old_assigned_to'] = $ticket['ticket_assigned_to'];
-			$this->send_notification(array_merge($history_data, $history_status), TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE);
+			$this->send_notification(array_merge($history_data, $history_status), TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE, $send_subscription);
 		}
 	}
 

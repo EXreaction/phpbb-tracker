@@ -511,7 +511,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				if ($tracker->api->can_manage)
 				{
 					$tracker->api->update_ticket($data, $ticket_id);
-					$tracker->api->process_notification($data, $row);
+					$tracker->api->process_notification($data, $row, false);
 
 					$tracker->api->manage_hide((($data['ticket_hidden']) ? 'hide' : 'unhide'), $ticket_id);
 					$tracker->api->manage_lock((($data['ticket_status']) ? 'lock' : 'unlock'), $ticket_id);
