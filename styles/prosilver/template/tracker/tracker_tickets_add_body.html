@@ -95,6 +95,32 @@
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
+	
+	<!-- IF S_MANAGE_TICKET or S_TICKET_SECURITY -->
+		<div class="panel bg2">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_OPTIONS}</h3>
+			<fieldset class="fields2">
+				<!-- IF S_TICKET_SECURITY -->
+				<dl>
+					<dt><label for="ticket_security">{L_TRACKER_SECURITY_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
+				<!-- ENDIF -->
+				<!-- IF S_MANAGE_TICKET -->
+				<dl>
+					<dt><label for="ticket_hidden">{L_TRACKER_HIDE_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
+				<dl>
+					<dt><label for="ticket_status">{L_TRACKER_LOCK_TICKET}:</label></dt>
+					<dd><input type="checkbox" name="ticket_status" id="ticket_status" value="1"<!-- IF S_IS_LOCKED --> checked="checked"<!-- ENDIF --> /></dd>
+				</dl>
+				<!-- ENDIF -->
+			</fieldset>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<!-- ENDIF -->
 
 	<!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
 	<div class="panel bg2">

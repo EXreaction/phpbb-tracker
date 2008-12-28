@@ -71,7 +71,7 @@
 		</thead>
 		<tbody>
 		<!-- BEGIN tickets -->
-			<tr class="<!-- IF tickets.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF tickets.TICKET_HIDDEN --> reported<!-- ENDIF -->">
+			<tr class="<!-- IF tickets.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF tickets.TICKET_HIDDEN or tickets.TICKET_SECURITY --> reported<!-- ENDIF -->">
 				<td><strong>{tickets.TICKET_ID}</strong></td>
 				<td>
 					<strong><a href="{tickets.U_VIEW_TICKET}">{tickets.TICKET_TITLE}</a></strong><br />

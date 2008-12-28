@@ -199,6 +199,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			'LAST_POST_TIME'			=> $user->format_date($item['last_post_time']),
 
 			'TICKET_HIDDEN'				=> ($item['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
+			'TICKET_SECURITY'			=> ($item['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
 			'TICKET_ID'					=> $item['ticket_id'],
 			'TICKET_TITLE'				=> $item['ticket_title'],
 			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour']),
@@ -927,6 +928,23 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'status_id'					=> TRACKER_NEW_STATUS,
 			'project_id'				=> $project_id,
 		);
+	
+		if ($tracker->api->can_manage)
+		{
+			$ticket_data += array(
+				'ticket_hidden'				=> request_var('ticket_hidden', 0),
+				'ticket_security'			=> request_var('ticket_security', 0),
+				'ticket_status'				=> request_var('ticket_status', 0),	
+			);
+		}
+		
+		if ($auth->acl_get('u_tracker_ticket_security'))
+		{
+			$ticket_data += array(
+				'ticket_security'			=> request_var('ticket_security', 0),
+			);
+		}
+		
 	}
 
 	if ($mode == 'edit' && ($preview || $submit || $add_attachment || $remove_attachment))
@@ -1067,9 +1085,28 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'TICKET_DESC'				=> $ticket_desc['text'],
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],
 		'TICKET_DBMS'				=> $ticket_data['ticket_dbms'],
-
+		
 		'U_ACTION'					=> ($mode == 'edit') ? $tracker->api->build_url('edit', array($project_id, $ticket_id)) : $tracker->api->build_url('add', array($project_id)),
 	));
+
+	if ($tracker->api->can_manage)
+	{
+		$template->assign_vars(array(
+			'S_MANAGE_TICKET'			=> ($tracker->api->can_manage) ? true : false,
+			'S_TICKET_SECURITY'			=> ($auth->acl_get('u_tracker_ticket_security')) ? true : false,
+			'S_IS_LOCKED'				=> ($ticket_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
+			'TICKET_HIDDEN'				=> ($ticket_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
+			'TICKET_SECURITY'			=> ($ticket_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
+		));
+	}
+	
+	if ($auth->acl_get('u_tracker_ticket_security'))
+	{
+		$template->assign_vars(array(
+			'S_TICKET_SECURITY'			=> ($auth->acl_get('u_tracker_ticket_security')) ? true : false,
+			'TICKET_SECURITY'			=> ($ticket_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
+		));
+	}
 
 	// Output page
 	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);

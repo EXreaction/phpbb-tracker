@@ -91,6 +91,27 @@
 	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_DESC}:</b><br />{L_TRACKER_TICKET_DESC_EXPLAIN}</td>
 	<td class="row2" width="78%"><textarea id="ticket_desc" name="ticket_desc" rows="15" cols="76">{TICKET_DESC}</textarea></td>
 </tr>
+<!-- IF S_MANAGE_TICKET or S_TICKET_SECURITY -->
+<tr>
+	<th colspan="2"><b>{L_OPTIONS}</b></th>
+</tr>
+<!-- IF S_TICKET_SECURITY -->
+<tr>
+	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_SECURITY_TICKET}:</b></td>
+	<td class="row2" width="78%"><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></td>
+</tr>
+<!-- ENDIF -->
+<!-- IF S_MANAGE_TICKET -->
+<tr>
+	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_HIDE_TICKET}:</b></td>
+	<td class="row2" width="78%"><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></td>
+</tr>
+<tr>
+	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_LOCK_TICKET}:</b></td>
+	<td class="row2" width="78%"><input type="checkbox" name="ticket_status" id="ticket_status" value="1"<!-- IF S_IS_LOCKED --> checked="checked"<!-- ENDIF --> /></td>
+</tr>
+<!-- ENDIF -->
+<!-- ENDIF -->
 <!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
 <tr>
 	<th colspan="2"><b>{L_TRACKER_ATTACHMENTS}</b></th>
