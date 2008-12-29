@@ -53,7 +53,7 @@
 					<change>Fixed bug removing attachments for posts when deleting</change>
 					<change>Fixed bug with language variables when viewing statistics</change>
 					<change>Fixed bug with installation script and updating from older versions</change>
-					<change>Fixed bug causing tracker link to appearin viewonline breadcrumbs/nav links</change>
+					<change>Fixed bug causing tracker link to appear in viewonline breadcrumbs/nav links</change>
 					<change>Increased size of ticket and post description</change>
 				</changelog>
 			</entry>
@@ -68,13 +68,15 @@
 				</changelog>
 			</entry>
 			<entry>
-				<date>2008-xx-xx</date>
+				<date>2009-xx-xx</date>
 				<rev-version>0.2.0</rev-version>
 				<changelog lang="en">
 					<change>Added selectable project view type inside acp</change>
 					<change>Added new issue buttons to prosilver and subsilver2</change>
 					<change>Added ability to enable/disable versions</change>
 					<change>Added ticket and project subscriptions</change>
+					<change>Added ability to set security tickets</change>
+					<change>Fixed many style related bugs</change>
 					<change>Updated modx to version 1.2.1</change>
 					<change>Updated installation script</change>
 					<change>Updated minimum PHP version to 5.0.0.</change>				
