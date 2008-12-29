@@ -125,7 +125,7 @@
 	}]]></action>
 			</edit>
 		</open>
-		<open src="includes/fuctions_user.php">
+		<open src="includes/functions_user.php">
 			<edit>
 				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);

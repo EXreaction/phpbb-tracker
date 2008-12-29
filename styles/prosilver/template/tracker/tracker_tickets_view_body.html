@@ -309,10 +309,10 @@
 				<li><a href="{U_VIEW_TICKET_HISTORY}">{L_TICKET_HISTORY}</a></li>
 				<li<!-- IF not S_MANAGE_TICKET or S_TICKET_REPLY --> class="last"<!-- ENDIF -->><a href="{U_WATCH_TICKET}">{L_WATCH_TICKET}</a></li>
 				<!-- IF not S_TICKET_REPLY -->
-					<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><li><label for="au"><strong>{L_TRACKER_ASSIGN_USER}:</strong></label> <select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></li><!-- ENDIF -->
-					<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS --><li><label for="cs"><strong>{L_TRACKER_CHANGE_STATUS}:</strong></label> <select id="cs" name="cs">{S_STATUS_OPTIONS}</select></li><!-- ENDIF -->
-					<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS --><li><label for="pr"><strong>{L_TRACKER_CHANGE_PRIORITY}:</strong></label> <select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></li><!-- ENDIF -->
-					<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS --><li><label for="s"><strong>{L_TRACKER_CHANGE_SEVERITY}:</strong></label> <select id="s" name="s">{S_SEVERITY_OPTIONS}</select></li><!-- ENDIF -->
+					<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><li><label for="au"><strong>{L_TRACKER_ASSIGN_USER}:</strong></label><select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></li><!-- ENDIF -->
+					<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS --><li><label for="cs"><strong>{L_TRACKER_CHANGE_STATUS}:</strong></label><select id="cs" name="cs">{S_STATUS_OPTIONS}</select></li><!-- ENDIF -->
+					<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS --><li><label for="pr"><strong>{L_TRACKER_CHANGE_PRIORITY}:</strong></label><select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></li><!-- ENDIF -->
+					<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS --><li><label for="s"><strong>{L_TRACKER_CHANGE_SEVERITY}:</strong></label><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></li><!-- ENDIF -->
 					<!-- IF S_MANAGE_TICKET --><li class="last"><input type="submit" name="update" value="{L_SUBMIT}" class="button2" /></li><!-- ENDIF -->
 				<!-- ENDIF -->
 			</ul>
