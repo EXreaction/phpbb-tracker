@@ -509,7 +509,7 @@ class acp_tracker
 					'PROJECT_ENABLED'				=> $project_data['project_enabled'],
 					'PROJECT_SECURITY'				=> $project_data['project_security'],
 					'TICKET_SECURITY'				=> $project_data['ticket_security'],
-					
+
 					'SHOW_PHP'						=> $project_data['show_php'],
 					'LANG_PHP'						=> $project_data['lang_php'],
 					'SHOW_DBMS'						=> $project_data['show_dbms'],
@@ -909,7 +909,7 @@ class acp_tracker
 				$this->set_template_title($mode);
 				return;
 			break;
-			
+
 			case 'enable':
 			case 'disable':
 				$this->tracker->api->set_enabled('version', $version_id, $action);
@@ -949,7 +949,7 @@ class acp_tracker
 
 		return $this->tracker->api->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="version_check" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
 	}
-	
+
 	function default_status_type_select($value, $key = '')
 	{
 		global $user;
