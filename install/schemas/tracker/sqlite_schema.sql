@@ -11,12 +11,12 @@ CREATE TABLE phpbb_tracker_project (
 	project_name_clean varchar(255) NOT NULL DEFAULT '',
 	project_desc text(65535) NOT NULL DEFAULT '',
 	project_group INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	project_type tinyint(4) NOT NULL DEFAULT '0',
-	project_enabled tinyint(4) NOT NULL DEFAULT '0',
-	project_security tinyint(4) NOT NULL DEFAULT '0',
-	ticket_security tinyint(4) NOT NULL DEFAULT '0',
-	show_php tinyint(4) NOT NULL DEFAULT '0',
-	show_dbms tinyint(4) NOT NULL DEFAULT '0',
+	project_type tinyint(2) NOT NULL DEFAULT '0',
+	project_enabled tinyint(1) NOT NULL DEFAULT '0',
+	project_security tinyint(1) NOT NULL DEFAULT '0',
+	ticket_security tinyint(1) NOT NULL DEFAULT '0',
+	show_php tinyint(1) NOT NULL DEFAULT '0',
+	show_dbms tinyint(1) NOT NULL DEFAULT '0',
 	lang_php varchar(255) NOT NULL DEFAULT '',
 	lang_dbms varchar(255) NOT NULL DEFAULT ''
 );
@@ -60,11 +60,11 @@ CREATE TABLE phpbb_tracker_tickets (
 	ticket_desc_bitfield varchar(255) NOT NULL DEFAULT '',
 	ticket_desc_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	ticket_desc_uid varchar(8) NOT NULL DEFAULT '',
-	ticket_status tinyint(4) NOT NULL DEFAULT '0',
-	ticket_hidden tinyint(4) NOT NULL DEFAULT '0',
-	ticket_security tinyint(4) NOT NULL DEFAULT '0',
+	ticket_status tinyint(1) NOT NULL DEFAULT '0',
+	ticket_hidden tinyint(1) NOT NULL DEFAULT '0',
+	ticket_security tinyint(1) NOT NULL DEFAULT '0',
 	ticket_assigned_to int(8) NOT NULL DEFAULT '0',
-	status_id tinyint(4) NOT NULL DEFAULT '0',
+	status_id tinyint(2) NOT NULL DEFAULT '0',
 	component_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	version_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	severity_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
@@ -133,7 +133,7 @@ CREATE TABLE phpbb_tracker_version (
 	version_id INTEGER PRIMARY KEY NOT NULL ,
 	project_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	version_name varchar(255) NOT NULL DEFAULT '',
-	version_enabled tinyint(4) NOT NULL DEFAULT '1'
+	version_enabled tinyint(1) NOT NULL DEFAULT '1'
 );
 
 

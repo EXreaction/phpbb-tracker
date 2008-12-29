@@ -126,13 +126,28 @@ $mod_config = array(
 		'0.2.0'	=> array(
 			'add_columns'		=> array(
 				TRACKER_VERSION_TABLE	=> array(
-					'version_enabled'		=> array('TINT:4', 1),
+					'version_enabled'		=> array('TINT:1', 1),
 				),
 				TRACKER_PROJECT_TABLE	=> array(
-					'show_php'				=> array('TINT:4', 0),
-					'show_dbms'				=> array('TINT:4', 0),
+					'show_php'				=> array('TINT:1', 0),
+					'show_dbms'				=> array('TINT:1', 0),
+					'ticket_security'		=> array('TINT:1', 0),
 					'lang_php'				=> array('VCHAR', 'TRACKER_TICKET_PHP'),
 					'lang_dbms'				=> array('VCHAR', 'TRACKER_TICKET_DBMS'),
+				),
+				TRACKER_TICKETS_TABLE	=> array(
+					'ticket_security'		=> array('TINT:1', 0),
+				),
+			),
+			'change_columns'		=> array(
+				TRACKER_TICKETS_TABLE	=> array(
+					'ticket_status'					=> array('TINT:1', 0),
+					'ticket_hidden'					=> array('TINT:1', 0),
+				),
+				TRACKER_PROJECT_TABLE	=> array(
+					'project_type'			=> array('TINT:2', 0),
+					'project_enabled'		=> array('TINT:1', 0),
+					'project_security'		=> array('TINT:1', 0),
 				),
 			),
 		),
@@ -180,7 +195,7 @@ $mod_config['install_check'] = array(
 				'styles/prosilver/template/tracker/tracker_header.html',
 				'styles/prosilver/template/tracker/tracker_move.html',
 			),
-			'subsilver2'		=> array(		
+			'subsilver2'		=> array(
 				'styles/subsilver2/template/tracker/tracker_index_body.html',
 				'styles/subsilver2/template/tracker/tracker_tickets_add_body.html',
 				'styles/subsilver2/template/tracker/tracker_tickets_body.html',
