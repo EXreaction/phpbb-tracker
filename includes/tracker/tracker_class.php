@@ -254,7 +254,8 @@ class tracker
 				'COMMENT_DESC'			=> generate_text_for_display($row['post_desc'], $row['post_desc_uid'], $row['post_desc_bitfield'], $row['post_desc_options']),
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
-
+				'POST_ID'				=> $row['post_id'],
+				
 				'S_DISPLAY_NOTICE'		=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 				'S_SHOW_ATTACHMENTS'	=> ($auth->acl_get('u_tracker_download') && $row['attach_id']) ? true : false,
 				'U_DOWNLOAD_LINK'		=> $u_download_link,
@@ -278,6 +279,7 @@ class tracker
 		}
 
 		$template->assign_vars(array(
+			'POST_IMG'		=> $user->img('icon_post_target', ''),
 			'PAGE_NUMBER'	=> ($posts_per_page > 0) ? on_page($total_posts, $posts_per_page, $start) : on_page($total_posts, $total_posts, $start),
 			'TOTAL_POSTS'	=> $l_total_posts,
 			'PAGINATION'	=> ($posts_per_page > 0) ? generate_pagination($this->api->build_url('ticket', array($project_id, $ticket_id)), $total_posts, $posts_per_page, $start) : false,

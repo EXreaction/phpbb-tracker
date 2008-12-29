@@ -75,7 +75,7 @@
 			<td class="row1">
 		<!-- BEGIN comments -->
 		<hr />
-			<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">
+			<div id="{comments.POST_ID}" style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0; clear: both;">
 				<div class="postdetails">
 				<!-- IF not S_IS_BOT -->
 						<!-- IF comments.S_CAN_DELETE or comments.S_CAN_EDIT -->
@@ -84,7 +84,7 @@
 							<!-- IF comments.S_CAN_DELETE --><a href="{comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
 							</div>
 						<!-- ENDIF -->
-					<!-- ENDIF -->{L_POST_BY_AUTHOR} <b>{comments.COMMENT_POSTER}</b> {L_POSTED_ON_DATE} {comments.COMMENT_TIME}	</div>
+					<!-- ENDIF --><a href="#{comments.POST_ID}">{POST_IMG}</a><b>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_POSTED_ON_DATE} {comments.COMMENT_TIME}</b></div>
 				<hr />
 				<div class="postbody">{comments.COMMENT_DESC}</div>
 				<!-- IF comments.S_SHOW_ATTACHMENTS -->

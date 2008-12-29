@@ -56,7 +56,7 @@
 	<!-- IF S_DISPLAY_COMMENTS -->
 	<h3>{L_TRACKER_TICKET_COMMENTS}</h3>
 		<!-- BEGIN comments -->
-		<div class="post <!-- IF comments.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+		<div id="{comments.POST_ID}" class="post <!-- IF comments.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
 					<!-- IF not S_IS_BOT -->
@@ -67,7 +67,7 @@
 						</ul>
 						<!-- ENDIF -->
 					<!-- ENDIF -->
-					<p class="author">{L_POST_BY_AUTHOR} <b>{comments.COMMENT_POSTER}</b> {L_POSTED_ON_DATE} {comments.COMMENT_TIME}</p>
+					<p class="author" style="font-weight: bold;"><a href="#{comments.POST_ID}">{POST_IMG}</a>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_POSTED_ON_DATE} {comments.COMMENT_TIME}</p>
 					<div class="content">{comments.COMMENT_DESC}</div>
 					<!-- IF comments.S_SHOW_ATTACHMENTS -->
 					<dl class="attachbox">
