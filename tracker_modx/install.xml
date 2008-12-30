@@ -83,6 +83,10 @@
 				</changelog>
 			</entry>
 		</history>
+		<link-group>
+			<link type="template" href="prosilver.xml" lang="en">prosilver</link>
+			<link type="template" href="subsilver2.xml" lang="en">subsilver2</link>
+		</link-group>
 	</header>
 	<action-group>
 		<copy>
