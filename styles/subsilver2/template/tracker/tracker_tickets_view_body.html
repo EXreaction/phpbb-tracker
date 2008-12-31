@@ -258,10 +258,12 @@
 			<td class="row2" width="78%"><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
+		<!-- IF S_TICKET_SECURITY -->
 		<tr>
 			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_SECURITY_TICKET}:</b></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></td>
 		</tr>
+		<!-- ENDIF -->
 		<tr>
 			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_HIDE_TICKET}:</b></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></td>

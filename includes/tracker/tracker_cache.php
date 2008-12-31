@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-* Class for grabbing/handling cached entries, extends cache.php
+* Class for grabbing/handling cached entries for the tracker, extends cache.php
 * @package acm
 */
 class tracker_cache extends cache

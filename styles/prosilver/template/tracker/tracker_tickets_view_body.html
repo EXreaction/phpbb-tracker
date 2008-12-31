@@ -229,10 +229,12 @@
 					<dd><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></dd>
 				</dl>
 				<!-- ENDIF -->
+				<!-- IF S_TICKET_SECURITY -->
 				<dl>
 					<dt><label for="ticket_security">{L_TRACKER_SECURITY_TICKET}:</label></dt>
 					<dd><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></dd>
 				</dl>
+				<!-- ENDIF -->
 				<dl>
 					<dt><label for="ticket_hidden">{L_TRACKER_HIDE_TICKET}:</label></dt>
 					<dd><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></dd>

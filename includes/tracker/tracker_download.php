@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-// Thank you sun. 
+// Thank you sun.
 if (isset($_SERVER['CONTENT_TYPE']))
 {
 	if ($_SERVER['CONTENT_TYPE'] === 'application/x-java-archive')

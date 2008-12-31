@@ -31,7 +31,7 @@ class tracker
 	{
 		global $template, $user;
 		global $phpbb_root_path, $phpEx;
-		
+
 		if (!function_exists('group_memberships'))
 		{
 			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
@@ -58,7 +58,7 @@ class tracker
 			'U_TRACKER' 				=> $this->api->build_url('index'),
 			'U_TRACKER_STATS'			=> $this->api->build_url('statistics'),
 		));
-	
+
 		if ($in_tracker)
 		{
 			$template->assign_block_vars('navlinks', array(
@@ -94,10 +94,10 @@ class tracker
 					{
 						continue;
 					}
-				}					
-				$project_array[$item['project_name_clean']][] =  $item;				
+				}
+				$project_array[$item['project_name_clean']][] =  $item;
 			}
-			
+
 			foreach ($project_array as $projects)
 			{
 				$display_project = true;
@@ -112,9 +112,9 @@ class tracker
 						'PROJECT_DESC'				=> $item['project_desc'],
 						'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
 						'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
-					));	
+					));
 				}
-			}			
+			}
 
 		}
 		else
@@ -154,7 +154,7 @@ class tracker
 			'S_TRACKER_PROJECT_VIEW'	=> $this->api->config['project_view'],
 			'S_DISPLAY_PROJECT'			=> $display_project,
 			'S_LOGIN_ACTION'			=> $this->api->build_url('login'),
-			
+
 			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
 		));
 
@@ -242,7 +242,7 @@ class tracker
 					}
 				}
 			}
-			
+
 			$filesize = $row['filesize'];
 			$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
 			$filesize = get_formatted_filesize($filesize, false);
@@ -258,7 +258,7 @@ class tracker
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
 				'POST_ID'				=> $row['post_id'],
-				
+
 				'S_DISPLAY_NOTICE'		=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 				'S_SHOW_ATTACHMENTS'	=> ($auth->acl_get('u_tracker_download') && $row['attach_id']) ? true : false,
 				'U_DOWNLOAD_LINK'		=> $u_download_link,
@@ -467,7 +467,7 @@ class tracker
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
 
 		$template->assign_var('S_IN_STATS', true);
-		
+
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'   		=> $user->lang['TRACKER_STATS'],
 			'U_VIEW_FORUM'  	=> $this->api->build_url('statistics'),
@@ -678,7 +678,7 @@ class tracker
 			{
 				$template->assign_block_vars('version', array(
 					'U_VIEW_CHANGELOG'		=> $this->api->build_url('changelog', array($project_id, $item['version_id'])),
-					
+
 					'VERSION_NAME'			=> $this->api->set_lang_name($item['version_name']),
 					'TOTAL'					=> (isset($version_count[$item['version_id']])) ? $version_count[$item['version_id']] : 0,
 				));
@@ -759,7 +759,7 @@ class tracker
 
 		page_footer();
 	}
-	
+
 	/**
 	* Display a changelog for the specified version
 	* @todo decide how to handle security projects/tickets
@@ -767,14 +767,14 @@ class tracker
 	public function display_changelog($project_id, $version_id)
 	{
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
-		
+
 		$sql = 'SELECT version_name
 			FROM ' . TRACKER_VERSION_TABLE . "
 			WHERE version_id = $version_id";
 		$result = $db->sql_query($sql);
 		$version_name = (string) $db->sql_fetchfield('version_name');
 		$db->sql_freeresult($result);
-		
+
 		$sql_array = array(
 			'SELECT'	=> 't.ticket_id,
 							t.ticket_title,
@@ -783,14 +783,14 @@ class tracker
 			'FROM'		=> array(
 				TRACKER_TICKETS_TABLE => 't',
 			),
-			
+
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(TRACKER_COMPONENTS_TABLE => 'c'),
 					'ON'	=> 't.component_id = c.component_id',
 				),
 			),
-			
+
 			'WHERE'		=> "t.version_id = $version_id AND " . $db->sql_in_set('t.status_id', array(15, 16)),
 
 			'ORDER_BY'	=>	't.ticket_id ASC',
@@ -805,14 +805,14 @@ class tracker
 		$changes = array();
 		$board_url = generate_board_url() . '/';
 		$page_title = sprintf($user->lang['TRACKER_VERSION_CHANGELOG'], $this->api->projects[$project_id]['project_name'], $version_name);
-		
+
 		if (sizeof($row))
 		{
 			$changes['bbcode'][] = '[size=120][b]' . $page_title . '[/b][/size]';
 			$changes['bbcode'][] = '[list]';
 			$changes['html'][] = '<span style="font-size: 120%; line-height: normal; font-weight: bold;">' . $page_title . '</span>';
 			$changes['html'][] = '<ul>';
-		
+
 			foreach ($row as $fixed)
 			{
 				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
@@ -820,50 +820,50 @@ class tracker
 				$changes['bbcode'][] = "[*][url=$ticket_url]$component_name{$fixed['ticket_title']}[/url]";
 				$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
 			}
-		
+
 
 			$changes['bbcode'][] = '[/list]';
 			$changes['html'][] = '</ul>';
-		
+
 			// Output
-			$output = implode("\n", $changes['bbcode']);		
-			$uid = $bitfield = $options = ''; 
+			$output = implode("\n", $changes['bbcode']);
+			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
-			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 			$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
 
 			// BBCode
-			
-			$uid = $bitfield = $options = ''; 
+
+			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
 			$output = '[code]' . implode("\n", $changes['bbcode']) . '[/code]';
-			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 			$bbcode_output = generate_text_for_display($output, $uid, $bitfield, $options);
-			
+
 			// HTML
-			$uid = $bitfield = $options = ''; 
+			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
 			$output = '[code]' . $output_text . '[/code]';
-			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);		
+			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 			$html_output = generate_text_for_display($output, $uid, $bitfield, $options);
-			
-					
+
+
 			$template->assign_vars(array(
 				'S_HAS_CHANGELOG'		=> true,
 				'OUTPUT'				=> $output_text,
 				'BBCODE_CHANGELOG'		=> $bbcode_output,
 				'HTML_CHANGELOG'		=> $html_output,
 			));
-		
+
 		}
-		
-		
+
+
 		// Output page
 		page_header($page_title, false);
-		
+
 		$template->assign_vars(array(
 			'S_IN_CHANGELOG'		=> true,
-			
+
 			'PAGE_TITLE'			=> $page_title,
 		));
 
@@ -872,7 +872,7 @@ class tracker
 		);
 
 		page_footer();
-		
+
 	}
 
 	public function display_ticket_attachment($attachment)
@@ -901,7 +901,7 @@ class tracker
 				$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$attachment['extension']]['upload_icon']) . '" alt="" />';
 			}
 		}
-		
+
 		$filesize = $attachment['filesize'];
 		$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
 		$filesize = get_formatted_filesize($filesize, false);
@@ -1026,7 +1026,7 @@ class tracker
 					}
 				}
 			break;
-			
+
 			default:
 			break;
 		}

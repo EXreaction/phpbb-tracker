@@ -36,7 +36,7 @@ class file_functions
 	{
 		return unlink($file);
 	}
-	
+
 	public static function move_file($src_file, $dst_file)
 	{
 		self::copy_file($src_file, $dst_file);
@@ -120,7 +120,7 @@ class file_functions
 			@rmdir($dir);
 		}
 	}
-	
+
 	public static function move_dir($src_dir, $dst_dir)
 	{
 		self::copy_dir($src_dir, $dst_dir);
@@ -166,8 +166,8 @@ class file_functions
 		{
 			$dir .= '/';
 		}
-	}	
-	
+	}
+
 	public static function remove_extension($file)
 	{
 		$ext = strrchr($file, '.');
@@ -182,9 +182,9 @@ class file_functions
 	public static function filesize($files)
 	{
 		// Seperate files from directories and calculate the size
-		$filesize = 0;		
+		$filesize = 0;
 		$files = (!is_array($files)) ? array($files) : $files;
-		
+
 		$dir_list = $file_list = array();
 		if (is_array($files))
 		{
@@ -220,15 +220,15 @@ class file_functions
 			}
 			unset ($file_list);
 		}
-		
+
 		return $filesize;
 	}
-	
+
 	public static function filelist($path, $dir = '', $ignore = '', $ignore_index = true)
 	{
 		$list = array();
 		self::append_slash($dir);
-		
+
 		if ($files = scandir($path . $dir))
 		{
 			foreach ($files as $file)
@@ -237,7 +237,7 @@ class file_functions
 				{
 					continue;
 				}
-				
+
 				if ($ignore_index && ($file == 'index.html' || $file == 'index.htm'))
 				{
 					continue;

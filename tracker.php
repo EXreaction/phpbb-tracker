@@ -97,7 +97,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND p.project_enabled = ' . TRACKER_PROJECT_ENABLED : '';
 	$sql_where .= (!$tracker->api->can_manage) ? ' AND t.ticket_hidden = ' . TRACKER_TICKET_UNHIDDEN : '';
 	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['project_security']) ? ' AND t.ticket_user_id = ' . $user->data['user_id'] : '';
-	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['ticket_security']) ? ' AND t.ticket_security = ' . TRACKER_TICKET_UNSECURITY . ' OR (t.ticket_security = ' . TRACKER_TICKET_SECURITY . ' AND t.ticket_user_id = ' . $user->data['user_id'] . ')' : '';
+	$sql_where .= (!$tracker->api->can_manage && $tracker->api->projects[$project_id]['ticket_security']) ? ' AND (t.ticket_security = ' . TRACKER_TICKET_UNSECURITY . ' OR (t.ticket_security = ' . TRACKER_TICKET_SECURITY . ' AND t.ticket_user_id = ' . $user->data['user_id'] . '))' : '';
 	$sql_where .= ($user_id) ? ' AND t.ticket_user_id = ' . $user_id : '';
 	$sql_where .= ($assigned_to_user_id) ? ' AND (t.ticket_assigned_to = ' . $assigned_to_user_id . ' OR t.ticket_assigned_to = ' . TRACKER_ASSIGNED_TO_GROUP . ')' : '';
 	$sql_where .= $tracker->api->get_filter_sql($status_type, $version_id, $component_id);
@@ -166,13 +166,15 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$pagination_mode = 'mode=search&amp;term=' . $term;
 	}
 
-	$total_tickets = $tracker->api->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
+	// Save a query
+	//$total_tickets = $tracker->api->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
 	$tickets_per_page = $tracker->api->config['tickets_per_page'];
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query_limit($sql, $tickets_per_page, $start);
 
 	$tickets = $db->sql_fetchrowset($result);
+	$total_tickets = sizeof($tickets);
 	$db->sql_freeresult($result);
 
 	if ($tickets)
@@ -449,9 +451,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'priority_id'			=> request_var('pr', 0),
 			'severity_id'			=> request_var('s', 0),
 			'ticket_hidden'			=> request_var('ticket_hidden', 0),
-			'ticket_security'		=> request_var('ticket_security', 0),
 			'ticket_status'			=> request_var('ticket_status', 0),
 		);
+	
+		if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
+		{
+			$data['ticket_security'] = request_var('ticket_security', 0);
+		}
 
 		if ($submit)
 		{
@@ -739,13 +745,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
 
 	$option_data = array(
-		'status_id'				=> $use_data ? $data['status_id'] : $row['status_id'],
-		'ticket_assigned_to'	=> $use_data ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
-		'severity_id'			=> $use_data ? $data['severity_id'] : $row['severity_id'],
-		'priority_id'			=> $use_data ? $data['priority_id'] : $row['priority_id'],
-		'ticket_hidden'			=> $use_data ? $data['ticket_hidden'] : $row['ticket_hidden'],
-		'ticket_security'		=> $use_data ? $data['ticket_security'] : $row['ticket_security'],
-		'ticket_status'			=> $use_data ? $data['ticket_status'] : $row['ticket_status'],
+		'status_id'				=> ($use_data) ? $data['status_id'] : $row['status_id'],
+		'ticket_assigned_to'	=> ($use_data) ? $data['ticket_assigned_to'] : $row['ticket_assigned_to'],
+		'severity_id'			=> ($use_data) ? $data['severity_id'] : $row['severity_id'],
+		'priority_id'			=> ($use_data) ? $data['priority_id'] : $row['priority_id'],
+		'ticket_hidden'			=> ($use_data) ? $data['ticket_hidden'] : $row['ticket_hidden'],
+		'ticket_status'			=> ($use_data) ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
 	$template->assign_vars(array(
@@ -810,10 +815,9 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_STATUS_DETAILS'		=> $tracker->api->set_status($row['status_id']),
 		'TICKET_CLOSED'				=> $tracker->api->is_closed($row['status_id']),
 		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
-		'TICKET_SECURITY'			=> ($option_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
-
+		
 		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
 		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
 		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
@@ -827,6 +831,16 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_PHP'				=> (empty($row['ticket_php'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_php'],
 		'TICKET_DBMS'				=> (empty($row['ticket_dbms'])) ? $user->lang['TRACKER_UNKNOWN'] : $row['ticket_dbms'],
 	));
+
+	if ($row['project_ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
+	{
+		$option_data['ticket_security'] = ($use_data) ? $data['ticket_security'] : $row['ticket_security'];
+	
+		$template->assign_vars(array(
+			'S_TICKET_SECURITY'			=> true,
+			'TICKET_SECURITY'			=> ($option_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
+		));
+	}
 
 	switch ($mode)
 	{
@@ -938,7 +952,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			);
 		}
 		
-		if ($auth->acl_get('u_tracker_ticket_security'))
+		if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 		{
 			$ticket_data += array(
 				'ticket_security'			=> request_var('ticket_security', 0),
@@ -1098,7 +1112,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		));
 	}
 	
-	if ($tracker->api->projects[$project_id]['ticket_security'] && $auth->acl_get('u_tracker_ticket_security'))
+	if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 	{
 		$template->assign_vars(array(
 			'S_TICKET_SECURITY'			=> true,

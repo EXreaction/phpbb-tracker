@@ -360,7 +360,20 @@ class tracker_api
 			$db->sql_build_array('INSERT', $data);
 		$db->sql_query($sql);
 
+		// Get project id
+		$project_id = $db->sql_nextid();
+
 		$cache->destroy('_tracker_projects');
+
+		// Add project members to project subscription
+		$members = group_memberships($data['project_group']);
+		if (sizeof($members))
+		{
+			foreach ($members as $item)
+			{
+				$this->subscribe('subscribe', $project_id, false, $item['user_id']);
+			}
+		}
 	}
 
 	/**
@@ -400,15 +413,23 @@ class tracker_api
 		}
 		$db->sql_freeresult($result);
 
-		$sql = 'DELETE FROM ' . TRACKER_VERSION_TABLE. '
+		$sql = 'DELETE FROM ' . TRACKER_VERSION_TABLE . '
 			WHERE project_id = ' . $id;
 		$db->sql_query($sql);
 
-		$sql = 'DELETE FROM ' . TRACKER_COMPONENTS_TABLE. '
+		$sql = 'DELETE FROM ' . TRACKER_COMPONENTS_TABLE . '
 			WHERE project_id = ' . $id;
 		$db->sql_query($sql);
 
-		$sql = 'DELETE FROM ' . TRACKER_PROJECT_TABLE. '
+		$sql = 'DELETE FROM ' . TRACKER_PROJECT_TABLE . '
+			WHERE project_id = ' . $id;
+		$db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . TRACKER_PROJECT_WATCH_TABLE . '
+			WHERE project_id = ' . $id;
+		$db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . TRACKER_TICKETS_WATCH_TABLE . '
 			WHERE project_id = ' . $id;
 		$db->sql_query($sql);
 
@@ -561,13 +582,13 @@ class tracker_api
 				$column = 'project_enabled';
 				$id_name = 'project_id';
 			break;
-			
+
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
 				$column = 'version_enabled';
-				$id_name = 'version_id';			
+				$id_name = 'version_id';
 			break;
-			
+
 			default:
 				trigger_error('NO_MODE');
 			break;
@@ -593,7 +614,7 @@ class tracker_api
 
 		if ($type == 'project')
 		{
-			$cache->destroy('_tracker_projects');		
+			$cache->destroy('_tracker_projects');
 		}
 	}
 
@@ -694,6 +715,10 @@ class tracker_api
 		$db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . TRACKER_POSTS_TABLE. '
+			WHERE ticket_id = ' . $id;
+		$db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . TRACKER_TICKETS_WATCH_TABLE . '
 			WHERE ticket_id = ' . $id;
 		$db->sql_query($sql);
 	}
@@ -806,7 +831,7 @@ class tracker_api
 			WHERE ' . $db->sql_in_set('ticket_id', $ticket_id);
 		$db->sql_query($sql);
 	}
-	
+
 	/**
 	* Sets security/unsecurity of ticket
 	* @param string $action value must be either 'security' or 'unsecurity'
@@ -938,14 +963,14 @@ class tracker_api
 			$db->sql_build_array('INSERT', $data);
 		$db->sql_query($sql);
 	}
-	
+
 	public function is_subscribed($mode, $id)
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
-		
+
 		$table = ($mode == 'ticket') ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
 		$column = ($mode == 'ticket') ? 'ticket_id' : 'project_id';
-		
+
 		$sql = "SELECT user_id FROM $table
 			WHERE $column = '$id'
 				AND user_id = '" . $user->data['user_id'] . "'";
@@ -963,26 +988,27 @@ class tracker_api
 			return true;
 		}
 	}
-	
-	public function subscribe($mode, $project_id, $ticket_id)
+
+	public function subscribe($mode, $project_id, $ticket_id, $user_id = false)
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
-		
-		$table = ($project_id && $ticket_id) ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
-		$column = ($project_id && $ticket_id) ? 'ticket_id' : 'project_id';
-		$id = ($project_id && $ticket_id) ? $ticket_id : $project_id;
-		
+
+		$table 		= ($project_id && $ticket_id) ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
+		$column 	= ($project_id && $ticket_id) ? 'ticket_id' : 'project_id';
+		$id 		= ($project_id && $ticket_id) ? $ticket_id : $project_id;
+		$user_id 	= (!$user_id) ? $user->data['user_id'] : $user_id;
+
 		if ($mode == 'subscribe')
 		{
 			$sql = "UPDATE $table
 				SET $column = '$id'
-				WHERE user_id = '" . $user->data['user_id'] . "'";
+				WHERE user_id = '$user_id'";
 			$db->sql_query($sql);
 
 			if (!$db->sql_affectedrows())
 			{
 				$sql = 'INSERT INTO ' . $table . ' ' . $db->sql_build_array('INSERT', array(
-					'user_id'	=> $user->data['user_id'],
+					'user_id'	=> $user_id,
 					$column		=> $id,
 				));
 				$db->sql_query($sql);
@@ -991,10 +1017,10 @@ class tracker_api
 		else
 		{
 			$sql = "DELETE FROM $table
-				WHERE $column = '$id' 
-					AND user_id = '" . $user->data['user_id'] . "'";
+				WHERE $column = '$id'
+					AND user_id = '$user_id'";
 			$db->sql_query($sql);
-		}		
+		}
 	}
 
 	/**
@@ -1008,7 +1034,7 @@ class tracker_api
 		{
 			return;
 		}
-		
+
 		$sql_array = array(
 			'SELECT'	=> 't.*, p.*',
 
@@ -1025,18 +1051,18 @@ class tracker_api
 
 			'WHERE'		=> 't.ticket_id = ' . $data['ticket_id'],
 		);
-	
+
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
-	
-		$row = $db->sql_fetchrow($result);		
-		$db->sql_freeresult($result);		
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
 		$data = array_merge($row, $data);
-		
+
 		$subject = $email_template = $email_address = '';
 		$email_template_vars = array();
 		$board_url = generate_board_url() . '/';
-		
+
 		$send = true;
 
 		switch ($type)
@@ -1066,14 +1092,14 @@ class tracker_api
 			case TRACKER_EMAIL_NOTIFY_COMMENT:
 
 				$email_template = 'tracker_notify_comment';
-				
+
 				// We don't need to let the user know if they post in there own ticket
 				if ($data['ticket_user_id'] == $user->data['user_id'])
 				{
 					$send = false;
 					break;
 				}
-				
+
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($data['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
@@ -1113,7 +1139,7 @@ class tracker_api
 			case TRACKER_EMAIL_NOTIFY_STATUS_SINGLE:
 
 				$email_template = 'tracker_notify_status_single';
-				
+
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($data['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
@@ -1202,7 +1228,7 @@ class tracker_api
 			case TRACKER_EMAIL_NOTIFY_STATUS_DOUBLE:
 
 				$email_template = 'tracker_notify_status_double';
-				
+
 				// If ticket is hidden then we won't notify anyone who is not project member
 				if ($data['ticket_hidden'] == TRACKER_TICKET_HIDDEN)
 				{
@@ -1304,17 +1330,17 @@ class tracker_api
 			$messenger->send();
 			$messenger->save_queue();
 		}
-		
+
 		if ($send_subscription)
 		{
 			$this->send_subscription($data);
 		}
 	}
-	
+
 	public function send_subscription($data)
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
-		
+
 		// Do not notify banned users, the user who triggered the notice
 		// or the original user who placed the ticket (they will get a notice anyways)
 		$sql = 'SELECT ban_userid
@@ -1329,7 +1355,7 @@ class tracker_api
 			$sql_ignore_users .= ', ' . (int) $row['ban_userid'];
 		}
 		$db->sql_freeresult($result);
-		
+
 		$members_only = false;
 		$members_ids = array();
 		if ($this->projects[$data['project_id']]['project_security'] || (isset($data['ticket_hidden']) && $data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) || (isset($data['ticket_security']) && $data['ticket_security'] == TRACKER_TICKET_SECURITY))
@@ -1337,16 +1363,16 @@ class tracker_api
 			// If ticket it hidden or security ticket/tracker, then we only want to notify team members who have subscribed
 			$members = array();
 			$members = group_memberships($this->projects[$data['project_id']]['project_group']);
-			
+
 			if (sizeof($members))
-			{	
+			{
 				foreach ($members as $item)
 				{
 					$member_ids[$item['user_id']] = $item['user_id'];
 				}
 			}
 		}
-		
+
 		$user_ids = array();
 		$sql_array = array(
 			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang',
@@ -1366,7 +1392,7 @@ class tracker_api
 				AND u.user_id NOT IN('. $sql_ignore_users .')',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
-		
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			// If we need members only and user is not group member skip it
@@ -1374,7 +1400,7 @@ class tracker_api
 			{
 				continue;
 			}
-			
+
 			$user_ids[$row['user_id']] = array(
 				'user_id'		=> $row['user_id'],
 				'username'		=> $row['username'],
@@ -1382,7 +1408,7 @@ class tracker_api
 			);
 		}
 		$db->sql_freeresult($result);
-		
+
 		$sql_array = array(
 			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang',
 
@@ -1401,7 +1427,7 @@ class tracker_api
 				AND u.user_id NOT IN('. $sql_ignore_users .')',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
-		
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			if (!isset($user_ids[$row['user_id']]))
@@ -1411,7 +1437,7 @@ class tracker_api
 				{
 					continue;
 				}
-				
+
 				$user_ids[$row['user_id']] = array(
 					'user_id'		=> $row['user_id'],
 					'username'		=> $row['username'],
@@ -1421,9 +1447,9 @@ class tracker_api
 			}
 		}
 		$db->sql_freeresult($result);
-		
+
 		// Alright we should now have all the user we want to notify
-		// So we can now get ready to send...		
+		// So we can now get ready to send...
 		if (sizeof($user_ids))
 		{
 			if (!class_exists('messenger'))
@@ -1444,12 +1470,12 @@ class tracker_api
 					'TICKET_ID'					=> $data['ticket_id'],
 					'PROJECT_UNSUBSCRIBE_URL'	=> $board_url . $this->build_url('clean_unsubscribe_p', array($data['project_id'])),
 					'TICKET_UNSUBSCRIBE_URL'	=> $board_url . $this->build_url('clean_unsubscribe_t', array($data['project_id'], $data['ticket_id'])),
-					'TICKET_TITLE'				=> htmlspecialchars_decode($data['ticket_title']),		
+					'TICKET_TITLE'				=> htmlspecialchars_decode($data['ticket_title']),
 					'TRACKER_URL'				=> $board_url . $this->build_url('clean_index'),
 					'TRACKER_TYPE'				=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'					=> htmlspecialchars_decode($config['sitename']),
 				);
-			
+
 				$messenger->subject($subject);
 				$messenger->template('tracker_notify_watch', $users['user_lang']);
 				$messenger->to($email_address);
@@ -1460,7 +1486,7 @@ class tracker_api
 			}
 			$messenger->save_queue();
 		}
-		
+
 	}
 
 	public function process_notification($data, $ticket, $send_subscription = true)
@@ -1724,26 +1750,26 @@ class tracker_api
 			break;
 
 			case TRACKER_ALL_OPENED:
-				$filter = ' AND ' . $db->sql_in_set('status_id', $this->get_opened());
+				$filter = ' AND ' . $db->sql_in_set('t.status_id', $this->get_opened());
 			break;
 
 			case TRACKER_ALL_CLOSED:
-				$filter = ' AND ' . $db->sql_in_set('status_id', $this->get_opened(), true);
+				$filter = ' AND ' . $db->sql_in_set('t.status_id', $this->get_opened(), true);
 			break;
 
 			default:
-				$filter = ' AND status_id = ' . $type;
+				$filter = ' AND t.status_id = ' . $type;
 			break;
 		}
-		
+
 		if ($version_id)
 		{
-			$filter .= ' AND version_id = ' . (int) $version_id;
+			$filter .= ' AND t.version_id = ' . (int) $version_id;
 		}
-		
+
 		if ($component_id)
 		{
-			$filter .= ' AND component_id = ' . (int) $component_id;
+			$filter .= ' AND t.component_id = ' . (int) $component_id;
 		}
 
 		return $filter;
@@ -1774,11 +1800,11 @@ class tracker_api
 		return $options;
 
 	}
-	
+
 	public function get_name($mode, $project_id, $id)
 	{
 		global $db;
-		
+
 		$mode = strtolower($mode);
 		$table = '';
 		switch ($mode)
@@ -1786,23 +1812,23 @@ class tracker_api
 			case 'component':
 				$table = TRACKER_COMPONENTS_TABLE;
 			break;
-			
+
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
 			break;
-			
+
 			default:
 				trigger_error('NO_MODE');
 			break;
 		}
-		
+
 		$sql = "SELECT {$mode}_name as name from $table
 			WHERE project_id = $project_id
 				AND {$mode}_id = $id";
 		$result = $db->sql_query($sql);
 		$name = (string) $db->sql_fetchfield('name');
 		$db->sql_freeresult($result);
-		
+
 		return $this->set_lang_name($name);
 	}
 
@@ -1966,7 +1992,7 @@ class tracker_api
 			'FORUM_NAME'	=> $data['project_name'],
 			'U_VIEW_FORUM'	=> $this->build_url(($in_stats) ? 'statistics_p' : 'project', array($data['project_id'])),
 		));
-		
+
 		if ($ticket_id)
 		{
 			$template->assign_block_vars('navlinks', array(
@@ -1979,7 +2005,6 @@ class tracker_api
 	/**
 	* Returns the total of specified type either 'tickets' or 'posts'
 	* Used for pagination
-	* Follows phpbb3 $config['display_last_edited'] variable
 	*/
 	public function get_total($type, $project_id = 0, $ticket_id = 0, $where = '')
 	{
