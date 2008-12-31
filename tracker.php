@@ -236,14 +236,14 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
 	}
 	
-	if ($version_id)
+	if ($version_id && $version_name = $tracker->api->get_name('version', $project_id, $version_id))
 	{
-		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_VERSION'], $tracker->api->get_name('version', $project_id, $version_id));;
+		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_VERSION'], $version_name);
 	}
 	
-	if ($component_id)
+	if ($component_id && $component_name = $tracker->api->get_name('component', $project_id, $component_id))
 	{
-		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_COMPONENT'], $tracker->api->get_name('component', $project_id, $component_id));
+		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_COMPONENT'], $component_name);
 	}
 
 	$l_total_tickets = false;

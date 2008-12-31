@@ -1603,7 +1603,7 @@ class tracker_api
 
 	public function handle_project_items($mode, $type, $data = false, $id = false)
 	{
-		global $db;
+		global $cache, $db;
 
 		$table = '';
 		switch ($type)
@@ -1658,7 +1658,7 @@ class tracker_api
 				trigger_error('NO_MODE');
 			break;
 		}
-
+		$cache->destroy('_tracker_projects');
 	}
 
 	/**
@@ -1806,15 +1806,15 @@ class tracker_api
 		global $db;
 
 		$mode = strtolower($mode);
-		$table = '';
+		$name = '';
 		switch ($mode)
 		{
 			case 'component':
-				$table = TRACKER_COMPONENTS_TABLE;
+				$name = (isset($this->projects[$project_id]['components'][$id]['component_name'])) ? $this->projects[$project_id]['components'][$id]['component_name'] : false;
 			break;
 
 			case 'version':
-				$table = TRACKER_VERSION_TABLE;
+				$name = (isset($this->projects[$project_id]['versions'][$id]['version_name'])) ? $this->projects[$project_id]['versions'][$id]['version_name'] : false;
 			break;
 
 			default:
@@ -1822,14 +1822,7 @@ class tracker_api
 			break;
 		}
 
-		$sql = "SELECT {$mode}_name as name from $table
-			WHERE project_id = $project_id
-				AND {$mode}_id = $id";
-		$result = $db->sql_query($sql);
-		$name = (string) $db->sql_fetchfield('name');
-		$db->sql_freeresult($result);
-
-		return $this->set_lang_name($name);
+		return ($name) ? $this->set_lang_name($name) : false;
 	}
 
 	/**
@@ -2277,6 +2270,44 @@ class tracker_api
 		}
 
 		return true;
+	}
+	
+	/**
+	* Function used to quickly show the contents of variables
+	*/
+	public function debug($exit = false, $var = false)
+	{
+		if ($var)
+		{
+			echo '<pre>';
+			var_export($var);
+			echo '</pre>';
+		}
+		else
+		{
+			$debug = array(
+				'POST'		=> $_POST,
+				'GET'		=> $_GET,
+				'REQUEST'	=> $_REQUEST,
+				'COOKIE'	=> $_COOKIE,
+				'SERVER'	=> $_SERVER,
+			);
+
+
+			foreach ($debug as $key => $value)
+			{
+				echo '<p><b>' . $key . '</b>';
+				echo '<pre>';
+				var_export($value);
+				echo '</pre>';
+				echo '</p>';
+			}
+		}
+
+		if ($exit)
+		{
+			exit;
+		}
 	}
 }
 

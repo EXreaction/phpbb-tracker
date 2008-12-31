@@ -61,8 +61,7 @@ class tracker_cache extends cache
 		{
 			global $db;
 
-			// tracker projects
-
+			// Get tracker projects
 			$sql_array = array(
 				'SELECT'	=> 'p.*,
 								g.group_name,
@@ -104,9 +103,73 @@ class tracker_cache extends cache
 					'lang_dbms'				=> $row['lang_dbms'],
 					'group_name'			=> $row['group_name'],
 					'group_colour'			=> $row['group_colour'],
-				);
+				);		
+			}
+			$db->sql_freeresult($result);			
+			
+			// Get project components
+			$sql_array = array(
+				'SELECT'	=> 'c.component_id,
+								c.component_name,
+								c.project_id',
+
+				'FROM'		=> array(
+					TRACKER_COMPONENTS_TABLE	=> 'c',
+				),
+
+				'ORDER_BY'	=> 'c.component_id ASC',
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$id = $row['component_id'];
+				$name = $row['component_name'];
+				$project_id = $row['project_id'];				
+				
+				if (isset($projects[$project_id]))
+				{
+					$projects[$project_id]['components'][$id] = array(
+						'component_id'		=> $id,
+						'component_name'	=> $name,
+					);
+				}
 			}
 			$db->sql_freeresult($result);
+			
+			// Get project versions
+			$sql_array = array(
+				'SELECT'	=> 'c.version_id,
+								c.version_name,
+								c.project_id',
+
+				'FROM'		=> array(
+					TRACKER_VERSION_TABLE	=> 'c',
+				),
+
+				'ORDER_BY'	=> 'c.version_id ASC',
+			);
+
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$id = $row['version_id'];
+				$name = $row['version_name'];
+				$project_id = $row['project_id'];				
+				
+				if (isset($projects[$project_id]))
+				{
+					$projects[$project_id]['versions'][$id] = array(
+						'version_id'		=> $id,
+						'version_name'		=> $name,
+					);
+				}
+			}
+			$db->sql_freeresult($result);			
 
 			$this->put('_tracker_projects', $projects);
 		}
