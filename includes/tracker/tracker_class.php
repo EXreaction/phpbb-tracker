@@ -760,6 +760,10 @@ class tracker
 		page_footer();
 	}
 	
+	/**
+	* Display a changelog for the specified version
+	* @todo decide how to handle security projects/tickets
+	*/
 	public function display_changelog($project_id, $version_id)
 	{
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
@@ -774,11 +778,17 @@ class tracker
 		$sql_array = array(
 			'SELECT'	=> 't.ticket_id,
 							t.ticket_title,
-							t.status_id,
-							t.version_id',
+							c.component_name',
 
 			'FROM'		=> array(
 				TRACKER_TICKETS_TABLE => 't',
+			),
+			
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(TRACKER_COMPONENTS_TABLE => 'c'),
+					'ON'	=> 't.component_id = c.component_id',
+				),
 			),
 			
 			'WHERE'		=> "t.version_id = $version_id AND " . $db->sql_in_set('t.status_id', array(15, 16)),
@@ -805,8 +815,9 @@ class tracker
 		
 			foreach ($row as $fixed)
 			{
+				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
 				$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
-				$changes['bbcode'][] = "[*][url=$ticket_url]{$fixed['ticket_title']}[/url]";
+				$changes['bbcode'][] = "[*][url=$ticket_url]$component_name{$fixed['ticket_title']}[/url]";
 				$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
 			}
 		
