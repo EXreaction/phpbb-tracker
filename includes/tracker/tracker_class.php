@@ -59,10 +59,13 @@ class tracker
 			'U_TRACKER_STATS'			=> $this->api->build_url('statistics'),
 		));
 	
-	   $template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'   		=> $user->lang['TRACKER_INDEX'],
-			'U_VIEW_FORUM'  	=> $this->api->build_url('index'),
-		));
+		if ($in_tracker)
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'   		=> $user->lang['TRACKER_INDEX'],
+				'U_VIEW_FORUM'  	=> $this->api->build_url('index'),
+			));
+		}
 	}
 
 	/**
