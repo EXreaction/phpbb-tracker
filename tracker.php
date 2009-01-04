@@ -166,15 +166,13 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$pagination_mode = 'mode=search&amp;term=' . $term;
 	}
 
-	// Save a query
-	//$total_tickets = $tracker->api->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
+	$total_tickets = $tracker->api->get_total('tickets', $project_id, $ticket_id, $sql_array['WHERE']);
 	$tickets_per_page = $tracker->api->config['tickets_per_page'];
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query_limit($sql, $tickets_per_page, $start);
 
 	$tickets = $db->sql_fetchrowset($result);
-	$total_tickets = sizeof($tickets);
 	$db->sql_freeresult($result);
 
 	if ($tickets)
