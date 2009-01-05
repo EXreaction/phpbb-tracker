@@ -75,7 +75,7 @@
 				<td><strong>{tickets.TICKET_ID}</strong></td>
 				<td>
 					<strong><a href="{tickets.U_VIEW_TICKET}">{tickets.TICKET_TITLE}</a></strong><br />
-					<span class="small">{tickets.TICKET_USERNAME} &raquo; {tickets.TICKET_TIME}<!-- IF tickets.LAST_POST_USERNAME -->{L_TRACKER_LAST_POST_BY}{tickets.LAST_POST_USERNAME}<!-- ENDIF --></span>
+					<span class="small">{tickets.TICKET_USERNAME} {L_TRACKER_POSTED_ON_DATE} {tickets.TICKET_TIME}<!-- IF tickets.LAST_POST_USERNAME -->{L_TRACKER_LAST_POST_BY}{tickets.LAST_POST_USERNAME}<!-- ENDIF --></span>
 				</td>
 				<td style="text-align: center;">{tickets.TICKET_COMPONENT}</td>
 				<td style="text-align: center;">{tickets.TICKET_ASSIGNED_TO}</td>

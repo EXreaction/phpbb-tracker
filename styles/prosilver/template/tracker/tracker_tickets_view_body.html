@@ -67,7 +67,7 @@
 						</ul>
 						<!-- ENDIF -->
 					<!-- ENDIF -->
-					<p class="author" style="font-weight: bold;"><a href="#{comments.POST_ID}">{POST_IMG}</a>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} &raquo; {comments.COMMENT_TIME}</p>
+					<p class="author" style="font-weight: bold;"><a href="#{comments.POST_ID}">{POST_IMG}</a>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_TRACKER_POSTED_ON_DATE} {comments.COMMENT_TIME}</p>
 					<div class="content">{comments.COMMENT_DESC}</div>
 					<!-- IF comments.S_SHOW_ATTACHMENTS -->
 					<dl class="attachbox">
@@ -266,7 +266,7 @@
 				<div class="inner"><span class="corners-top"><span></span></span>
 				<!-- BEGIN review -->
 				<div class="postbody">
-					<p class="author<!-- IF review.S_LAST_ROW --> current<!-- ENDIF -->">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_POSTED_ON_DATE} {review.POST_TIME}</p>
+					<p class="author<!-- IF review.S_LAST_ROW --> current<!-- ENDIF -->">{L_POST_BY_AUTHOR} <b>{review.POST_USER}</b> {L_TRACKER_POSTED_ON_DATE} {review.POST_TIME}</p>
 
 					<div class="content<!-- IF review.S_LAST_ROW --> current<!-- ENDIF -->">{review.POST_TEXT}</div>
 				</div>
