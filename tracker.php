@@ -813,7 +813,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_STATUS_DETAILS'		=> $tracker->api->set_status($row['status_id']),
 		'TICKET_CLOSED'				=> $tracker->api->is_closed($row['status_id']),
 		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
-		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'])) : '',
+		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'], false, true)) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
 		
 		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
