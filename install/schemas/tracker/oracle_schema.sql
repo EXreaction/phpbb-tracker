@@ -42,12 +42,38 @@ DISCONNECT;
 CONNECT phpbb/phpbb_password;
 */
 /*
+	Table: 'phpbb_tracker_categories'
+*/
+CREATE TABLE phpbb_tracker_categories (
+	project_cat_id number(8) NOT NULL,
+	project_cat_name varchar2(255) DEFAULT '' ,
+	project_cat_name_clean varchar2(255) DEFAULT '' ,
+	CONSTRAINT pk_phpbb_tracker_categories PRIMARY KEY (project_cat_id)
+)
+/
+
+
+CREATE SEQUENCE phpbb_tracker_categories_seq
+/
+
+CREATE OR REPLACE TRIGGER t_phpbb_tracker_categories
+BEFORE INSERT ON phpbb_tracker_categories
+FOR EACH ROW WHEN (
+	new.project_cat_id IS NULL OR new.project_cat_id = 0
+)
+BEGIN
+	SELECT phpbb_tracker_categories_seq.nextval
+	INTO :new.project_cat_id
+	FROM dual;
+END;
+/
+
+
+/*
 	Table: 'phpbb_tracker_project'
 */
 CREATE TABLE phpbb_tracker_project (
 	project_id number(8) NOT NULL,
-	project_name varchar2(255) DEFAULT '' ,
-	project_name_clean varchar2(255) DEFAULT '' ,
 	project_desc varchar2(765) DEFAULT '' ,
 	project_group number(8) DEFAULT '0' NOT NULL,
 	project_type number(2) DEFAULT '0' NOT NULL,

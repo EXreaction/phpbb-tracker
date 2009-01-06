@@ -4,11 +4,17 @@
 
 BEGIN TRANSACTION;
 
+# Table: 'phpbb_tracker_categories'
+CREATE TABLE phpbb_tracker_categories (
+	project_cat_id INTEGER PRIMARY KEY NOT NULL ,
+	project_cat_name varchar(255) NOT NULL DEFAULT '',
+	project_cat_name_clean varchar(255) NOT NULL DEFAULT ''
+);
+
+
 # Table: 'phpbb_tracker_project'
 CREATE TABLE phpbb_tracker_project (
 	project_id INTEGER PRIMARY KEY NOT NULL ,
-	project_name varchar(255) NOT NULL DEFAULT '',
-	project_name_clean varchar(255) NOT NULL DEFAULT '',
 	project_desc text(65535) NOT NULL DEFAULT '',
 	project_group INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	project_type tinyint(2) NOT NULL DEFAULT '0',

@@ -2,11 +2,18 @@
 # $Id: $
 #
 
+# Table: 'phpbb_tracker_categories'
+CREATE TABLE phpbb_tracker_categories (
+	project_cat_id mediumint(8) UNSIGNED NOT NULL auto_increment,
+	project_cat_name varbinary(255) DEFAULT '' NOT NULL,
+	project_cat_name_clean varbinary(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (project_cat_id)
+);
+
+
 # Table: 'phpbb_tracker_project'
 CREATE TABLE phpbb_tracker_project (
 	project_id mediumint(8) UNSIGNED NOT NULL auto_increment,
-	project_name varbinary(255) DEFAULT '' NOT NULL,
-	project_name_clean varbinary(255) DEFAULT '' NOT NULL,
 	project_desc blob NOT NULL,
 	project_group mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	project_type tinyint(2) DEFAULT '0' NOT NULL,

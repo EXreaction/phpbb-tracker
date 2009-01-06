@@ -3,11 +3,30 @@
 #
 
 
+# Table: 'phpbb_tracker_categories'
+CREATE TABLE phpbb_tracker_categories (
+	project_cat_id INTEGER NOT NULL,
+	project_cat_name VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
+	project_cat_name_clean VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL
+);;
+
+ALTER TABLE phpbb_tracker_categories ADD PRIMARY KEY (project_cat_id);;
+
+
+CREATE GENERATOR phpbb_tracker_categories_gen;;
+SET GENERATOR phpbb_tracker_categories_gen TO 0;;
+
+CREATE TRIGGER t_phpbb_tracker_categories FOR phpbb_tracker_categories
+BEFORE INSERT
+AS
+BEGIN
+	NEW.project_cat_id = GEN_ID(phpbb_tracker_categories_gen, 1);
+END;;
+
+
 # Table: 'phpbb_tracker_project'
 CREATE TABLE phpbb_tracker_project (
 	project_id INTEGER NOT NULL,
-	project_name VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
-	project_name_clean VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	project_desc VARCHAR(255) CHARACTER SET UTF8 DEFAULT '' NOT NULL COLLATE UNICODE,
 	project_group INTEGER DEFAULT 0 NOT NULL,
 	project_type INTEGER DEFAULT 0 NOT NULL,

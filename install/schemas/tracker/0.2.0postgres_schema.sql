@@ -85,6 +85,19 @@ CREATE OPERATOR =(
   SORT1= <);
 */
 /*
+	Table: 'phpbb_tracker_categories'
+*/
+CREATE SEQUENCE phpbb_tracker_categories_seq;
+
+CREATE TABLE phpbb_tracker_categories (
+	project_cat_id INT4 DEFAULT nextval('phpbb_tracker_categories_seq'),
+	project_cat_name varchar(255) DEFAULT '' NOT NULL,
+	project_cat_name_clean varchar(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (project_cat_id)
+);
+
+
+/*
 	Table: 'phpbb_tracker_project_watch'
 */
 CREATE TABLE phpbb_tracker_project_watch (

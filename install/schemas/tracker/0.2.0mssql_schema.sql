@@ -8,6 +8,24 @@ BEGIN TRANSACTION
 GO
 
 /*
+	Table: 'phpbb_tracker_categories'
+*/
+CREATE TABLE [phpbb_tracker_categories] (
+	[project_cat_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[project_cat_name] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[project_cat_name_clean] [varchar] (255) DEFAULT ('') NOT NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [phpbb_tracker_categories] WITH NOCHECK ADD 
+	CONSTRAINT [PK_phpbb_tracker_categories] PRIMARY KEY  CLUSTERED 
+	(
+		[project_cat_id]
+	)  ON [PRIMARY] 
+GO
+
+
+/*
 	Table: 'phpbb_tracker_project_watch'
 */
 CREATE TABLE [phpbb_tracker_project_watch] (

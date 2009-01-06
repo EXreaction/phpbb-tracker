@@ -139,7 +139,6 @@ class acp_tracker
 				'tickets_per_page'			=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'posts_per_page'			=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'top_reporters'				=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
-				'project_view'				=> array('lang' => 'TRACKER_PROJECT_VIEW',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 				'default_status_type'		=> array('lang' => 'TRACKER_DEFAULT_STATUS_TYPE',	'validate' => 'int', 	'type' => 'select', 		'explain' => true, 'method' => 'default_status_type_select'),
 		));
 
