@@ -21,6 +21,7 @@ global $table_prefix;
 define('TRACKER_CONFIG_TABLE',			$table_prefix . 'tracker_config');
 define('TRACKER_ATTACHMENTS_TABLE',		$table_prefix . 'tracker_attachments');
 define('TRACKER_PROJECT_TABLE',			$table_prefix . 'tracker_project');
+define('TRACKER_PROJECT_CATS_TABLE',	$table_prefix . 'tracker_project_categories');
 define('TRACKER_TICKETS_TABLE',			$table_prefix . 'tracker_tickets');
 define('TRACKER_POSTS_TABLE',			$table_prefix . 'tracker_posts');
 define('TRACKER_COMPONENTS_TABLE',		$table_prefix . 'tracker_components');

@@ -48,6 +48,32 @@ class tracker_cache extends cache
 
 		return $config;
 	}
+	
+	public function obtain_tracker_project_cats()
+	{
+		if (($projects = $this->get('_tracker_project_cats')) === false)
+		{
+			global $db;
+			
+			$sql = 'SELECT *
+				FROM ' . TRACKER_PROJECT_CATS_TABLE . '
+				 ORDER BY project_cat_name_clean ASC';
+			$result = $db->sql_query($sql);
+
+			$projects = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$projects[$row['project_cat_id']] = array(
+					'project_cat_id'			=> $row['project_cat_id'],
+					'project_cat_name'			=> $row['project_cat_name'],
+					'project_cat_name_clean'	=> $row['project_cat_name_clean'],
+				);		
+			}
+			$db->sql_freeresult($result);			
+			$this->put('_tracker_project_cats', $projects);
+		}
+		return $projects;
+	}
 
 	/**
 	* Obtain tracker projects
@@ -69,7 +95,7 @@ class tracker_cache extends cache
 
 				'FROM'		=> array(
 					TRACKER_PROJECT_TABLE	=> 'p',
-				),
+				),				
 
 				'LEFT_JOIN'	=> array(
 					array(
@@ -78,7 +104,7 @@ class tracker_cache extends cache
 					),
 				),
 
-				'ORDER_BY'	=> 'project_name_clean ASC, project_type ASC',
+				'ORDER_BY'	=> 'project_type ASC',
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -88,21 +114,20 @@ class tracker_cache extends cache
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$projects[$row['project_id']] = array(
-					'project_id'			=> $row['project_id'],
-					'project_name'			=> $row['project_name'],
-					'project_name_clean'	=> $row['project_name_clean'],
-					'project_desc'			=> $row['project_desc'],
-					'project_enabled'		=> $row['project_enabled'],
-					'project_type'			=> $row['project_type'],
-					'project_security'		=> $row['project_security'],
-					'ticket_security'		=> $row['ticket_security'],
-					'project_group'			=> $row['project_group'],
-					'show_php'				=> $row['show_php'],
-					'lang_php'				=> $row['lang_php'],
-					'show_dbms'				=> $row['show_dbms'],
-					'lang_dbms'				=> $row['lang_dbms'],
-					'group_name'			=> $row['group_name'],
-					'group_colour'			=> $row['group_colour'],
+					'project_id'				=> $row['project_id'],
+					'project_desc'				=> $row['project_desc'],
+					'project_enabled'			=> $row['project_enabled'],
+					'project_type'				=> $row['project_type'],
+					'project_security'			=> $row['project_security'],
+					'ticket_security'			=> $row['ticket_security'],
+					'project_group'				=> $row['project_group'],
+					'project_cat_id'			=> $row['project_cat_id'],
+					'show_php'					=> $row['show_php'],
+					'lang_php'					=> $row['lang_php'],
+					'show_dbms'					=> $row['show_dbms'],
+					'lang_dbms'					=> $row['lang_dbms'],
+					'group_name'				=> $row['group_name'],
+					'group_colour'				=> $row['group_colour'],
 				);		
 			}
 			$db->sql_freeresult($result);			

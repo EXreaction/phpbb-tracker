@@ -4,8 +4,8 @@
 
 BEGIN TRANSACTION;
 
-# Table: 'phpbb_tracker_categories'
-CREATE TABLE phpbb_tracker_categories (
+# Table: 'phpbb_tracker_project_categories'
+CREATE TABLE phpbb_tracker_project_categories (
 	project_cat_id INTEGER PRIMARY KEY NOT NULL ,
 	project_cat_name varchar(255) NOT NULL DEFAULT '',
 	project_cat_name_clean varchar(255) NOT NULL DEFAULT ''

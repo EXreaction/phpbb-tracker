@@ -59,6 +59,7 @@ class tracker_api
 		$this->cache = new tracker_cache();
 
 		$this->config		= $this->cache->obtain_tracker_config();
+		$this->project_cats = $this->cache->obtain_tracker_project_cats();
 		$this->projects		= $this->cache->obtain_tracker_projects();
 		$this->extensions	= $this->cache->obtain_attach_extensions(TRACKER_EXTENSION_ID);
 
@@ -347,9 +348,120 @@ class tracker_api
 		$db->sql_query($sql);
 
 	}
+	
+	public function get_project_name($project_cat_id, $project_id, $type_id = false)
+	{	
+		$project_name = $this->project_cats[$project_cat_id]['project_cat_name'];		
+		if ($type_id !== false)
+		{
+			$project_type = $this->set_lang_name($this->types[$type_id]['title']);
+		}
+		else
+		{			
+			$project_type = $this->get_type_option('title', $project_id); 
+		}
+		
+		return $project_name . ' - ' . $project_type;
+	}
+	
+	/**
+	* Add a project category to the tracker
+	* @param array $data array containing data to insert into project cat table
+	*/
+	public function add_project_cat($data)
+	{
+		global $db, $cache;
+
+		$sql = 'INSERT INTO ' . TRACKER_PROJECT_CATS_TABLE . ' ' .
+			$db->sql_build_array('INSERT', $data);
+		$db->sql_query($sql);
+
+		$cache->destroy('_tracker_projects');
+		$cache->destroy('_tracker_project_cats');
+	}
 
 	/**
-	* Add a project to the bug tracker
+	* Update an existing project category in the tracker
+	* @param array $data array containing data to update in the project cat table
+	* @param int $id project cat id of project cat to update in the project cat table
+	*/
+	public function update_project_cat($data, $id)
+	{
+		global $db, $cache;
+
+		$sql = 'UPDATE ' . TRACKER_PROJECT_CATS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $data) . '
+			WHERE ' . $db->sql_in_set('project_cat_id', $id);
+		$db->sql_query($sql);
+
+		$cache->destroy('_tracker_projects');
+		$cache->destroy('_tracker_project_cats');
+	}
+	
+	/**
+	* Delete an existing project category from tracker
+	* Handles removing other info associated with project cat
+	* @param int $id project cat id of project cat to delete from the project cat table
+	*/
+	public function delete_project_cat($id)
+	{
+		global $db, $cache;
+
+		$sql = 'SELECT project_id
+			FROM ' . TRACKER_PROJECT_TABLE . '
+				WHERE project_cat_id = ' . $id;
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$this->delete_project($row['project_id']);
+		}
+		$db->sql_freeresult($result);
+
+		$sql = 'DELETE FROM ' . TRACKER_PROJECT_CATS_TABLE . '
+			WHERE project_cat_id = ' . $id;
+		$db->sql_query($sql);
+		
+		$cache->destroy('_tracker_projects');		
+		$cache->destroy('_tracker_project_cats');		
+	}
+	
+	/**
+	* Display project cat select options
+	*/
+	public function project_cat_select_options($selected_id)
+	{
+		global $user, $db;
+
+		$sql = 'SELECT project_cat_id, project_cat_name, project_cat_name_clean
+			FROM ' . TRACKER_PROJECT_CATS_TABLE . '
+				ORDER BY project_cat_name_clean ASC';
+		$result = $db->sql_query($sql);
+
+		$row = $db->sql_fetchrowset($result);
+		$db->sql_freeresult($result);
+		
+		$options = '';
+		foreach ($row as $item)
+		{
+			if ($item['project_cat_id'] == $selected_id)
+			{
+				$selected = ' selected="selected"';
+			}
+			else
+			{
+				$selected = '';
+			}
+
+			$options .= '<option value="' . $item['project_cat_id'] . '"' . $selected . '>' . $item['project_cat_name'] .'</option>';
+		}
+
+		return $options;
+
+	}
+
+	/**
+	* Add a project to the tracker
 	* @param array $data array containing data to insert into projects table
 	*/
 	public function add_project($data)
@@ -374,10 +486,12 @@ class tracker_api
 				$this->subscribe('subscribe', $project_id, false, $item['user_id']);
 			}
 		}
+		
+		return $project_id;
 	}
 
 	/**
-	* Update an existing project in the bug tracker
+	* Update an existing project in the tracker
 	* @param array $data array containing data to update in the projects table
 	* @param int $id project id of project to update in the projects table
 	*/
@@ -430,7 +544,7 @@ class tracker_api
 		$db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . TRACKER_TICKETS_WATCH_TABLE . '
-			WHERE project_id = ' . $id;
+			WHERE ticket_id = ' . $id;
 		$db->sql_query($sql);
 
 		$cache->destroy('_tracker_projects');

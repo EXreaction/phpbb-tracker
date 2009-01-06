@@ -812,7 +812,7 @@ function get_schema_struct($update)
 	switch ($update)
 	{
 		case '0.2.0':
-			$schema_data['phpbb_tracker_categories'] = array(
+			$schema_data['phpbb_tracker_project_categories'] = array(
 				'COLUMNS'		=> array(
 					'project_cat_id'			=> array('UINT', NULL, 'auto_increment'),
 					'project_cat_name'			=> array('VCHAR', ''),
@@ -844,7 +844,7 @@ function get_schema_struct($update)
 		break;
 	}
 	
-	$schema_data['phpbb_tracker_categories'] = array(
+	$schema_data['phpbb_tracker_project_categories'] = array(
 		'COLUMNS'		=> array(
 			'project_cat_id'			=> array('UINT', NULL, 'auto_increment'),
 			'project_cat_name'			=> array('VCHAR', ''),
@@ -857,7 +857,8 @@ function get_schema_struct($update)
 		'COLUMNS'		=> array(
 			'project_id'			=> array('UINT', NULL, 'auto_increment'),
 			'project_desc'			=> array('STEXT_UNI', ''),
-			'project_group'			=> array('UINT', 0),
+			'project_cat_id'		=> array('UINT', 0),
+			'project_group'			=> array('UINT', 0),			
 			'project_type'			=> array('TINT:2', 0),
 			'project_enabled'		=> array('TINT:1', 0),
 			'project_security'		=> array('TINT:1', 0),

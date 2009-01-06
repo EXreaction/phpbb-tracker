@@ -148,39 +148,39 @@
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 		<fieldset class="tabulated">
 		<legend>{L_TITLE}</legend>
-
+		<input name="project_cat_name" type="text" class="text medium" id="project_cat_name" value="" />&nbsp;&nbsp;<input class="button2" type="submit" id="submit" name="project_cat_add" value="{L_ACP_TRACKER_PROJECT_CAT_ADD}" /><br /><br />
+		<!-- BEGIN cat -->
 		<table cellspacing="1">
-		<thead>
-		<tr>
-			<th>{L_TRACKER_PROJECT_NAME}</th>
-			<th>{L_TRACKER_PROJECT_DESC}</th>
-			<th>{L_TRACKER_PROJECT_TYPE}</th>
-			<th>{L_TRACKER_PROJECT_ENABLED}</th>
-			<th>{L_OPTIONS}</th>
-		</tr>
-		</thead>
 		<tbody>
+			<tr class="row1">
+				<td><strong>{cat.PROJECT_CAT_NAME}</td>
+				<td colspan="3" style="vertical-align: top; text-align: right; white-space: nowrap;">				
+					<a href="{cat.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{cat.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
 			<!-- BEGIN project -->
-			<!-- IF project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-				<td>{project.PROJECT_NAME}</td>
-				<td>{project.PROJECT_DESC}</td>
-				<td>{project.PROJECT_TYPE}</td>
+			<tr class="row2">
+				<td>{cat.project.PROJECT_TYPE}</td>
+				<td>{cat.project.PROJECT_DESC}</td>
 				<td>
-					<!-- IF project.PROJECT_ENABLED -->
-						<a href="{project.U_DISABLE}">{L_DISABLE}</a>
+					<!-- IF cat.project.PROJECT_ENABLED -->
+						<a href="{cat.project.U_DISABLE}">{L_DISABLE}</a>
 					<!-- ELSE -->
-						<a href="{project.U_ENABLE}">{L_ENABLE}</a>
+						<a href="{cat.project.U_ENABLE}">{L_ENABLE}</a>
 					<!-- ENDIF -->
 				</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-					<a href="{project.U_EDIT}">{ICON_EDIT}</a>
-					<a href="{project.U_DELETE}">{ICON_DELETE}</a>
+					<a href="{cat.project.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{cat.project.U_DELETE}">{ICON_DELETE}</a>
 				</td>
 			</tr>
 			<!-- END project -->
 		</tbody>
 		</table>
-
+		<!-- IF not cat.S_LAST_ROW --><br /><br /><!-- ELSE --><br /><!-- ENDIF -->
+		<!-- END cat -->
+		
 		<p class="quick">
 			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_PROJECT_ADD}" />
 		</p>
@@ -191,12 +191,12 @@
 		<fieldset>
 			<legend>{L_TITLE}</legend>
 		<dl>
-			<dt><label for="project_name">{L_TRACKER_PROJECT_NAME}</label><br /><span>{L_TRACKER_PROJECT_NAME_EXPLAIN}</span></dt>
-			<dd><input type="text" id="project_name" name="project_name" size="60" maxlength="255" value="{PROJECT_NAME}" /></dd>
-		</dl>
-		<dl>
 			<dt><label for="project_desc">{L_TRACKER_PROJECT_DESC}</label><br /><span>{L_TRACKER_PROJECT_DESC_EXPLAIN}</span></dt>
 			<dd><input type="text" id="project_desc" name="project_desc" size="60" maxlength="255" value="{PROJECT_DESC}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="project_cat_id">{L_TRACKER_PROJECT_CAT_ID}</label><br /><span>{L_TRACKER_PROJECT_CAT_ID_EXPLAIN}</span></dt>
+			<dd><select name="project_cat_id" id="project_cat_id">{S_PROJECT_CAT_OPTIONS}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="project_group">{L_TRACKER_PROJECT_GROUP}</label><br /><span>{L_TRACKER_PROJECT_GROUP_EXPLAIN}</span></dt>
@@ -236,7 +236,7 @@
 		</dl>
 		</fieldset>
 
-		<input type="hidden" name="project_id" value="{PROJECT_ID}" />
+		<input type="hidden" name="p" value="{PROJECT_ID}" />
 		<fieldset class="submit-buttons">
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;

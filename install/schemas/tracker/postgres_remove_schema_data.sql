@@ -5,6 +5,7 @@
 # POSTGRES BEGIN #
 
 # -- Drop Mod Tables
+DROP SEQUENCE phpbb_tracker_project_categories_seq;
 DROP SEQUENCE phpbb_tracker_project_seq;
 DROP SEQUENCE phpbb_tracker_attachments_seq;
 DROP SEQUENCE phpbb_tracker_tickets_seq;
