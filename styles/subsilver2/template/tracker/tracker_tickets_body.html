@@ -33,8 +33,8 @@
 					<strong>{L_TRACKER_FILTER_TICKET}:</strong>
 				</label>
 				<select id="st" name="st" onchange="document.getElementById('st_form').submit();">{S_STATUS_OPTIONS}</select>
-				<!-- IF S_VERSION_OPTIONS --><select id="v" name="v" onchange="document.getElementById('st_form').submit();">{S_VERSION_OPTIONS}</select>&nbsp;<!-- ENDIF -->
-				<!-- IF S_COMPONENT_OPTIONS --><select id="c" name="c" onchange="document.getElementById('st_form').submit();">{S_COMPONENT_OPTIONS}</select><!-- ENDIF -->
+				<!-- IF S_VERSION_OPTIONS --><select id="vid" name="vid" onchange="document.getElementById('st_form').submit();">{S_VERSION_OPTIONS}</select>&nbsp;<!-- ENDIF -->
+				<!-- IF S_COMPONENT_OPTIONS --><select id="cid" name="cid" onchange="document.getElementById('st_form').submit();">{S_COMPONENT_OPTIONS}</select><!-- ENDIF -->
 				<noscript><input type="submit" name="submit" value="OK" class="btnlite" /></noscript>
 				<input type="hidden" name="p" value="{PROJECT_ID}" />
 				<input type="hidden" name="u" value="{TRACKER_USER_ID}" />

@@ -343,7 +343,7 @@ class acp_tracker
 		$this->page_title = 'ACP_TRACKER_PROJECT';
 
 		$project_id = request_var('p', 0);
-		$project_cat_id = request_var('pc', 0);
+		$project_cat_id = request_var('c', 0);
 		$submit	= (isset($_POST['submit'])) ? true : false;
 
 		$project_cat_add = (isset($_POST['project_cat_add'])) ? true : false;
@@ -536,7 +536,7 @@ class acp_tracker
 				confirm_box(false, 'ACP_TRACKER_PROJECT_CAT_DELETE', build_hidden_fields(array(
 					'action'		=> 'delete_cat',
 					'submit'		=> true,
-					'pc'			=> $project_cat_id,
+					'c'				=> $project_cat_id,
 				)));
 			break;
 
@@ -650,8 +650,8 @@ class acp_tracker
 			{
 				$template->assign_block_vars('cat', array(
 					'PROJECT_CAT_NAME'	=> $project_cat['project_name'],
-					'U_EDIT' 			=> "{$this->u_action}&amp;action=edit_cat&amp;pc={$project_cat['project_cat_id']}",
-					'U_DELETE' 			=> "{$this->u_action}&amp;action=delete_cat&amp;pc={$project_cat['project_cat_id']}",
+					'U_EDIT' 			=> "{$this->u_action}&amp;action=edit_cat&amp;c={$project_cat['project_cat_id']}",
+					'U_DELETE' 			=> "{$this->u_action}&amp;action=delete_cat&amp;c={$project_cat['project_cat_id']}",
 				));
 
 				foreach ($projects as $item)
