@@ -276,9 +276,7 @@ class install_update extends module
 							TRACKER_PROJECT_TABLE	=> array('project_name', 'project_name_clean'),
 						),
 					);
-
-					$phpbb_db_tools->perform_schema_changes($schema_changes]);
-
+					$phpbb_db_tools->perform_schema_changes($schema_changes);
 
 				break;
 

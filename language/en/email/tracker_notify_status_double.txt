@@ -1,7 +1,7 @@
 Hello {USERNAME},
 
 You are receiving this notification because one or more details of your
-ticket #{TICKET_ID} in the {TRACKER_TYPE} at {SITE_NAME} have been changed. Please
+ticket #{TICKET_ID} in the {PROJECT_NAME} - {TRACKER_TYPE} at {SITE_NAME} have been changed. Please
 review the changes below and act accordingly if they require any attention.
 
 These changes were made by "{CHANGE_USERNAME}".
@@ -19,5 +19,6 @@ More information:
 {TICKET_URL}
 
 --
-{SITE_NAME} {TRACKER_TYPE}
+{SITE_NAME} 
+{PROJECT_NAME} - {TRACKER_TYPE}
 {TRACKER_URL}

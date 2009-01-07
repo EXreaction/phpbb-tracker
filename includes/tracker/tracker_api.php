@@ -1264,6 +1264,7 @@ class tracker_api
 					'TICKET_TITLE'		=> htmlspecialchars_decode($data['ticket_title']),
 					'TICKET_DESC'		=> $this->format_desc($data['post_desc']),
 					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
+					'PROJECT_NAME'		=> htmlspecialchars_decode($data['project_name']),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 				);
@@ -1351,6 +1352,7 @@ class tracker_api
 					'TICKET_ID'			=> $data['ticket_id'],
 					'TICKET_TITLE'		=> htmlspecialchars_decode($data['ticket_title']),
 					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
+					'PROJECT_NAME'		=> htmlspecialchars_decode($data['project_name']),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 					'FIELD_NAME1'		=> htmlspecialchars_decode($field_name),
@@ -1431,6 +1433,7 @@ class tracker_api
 					'TICKET_ID'			=> $data['ticket_id'],
 					'TICKET_TITLE'		=> htmlspecialchars_decode($data['ticket_title']),
 					'TRACKER_URL'		=> $board_url . $this->build_url('clean_index'),
+					'PROJECT_NAME'		=> htmlspecialchars_decode($data['project_name']),
 					'TRACKER_TYPE'		=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'			=> htmlspecialchars_decode($config['sitename']),
 					'FIELD_NAME1'		=> htmlspecialchars_decode($field_name1),
@@ -1606,6 +1609,7 @@ class tracker_api
 					'TICKET_UNSUBSCRIBE_URL'	=> $board_url . $this->build_url('clean_unsubscribe_t', array($data['project_id'], $data['ticket_id'])),
 					'TICKET_TITLE'				=> htmlspecialchars_decode($data['ticket_title']),
 					'TRACKER_URL'				=> $board_url . $this->build_url('clean_index'),
+					'PROJECT_NAME'				=> htmlspecialchars_decode($data['project_name']),
 					'TRACKER_TYPE'				=> $this->get_type_option('title', $data['project_id']),
 					'SITE_NAME'					=> htmlspecialchars_decode($config['sitename']),
 				);
@@ -1717,7 +1721,7 @@ class tracker_api
 			$subject = substr($subject, 0, TRACKER_SUBJECT_LENGTH) . '...';
 		}
 
-		$subject = sprintf($user->lang['TRACKER_EMAIL_SUBJECT'], $config['sitename'], $this->get_type_option('title', $project_id), $ticket_id, $subject);
+		$subject = sprintf($user->lang['TRACKER_EMAIL_SUBJECT'], $config['sitename'], $this->projects[$project_id]['project_name'], $this->get_type_option('title', $project_id), $ticket_id, $subject);
 
 		return htmlspecialchars_decode($subject);
 	}
