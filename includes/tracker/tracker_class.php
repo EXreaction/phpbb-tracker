@@ -818,25 +818,21 @@ class tracker
 
 		if (sizeof($row))
 		{
-			$changes['bbcode'][] = '[size=120][b]' . $page_title . '[/b][/size]';
-			$changes['bbcode'][] = '[list]';
-			$changes['html'][] = '<span style="font-size: 120%; line-height: normal; font-weight: bold;">' . $page_title . '</span>';
-			$changes['html'][] = '<ul>';
+			$changes[] = '[size=120][b]' . $page_title . '[/b][/size]';
+			$changes[] = '[list]';
 
 			foreach ($row as $fixed)
 			{
 				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
 				$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
-				$changes['bbcode'][] = "[*][url=$ticket_url]$component_name{$fixed['ticket_title']}[/url]";
-				$changes['html'][] = "<li><a href=\"$ticket_url\">{$fixed['ticket_title']}</a></li>";
+				$changes[] = "[*][url=$ticket_url]$component_name{$fixed['ticket_title']}[/url]";
 			}
 
 
-			$changes['bbcode'][] = '[/list]';
-			$changes['html'][] = '</ul>';
+			$changes[] = '[/list]';
 
 			// Output
-			$output = implode("\n", $changes['bbcode']);
+			$output = implode("\n", $changes);
 			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
 			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
@@ -846,7 +842,7 @@ class tracker
 
 			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
-			$output = '[code]' . implode("\n", $changes['bbcode']) . '[/code]';
+			$output = '[code]' . implode("\n", $changes) . '[/code]';
 			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 			$bbcode_output = generate_text_for_display($output, $uid, $bitfield, $options);
 

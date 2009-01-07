@@ -109,7 +109,7 @@ class tracker_cache extends cache
 					),
 				),
 
-				'ORDER_BY'	=> 'project_name_clean ASC, project_type ASC',
+				'ORDER_BY'	=> 'pc.project_name_clean ASC, p.project_type ASC',
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);

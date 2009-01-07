@@ -558,11 +558,27 @@ class tracker_api
 	{
 		global $db;
 
-		$sql = 'SELECT *
-			FROM ' . TRACKER_PROJECT_TABLE . '
-				ORDER BY project_type ASC, project_name_clean ASC';
-		$result = $db->sql_query($sql);
+			$sql_array = array(
+				'SELECT'	=> 'p.*,
+								pc.*',
 
+				'FROM'		=> array(
+					TRACKER_PROJECT_TABLE	=> 'p',
+				),				
+
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+						'ON'	=> 'p.project_cat_id = pc.project_cat_id',
+					),
+				),
+
+				'ORDER_BY'	=> 'pc.project_name_clean ASC, p.project_type ASC',
+			);
+
+		$sql = $db->sql_build_query('SELECT', $sql_array);
+		$result = $db->sql_query($sql);
+		
 		$row = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 
