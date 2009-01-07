@@ -436,6 +436,10 @@ class tracker
 				'POST_TEXT'		=> generate_text_for_display($review['text'], $review['uid'], $review['bitfield'], $review['options']),
 			));
 		}
+		
+		$template->assign_vars(array(
+			'POST_IMG'		=> $user->img('icon_post_target', ''),
+		));
 	}
 
 	public function display_statistics($project_id, $project_cat_id = false)
