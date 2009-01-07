@@ -71,7 +71,7 @@ if (!empty($project_id))
 
 if ($mode == 'statistics')
 {
-	$tracker->display_statistics($project_id);
+	$tracker->display_statistics($project_id, $project_cat_id);
 }
 
 if ($mode == 'changelog' && $project_id && $version_id)

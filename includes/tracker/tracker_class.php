@@ -125,8 +125,7 @@ class tracker
 				'U_VIEW_FORUM'  	=> $this->api->build_url('project_cat', array($project_cat_id)),
 			));
 		}
-
-
+		
 		// Assign index specific vars
 		$template->assign_vars(array(
 			'S_DISPLAY_PROJECT'			=> $display_project,
@@ -439,7 +438,7 @@ class tracker
 		}
 	}
 
-	public function display_statistics($project_id)
+	public function display_statistics($project_id, $project_cat_id = false)
 	{
 		global $db, $user, $cache, $template, $phpEx, $phpbb_root_path, $config, $auth;
 
@@ -729,9 +728,14 @@ class tracker
 
 			foreach ($project_array as $projects)
 			{				
+				if ($project_cat_id && $project_cat_id != $projects[0]['project_cat_id'])
+				{
+					continue;
+				}
+			
 				$template->assign_block_vars('cat', array(
 					'PROJECT_NAME'		=> $projects[0]['project_name'],
-					'U_PROJECT' 		=> $this->api->build_url('project_cat', array($projects[0]['project_cat_id'])),
+					'U_PROJECT' 		=> $this->api->build_url('statistics_pc', array($projects[0]['project_cat_id'])),
 				));
 
 				foreach ($projects as $item)
@@ -745,6 +749,14 @@ class tracker
 					));
 				}
 
+			}
+			
+			if ($project_cat_id)
+			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'   		=> $this->api->project_cats[$project_cat_id]['project_name'],
+					'U_VIEW_FORUM'  	=> $this->api->build_url('statistics_pc', array($project_cat_id)),
+				));
 			}
 
 			// Output page
@@ -1120,6 +1132,7 @@ class tracker_url_builder
 		'history'			=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
 		'statistics'		=> 'mode=statistics',
 		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
+		'statistics_pc'		=> 'mode=statistics&amp;pc=%1$s',
 		'download'			=> 'mode=download&amp;id=%1$s',
 		'download_type'		=> 'mode=download&amp;id=%1$s&amp;type=%2$s',
 		'delete'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',

@@ -629,7 +629,7 @@ class tracker_api
 		{
 			while (false !== ($file = readdir($dh)))
 			{
-				if (!in_array($file, array('.', '..', 'index.htm', 'index.html'), true))
+				if (!in_array($file, array('.', '..', 'index.htm', 'index.html', '.svn'), true))
 				{
 					if (!isset($valid_files[$file]))
 					{
@@ -2097,7 +2097,7 @@ class tracker_api
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'   		=> $data['project_name'],
-			'U_VIEW_FORUM'  	=> $this->build_url('project_cat', array($data['project_cat_id'])),
+			'U_VIEW_FORUM'  	=> $this->build_url(($in_stats) ? 'statistics_pc' : 'project_cat', array($data['project_cat_id'])),
 		));
 		
 		$template->assign_block_vars('navlinks', array(
