@@ -22,7 +22,7 @@ if (!empty($setmodules))
 	{
 		return;
 	}
-	
+
 	$module[] = array(
 		'module_type'		=> 'install',
 		'module_title'		=> 'UNINSTALL',
@@ -79,8 +79,8 @@ class install_uninstall extends module
 	{
 		global $user, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_db_tools, $db, $mod_config;
 
-		$this->page_title = $user->lang['STAGE_UNINSTALL_TRACKER'];		
-		
+		$this->page_title = $user->lang['STAGE_UNINSTALL_TRACKER'];
+
 		// Remove all the tracker tables and data
 		$this->p_master->load_data($mod_config['remove_data_file']);
 		// Load any db specific files for tables and data to remove
@@ -104,8 +104,8 @@ class install_uninstall extends module
 		$this->p_master->remove_permissions($mod_config['permission_options']);
 
 		// Remove modules
-		$this->p_master->remove_modules($mod_config['parent_module_remove'], $mod_config['module_remove']);		
-		
+		$this->p_master->remove_modules($mod_config['parent_module_remove'], $mod_config['module_remove']);
+
 		// Clear prefetch and permissions cache
 		$auth_admin = new auth_admin();
 		$cache->destroy('_acl_options');

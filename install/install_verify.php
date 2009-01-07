@@ -17,7 +17,12 @@ if (!defined('IN_INSTALL'))
 }
 
 if (!empty($setmodules))
-{	
+{
+	if (!$this->installed_version || ($this->installed_version && version_compare($this->installed_version, $mod_config['mod_version'], '<')))
+	{
+		return;
+	}
+
 	$module[] = array(
 		'module_type'		=> 'install',
 		'module_title'		=> 'VERIFY',
@@ -80,7 +85,7 @@ class install_verify extends module
 			'TITLE'		=> $user->lang['REQUIREMENTS_TITLE'],
 			'BODY'		=> $user->lang['REQUIREMENTS_EXPLAIN'],
 		));
-	
+
 		// We will only check for files from the styles that are installed
 		$sql = 'SELECT template_id, template_name FROM ' . STYLES_TEMPLATE_TABLE;
 		$result = $db->sql_query($sql);
@@ -175,14 +180,14 @@ class install_verify extends module
 				'S_LEGEND'	=> false,
 			));
 		}
-		
+
 
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['VERIFY_TRACKER_INSTALLATION'],
 			'LEGEND_EXPLAIN'	=> $user->lang['VERIFY_TRACKER_INSTALLATION_EXPLAIN'],
 		));
-		
+
 		// Check files exist
 		$error = array();
 		foreach ($mod_config['install_check']['files']['core'] as $file)
@@ -191,7 +196,7 @@ class install_verify extends module
 			{
 				$error[] = 'phpbb_root_path/' . $file;
 			}
-		}		
+		}
 
 		foreach($installed_templates as $name)
 		{
@@ -217,7 +222,7 @@ class install_verify extends module
 			$result = '<strong style="color:green">' . $user->lang['VERIFY_ALL_FILES'] . '</strong>';
 		}
 		unset($error);
-		
+
 		$template->assign_block_vars('checks', array(
 			'TITLE'			=> $user->lang['VERIFY_FILES_EXIST'],
 			'RESULT'		=> $result,
@@ -225,7 +230,7 @@ class install_verify extends module
 			'S_EXPLAIN'		=> false,
 			'S_LEGEND'		=> false,
 		));
-		
+
 		// Check if tables exist
 		$error = array();
 		$tables = get_tables($db);
@@ -248,7 +253,7 @@ class install_verify extends module
 			$result = '<strong style="color:green">' . $user->lang['VERIFY_ALL_TABLES'] . '</strong>';
 		}
 		unset($error);
-		
+
 		$template->assign_block_vars('checks', array(
 			'TITLE'			=> $user->lang['VERIFY_TABLES_EXIST'],
 			'RESULT'		=> $result,
@@ -256,7 +261,7 @@ class install_verify extends module
 			'S_EXPLAIN'		=> false,
 			'S_LEGEND'		=> false,
 		));
-		
+
 		// Check files edits exist
 		$error = array();
 		foreach ($mod_config['install_check']['edits']['core'] as $key => $value)
@@ -276,7 +281,7 @@ class install_verify extends module
 				$error[] = 'phpbb_root_path/' . $key . ' - <span style="color: black;">' . $user->lang['NOT_FOUND'] . '</span>';
 			}
 		}
-		
+
 		foreach ($installed_templates as $name)
 		{
 			if (isset($mod_config['install_check']['edits']['styles'][$name]))
@@ -311,7 +316,7 @@ class install_verify extends module
 			$result = '<strong style="color:green">' . $user->lang['VERIFY_ALL_FILES_EDITED'] . '</strong>';
 		}
 		unset($error);
-		
+
 		$template->assign_block_vars('checks', array(
 			'TITLE'			=> $user->lang['VERIFY_FILES_EDITED'],
 			'RESULT'		=> $result,
@@ -319,7 +324,7 @@ class install_verify extends module
 			'S_EXPLAIN'		=> false,
 			'S_LEGEND'		=> false,
 		));
-		
+
 		// Check other db data
 		if (isset($mod_config['install_check']['alter_db']))
 		{
@@ -342,7 +347,7 @@ class install_verify extends module
 					}
 					unset($row);
 				}
-				
+
 				if (sizeof($error))
 				{
 					$passed['mod'] = false;
@@ -354,7 +359,7 @@ class install_verify extends module
 				}
 				unset($error);
 			}
-			
+
 			$template->assign_block_vars('checks', array(
 				'TITLE'			=> $user->lang['VERIFY_OTHER_DB_DATA'],
 				'RESULT'		=> $result,
@@ -363,7 +368,7 @@ class install_verify extends module
 				'S_LEGEND'		=> false,
 			));
 		}
-		
+
 		// Check if modules are present
 		$error = array();
 		if (isset($mod_config['install_check']['modules']['acp']))
@@ -415,7 +420,7 @@ class install_verify extends module
 				}
 			}
 		}
-		
+
 		if (sizeof($error))
 		{
 			$passed['mod'] = false;
@@ -426,7 +431,7 @@ class install_verify extends module
 			$result = '<strong style="color:green">' . $user->lang['VERIFY_ALL_MODULES'] . '</strong>';
 		}
 		unset($error);
-		
+
 		$template->assign_block_vars('checks', array(
 			'TITLE'			=> $user->lang['VERIFY_MODULES'],
 			'RESULT'		=> $result,
@@ -434,7 +439,7 @@ class install_verify extends module
 			'S_EXPLAIN'		=> false,
 			'S_LEGEND'		=> false,
 		));
-		
+
 		// Check if permissions exist
 		$error = array();
 		foreach ($mod_config['permission_options']['global'] as $value)
@@ -463,7 +468,7 @@ class install_verify extends module
 			$result = '<strong style="color:green">' . $user->lang['VERIFY_ALL_PERMISSIONS'] . '</strong>';
 		}
 		unset($error);
-		
+
 		$template->assign_block_vars('checks', array(
 			'TITLE'			=> $user->lang['VERIFY_PERMISSIONS'],
 			'RESULT'		=> $result,
@@ -507,7 +512,7 @@ class install_verify extends module
 			{
 				$result = '<strong style="color:green">' . $user->lang['VERIFY_NO_DUPLICATE_PERMISSIONS'] . '</strong>';
 			}
-			
+
 			$template->assign_block_vars('checks', array(
 				'TITLE'			=> $user->lang['VERIFY_DUPLICATE_PERMISSIONS'],
 				'RESULT'		=> $result,
@@ -516,7 +521,7 @@ class install_verify extends module
 				'S_LEGEND'		=> false,
 			));
 		}
-		
+
 		$title = (!in_array(false, $passed)) ? $user->lang['INSTALL_CONGRATS'] : $user->lang['VERIFY_ERRORS'];
 		$body = (!in_array(false, $passed)) ? sprintf($user->lang['VERIFY_CONGRATS_EXPLAIN'], $mod_config['mod_version']) : sprintf($user->lang['VERIFY_ERRORS_EXPLAIN'], $mod_config['mod_version']);
 		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id) : $this->p_master->module_url . "?mode=$mode&amp;sub=verify";

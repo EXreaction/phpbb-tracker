@@ -96,12 +96,12 @@ class tracker
 
 		foreach ($project_array as $projects)
 		{
-			$display_project = true;			
+			$display_project = true;
 			if ($project_cat_id && $project_cat_id != $projects[0]['project_cat_id'])
 			{
 				continue;
 			}
-			
+
 			$template->assign_block_vars('cat', array(
 				'PROJECT_NAME'		=> $projects[0]['project_name'],
 				'U_PROJECT' 		=> $this->api->build_url('project_cat', array($projects[0]['project_cat_id'])),
@@ -117,7 +117,7 @@ class tracker
 				));
 			}
 		}
-		
+
 		if ($project_cat_id)
 		{
 			$template->assign_block_vars('navlinks', array(
@@ -125,7 +125,7 @@ class tracker
 				'U_VIEW_FORUM'  	=> $this->api->build_url('project_cat', array($project_cat_id)),
 			));
 		}
-		
+
 		// Assign index specific vars
 		$template->assign_vars(array(
 			'S_DISPLAY_PROJECT'			=> $display_project,
@@ -722,17 +722,17 @@ class tracker
 						continue;
 					}
 				}
-				
+
 				$project_array[$item['project_name_clean']][] =  $item;
 			}
 
 			foreach ($project_array as $projects)
-			{				
+			{
 				if ($project_cat_id && $project_cat_id != $projects[0]['project_cat_id'])
 				{
 					continue;
 				}
-			
+
 				$template->assign_block_vars('cat', array(
 					'PROJECT_NAME'		=> $projects[0]['project_name'],
 					'U_PROJECT' 		=> $this->api->build_url('statistics_pc', array($projects[0]['project_cat_id'])),
@@ -750,7 +750,7 @@ class tracker
 				}
 
 			}
-			
+
 			if ($project_cat_id)
 			{
 				$template->assign_block_vars('navlinks', array(

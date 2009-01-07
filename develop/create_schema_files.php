@@ -828,7 +828,7 @@ function get_schema_struct($update)
 				),
 				'PRIMARY_KEY'	=> array('user_id', 'project_id'),
 			);
-		
+
 			$schema_data['phpbb_tracker_tickets_watch'] = array(
 				'COLUMNS'		=> array(
 					'user_id'		=> array('UINT', 0),
@@ -839,11 +839,11 @@ function get_schema_struct($update)
 
 			return $schema_data;
 		break;
-		
+
 		default:
 		break;
 	}
-	
+
 	$schema_data['phpbb_tracker_project_categories'] = array(
 		'COLUMNS'		=> array(
 			'project_cat_id'		=> array('UINT', NULL, 'auto_increment'),
@@ -858,7 +858,7 @@ function get_schema_struct($update)
 			'project_id'			=> array('UINT', NULL, 'auto_increment'),
 			'project_desc'			=> array('STEXT_UNI', ''),
 			'project_cat_id'		=> array('UINT', 0),
-			'project_group'			=> array('UINT', 0),			
+			'project_group'			=> array('UINT', 0),
 			'project_type'			=> array('TINT:2', 0),
 			'project_enabled'		=> array('TINT:1', 0),
 			'project_security'		=> array('TINT:1', 0),

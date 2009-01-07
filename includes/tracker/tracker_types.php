@@ -24,7 +24,7 @@ if (!isset($status_type))
 
 /*
 * Tracker types defined below
-* The three default types are 
+* The three default types are
 * bug, feature and issue trackers
 */
 

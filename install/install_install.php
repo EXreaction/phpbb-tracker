@@ -22,7 +22,7 @@ if (!empty($setmodules))
 	{
 		return;
 	}
-	
+
 	$module[] = array(
 		'module_type'		=> 'install',
 		'module_title'		=> 'INSTALL',
@@ -193,13 +193,13 @@ class install_install extends module
 	{
 		global $user, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_db_tools, $mod_config;
 
-		$this->page_title = $user->lang['STAGE_INSTALL_TRACKER'];		
-		
+		$this->page_title = $user->lang['STAGE_INSTALL_TRACKER'];
+
 		// Load all the tables
 		$this->p_master->load_tables();
 		// Load all the tracker data
 		$this->p_master->load_data($mod_config['data_file']);
-		
+
 		if (isset($mod_config['schema_changes']))
 		{
 			// Alter some existing tables
@@ -219,7 +219,7 @@ class install_install extends module
 
 		// Purge the cache
 		$cache->purge();
-		
+
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
 			'BODY'		=> $user->lang['STAGE_INSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], $mod_config['mod_version']),

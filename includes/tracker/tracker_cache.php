@@ -48,13 +48,13 @@ class tracker_cache extends cache
 
 		return $config;
 	}
-	
+
 	public function obtain_tracker_project_cats()
 	{
 		if (($projects = $this->get('_tracker_project_cats')) === false)
 		{
 			global $db;
-			
+
 			$sql = 'SELECT *
 				FROM ' . TRACKER_PROJECT_CATS_TABLE . '
 				 ORDER BY project_name_clean ASC';
@@ -67,9 +67,9 @@ class tracker_cache extends cache
 					'project_cat_id'		=> $row['project_cat_id'],
 					'project_name'			=> $row['project_name'],
 					'project_name_clean'	=> $row['project_name_clean'],
-				);		
+				);
 			}
-			$db->sql_freeresult($result);			
+			$db->sql_freeresult($result);
 			$this->put('_tracker_project_cats', $projects);
 		}
 		return $projects;
@@ -96,7 +96,7 @@ class tracker_cache extends cache
 
 				'FROM'		=> array(
 					TRACKER_PROJECT_TABLE	=> 'p',
-				),				
+				),
 
 				'LEFT_JOIN'	=> array(
 					array(
@@ -135,10 +135,10 @@ class tracker_cache extends cache
 					'lang_dbms'					=> $row['lang_dbms'],
 					'group_name'				=> $row['group_name'],
 					'group_colour'				=> $row['group_colour'],
-				);		
+				);
 			}
-			$db->sql_freeresult($result);			
-			
+			$db->sql_freeresult($result);
+
 			// Get project components
 			$sql_array = array(
 				'SELECT'	=> 'c.component_id,
@@ -159,8 +159,8 @@ class tracker_cache extends cache
 			{
 				$id = $row['component_id'];
 				$name = $row['component_name'];
-				$project_id = $row['project_id'];				
-				
+				$project_id = $row['project_id'];
+
 				if (isset($projects[$project_id]))
 				{
 					$projects[$project_id]['components'][$id] = array(
@@ -170,7 +170,7 @@ class tracker_cache extends cache
 				}
 			}
 			$db->sql_freeresult($result);
-			
+
 			// Get project versions
 			$sql_array = array(
 				'SELECT'	=> 'c.version_id,
@@ -191,8 +191,8 @@ class tracker_cache extends cache
 			{
 				$id = $row['version_id'];
 				$name = $row['version_name'];
-				$project_id = $row['project_id'];				
-				
+				$project_id = $row['project_id'];
+
 				if (isset($projects[$project_id]))
 				{
 					$projects[$project_id]['versions'][$id] = array(
@@ -201,7 +201,7 @@ class tracker_cache extends cache
 					);
 				}
 			}
-			$db->sql_freeresult($result);			
+			$db->sql_freeresult($result);
 
 			$this->put('_tracker_projects', $projects);
 		}

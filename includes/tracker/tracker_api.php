@@ -348,22 +348,22 @@ class tracker_api
 		$db->sql_query($sql);
 
 	}
-	
+
 	public function get_project_name($project_cat_id, $project_id, $type_id = false)
-	{	
-		$project_name = $this->project_cats[$project_cat_id]['project_name'];		
+	{
+		$project_name = $this->project_cats[$project_cat_id]['project_name'];
 		if ($type_id !== false)
 		{
 			$project_type = $this->set_lang_name($this->types[$type_id]['title']);
 		}
 		else
-		{			
-			$project_type = $this->get_type_option('title', $project_id); 
+		{
+			$project_type = $this->get_type_option('title', $project_id);
 		}
-		
+
 		return $project_name . ' - ' . $project_type;
 	}
-	
+
 	/**
 	* Add a project category to the tracker
 	* @param array $data array containing data to insert into project cat table
@@ -397,7 +397,7 @@ class tracker_api
 		$cache->destroy('_tracker_projects');
 		$cache->destroy('_tracker_project_cats');
 	}
-	
+
 	/**
 	* Delete an existing project category from tracker
 	* Handles removing other info associated with project cat
@@ -421,11 +421,11 @@ class tracker_api
 		$sql = 'DELETE FROM ' . TRACKER_PROJECT_CATS_TABLE . '
 			WHERE project_cat_id = ' . $id;
 		$db->sql_query($sql);
-		
-		$cache->destroy('_tracker_projects');		
-		$cache->destroy('_tracker_project_cats');		
+
+		$cache->destroy('_tracker_projects');
+		$cache->destroy('_tracker_project_cats');
 	}
-	
+
 	/**
 	* Display project cat select options
 	*/
@@ -440,7 +440,7 @@ class tracker_api
 
 		$row = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
-		
+
 		$options = '';
 		foreach ($row as $item)
 		{
@@ -486,7 +486,7 @@ class tracker_api
 				$this->subscribe('subscribe', $project_id, false, $item['user_id']);
 			}
 		}
-		
+
 		return $project_id;
 	}
 
@@ -564,7 +564,7 @@ class tracker_api
 
 				'FROM'		=> array(
 					TRACKER_PROJECT_TABLE	=> 'p',
-				),				
+				),
 
 				'LEFT_JOIN'	=> array(
 					array(
@@ -578,7 +578,7 @@ class tracker_api
 
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
-		
+
 		$row = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 
@@ -2119,7 +2119,7 @@ class tracker_api
 			'FORUM_NAME'   		=> $data['project_name'],
 			'U_VIEW_FORUM'  	=> $this->build_url(($in_stats) ? 'statistics_pc' : 'project_cat', array($data['project_cat_id'])),
 		));
-		
+
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->get_type_option('title', $data['project_id']),
 			'U_VIEW_FORUM'	=> $this->build_url(($in_stats) ? 'statistics_p' : 'project', array($data['project_id'])),
@@ -2410,7 +2410,7 @@ class tracker_api
 
 		return true;
 	}
-	
+
 	/**
 	* Function used to quickly show the contents of variables
 	*/

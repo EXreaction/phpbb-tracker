@@ -80,18 +80,18 @@ if ($mode == 'changelog' && $project_id && $version_id)
 }
 
 if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
-{	
+{
 	if ($subscribe != '')
 	{
 		$tracker->api->subscribe('subscribe', $project_id, $ticket_id);
 	}
 	else if ($unsubscribe != '')
 	{
-		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);	
+		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);
 	}
-	
+
 	$is_subscribed = $tracker->api->is_subscribed('project', $project_id);
-	
+
 	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
 
 	$sql_where = 't.project_id = ' . $project_id;
@@ -230,12 +230,12 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		user_get_id_name($filter_user_id, $filter_username);
 		$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
 	}
-	
+
 	if ($version_id && $version_name = $tracker->api->get_name('version', $project_id, $version_id))
 	{
 		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_VERSION'], $version_name);
 	}
-	
+
 	if ($component_id && $component_name = $tracker->api->get_name('component', $project_id, $component_id))
 	{
 		$currently_showing .= sprintf($user->lang['TRACKER_FILTER_COMPONENT'], $component_name);
@@ -290,9 +290,9 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'U_MY_TICKETS'					=> ($user_id) ? $tracker->api->build_url('project_st_at', array($project_id, $status_type, $assigned_to_user_id, $version_id, $component_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user->data['user_id'], $version_id, $component_id)),
 		'TRACKER_MY_TICKETS'			=> ($user_id) ? $user->lang['TRACKER_EVERYONES_TICKETS'] : $user->lang['TRACKER_MY_TICKETS'],
 
-		'U_WATCH_PROJECT'				=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_p', array($project_id)) : $tracker->api->build_url('subscribe_p', array($project_id)),		
+		'U_WATCH_PROJECT'				=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_p', array($project_id)) : $tracker->api->build_url('subscribe_p', array($project_id)),
 		'L_WATCH_PROJECT'				=> ($is_subscribed) ? $user->lang['TRACKER_UNWATCH_PROJECT'] : $user->lang['TRACKER_WATCH_PROJECT'],
-	
+
 		'U_MY_ASSIGNED_TICKETS'			=> ($assigned_to_user_id) ? $tracker->api->build_url('project_st_u', array($project_id, $status_type, $user_id, $version_id, $component_id)) : $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $user->data['user_id'], $user_id, $version_id, $component_id)),
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
@@ -324,11 +324,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	}
 	else if ($unsubscribe != '')
 	{
-		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);	
+		$tracker->api->subscribe('unsubscribe', $project_id, $ticket_id);
 	}
-	
+
 	$is_subscribed = $tracker->api->is_subscribed('ticket', $ticket_id);
-	
+
 	if ($mode == 'delete')
 	{
 		$tracker->display_delete($project_id, $post_id, $ticket_id);
@@ -448,7 +448,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'ticket_hidden'			=> request_var('ticket_hidden', 0),
 			'ticket_status'			=> request_var('ticket_status', 0),
 		);
-	
+
 		if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 		{
 			$data['ticket_security'] = request_var('ticket_security', 0);
@@ -667,13 +667,13 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$tracker->api->manage_lock($action, $ticket_id);
 				redirect(build_url());
 			break;
-			
+
 			case 'security':
 			case 'unsecurity':
 				$tracker->api->manage_security($action, $ticket_id);
 				redirect(build_url());
 			break;
-			
+
 			case 'hide':
 			case 'unhide':
 				if ($tracker->api->can_manage)
@@ -760,10 +760,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
 		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
-		
+
 		'L_TRACKER_TICKET_PHP_DETAIL'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_DETAIL'),
 		'L_TRACKER_TICKET_DBMS_DETAIL'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_DETAIL'),
-		
+
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
@@ -796,12 +796,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'U_SEND_PM'					=> $tracker->api->build_url('compose_pm', array($row['ticket_user_id'])),
 		'U_REPORTERS_TICKETS'		=> $tracker->api->build_url('project_st_u', array($project_id, TRACKER_ALL, $row['ticket_user_id'], $version_id, $component_id)),
 
-		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),		
+		'U_VIEW_TICKET_HISTORY'		=> ($mode == 'history') ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : $tracker->api->build_url('history', array($project_id, $ticket_id)),
 		'L_TICKET_HISTORY'			=> ($mode == 'history') ? $user->lang['TRACKER_HIDE_TICKET_HISTORY'] : $user->lang['TRACKER_VIEW_TICKET_HISTORY'],
 
-		'U_WATCH_TICKET'			=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_t', array($project_id, $ticket_id)) : $tracker->api->build_url('subscribe_t', array($project_id, $ticket_id)),		
+		'U_WATCH_TICKET'			=> ($is_subscribed) ? $tracker->api->build_url('unsubscribe_t', array($project_id, $ticket_id)) : $tracker->api->build_url('subscribe_t', array($project_id, $ticket_id)),
 		'L_WATCH_TICKET'			=> ($is_subscribed) ? $user->lang['TRACKER_UNWATCH_TICKET'] : $user->lang['TRACKER_WATCH_TICKET'],
-		
+
 		'TRACKER_REPLY_DETAIL'		=> $user->lang['TRACKER_REPLY_DETAIL'] . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_REPLY_DETAIL_EMAIL'] : ''),
 
 		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
@@ -817,7 +817,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'TICKET_HIDDEN'				=> ($option_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 		'TICKET_LAST_VISIT'			=> (!empty($row['last_visit_user_id'])) ? sprintf($user->lang['TRACKER_LAST_VISIT'], get_username_string('full', $row['last_visit_user_id'], $row['last_visit_username'], $row['last_visit_user_colour']), $user->format_date($row['last_visit_time'], false, true)) : '',
 		'TICKET_TIME'				=> $user->format_date($row['ticket_time']),
-		
+
 		'S_TICKET_COMPONENT'		=> $tracker->api->get_type_option('component', $project_id),
 		'S_TICKET_VERSION'			=> $tracker->api->get_type_option('version', $project_id),
 		'S_TICKET_PRIORITY'			=> $s_ticket_priority,
@@ -835,7 +835,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	if ($row['project_ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 	{
 		$option_data['ticket_security'] = ($use_data) ? $data['ticket_security'] : $row['ticket_security'];
-	
+
 		$template->assign_vars(array(
 			'S_TICKET_SECURITY'			=> true,
 			'TICKET_SECURITY'			=> ($option_data['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
@@ -942,23 +942,23 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'status_id'					=> TRACKER_NEW_STATUS,
 			'project_id'				=> $project_id,
 		);
-	
+
 		if ($tracker->api->can_manage)
 		{
 			$ticket_data += array(
 				'ticket_hidden'				=> request_var('ticket_hidden', 0),
 				'ticket_security'			=> request_var('ticket_security', 0),
-				'ticket_status'				=> request_var('ticket_status', 0),	
+				'ticket_status'				=> request_var('ticket_status', 0),
 			);
 		}
-		
+
 		if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 		{
 			$ticket_data += array(
 				'ticket_security'			=> request_var('ticket_security', 0),
 			);
 		}
-		
+
 	}
 
 	if ($mode == 'edit' && ($preview || $submit || $add_attachment || $remove_attachment))
@@ -1081,25 +1081,25 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'PROJECT_ID'				=> $project_id,
 		'PROJECT_NAME'				=> $tracker->api->projects[$project_id]['project_name'],
 		'PROJECT_TYPE'				=> $tracker->api->get_type_option('title', $project_id),
-		
+
 		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
-		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],		
-		
+		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
+
 		'L_TRACKER_TICKET_PHP'					=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php']),
 		'L_TRACKER_TICKET_PHP_EXPLAIN'			=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN'),
 		'L_TRACKER_TICKET_PHP_EXPLAIN_BAD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN_BAD'),
 		'L_TRACKER_TICKET_PHP_EXPLAIN_GOOD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_php'] . '_EXPLAIN_GOOD'),
-		
+
 		'L_TRACKER_TICKET_DBMS'					=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms']),
 		'L_TRACKER_TICKET_DBMS_EXPLAIN'			=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN'),
 		'L_TRACKER_TICKET_DBMS_EXPLAIN_BAD'		=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN_BAD'),
 		'L_TRACKER_TICKET_DBMS_EXPLAIN_GOOD'	=> $tracker->api->set_lang_name($tracker->api->projects[$project_id]['lang_dbms'] . '_EXPLAIN_GOOD'),
-		
+
 		'TICKET_TITLE'				=> $ticket_data['ticket_title'],
 		'TICKET_DESC'				=> $ticket_desc['text'],
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],
 		'TICKET_DBMS'				=> $ticket_data['ticket_dbms'],
-		
+
 		'U_ACTION'					=> ($mode == 'edit') ? $tracker->api->build_url('edit', array($project_id, $ticket_id)) : $tracker->api->build_url('add', array($project_id)),
 	));
 
@@ -1111,7 +1111,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'TICKET_HIDDEN'				=> ($ticket_data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 		));
 	}
-	
+
 	if ($tracker->api->projects[$project_id]['ticket_security'] && ($auth->acl_get('u_tracker_ticket_security') || $tracker->api->can_manage))
 	{
 		$template->assign_vars(array(

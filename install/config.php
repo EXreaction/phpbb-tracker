@@ -145,6 +145,7 @@ $mod_config = array(
 					'ticket_hidden'					=> array('TINT:1', 0),
 				),
 				TRACKER_PROJECT_TABLE	=> array(
+					'project_cat_id'		=> array('UINT', 0),
 					'project_type'			=> array('TINT:2', 0),
 					'project_enabled'		=> array('TINT:1', 0),
 					'project_security'		=> array('TINT:1', 0),
@@ -161,7 +162,7 @@ $mod_config = array(
 );
 
 $mod_config['install_check'] = array(
-	'tables'		=> array(TRACKER_CONFIG_TABLE, TRACKER_ATTACHMENTS_TABLE, TRACKER_PROJECT_TABLE, TRACKER_TICKETS_TABLE, TRACKER_POSTS_TABLE, TRACKER_COMPONENTS_TABLE, TRACKER_HISTORY_TABLE, TRACKER_VERSION_TABLE, TRACKER_PROJECT_WATCH_TABLE, TRACKER_TICKETS_WATCH_TABLE),
+	'tables'		=> array(TRACKER_CONFIG_TABLE, TRACKER_ATTACHMENTS_TABLE, TRACKER_PROJECT_CATS_TABLE, TRACKER_PROJECT_TABLE, TRACKER_TICKETS_TABLE, TRACKER_POSTS_TABLE, TRACKER_COMPONENTS_TABLE, TRACKER_HISTORY_TABLE, TRACKER_VERSION_TABLE, TRACKER_PROJECT_WATCH_TABLE, TRACKER_TICKETS_WATCH_TABLE),
 	'files' 		=> array(
 		'core'			=> array(
 			'tracker.php',

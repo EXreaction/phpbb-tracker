@@ -22,7 +22,7 @@ if (!empty($setmodules))
 	{
 		return;
 	}
-	
+
 	$module[] = array(
 		'module_type'		=> 'install',
 		'module_title'		=> 'UPDATE',
@@ -193,11 +193,11 @@ class install_update extends module
 	{
 		global $user, $template, $cache, $phpEx, $phpbb_root_path, $file_functions, $phpbb_db_tools, $db, $mod_config;
 
-		$this->page_title = $user->lang['STAGE_UPDATE_TRACKER'];		
-		
+		$this->page_title = $user->lang['STAGE_UPDATE_TRACKER'];
+
 		// Purge the cache
 		$cache->purge();
-		
+
 		if (version_compare($this->p_master->installed_version, $mod_config['mod_version'], '<'))
 		{
 			switch ($this->p_master->installed_version)
@@ -226,26 +226,66 @@ class install_update extends module
 						file_functions::delete_dir('./../includes/tracker/files');
 						$this->p_master->set_config('attachment_path', 'files/tracker');
 					}
-					
+
 				case '0.1.1':
 					// This is need because of a bug when installing 0.1.1 new
 					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.1']);
 					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.2']);
-				
+
 				case '0.1.2':
 				case '0.1.3':
 					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.2.0']);
 					$this->p_master->add_permissions($mod_config['update_permission_options']['0.2.0']);
 					$this->p_master->load_tables('0.2.0');
-					$this->p_master->set_config('project_view', false);
 					$this->p_master->set_config('default_status_type', TRACKER_ALL_OPENED);
-					
+
+					// First lets pull all the project name data
+					$sql = 'SELECT project_id, project_name, project_name_clean
+						FROM ' . TRACKER_PROJECT_TABLE;
+					$result = $db->sql_query($sql);
+
+					$row = $db->sql_fetchrowset($result);
+					$db->sql_freeresult($result);
+
+					// Now we will insert every project into its own category
+					// and update project table with the new project_cat _id.
+					// This will be the safest way to do it. Every old project
+					// will get its own category and the admin can moves things
+					// around as they see fit after.
+					foreach ($row as $item)
+					{
+						$sql_array = array(
+							'project_name'			=> $item['project_name'],
+							'project_name_clean'	=> $item['project_name_clean'],
+						);
+
+						$db->sql_query('INSERT INTO ' . TRACKER_PROJECT_CAT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array));
+
+						// Get project id
+						$project_cat_id = $db->sql_nextid();
+
+						$sql = 'UPDATE ' . TRACKER_PROJECT_TABLE . '
+							SET project_cat_id = ' . (int) $project_cat_id . '
+							WHERE project_id = ' . (int) $item['project_id'];
+						$db->sql_query($sql);
+					}
+
+					// Remove the unnecessary columns from the tracker_project table.
+					$schema_changes = array(
+						'drop_columns'		=> array(
+							TRACKER_PROJECT_TABLE	=> array('project_name', 'project_name_clean'),
+						),
+					);
+
+					$phpbb_db_tools->perform_schema_changes($schema_changes]);
+
+
 				break;
 
 				default:
 				break;
 			}
-			
+
 			// Set tracker version config value to latest version
 			$this->p_master->set_config('version', $mod_config['mod_version']);
 			// Purge the cache

@@ -345,20 +345,20 @@ class acp_tracker
 		$project_id = request_var('p', 0);
 		$project_cat_id = request_var('pc', 0);
 		$submit	= (isset($_POST['submit'])) ? true : false;
-		
+
 		$project_cat_add = (isset($_POST['project_cat_add'])) ? true : false;
 
 		$template->assign_vars(array(
 			'S_IN_MANAGE_PROJECT'	=> true,
 		));
-	
+
 		if ($project_cat_add)
 		{
 			$project_cat_data = array(
 				'project_name'			=> utf8_normalize_nfc(request_var('project_name', '', true)),
 				'project_name_clean'	=> utf8_clean_string(request_var('project_name', '', true)),
-			);			
-			
+			);
+
 			if (utf8_clean_string($project_cat_data['project_name']) === '')
 			{
 				trigger_error($user->lang['TRACKER_PROJECT_CAT_NO_NAME'] . adm_back_link($this->u_action), E_USER_WARNING);
@@ -402,7 +402,7 @@ class acp_tracker
 					$project_data = array();
 				}
 			break;
-			
+
 			case 'edit_cat':
 				if ($submit)
 				{
@@ -471,7 +471,7 @@ class acp_tracker
 					$project_data = $row;
 				}
 			break;
-			
+
 			case 'delete_cat':
 				if (confirm_box(true) && $submit)
 				{
@@ -531,7 +531,7 @@ class acp_tracker
 					'p'	=> $project_id,
 				)));
 			break;
-			
+
 			case 'delete_cat':
 				confirm_box(false, 'ACP_TRACKER_PROJECT_CAT_DELETE', build_hidden_fields(array(
 					'action'		=> 'delete_cat',
@@ -539,7 +539,7 @@ class acp_tracker
 					'pc'			=> $project_cat_id,
 				)));
 			break;
-			
+
 			case 'edit_cat':
 				$template->assign_vars(array(
 					'S_IN_MANAGE_PROJECT_CAT_EDIT'	=> true,
@@ -582,7 +582,7 @@ class acp_tracker
 				{
 					trigger_error($user->lang['ACP_TRACKER_NO_PROJECT_CAT_CREATED'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
-				
+
 				$template->assign_vars(array(
 					'S_GROUP_OPTIONS'		=> group_select_options($project_data['project_group'], false, (($user->data['user_type'] == USER_FOUNDER) ? false : 0)),
 					'S_PROJECT_CAT_OPTIONS'	=> $s_project_cat_options,
@@ -626,7 +626,7 @@ class acp_tracker
 			'S_IN_MANAGE_PROJECT_DEFAULT'	=> true,
 			'U_ACTION' 						=> "{$this->u_action}&amp;action=add",
 		));
-		
+
 		$sql = 'SELECT *
 			FROM ' . TRACKER_PROJECT_CATS_TABLE . '
 			 ORDER BY project_name_clean ASC';
@@ -641,9 +641,9 @@ class acp_tracker
 		$result = $db->sql_query($sql);
 
 		$projects = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);		
+		$db->sql_freeresult($result);
 
-		
+
 		if (sizeof($project_cats))
 		{
 			foreach ($project_cats as $project_cat)
@@ -657,7 +657,7 @@ class acp_tracker
 				foreach ($projects as $item)
 				{
 					if ($item['project_cat_id'] == $project_cat['project_cat_id'])
-					{					
+					{
 						$template->assign_block_vars('cat.project', array(
 							'PROJECT_DESC'		=> $item['project_desc'],
 							'PROJECT_TYPE'		=> $this->tracker->api->set_lang_name($this->tracker->api->types[$item['project_type']]['title']),

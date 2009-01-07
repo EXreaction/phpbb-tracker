@@ -125,11 +125,11 @@ class module
 
 	/**
 	* Private methods, should not be overwritten
-	*/	
+	*/
 	function create($module_type, $module_url, $selected_mod = false, $selected_submod = false)
 	{
 		global $db, $config, $phpEx, $mod_config, $phpbb_root_path;
-		
+
 		// Check if the tracker is already installed
 		$tables = get_tables($db);
 		if (in_array(TRACKER_CONFIG_TABLE, $tables))
@@ -150,7 +150,7 @@ class module
 			$db->sql_freeresult($result);
 		}
 		unset($tables);
-	
+
 		$module = array();
 
 		// Grab module information using Bart's "neat-o-module" system (tm)
@@ -172,12 +172,12 @@ class module
 		closedir($dir);
 
 		unset($setmodules);
-		
+
 		if (!sizeof($module))
 		{
 			$this->error('No installation modules found', __LINE__, __FILE__);
 		}
-		
+
 		// Order to use and count further if modules get assigned to the same position or not having an order
 		$max_module_order = 1000;
 
@@ -604,7 +604,7 @@ class module
 	* The following are used perform various operations
 	* while installing/updating/removing the tracker
 	*/
-	
+
 	/**
 	* Add new permission
 	*/
@@ -613,15 +613,15 @@ class module
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option($options);
 	}
-	
+
 	/**
-	* Add permission options to roles 
+	* Add permission options to roles
 	* Takes array or roles and permissions options
 	*/
 	function update_roles($roles, $options)
 	{
 		global $db;
-		
+
 		$options_array = array();
 		foreach ($options as $option)
 		{
@@ -631,11 +631,11 @@ class module
 			$result = $db->sql_query($sql);
 			$auth_option_id = $db->sql_fetchfield('auth_option_id');
 			$db->sql_freeresult($result);
-			
+
 			$options_array[$option] = $auth_option_id;
 		}
 		unset($option);
-		
+
 		$roles_array = array();
 		foreach ($roles as $role)
 		{
@@ -645,11 +645,11 @@ class module
 			$result = $db->sql_query($sql);
 			$role_id = $db->sql_fetchfield('role_id');
 			$db->sql_freeresult($result);
-			
-			$roles_array[$role] = $role_id;			
+
+			$roles_array[$role] = $role_id;
 		}
 		unset($role);
-		
+
 		$sql_ary = array();
 		foreach ($roles_array as $role)
 		{
@@ -663,12 +663,12 @@ class module
 			}
 		}
 
-		$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);	
+		$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
 	}
 
 	/**
 	* Removes permissions from phpBB permissions
-	* Completely removes a permission options from 
+	* Completely removes a permission options from
 	* all related tables
 	*/
 	function remove_permissions($options)
@@ -767,7 +767,7 @@ class module
 
 				$_module->update_module_data($parent_tab, true);
 				add_log('admin', 'LOG_MODULE_ADD', $_module->lang_name($parent_tab['module_langname']));
-				
+
 				$sql = 'SELECT module_id
 					FROM ' . MODULES_TABLE . "
 					WHERE module_langname = 'ACP_CAT_DOT_MODS'";
@@ -927,7 +927,7 @@ class module
 
 		return;
 	}
-	
+
 	/**
 	* Remove single module
 	* Expects module_data to be an array of module_basename, module_langname and module_mode to remove
@@ -961,10 +961,10 @@ class module
 			}
 			$db->sql_freeresult($result);
 		}
-		
+
 		return;
 	}
-	
+
 	/**
 	* Load schema table files and display run queries
 	*/
@@ -999,7 +999,7 @@ class module
 		$remove_remarks($sql_query);
 
 		$sql_query = split_sql_file($sql_query, $delimiter);
-		
+
 		$sql_results = '';
 		foreach ($sql_query as $sql)
 		{
@@ -1022,7 +1022,7 @@ class module
 			'TITLE'		=> $user->lang['INST_SQL_RESULTS'],
 			'RESULT'	=> '<textarea rows="10" cols="10">' . trim($sql_results) . '</textarea>',
 		));
-		
+
 		unset($sql_query, $sql_results);
 	}
 
@@ -1072,7 +1072,7 @@ class module
 				$sql_results .= preg_replace('/\t(AND|OR)(\W)/', "\$1\$2", htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', "\n", $sql))) . "\n\n";
 			}
 		}
-		
+
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'	=> true,
 		));
@@ -1081,10 +1081,10 @@ class module
 			'TITLE'		=> $user->lang['INST_SQL_RESULTS'],
 			'RESULT'	=> '<textarea rows="10" cols="10">' . trim($sql_results) . '</textarea>',
 		));
-		
+
 		unset($sql_query, $sql_results);
 	}
-	
+
 	/**
 	* Format version strings in correctly to compare
 	*/
@@ -1092,7 +1092,7 @@ class module
 	{
 		$find = array('rc', ' ');
 		$replace = array('RC', '.');
-		
+
 		return str_replace($find, $replace, strtolower($version));
 	}
 
@@ -1115,10 +1115,10 @@ class module
 				'config_value'	=> $config_value));
 			$db->sql_query($sql);
 		}
-		
+
 		// Destroy the cache of the config
 		// because the values have changed
 		$cache->destroy('_tracker');
-	}	
+	}
 }
 ?>
