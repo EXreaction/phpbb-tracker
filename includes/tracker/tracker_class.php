@@ -71,87 +71,64 @@ class tracker
 	/**
 	 * Display the tracker index
 	 */
-	public function display_index()
+	public function display_index($project_cat_id = false)
 	{
 		global $user, $template;
 
-		$row = &$this->api->projects;
-		if (!sizeof($row))
+		if (!sizeof($this->api->projects))
 		{
 			trigger_error('TRACKER_NO_PROJECT_EXIST');
 		}
 
 		$display_project = false;
-		if ($this->api->config['project_view'])
+		$project_array = array();
+		foreach ($this->api->projects as $item)
 		{
-			$project_array = array();
-
-			foreach ($row as $item)
+			if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
 			{
-				if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
+				if (!group_memberships($item['project_group'], $user->data['user_id'], true))
 				{
-					if (!group_memberships($item['project_group'], $user->data['user_id'], true))
-					{
-						continue;
-					}
+					continue;
 				}
-				$project_array[$item['project_name_clean']][] =  $item;
 			}
+			$project_array[$item['project_name_clean']][] =  $item;
+		}
 
-			foreach ($project_array as $projects)
+		foreach ($project_array as $projects)
+		{
+			$display_project = true;			
+			if ($project_cat_id && $project_cat_id != $projects[0]['project_cat_id'])
 			{
-				$display_project = true;
-				$template->assign_block_vars('project', array(
-					'PROJECT_NAME'		=> $projects[0]['project_name'],
+				continue;
+			}
+			
+			$template->assign_block_vars('cat', array(
+				'PROJECT_NAME'		=> $projects[0]['project_name'],
+				'U_PROJECT' 		=> $this->api->build_url('project_cat', array($projects[0]['project_cat_id'])),
+			));
+
+			foreach ($projects as $item)
+			{
+				$template->assign_block_vars('cat.project', array(
+					'PROJECT_TYPE'				=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
+					'PROJECT_DESC'				=> $item['project_desc'],
+					'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
+					'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
 				));
-
-				foreach ($projects as $item)
-				{
-					$template->assign_block_vars('project.item', array(
-						'PROJECT_TYPE'				=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
-						'PROJECT_DESC'				=> $item['project_desc'],
-						'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
-						'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
-					));
-				}
 			}
-
 		}
-		else
+		
+		if ($project_cat_id)
 		{
-			foreach ($this->api->types as $key => $type)
-			{
-				$template->assign_block_vars($type['id'], array());
-
-				foreach ($row as $item)
-				{
-					if ($item['project_type'] != $key)
-					{
-						continue;
-					}
-
-					if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
-					{
-						if (!group_memberships($item['project_group'], $user->data['user_id'], true))
-						{
-							continue;
-						}
-					}
-
-					$display_project = true;
-					$template->assign_block_vars($type['id'] . '.project', array(
-						'PROJECT_NAME'				=> $item['project_name'],
-						'PROJECT_DESC'				=> $item['project_desc'],
-						'U_PROJECT_STATISTICS'		=> $this->api->build_url('statistics_p', array($item['project_id'])),
-						'U_PROJECT' 				=> $this->api->build_url('project', array($item['project_id'])),
-					));
-				}
-			}
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'   		=> $this->api->project_cats[$project_cat_id]['project_name'],
+				'U_VIEW_FORUM'  	=> $this->api->build_url('project_cat', array($project_cat_id)),
+			));
 		}
+
 
 		// Assign index specific vars
 		$template->assign_vars(array(
-			'S_TRACKER_PROJECT_VIEW'	=> $this->api->config['project_view'],
 			'S_DISPLAY_PROJECT'			=> $display_project,
 			'S_LOGIN_ACTION'			=> $this->api->build_url('login'),
 
@@ -495,7 +472,7 @@ class tracker
 
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
-				'L_TITLE'				=> $this->api->get_type_option('title', $project_id) . ' - ' . $this->api->projects[$project_id]['project_name'],
+				'L_TITLE'				=> $this->api->projects[$project_id]['project_name'] . ' - ' . $this->api->get_type_option('title', $project_id),
 
 				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
 				'TOTAL_OPENED'			=> $total_opened,
@@ -694,9 +671,10 @@ class tracker
 		{
 			$sql_array = array(
 				'SELECT'	=> 'p.project_id,
-								p.project_name,
+								p.project_cat_id,
+								pc.project_name,
 								p.project_desc,
-								p.project_name_clean,
+								pc.project_name_clean,
 								p.project_type,
 								p.project_enabled,
 								p.project_group,
@@ -708,20 +686,25 @@ class tracker
 
 				'LEFT_JOIN'	=> array(
 					array(
+						'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+						'ON'	=> 'p.project_cat_id = pc.project_cat_id',
+					),
+					array(
 						'FROM'	=> array(TRACKER_TICKETS_TABLE => 't'),
 						'ON'	=> 'p.project_id = t.project_id',
 					),
 				),
 
 				'GROUP_BY'	=> 'p.project_id,
-								p.project_name,
+								p.project_cat_id,
+								pc.project_name,
 								p.project_desc,
-								p.project_name_clean,
+								pc.project_name_clean,
 								p.project_type,
 								p.project_enabled,
 								p.project_group',
 
-				'ORDER_BY'	=>	'p.project_type ASC, p.project_name_clean ASC',
+				'ORDER_BY'	=>	'pc.project_name_clean ASC, p.project_type ASC',
 
 			);
 
@@ -730,6 +713,7 @@ class tracker
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 
+			$project_array = array();
 			foreach ($row as $item)
 			{
 				if ($item['project_enabled'] == TRACKER_PROJECT_DISABLED)
@@ -739,14 +723,28 @@ class tracker
 						continue;
 					}
 				}
+				
+				$project_array[$item['project_name_clean']][] =  $item;
+			}
 
-				$template->assign_block_vars('project', array(
-					'U_PROJECT'			=> $this->api->build_url('statistics_p', array($item['project_id'])),
-					'PROJECT_NAME'		=> $item['project_name'],
-					'PROJECT_DESC'		=> $item['project_desc'],
-					'PROJECT_TYPE'		=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
-					'TOTAL_TICKETS'		=> (isset($item['total_tickets'])) ? $item['total_tickets'] : 0,
+			foreach ($project_array as $projects)
+			{				
+				$template->assign_block_vars('cat', array(
+					'PROJECT_NAME'		=> $projects[0]['project_name'],
+					'U_PROJECT' 		=> $this->api->build_url('project_cat', array($projects[0]['project_cat_id'])),
 				));
+
+				foreach ($projects as $item)
+				{
+					$template->assign_block_vars('cat.project', array(
+						'U_PROJECT'			=> $this->api->build_url('statistics_p', array($item['project_id'])),
+						'PROJECT_NAME'		=> $item['project_name'],
+						'PROJECT_DESC'		=> $item['project_desc'],
+						'PROJECT_TYPE'		=> $this->api->set_lang_name($this->api->types[$item['project_type']]['title']),
+						'TOTAL_TICKETS'		=> (isset($item['total_tickets'])) ? $item['total_tickets'] : 0,
+					));
+				}
+
 			}
 
 			// Output page
@@ -1107,6 +1105,7 @@ class tracker_url_builder
 	public $clean_url_base;
 	public $url_ary = array(
 		'index'				=> false,
+		'project_cat'		=> 'pc=%1$s',
 		'project'			=> 'p=%1$s',
 		'project_st'		=> 'p=%1$s&amp;st=%2$s',
 		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;v=%4$s&amp;c=%5$s',

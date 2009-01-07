@@ -16,91 +16,22 @@
 </table>
 <!-- ELSE -->
 <br />
-	<!-- IF S_TRACKER_PROJECT_VIEW -->
-		<!-- BEGIN project -->
-			<h3>{project.PROJECT_NAME}</h3>
-				<table class="tablebg" cellspacing="1" width="100%">
-				<tr>
-					<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_TYPE}&nbsp;</th>
-					<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+	<!-- BEGIN cat -->
+		<table class="tablebg" cellspacing="1" width="100%">
+			<tr>
+				<th width="30%" style="text-align: left;">&nbsp;<a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a>&nbsp;</th>
+				<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
+			</tr>
+			<!-- BEGIN project -->
+			<!-- IF cat.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td style="width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
+					<td style="width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+					<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{cat.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
 				</tr>
-				<!-- BEGIN item -->
-				<!-- IF project.item.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-						<td style="width: 30%;"><a href="{project.item.U_PROJECT}"><strong>{project.item.PROJECT_TYPE}</strong></a></td>
-						<td style="width: 60%;"><!-- IF project.item.PROJECT_DESC -->{project.item.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-						<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{project.item.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-					</tr>
-				<!-- END item -->
-				</table>
-				<!-- IF not project.S_LAST_ROW --><br /><!-- ENDIF -->
-		<!-- END project -->
-	<!-- ELSE -->
-		<!-- IF .bug -->
-			<!-- BEGIN bug -->
-				<!-- IF .bug.project -->
-				<h3>{L_BUG_TRACKER}</h3>
-					<table class="tablebg" cellspacing="1" width="100%">
-					<tr>
-						<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-						<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
-					</tr>
-					<!-- BEGIN project -->
-					<!-- IF bug.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-							<td style="width: 30%;"><a href="{bug.project.U_PROJECT}"><b>{bug.project.PROJECT_NAME}</b></a></td>
-							<td style="width: 60%;">{bug.project.PROJECT_DESC}</td>
-							<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-						</tr>
-					<!-- END project -->
-					</table>
-					<br />
-				<!-- ENDIF -->
-			<!-- END bug -->
-		<!-- ENDIF -->
-
-		<!-- IF .feature -->
-			<!-- BEGIN feature -->
-				<!-- IF .feature.project -->
-				<h3>{L_FEATURE_TRACKER}</h3>
-					<table class="tablebg" cellspacing="1" width="100%">
-					<tr>
-						<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-						<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
-					</tr>
-					<!-- BEGIN project -->
-					<!-- IF feature.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-							<td style="width: 30%;"><a href="{feature.project.U_PROJECT}"><b>{feature.project.PROJECT_NAME}</b></a></td>
-							<td style="width: 60%;">{feature.project.PROJECT_DESC}</td>
-							<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-						</tr>
-					<!-- END project -->
-					</table>
-					<br />
-				<!-- ENDIF -->
-			<!-- END feature -->
-		<!-- ENDIF -->
-
-		<!-- IF .issue -->
-			<!-- BEGIN issue -->
-				<!-- IF .issue.project -->
-				<h3>{L_ISSUE_TRACKER}</h3>
-					<table class="tablebg" cellspacing="1" width="100%">
-					<tr>
-						<th width="30%" style="text-align: left;">&nbsp;{L_TRACKER_PROJECT_NAME_TITLE}&nbsp;</th>
-						<th colspan="2" width="70%" style="text-align: left;">&nbsp;{L_TRACKER_DESCRIPTION}&nbsp;</th>
-					</tr>
-					<!-- BEGIN project -->
-					<!-- IF issue.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-							<td style="width: 30%;"><a href="{issue.project.U_PROJECT}"><b>{issue.project.PROJECT_NAME}</b></a></td>
-							<td style="width: 60%;">{issue.project.PROJECT_DESC}</td>
-							<td style="width: 10%; text-align: center; vertical-align: middle;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-						</tr>
-					<!-- END project -->
-				</table>
-				<br />
-				<!-- ENDIF -->
-			<!-- END issue -->
-		<!-- ENDIF -->
-	<!-- ENDIF -->
+			<!-- END project -->
+		</table>
+		<!-- IF not cat.S_LAST_ROW --><br /><!-- ENDIF -->
+	<!-- END cat -->
 <!-- ENDIF -->
 <br />
 

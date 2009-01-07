@@ -46,8 +46,8 @@ CONNECT phpbb/phpbb_password;
 */
 CREATE TABLE phpbb_tracker_project_categories (
 	project_cat_id number(8) NOT NULL,
-	project_cat_name varchar2(255) DEFAULT '' ,
-	project_cat_name_clean varchar2(255) DEFAULT '' ,
+	project_name varchar2(255) DEFAULT '' ,
+	project_name_clean varchar2(255) DEFAULT '' ,
 	CONSTRAINT pk_phpbb_tracker_project_categories PRIMARY KEY (project_cat_id)
 )
 /

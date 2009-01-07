@@ -197,37 +197,53 @@
 
 	<!-- ELSE -->
 	<h2>{L_TRACKER}</h2>
-	<p>{L_TRACKER_STATISTICS}</p>
-	<div class="forabg">
-		<div class="inner"><span class="corners-top"><span></span></span>
-			<table class="table1" cellspacing="0">
-			<thead>
-				<tr>
-					<th style="text-align: left;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-					<th style="text-align: left;">{L_TRACKER_DESCRIPTION}</th>
-					<th style="text-align: left;">{L_TRACKER_TYPE}</th>
-					<th style="text-align: left;">{L_TRACKER_TOTAL_TICKETS}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<!-- BEGIN project -->
-				<!-- IF project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td><a href="{project.U_PROJECT}"><strong>{project.PROJECT_NAME}</strong></a></td>
-						<td><!-- IF project.PROJECT_DESC -->{project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-						<td>{project.PROJECT_TYPE}</td>
-						<td><strong>{project.TOTAL_TICKETS}</strong></td>
+	<p>{L_TRACKER_STATISTICS}</p>	
+		<!-- BEGIN cat -->
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<table class="table1" cellspacing="0">
+				<thead>
+					<tr>
+						<th style="text-align: left; width: 30%;"><a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a></th>
+						<th style="text-align: left; width: 60%;">{L_TRACKER_DESCRIPTION}</th>
+						<th style="text-align: center; width: 10%;">{L_TRACKER_TOTAL_TICKETS}</th>
 					</tr>
-				<!-- BEGINELSE -->
-				<tr style="height: 50px">
-					<td class="bg1" colspan="4" align="center">
-						<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
-					</td>
-				</tr>
-				<!-- END project -->
-			</tbody>
-		</table>
-		<span class="corners-bottom"><span></span></span></div>
-	</div>
+				</thead>
+				<tbody>
+					<!-- BEGIN project -->
+					<!-- IF cat.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+							<td style="width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
+							<td style="width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+							<td style="width: 10%; text-align: center;"><strong>{project.TOTAL_TICKETS}</strong></td>
+						</tr>
+					<!-- END project -->
+				</tbody>
+				</table>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<!-- IF not cat.S_LAST_ROW --><br /><!-- ENDIF -->
+		<!-- BEGINELSE -->
+			<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<table class="table1" cellspacing="0">
+				<thead>
+					<tr>
+						<th style="text-align: left; width: 30%;"><a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a></th>
+						<th style="text-align: left; width: 60%;">{L_TRACKER_DESCRIPTION}</th>
+						<th style="text-align: left; width: 10%;">{L_TRACKER_TOTAL_TICKETS}</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr style="height: 50px">
+						<td class="bg1" colspan="3" style="text-align: center;">
+							<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>	
+		<!-- END cat -->
 	<!-- ENDIF -->
 	<br />
 	<!-- INCLUDE tracker/tracker_footer.html -->

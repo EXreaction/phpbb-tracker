@@ -355,17 +355,17 @@ class acp_tracker
 		if ($project_cat_add)
 		{
 			$project_cat_data = array(
-				'project_cat_name'			=> utf8_normalize_nfc(request_var('project_cat_name', '', true)),
-				'project_cat_name_clean'	=> utf8_clean_string(request_var('project_cat_name', '', true)),
+				'project_name'			=> utf8_normalize_nfc(request_var('project_name', '', true)),
+				'project_name_clean'	=> utf8_clean_string(request_var('project_name', '', true)),
 			);			
 			
-			if (utf8_clean_string($project_cat_data['project_cat_name']) === '')
+			if (utf8_clean_string($project_cat_data['project_name']) === '')
 			{
 				trigger_error($user->lang['TRACKER_PROJECT_CAT_NO_NAME'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			$this->tracker->api->add_project_cat($project_cat_data);
-			add_log('admin', 'LOG_TRACKER_PROJECT_CAT_ADD', $project_cat_data['project_cat_name']);
+			add_log('admin', 'LOG_TRACKER_PROJECT_CAT_ADD', $project_cat_data['project_name']);
 			trigger_error($user->lang['ACP_TRACKER_PROJECT_CAT_ADDED'] . adm_back_link($this->u_action));
 		}
 
@@ -400,6 +400,36 @@ class acp_tracker
 				else
 				{
 					$project_data = array();
+				}
+			break;
+			
+			case 'edit_cat':
+				if ($submit)
+				{
+					if (!check_form_key($form_key))
+					{
+						trigger_error('FORM_INVALID', E_USER_WARNING);
+					}
+
+					$project_data = array(
+						'project_name'			=> utf8_normalize_nfc(request_var('project_name', '', true)),
+						'project_name_clean'	=> utf8_clean_string(request_var('project_name', '', true)),
+					);
+
+					$this->tracker->api->update_project_cat($project_data, $project_cat_id);
+					add_log('admin', 'LOG_TRACKER_PROJECT_CAT_EDIT', $project_data['project_name']);
+					trigger_error($user->lang['ACP_TRACKER_PROJECT_CAT_EDITED'] . adm_back_link($this->u_action));
+				}
+				else
+				{
+					$sql = 'SELECT *
+							FROM ' . TRACKER_PROJECT_CATS_TABLE . '
+							WHERE project_cat_id = ' . $project_cat_id;
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+
+					$project_data = $row;
 				}
 			break;
 
@@ -455,7 +485,7 @@ class acp_tracker
 					if ($row)
 					{
 						$this->tracker->api->delete_project_cat($project_cat_id);
-						add_log('admin', 'LOG_TRACKER_PROJECT_CAT_DELETE', $row['project_cat_name']);
+						add_log('admin', 'LOG_TRACKER_PROJECT_CAT_DELETE', $row['project_name']);
 						trigger_error($user->lang['ACP_TRACKER_PROJECT_CAT_DELETED'] . adm_back_link($this->u_action));
 					}
 					else
@@ -509,6 +539,21 @@ class acp_tracker
 					'pc'			=> $project_cat_id,
 				)));
 			break;
+			
+			case 'edit_cat':
+				$template->assign_vars(array(
+					'S_IN_MANAGE_PROJECT_CAT_EDIT'	=> true,
+					'U_ACTION'						=> $this->u_action . '&amp;action=' . $action,
+
+					'PROJECT_CAT_ID'				=> $project_data['project_cat_id'],
+					'PROJECT_CAT_NAME'				=> $project_data['project_name'],
+				));
+
+				$this->set_template_title($mode);
+
+				return;
+			break;
+
 
 			case 'edit':
 				$template->assign_vars(array(
@@ -546,7 +591,6 @@ class acp_tracker
 
 				$template->assign_vars(array(
 					'S_IN_MANAGE_PROJECT_ADD_EDIT'	=> true,
-					'U_BACK'						=> $this->u_action,
 					'U_ACTION'						=> $this->u_action . '&amp;action=' . $action,
 
 					'PROJECT_DESC'					=> $project_data['project_desc'],
@@ -585,7 +629,7 @@ class acp_tracker
 		
 		$sql = 'SELECT *
 			FROM ' . TRACKER_PROJECT_CATS_TABLE . '
-			 ORDER BY project_cat_name_clean ASC';
+			 ORDER BY project_name_clean ASC';
 		$result = $db->sql_query($sql);
 
 		$project_cats = $db->sql_fetchrowset($result);
@@ -605,7 +649,7 @@ class acp_tracker
 			foreach ($project_cats as $project_cat)
 			{
 				$template->assign_block_vars('cat', array(
-					'PROJECT_CAT_NAME'	=> $project_cat['project_cat_name'],
+					'PROJECT_CAT_NAME'	=> $project_cat['project_name'],
 					'U_EDIT' 			=> "{$this->u_action}&amp;action=edit_cat&amp;pc={$project_cat['project_cat_id']}",
 					'U_DELETE' 			=> "{$this->u_action}&amp;action=delete_cat&amp;pc={$project_cat['project_cat_id']}",
 				));

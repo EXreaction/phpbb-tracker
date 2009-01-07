@@ -159,29 +159,37 @@
 	<!-- ENDIF -->
 	<!-- ELSE -->
 	<h2>{L_TRACKER}</h2>
-	<p>{L_TRACKER_STATISTICS}</p>
-	<table class="tablebg" cellspacing="1" width="100%">
-	<tr>
-		<th style="text-align: left;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-		<th style="text-align: left;">{L_TRACKER_DESCRIPTION}</th>
-		<th style="text-align: left;">{L_TRACKER_TYPE}</th>
-		<th style="text-align: left;">{L_TRACKER_TOTAL_TICKETS}</th>
-	</tr>
-	<!-- BEGIN project -->
-	<!-- IF project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td><a href="{project.U_PROJECT}"><b>{project.PROJECT_NAME}</b></a></td>
-			<td>{project.PROJECT_DESC}</td>
-			<td>{project.PROJECT_TYPE}</td>
-			<td><b>{project.TOTAL_TICKETS}</b></td>
-		</tr>
-	<!-- BEGINELSE -->
-	<tr style="height: 50px">
-		<td class="row1" colspan="4" align="center">
-			<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
-		</td>
-	</tr>
-	<!-- END project -->
-	</table>
+	<p>{L_TRACKER_STATISTICS}</p>	
+		<!-- BEGIN cat -->
+		<table class="tablebg" cellspacing="1" width="100%">
+			<tr>
+				<th style="text-align: left; width: 30%;"><a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a></th>
+				<th style="text-align: left; width: 60%;">{L_TRACKER_DESCRIPTION}</th>
+				<th style="text-align: center; width: 10%;">{L_TRACKER_TOTAL_TICKETS}</th>
+			</tr>
+			<!-- BEGIN project -->
+			<!-- IF cat.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td style="text-align: left; width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
+					<td style="text-align: left; width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+					<td style="text-align: center; width: 10%;"><b>{cat.project.TOTAL_TICKETS}</b></td>
+				</tr>
+			<!-- END project -->
+		</table>
+		<!-- IF not cat.S_LAST_ROW --><br /><!-- ENDIF -->
+		<!-- BEGINELSE -->
+			<table class="tablebg" cellspacing="1" width="100%">
+			<tr>
+				<th style="text-align: left; width: 30%;"><a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a></th>
+				<th style="text-align: left; width: 60%;">{L_TRACKER_DESCRIPTION}</th>
+				<th style="text-align: left; width: 10%;">{L_TRACKER_TOTAL_TICKETS}</th>
+			</tr>
+			<tr style="height: 50px">
+				<td class="row1" colspan="3" align="center">
+					<strong>{L_TRACKER_NO_PROJECT_EXIST}</strong>
+				</td>
+			</tr>
+			</table>
+		<!-- END cat -->	
 	<!-- ENDIF -->
 	<br />
 	<!-- INCLUDE tracker/tracker_footer.html -->

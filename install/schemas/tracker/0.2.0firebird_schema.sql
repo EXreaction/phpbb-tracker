@@ -6,8 +6,8 @@
 # Table: 'phpbb_tracker_project_categories'
 CREATE TABLE phpbb_tracker_project_categories (
 	project_cat_id INTEGER NOT NULL,
-	project_cat_name VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
-	project_cat_name_clean VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL
+	project_name VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
+	project_name_clean VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL
 );;
 
 ALTER TABLE phpbb_tracker_project_categories ADD PRIMARY KEY (project_cat_id);;

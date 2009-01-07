@@ -351,7 +351,7 @@ class tracker_api
 	
 	public function get_project_name($project_cat_id, $project_id, $type_id = false)
 	{	
-		$project_name = $this->project_cats[$project_cat_id]['project_cat_name'];		
+		$project_name = $this->project_cats[$project_cat_id]['project_name'];		
 		if ($type_id !== false)
 		{
 			$project_type = $this->set_lang_name($this->types[$type_id]['title']);
@@ -433,9 +433,9 @@ class tracker_api
 	{
 		global $user, $db;
 
-		$sql = 'SELECT project_cat_id, project_cat_name, project_cat_name_clean
+		$sql = 'SELECT project_cat_id, project_name, project_name_clean
 			FROM ' . TRACKER_PROJECT_CATS_TABLE . '
-				ORDER BY project_cat_name_clean ASC';
+				ORDER BY project_name_clean ASC';
 		$result = $db->sql_query($sql);
 
 		$row = $db->sql_fetchrowset($result);
@@ -453,7 +453,7 @@ class tracker_api
 				$selected = '';
 			}
 
-			$options .= '<option value="' . $item['project_cat_id'] . '"' . $selected . '>' . $item['project_cat_name'] .'</option>';
+			$options .= '<option value="' . $item['project_cat_id'] . '"' . $selected . '>' . $item['project_name'] .'</option>';
 		}
 
 		return $options;
@@ -2096,7 +2096,12 @@ class tracker_api
 		global $phpEx, $phpbb_root_path;
 
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $data['project_name'],
+			'FORUM_NAME'   		=> $data['project_name'],
+			'U_VIEW_FORUM'  	=> $this->build_url('project_cat', array($data['project_cat_id'])),
+		));
+		
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->get_type_option('title', $data['project_id']),
 			'U_VIEW_FORUM'	=> $this->build_url(($in_stats) ? 'statistics_p' : 'project', array($data['project_id'])),
 		));
 

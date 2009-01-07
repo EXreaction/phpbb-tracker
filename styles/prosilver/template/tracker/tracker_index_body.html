@@ -23,119 +23,32 @@
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 <!-- ELSE -->
-	<!-- IF S_TRACKER_PROJECT_VIEW -->
-		<!-- BEGIN project -->
-			<h3>{project.PROJECT_NAME}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<table class="table1" cellspacing="0">
-						<thead>
-							<tr>
-								<th style="text-align: left; width: 30%;">{L_TRACKER_TYPE}</th>
-								<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- BEGIN item -->
-							<!-- IF project.item.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-									<td style="width: 30%;"><a href="{project.item.U_PROJECT}"><strong>{project.item.PROJECT_TYPE}</strong></a></td>
-									<td style="width: 60%;"><!-- IF project.item.PROJECT_DESC -->{project.item.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-									<td style="width: 10%; text-align: right;"><a href="{project.item.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-								</tr>
-							<!-- END item -->
-						</tbody>
-						</table>
-					<span class="corners-bottom"><span></span></span></div>
-				</div>
-		<!-- END project -->
-	<!-- ELSE -->
-		<!-- IF .bug -->
-			<!-- BEGIN bug -->
-				<!-- IF .bug.project -->
-				<h3>{L_BUG_TRACKER}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<table class="table1" cellspacing="0">
-						<thead>
-							<tr>
-								<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-								<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- BEGIN project -->
-							<!-- IF bug.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-									<td style="width: 30%;"><a href="{bug.project.U_PROJECT}"><strong>{bug.project.PROJECT_NAME}</strong></a></td>
-									<td style="width: 60%;"><!-- IF bug.project.PROJECT_DESC -->{bug.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-									<td style="width: 10%; text-align: right;"><a href="{bug.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-								</tr>
-							<!-- END project -->
-						</tbody>
-						</table>
-					<span class="corners-bottom"><span></span></span></div>
-				</div>
-				<!-- ENDIF -->
-			<!-- END bug -->
-		<!-- ENDIF -->
 
-		<!-- IF .feature -->
-			<!-- BEGIN feature -->
-				<!-- IF .feature.project -->
-				<h3>{L_FEATURE_TRACKER}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<table class="table1" cellspacing="0">
-						<thead>
-							<tr>
-								<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-								<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- BEGIN project -->
-							<!-- IF feature.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-									<td style="width: 30%;"><a href="{feature.project.U_PROJECT}"><strong>{feature.project.PROJECT_NAME}</strong></a></td>
-									<td style="width: 60%;"><!-- IF feature.project.PROJECT_DESC -->{feature.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-									<td style="width: 10%; text-align: right;"><a href="{feature.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-								</tr>
-							<!-- END project -->
-						</tbody>
-						</table>
-					<span class="corners-bottom"><span></span></span></div>
-				</div>
-				<!-- ENDIF -->
-			<!-- END feature -->
-		<!-- ENDIF -->
+<!-- BEGIN cat -->
+	<div class="forabg">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<table class="table1" cellspacing="0">
+			<thead>
+				<tr>
+					<th style="text-align: left; width: 30%;"><a href="{cat.U_PROJECT}">{cat.PROJECT_NAME}</a></th>
+					<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN project -->
+				<!-- IF cat.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+						<td style="width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
+						<td style="width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
+						<td style="width: 10%; text-align: right;"><a href="{cat.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
+					</tr>
+				<!-- END project -->
+			</tbody>
+			</table>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+	<!-- IF not cat.S_LAST_ROW --><br /><!-- ENDIF -->
+<!-- END cat -->
 
-		<!-- IF .issue -->
-			<!-- BEGIN issue -->
-				<!-- IF .issue.project -->
-				<h3>{L_ISSUE_TRACKER}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<table class="table1" cellspacing="0">
-						<thead>
-							<tr>
-								<th style="text-align: left; width: 30%;">{L_TRACKER_PROJECT_NAME_TITLE}</th>
-								<th colspan="2" style="text-align: left; width: 70%;">{L_TRACKER_DESCRIPTION}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- BEGIN project -->
-							<!-- IF issue.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-									<td style="width: 30%;"><a href="{issue.project.U_PROJECT}"><strong>{issue.project.PROJECT_NAME}</strong></a></td>
-									<td style="width: 60%;"><!-- IF issue.project.PROJECT_DESC -->{issue.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-									<td style="width: 10%; text-align: right;"><a href="{issue.project.U_PROJECT_STATISTICS}">{L_TRACKER_VIEW_STATISTICS}</a></td>
-								</tr>
-							<!-- END project -->
-						</tbody>
-						</table>
-					<span class="corners-bottom"><span></span></span></div>
-				</div>
-				<!-- ENDIF -->
-			<!-- END issue -->
-		<!-- ENDIF -->
-	<!-- ENDIF -->
 <!-- ENDIF -->
 <br />
 

@@ -12,8 +12,8 @@ GO
 */
 CREATE TABLE [phpbb_tracker_project_categories] (
 	[project_cat_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[project_cat_name] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[project_cat_name_clean] [varchar] (255) DEFAULT ('') NOT NULL 
+	[project_name] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[project_name_clean] [varchar] (255) DEFAULT ('') NOT NULL 
 ) ON [PRIMARY]
 GO
 

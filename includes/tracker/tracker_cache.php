@@ -57,16 +57,16 @@ class tracker_cache extends cache
 			
 			$sql = 'SELECT *
 				FROM ' . TRACKER_PROJECT_CATS_TABLE . '
-				 ORDER BY project_cat_name_clean ASC';
+				 ORDER BY project_name_clean ASC';
 			$result = $db->sql_query($sql);
 
 			$projects = array();
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$projects[$row['project_cat_id']] = array(
-					'project_cat_id'			=> $row['project_cat_id'],
-					'project_cat_name'			=> $row['project_cat_name'],
-					'project_cat_name_clean'	=> $row['project_cat_name_clean'],
+					'project_cat_id'		=> $row['project_cat_id'],
+					'project_name'			=> $row['project_name'],
+					'project_name_clean'	=> $row['project_name_clean'],
 				);		
 			}
 			$db->sql_freeresult($result);			
@@ -90,6 +90,7 @@ class tracker_cache extends cache
 			// Get tracker projects
 			$sql_array = array(
 				'SELECT'	=> 'p.*,
+								pc.*,
 								g.group_name,
 								g.group_colour',
 
@@ -99,12 +100,16 @@ class tracker_cache extends cache
 
 				'LEFT_JOIN'	=> array(
 					array(
+						'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+						'ON'	=> 'p.project_cat_id = pc.project_cat_id',
+					),
+					array(
 						'FROM'	=> array(GROUPS_TABLE => 'g'),
 						'ON'	=> 'p.project_group = g.group_id',
 					),
 				),
 
-				'ORDER_BY'	=> 'project_type ASC',
+				'ORDER_BY'	=> 'project_name_clean ASC, project_type ASC',
 			);
 
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -115,6 +120,8 @@ class tracker_cache extends cache
 			{
 				$projects[$row['project_id']] = array(
 					'project_id'				=> $row['project_id'],
+					'project_name'				=> $row['project_name'],
+					'project_name_clean'		=> $row['project_name_clean'],
 					'project_desc'				=> $row['project_desc'],
 					'project_enabled'			=> $row['project_enabled'],
 					'project_type'				=> $row['project_type'],

@@ -38,6 +38,7 @@ $mode					= request_var('mode', '');
 $term					= utf8_normalize_nfc(request_var('term', '', true));
 $ticket_id				= request_var('t', 0);
 $project_id				= request_var('p', 0);
+$project_cat_id			= request_var('pc', 0);
 $version_id				= request_var('v', 0);
 $component_id			= request_var('c', 0);
 $post_id				= request_var('pid', 0);
@@ -280,7 +281,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	// Assign index specific vars
 	$template->assign_vars(array(
-		'L_TITLE'						=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
+		'L_TITLE'						=> $tracker->api->projects[$project_id]['project_name'] . ' - ' . $tracker->api->get_type_option('title', $project_id),
 
 		'S_CAN_MANAGE'					=> $tracker->api->can_manage,
 		'PROJECT_ID'					=> $project_id,
@@ -788,7 +789,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_CAN_EDIT'				=> $tracker->api->check_edit($row['ticket_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> $tracker->api->build_url('edit', array($project_id, $ticket_id)),
 
-		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
+		'L_TITLE'					=> $tracker->api->projects[$project_id]['project_name'] . ' - ' .  $tracker->api->get_type_option('title', $project_id),
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_REPLY_EXPLAIN'], $row['ticket_title']),
 		'U_POST_REPLY_TICKET'		=> $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		'U_SEND_PM'					=> $tracker->api->build_url('compose_pm', array($row['ticket_user_id'])),
@@ -1062,7 +1063,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
 	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	$template->assign_vars(array(
-		'L_TITLE'					=> $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'],
+		'L_TITLE'					=> $tracker->api->projects[$project_id]['project_name'] . ' - ' . $tracker->api->get_type_option('title', $project_id),
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->api->projects[$project_id]['project_name'], $tracker->api->get_type_option('title', $project_id)) . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
 		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
 
@@ -1131,7 +1132,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 }
 else
 {
-	$tracker->display_index();
+	$tracker->display_index($project_cat_id);
 }
 
 ?>
