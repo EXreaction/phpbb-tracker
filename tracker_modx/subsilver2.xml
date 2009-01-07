@@ -32,7 +32,8 @@
 	</header>
 	<action-group>
 		<copy>
-			<file from="root/styles/subsilver2/*.*" to="styles/subsilver2/" />
+			<file from="root/styles/subsilver2/template/tracker/*.*" to="styles/subsilver2/template/tracker/" />
+			<file from="root/styles/subsilver2/imageset/en/button_issue_new.gif" to="styles/subsilver2/imageset/en/button_issue_new.gif" />
 		</copy>
 		<open src="styles/subsilver2/template/overall_header.html">
 			<edit>

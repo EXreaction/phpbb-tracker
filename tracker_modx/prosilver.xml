@@ -32,7 +32,8 @@
 	</header>
 	<action-group>
 		<copy>
-			<file from="root/styles/prosilver/*.*" to="styles/prosilver/" />
+			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/" />
+			<file from="root/styles/prosilver/imageset/en/button_issue_new.gif" to="styles/prosilver/imageset/en/button_issue_new.gif" />
 		</copy>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
