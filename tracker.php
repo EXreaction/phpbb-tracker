@@ -118,10 +118,6 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 		'LEFT_JOIN'	=> array(
 			array(
-				'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
-				'ON'	=> 't.project_id = p.project_id',
-			),
-			array(
 				'FROM'	=> array(USERS_TABLE => 'u1'),
 				'ON'	=> 'u1.user_id = t.ticket_user_id',
 			),
@@ -574,7 +570,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						a.filesize,
 						a.filetime,
 						p.project_id,
-						p.project_name,
+						p.project_cat_id,
+						pc.project_name,
 						p.project_group,
 						p.project_security,
 						p.ticket_security as project_ticket_security,
@@ -594,6 +591,10 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			array(
 				'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
 				'ON'	=> 't.project_id = p.project_id',
+			),
+			array(
+				'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+				'ON'	=> 'p.project_cat_id = pc.project_cat_id',
 			),
 			array(
 				'FROM'	=> array(TRACKER_ATTACHMENTS_TABLE => 'a'),

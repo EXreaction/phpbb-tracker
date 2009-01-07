@@ -1150,7 +1150,7 @@ class tracker_api
 		}
 
 		$sql_array = array(
-			'SELECT'	=> 't.*, p.*',
+			'SELECT'	=> 't.*, p.*, pc.*',
 
 			'FROM'		=> array(
 				TRACKER_TICKETS_TABLE	=> 't',
@@ -1160,6 +1160,10 @@ class tracker_api
 				array(
 					'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
 					'ON'	=> 't.project_id = p.project_id',
+				),
+				array(
+					'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+					'ON'	=> 'p.project_cat_id = pc.project_cat_id',
 				),
 			),
 
