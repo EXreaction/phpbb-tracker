@@ -231,7 +231,7 @@
 		<open src="language/en/acp/styles.php">
 			<edit>
 				<find><![CDATA[	'IMG_BUTTON_TOPIC_REPLY'	=> 'Reply topic',]]></find>
-				<action type="after-add"><![CDATA[	'IMG_BUTTON_NEW_ISSUE'	=> 'New issue',]]></action>
+				<action type="after-add"><![CDATA[	'IMG_BUTTON_ISSUE_NEW'	=> 'New issue',]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/overall_header.html">
