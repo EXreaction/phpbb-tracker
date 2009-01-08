@@ -129,6 +129,7 @@ $mod_config = array(
 					'version_enabled'		=> array('TINT:1', 1),
 				),
 				TRACKER_PROJECT_TABLE	=> array(
+					'project_cat_id'		=> array('UINT', 0),
 					'show_php'				=> array('TINT:1', 0),
 					'show_dbms'				=> array('TINT:1', 0),
 					'ticket_security'		=> array('TINT:1', 0),

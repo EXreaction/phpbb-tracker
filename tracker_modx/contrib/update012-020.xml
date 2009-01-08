@@ -92,6 +92,7 @@
 			<file from="root/install/schemas/*.*" to="install/schemas/" />
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php" />
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php" />
+			<file from="root/includes/tracker/functions_files.php" to="includes/tracker/functions_files.php" />		
 			<file from="root/includes/tracker/tracker_api.php" to="includes/tracker/tracker_api.php" />
 			<file from="root/includes/tracker/tracker_cache.php" to="includes/tracker/tracker_cache.php" />
 			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php" />
@@ -199,12 +200,14 @@
 				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
 		$db->sql_query($sql);]]></find>
-				<action type="after-add"><![CDATA[		
-		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
+				<action type="after-add"><![CDATA[		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
 		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE . " SET last_visit_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('last_visit_user_id', $user_id_ary);
-		$db->sql_query($sql);]]></action>
+		$db->sql_query($sql);
+		
+		$cache->destroy('_tracker_projects');
+		$cache->destroy('_tracker_project_cats');]]></action>
 			</edit>
 		</open>
 		<open src="includes/acp/acp_language.php">
@@ -240,10 +243,6 @@
 			<!-- ENDIF -->]]></find>
 			<action type="replace-with"><![CDATA[				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --></li>]]></action>
 			</edit>
-	      <edit>
-	        <find><![CDATA[&#8249; <a href="{U_TRACKER}">{L_TRACKER}</a>]]></find>
-	        <action type="replace-with"><![CDATA[&#8249; <a href="{U_TRACKER}">{L_TRACKER_INDEX}</a>]]></action>
-	      </edit>
 	    </open>
 		<open src="styles/prosilver/imageset/en/imageset.cfg">
 			<edit>
@@ -268,10 +267,6 @@
 			</edit>
 		</open>
 		<open src="styles/subsilver2/template/overall_header.html">
-	      <edit>
-	        <find><![CDATA[{L_TRACKER}]]></find>
-	        <action type="replace-with"><![CDATA[{L_TRACKER_INDEX}]]></action>
-	      </edit>
 		  	<edit>
 				<find><![CDATA[	<!-- IF S_IN_TRACKER -->
 	<!-- INCLUDE tracker/tracker_breadcrumbs.html -->
@@ -288,7 +283,7 @@
 			</edit>
 		</open>
 		
-		<diy-instructions lang="en">Run the included installer at http://yoursite.com/phpBB/install/index.php and select the option to update to latest version.
+		<diy-instructions lang="en">Delete subsilver2/template/tracker/tracker_breadcrumbs.html. Run the included installer at http://yoursite.com/phpBB/install/index.php and select the option to update to latest version.
 Once done make sure to remove install folder from your server and then purge the cache and refresh your styles templates, themes and imageset.</diy-instructions>
 	</action-group>
 </mod>

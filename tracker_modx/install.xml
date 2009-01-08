@@ -95,6 +95,7 @@
 			<file from="root/install/*.*" to="install/" />
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php" />
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php" />
+			<file from="root/includes/tracker/functions_files.php" to="includes/tracker/functions_files.php" />
 			<file from="root/includes/tracker/tracker_api.php" to="includes/tracker/tracker_api.php" />
 			<file from="root/includes/tracker/tracker_cache.php" to="includes/tracker/tracker_cache.php" />
 			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php" />

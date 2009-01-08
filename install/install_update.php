@@ -259,7 +259,7 @@ class install_update extends module
 							'project_name_clean'	=> $item['project_name_clean'],
 						);
 
-						$db->sql_query('INSERT INTO ' . TRACKER_PROJECT_CAT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array));
+						$db->sql_query('INSERT INTO ' . TRACKER_PROJECT_CATS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array));
 
 						// Get project id
 						$project_cat_id = $db->sql_nextid();
