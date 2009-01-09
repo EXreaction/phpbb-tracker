@@ -190,7 +190,7 @@
 				}
 			}
 		break;]]></find>
-						<action type="replace_with"><![CDATA[		case 'tracker':
+						<action type="replace-with"><![CDATA[		case 'tracker':
 			include($phpbb_root_path . 'includes/tracker/tracker_viewonline.' . $phpEx);
 		break;]]></action>
 			</edit>
