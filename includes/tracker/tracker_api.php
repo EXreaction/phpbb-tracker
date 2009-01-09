@@ -2229,7 +2229,7 @@ class tracker_api
 
 					$display_username = get_username_string('full', $row['edit_user'], $user_row['username'], $user_row['user_colour']);
 				}
-				$l_edited_by = sprintf($l_edit_time_total, $display_username, $user->format_date($row['edit_time']), $row['edit_count']);
+				$l_edited_by = sprintf($l_edit_time_total, $display_username, $user->format_date($row['edit_time'], false, true), $row['edit_count']);
 			}
 		}
 		else if ($type == 'post')
