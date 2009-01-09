@@ -1979,7 +1979,7 @@ class tracker_api
 
 			case 'version':
 				$table = TRACKER_VERSION_TABLE;
-				if ($version_enabled)
+				if ($version_enabled && !$this->can_manage)
 				{
 					$where = ' AND version_enabled = ' . TRACKER_PROJECT_ENABLED;
 				}

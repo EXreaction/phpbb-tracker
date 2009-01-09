@@ -118,6 +118,10 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 		'LEFT_JOIN'	=> array(
 			array(
+				'FROM'	=> array(TRACKER_PROJECT_TABLE => 'p'),
+				'ON'	=> 'p.project_id = t.project_id',
+			),
+			array(
 				'FROM'	=> array(USERS_TABLE => 'u1'),
 				'ON'	=> 'u1.user_id = t.ticket_user_id',
 			),
