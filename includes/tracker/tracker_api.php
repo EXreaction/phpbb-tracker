@@ -1122,6 +1122,14 @@ class tracker_api
 	public function subscribe($mode, $project_id, $ticket_id, $user_id = false)
 	{
 		global $phpbb_root_path, $phpEx, $user, $config, $db;
+		
+		if ($user_id === false)
+		{
+			if ($user->data['is_bot'] || !$user->data['is_registered'])
+			{
+				return;
+			}
+		}
 
 		$table 		= ($project_id && $ticket_id) ? TRACKER_TICKETS_WATCH_TABLE : TRACKER_PROJECT_WATCH_TABLE;
 		$column 	= ($project_id && $ticket_id) ? 'ticket_id' : 'project_id';
@@ -1130,9 +1138,12 @@ class tracker_api
 
 		if ($mode == 'subscribe')
 		{
+			// Make sure we do not try to insert it if
+			// it already existed for whatever reason
 			$sql = "UPDATE $table
 				SET $column = '$id'
-				WHERE user_id = '$user_id'";
+				WHERE user_id = '$user_id'
+					AND $column = '$id'";
 			$db->sql_query($sql);
 
 			if (!$db->sql_affectedrows())

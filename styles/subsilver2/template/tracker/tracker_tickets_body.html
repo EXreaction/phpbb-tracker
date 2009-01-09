@@ -93,9 +93,11 @@
 			<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_TICKETS} ]&nbsp;</td>
 			<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
 		</tr>
+		<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
 		<tr>
 			<td colspan="3"><a href="{U_WATCH_PROJECT}">{L_WATCH_PROJECT}</a></td>
 		</tr>
+		<!-- ENDIF -->
 	</table>
 <!-- ELSE -->
 	<table width="100%" cellspacing="1">
