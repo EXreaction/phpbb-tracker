@@ -185,7 +185,7 @@ $status_type['feature'] = array(
 		'id' 		=> 7,
 		'name'		=> 'TRACKER_IMPLEMENTING',
 		'filter' 	=> false,
-		'open' 		=> false,
+		'open' 		=> true,
 	),
 	8 => array(
 		'id' 		=> 8,
@@ -197,7 +197,7 @@ $status_type['feature'] = array(
 		'id' 		=> 9,
 		'name' 		=> 'TRACKER_IMPLEMENTED_SVN',
 		'filter' 	=> false,
-		'open' 		=> true,
+		'open' 		=> false,
 	),
 	10 => array(
 		'id' 		=> 10,
