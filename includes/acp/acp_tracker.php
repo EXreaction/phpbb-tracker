@@ -99,7 +99,7 @@ class acp_tracker
 		$latest_version = trim($info[0]);
 
 		$announcement_url = trim($info[1]);
-		$update_link = append_sid($phpbb_root_path . 'tracker_install/install.' . $phpEx);
+		$update_link = append_sid($phpbb_root_path . 'install/index.' . $phpEx);
 
 		$up_to_date = (version_compare(str_replace('rc', 'RC', strtolower($current_version)), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
 
