@@ -68,7 +68,7 @@
 				</changelog>
 			</entry>
 			<entry>
-				<date>2009-xx-xx</date>
+				<date>2009-01-14</date>
 				<rev-version>0.2.0</rev-version>
 				<changelog lang="en">
 					<change>Added selectable project view type inside acp</change>
