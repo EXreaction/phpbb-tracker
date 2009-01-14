@@ -131,7 +131,7 @@ class install_verify extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array('files/tracker');
+		$directories = array('files/', 'files/tracker/');
 
 		umask(0);
 
