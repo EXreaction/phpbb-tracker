@@ -1507,9 +1507,10 @@ class tracker_api
 		$members_only = false;
 		$members_ids = array();
 		if ($this->projects[$data['project_id']]['project_security'] || (isset($data['ticket_hidden']) && $data['ticket_hidden'] == TRACKER_TICKET_HIDDEN) || (isset($data['ticket_security']) && $data['ticket_security'] == TRACKER_TICKET_SECURITY))
-		{
+		{			
 			// If ticket it hidden or security ticket/tracker, then we only want to notify team members who have subscribed
 			$members = array();
+			$members_only = true;
 			$members = group_memberships($this->projects[$data['project_id']]['project_group']);
 
 			if (sizeof($members))
@@ -1520,7 +1521,7 @@ class tracker_api
 				}
 			}
 		}
-
+		
 		$user_ids = array();
 		$sql_array = array(
 			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang',
@@ -1540,7 +1541,8 @@ class tracker_api
 				AND u.user_id NOT IN('. $sql_ignore_users .')',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
-
+		$result = $db->sql_query($sql);
+		
 		while ($row = $db->sql_fetchrow($result))
 		{
 			// If we need members only and user is not group member skip it
@@ -1553,6 +1555,7 @@ class tracker_api
 				'user_id'		=> $row['user_id'],
 				'username'		=> $row['username'],
 				'user_email'	=> $row['user_email'],
+				'user_lang'		=> $row['user_lang'],
 			);
 		}
 		$db->sql_freeresult($result);
@@ -1575,7 +1578,8 @@ class tracker_api
 				AND u.user_id NOT IN('. $sql_ignore_users .')',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
-
+		$result = $db->sql_query($sql);
+		
 		while ($row = $db->sql_fetchrow($result))
 		{
 			if (!isset($user_ids[$row['user_id']]))
@@ -1606,6 +1610,7 @@ class tracker_api
 			}
 
 			$messenger = new messenger();
+			$board_url = generate_board_url() . '/';
 
 			foreach ($user_ids as $users)
 			{
@@ -2431,7 +2436,7 @@ class tracker_api
 	*/
 	public function debug($exit = false, $var = false)
 	{
-		if ($var)
+		if ($var !== false)
 		{
 			echo '<pre>';
 			var_export($var);
