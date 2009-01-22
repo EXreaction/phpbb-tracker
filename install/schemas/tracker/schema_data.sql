@@ -11,6 +11,6 @@ INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('tickets_pe
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('posts_per_page', '10');
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('top_reporters', '10');
 INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('default_status_type', '1');
-INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('version', '0.2.0');
+INSERT INTO phpbb_tracker_config (config_name, config_value) VALUES ('version', '0.3.0');
 
 # POSTGRES COMMIT #

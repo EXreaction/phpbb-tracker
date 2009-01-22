@@ -277,6 +277,8 @@ class install_update extends module
 						),
 					);
 					$phpbb_db_tools->perform_schema_changes($schema_changes);
+					
+				case '0.2.0':
 
 				break;
 

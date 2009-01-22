@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 
 $mod_config = array(
 	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.2.0',
+	'mod_version'				=> '0.3.0',
 	'phpbb_version'				=> '3.0.0',
 	'data_file'					=> 'schemas/tracker/schema_data.sql',
 	'remove_data_file'			=> 'schemas/tracker/remove_schema_data.sql',
