@@ -119,6 +119,8 @@ class acp_tracker
 		global $db, $user, $auth, $template, $cache, $mode;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		$user->add_lang('acp/board');
+		
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
 
@@ -135,6 +137,7 @@ class acp_tracker
 
 				'legend2'					=> 'ACP_TRACKER_SETTINGS_GENERAL',
 				'attachment_path'			=> array('lang' => 'TRACKER_ATTACHMENT_PATH',		'validate' => 'path', 	'type' => 'text:30:65', 	'explain' => true),
+				'enable_post_confirm'		=> array('lang' => 'VISUAL_CONFIRM_POST',			'validate' => 'bool',	'type' => 'radio:yes_no', 	'explain' => true),
 				'send_email'				=> array('lang' => 'TRACKER_SEND_EMAIL',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 				'tickets_per_page'			=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'posts_per_page'			=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),

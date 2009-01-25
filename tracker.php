@@ -34,28 +34,29 @@ $user->setup();
 $tracker = new tracker();
 
 // Get the varibles we will use to build the tracker pages
-$mode					= request_var('mode', '');
-$term					= utf8_normalize_nfc(request_var('term', '', true));
-$ticket_id				= request_var('t', 0);
-$project_id				= request_var('p', 0);
-$project_cat_id			= request_var('c', 0);
-$version_id				= request_var('vid', 0);
-$component_id			= request_var('cid', 0);
-$post_id				= request_var('pid', 0);
-$user_id				= request_var('u', 0);
-$assigned_to_user_id	= request_var('at', 0);
-$status_type			= request_var('st', $tracker->api->config['default_status_type']);
-$start					= request_var('start', 0);
-$subscribe				= request_var('subscribe', '');
-$unsubscribe			= request_var('unsubscribe', '');
+$mode						= request_var('mode', '');
+$term						= utf8_normalize_nfc(request_var('term', '', true));
+$ticket_id					= request_var('t', 0);
+$project_id					= request_var('p', 0);
+$project_cat_id				= request_var('c', 0);
+$version_id					= request_var('vid', 0);
+$component_id				= request_var('cid', 0);
+$post_id					= request_var('pid', 0);
+$user_id					= request_var('u', 0);
+$assigned_to_user_id		= request_var('at', 0);
+$status_type				= request_var('st', $tracker->api->config['default_status_type']);
+$start						= request_var('start', 0);
+$subscribe					= request_var('subscribe', '');
+$unsubscribe				= request_var('unsubscribe', '');
 
-$submit					= (isset($_POST['submit'])) ? true : false;
-$submit_mod				= (isset($_POST['submit_mod'])) ? true : false;
-$update					= (isset($_POST['update'])) ? true : false;
-$add_attachment			= (isset($_POST['add_attachment'])) ? true : false;
-$remove_attachment		= (isset($_POST['delete_attachment'])) ? true : false;
-$attachment_data		= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
-$preview				= (isset($_POST['preview'])) ? true : false;
+$submit						= (isset($_POST['submit'])) ? true : false;
+$submit_mod					= (isset($_POST['submit_mod'])) ? true : false;
+$update						= (isset($_POST['update'])) ? true : false;
+$add_attachment				= (isset($_POST['add_attachment'])) ? true : false;
+$remove_attachment			= (isset($_POST['delete_attachment'])) ? true : false;
+$attachment_data			= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
+$preview					= (isset($_POST['preview'])) ? true : false;
+$s_hidden_fields_confirm 	= '';
 
 // check permissions
 $tracker->check_permission($mode, $project_id);
@@ -66,6 +67,11 @@ if (!empty($project_id))
 	if (!$tracker->check_exists($project_id))
 	{
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
+	}
+	
+	if ($tracker->api->config['enable_post_confirm'])
+	{
+		$tracker->check_captcha($mode, $submit, $preview, $s_hidden_fields_confirm);
 	}
 }
 
@@ -761,7 +767,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
-
+		'S_HIDDEN_FIELDS_CONFIRM'	=> $s_hidden_fields_confirm,
+		
 		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
 		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
 
@@ -1072,6 +1079,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->api->projects[$project_id]['project_name'], $tracker->api->get_type_option('title', $project_id)) . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),
 		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
 
+		'S_HIDDEN_FIELDS_CONFIRM'	=> $s_hidden_fields_confirm,
 		'S_EDIT_REASON'				=> ($mode == 'edit') ? true : false,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),

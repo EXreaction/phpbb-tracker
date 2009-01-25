@@ -1067,6 +1067,83 @@ class tracker
 
 		return true;
 	}
+	
+	public function check_captcha($mode, $submit, $preview, &$s_hidden_fields_confirm)
+	{		
+		global $config, $user, $template, $db, $phpbb_root_path, $phpEx;
+		
+		$user->add_lang('posting');
+		
+		$solved_captcha = false;
+		if ($submit || $preview)
+		{
+			if (!$user->data['is_registered'] && in_array($mode, array('add', 'edit', 'reply')))
+			{
+				$confirm_id = request_var('confirm_id', '');
+				$confirm_code = request_var('confirm_code', '');
+
+				$sql = 'SELECT code
+					FROM ' . CONFIRM_TABLE . "
+					WHERE confirm_id = '" . $db->sql_escape($confirm_id) . "'
+						AND session_id = '" . $db->sql_escape($user->session_id) . "'
+						AND confirm_type = " . CONFIRM_POST;
+				$result = $db->sql_query($sql);
+				$confirm_row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				if (empty($confirm_row['code']) || strcasecmp($confirm_row['code'], $confirm_code) !== 0)
+				{
+					$this->errors[] = $user->lang['CONFIRM_CODE_WRONG'];
+				}
+				else
+				{
+					$solved_captcha = true;
+				}
+			}
+		}
+	
+		if (!$user->data['is_registered'] && $solved_captcha === false && ($mode == 'add' || $mode == 'reply' || $mode == 'edit'))
+		{
+			// Show confirm image
+			$sql = 'DELETE FROM ' . CONFIRM_TABLE . "
+				WHERE session_id = '" . $db->sql_escape($user->session_id) . "'
+					AND confirm_type = " . CONFIRM_POST;
+			$db->sql_query($sql);
+
+			// Generate code
+			$code = gen_rand_string(mt_rand(5, 8));
+			$confirm_id = md5(unique_id($user->ip));
+			$seed = hexdec(substr(unique_id(), 4, 10));
+
+			// compute $seed % 0x7fffffff
+			$seed -= 0x7fffffff * floor($seed / 0x7fffffff);
+
+			$sql = 'INSERT INTO ' . CONFIRM_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+				'confirm_id'	=> (string) $confirm_id,
+				'session_id'	=> (string) $user->session_id,
+				'confirm_type'	=> (int) CONFIRM_POST,
+				'code'			=> (string) $code,
+				'seed'			=> (int) $seed)
+			);
+			$db->sql_query($sql);
+
+			$template->assign_vars(array(
+				'S_CONFIRM_CODE'			=> true,
+				'CONFIRM_ID'				=> $confirm_id,
+				'CONFIRM_IMAGE'				=> '<img src="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=confirm&amp;id=' . $confirm_id . '&amp;type=' . CONFIRM_POST) . '" alt="" title="" />',
+				'L_POST_CONFIRM_EXPLAIN'	=> sprintf($user->lang['POST_CONFIRM_EXPLAIN'], '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>'),
+			));
+		}
+
+		// Add the confirm id/code pair to the hidden fields, else an error is displayed on next submit/preview
+		if ($solved_captcha !== false)
+		{
+			$s_hidden_fields_confirm = build_hidden_fields(array(
+				'confirm_id'		=> request_var('confirm_id', ''),
+				'confirm_code'		=> request_var('confirm_code', ''))
+			);
+		}
+	}
 
 	/**
 	 * Create a "back" link (with trigger_error)

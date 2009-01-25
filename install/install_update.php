@@ -279,6 +279,8 @@ class install_update extends module
 					$phpbb_db_tools->perform_schema_changes($schema_changes);
 					
 				case '0.2.0':
+				case '0.3.0':
+					$this->p_master->set_config('enable_post_confirm', true);
 
 				break;
 
