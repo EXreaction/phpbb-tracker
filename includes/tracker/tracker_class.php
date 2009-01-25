@@ -996,7 +996,7 @@ class tracker
 		{
 			case 'reply':
 			case 'add':
-				if (!$auth->acl_get('u_tracker_post') || !$user->data['is_registered'])
+				if (!$auth->acl_get('u_tracker_post'))
 				{
 					if ($return)
 					{

@@ -116,9 +116,9 @@
 		<!-- END -->
 	<!-- ENDIF -->
 
-	<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT or PAGINATION or TOTAL_POSTS -->
+	<!-- IF S_CAN_POST_TRACKER or PAGINATION or TOTAL_POSTS -->
 	<div class="topic-actions">
-		<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT and not S_DISPLAY_HISTORY -->
+		<!-- IF S_CAN_POST_TRACKER and not S_IS_BOT -->
 		<div class="buttons">
 			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TICKET}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		</div>

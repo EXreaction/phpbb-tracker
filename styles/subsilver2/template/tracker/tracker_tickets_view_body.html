@@ -162,10 +162,10 @@
 	</table>
 	<!-- ENDIF -->
 
-	<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT and not S_TICKET_REPLY or TOTAL_POSTS -->
+	<!-- IF S_CAN_POST_TRACKER or TOTAL_POSTS -->
 	<table width="100%" cellspacing="1">
 		<tr>
-			<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT and not S_TICKET_REPLY -->
+			<!-- IF S_CAN_POST_TRACKER and not S_IS_BOT -->
 				<td><a href="{U_POST_REPLY_TICKET}">{REPLY_IMG}</a></td>
 			<!-- ENDIF -->
 			<!-- IF TOTAL_POSTS -->
