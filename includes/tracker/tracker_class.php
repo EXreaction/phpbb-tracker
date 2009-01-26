@@ -25,7 +25,7 @@ class tracker
 	public $api;
 	public $url_builder;
 
-	public $errors;
+	public $errors = array();
 
 	public function __construct($in_tracker = true)
 	{
