@@ -301,7 +301,7 @@
 					<!-- IF S_SHOW_DBMS --><li><strong>{L_TRACKER_TICKET_DBMS_DETAIL}:</strong> {TICKET_DBMS}</li><!-- ENDIF -->
 				<!-- ENDIF -->
 				<li><strong>{L_TRACKER_ASSIGNED_TO}:</strong> {TICKET_ASSIGNED_TO}</li>
-				<li><strong>{L_TRACKER_REPORTED_BY}:</strong> {TICKET_REPORTED_BY} (<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)</li>
+				<li><strong>{L_TRACKER_REPORTED_BY}:</strong> {TICKET_REPORTED_BY} <!-- IF S_SEND_PM -->(<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)<!-- ENDIF --></li>
 				<li><strong>{L_TRACKER_REPORTERS_TICKETS}:</strong> <a href="{U_REPORTERS_TICKETS}">{L_TRACKER_LIST_ALL_TICKETS}</a></li>
 				<li<!-- IF not TICKET_LAST_VISIT --> class="last"<!-- ENDIF -->><strong>{L_TRACKER_REPORTED_ON}:</strong> {TICKET_TIME}</li>
 				<!-- IF TICKET_LAST_VISIT --><li class="last">{TICKET_LAST_VISIT}</li><!-- ENDIF -->

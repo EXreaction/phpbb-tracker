@@ -768,6 +768,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 		'S_HIDDEN_FIELDS_CONFIRM'	=> $s_hidden_fields_confirm,
+		'S_SEND_PM'					=> ($config['allow_privmsg'] && $auth->acl_get('u_sendpm') && $row['ticket_user_id'] != ANONYMOUS) ? true : false,
 		
 		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
 		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
