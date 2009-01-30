@@ -209,7 +209,7 @@ class install_install extends module
 		// Add the admin permissions for the tracker acp modules
 		$this->p_master->add_permissions($mod_config['permission_options']);
 		// Add the admin permissions for the tracker acp modules to the correct roles
-		$this->p_master->update_roles(array('ROLE_ADMIN_STANDARD', 'ROLE_ADMIN_FULL'), $mod_config['permission_options']['global']);
+		$this->p_master->update_roles(array('ROLE_ADMIN_STANDARD', 'ROLE_ADMIN_FULL'), array('a_tracker'));
 
 		// Add the modules
 		foreach($mod_config['mod_modules'] as $modules)
