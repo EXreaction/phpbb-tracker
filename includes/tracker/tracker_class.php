@@ -1024,7 +1024,7 @@ class tracker
 			break;
 
 			case 'delete':
-				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_delete_global') && (!$auth->acl_get('u_tracker_delete_all') || !$this->can_manage))
+				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_delete_global') && (!$auth->acl_get('u_tracker_delete_all') || !$this->api->can_manage))
 				{
 					if ($return)
 					{
