@@ -32,6 +32,11 @@ $url_params = array(
 preg_match('#p=([0-9]+)#i', $row['session_page'], $project_id);
 $project_id = (sizeof($project_id)) ? (int) $project_id[1] : 0;
 
+if (!$tracker->check_exists($project_id))
+{
+	$project_id = 0;	
+}
+
 preg_match('#t=([0-9]+)#i', $row['session_page'], $ticket_id);
 $ticket_id = (sizeof($ticket_id)) ? (int) $ticket_id[1] : 0;
 
