@@ -203,7 +203,7 @@ $status_type['feature'] = array(
 		'id' 		=> 10,
 		'name'		=> 'TRACKER_RESEARCHING',
 		'filter' 	=> false,
-		'open' 		=> false,
+		'open' 		=> true,
 	),
 	11 => array(
 		'id' 		=> 11,
@@ -279,7 +279,7 @@ $status_type['issue'] = array(
 		'id' 		=> 6,
 		'name'		=> 'TRACKER_RESEARCHING',
 		'filter' 	=> false,
-		'open' 		=> false,
+		'open' 		=> true,
 	),
 	7 => array(
 		'id' 		=> 7,
