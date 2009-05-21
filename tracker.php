@@ -284,6 +284,17 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'TOTAL_TICKETS'	=> $l_total_tickets,
 		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination($pagination_url, $total_tickets, $tickets_per_page, $start) : false,
 	));
+	
+	$s_hidden_fields = build_hidden_fields(array('p' => $project_id, 'u' => $user_id, 'at' => $assigned_to_user_id));
+	if ($_SID)
+	{
+		$s_hidden_fields .= build_hidden_fields(array('sid' =>  $_SID));
+	}
+	
+	if ($mode == 'search' && !empty($term))
+	{	
+		$s_hidden_fields .= build_hidden_fields(array('mode' => 'search', 'term' => $term));
+	}
 
 	// Assign index specific vars
 	$template->assign_vars(array(
@@ -307,7 +318,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'TRACKER_MY_ASSIGNED_TICKETS'	=> ($assigned_to_user_id) ? $user->lang['TRACKER_EVERYONES_ASSIGNED_TICKETS'] : $user->lang['TRACKER_MY_ASSIGNED_TICKETS'],
 
 		'U_ACTION'						=> ($mode == 'search' && !empty($term)) ? $tracker->api->build_url('search', array($project_id, $term)) : $tracker->api->build_url('index'),
-		'S_HIDDEN_FIELDS'				=> ($mode == 'search' && !empty($term)) ? build_hidden_fields(array('mode' => 'search', 'term' => $term)): '' ,
+		'S_HIDDEN_FIELDS'				=> $s_hidden_fields,
 		'S_ACTION_SEARCH' 				=> $tracker->api->build_url('project_st_at_u', array($project_id, $status_type, $assigned_to_user_id, $user_id, $version_id, $component_id)),
 		'S_HIDDEN_FIELDS_SEARCH' 		=> build_hidden_fields(array('mode' => 'search', 'p' => $project_id)),
 

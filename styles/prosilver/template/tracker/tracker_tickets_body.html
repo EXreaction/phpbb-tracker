@@ -33,9 +33,6 @@
 			<!-- IF S_VERSION_OPTIONS --><select id="vid" name="vid" onchange="document.getElementById('st_form').submit();">{S_VERSION_OPTIONS}</select>&nbsp;<!-- ENDIF -->
 			<!-- IF S_COMPONENT_OPTIONS --><select id="cid" name="cid" onchange="document.getElementById('st_form').submit();">{S_COMPONENT_OPTIONS}</select><!-- ENDIF -->
 			<noscript><p><input type="submit" name="submit" value="{L_SUBMIT}" class="button2" /></p></noscript>
-			<input type="hidden" name="p" value="{PROJECT_ID}" />
-			<input type="hidden" name="u" value="{TRACKER_USER_ID}" />
-			<input type="hidden" name="at" value="{TRACKER_ASSIGNED_USER_ID}" />
 			{S_HIDDEN_FIELDS}
 		</fieldset>
 		</form>
