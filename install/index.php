@@ -736,7 +736,7 @@ class module
 	function create_modules($parent_module_data, $module_data)
 	{
 		global $phpbb_root_path, $phpEx, $db;
-		$_module = &new acp_modules();
+		$_module = new acp_modules();
 		$_module->module_class = $parent_module_data['module_class'];
 
 		$db->sql_error_triggered = false;
@@ -831,7 +831,7 @@ class module
 	function add_modules($parent_module_langname, $parent_module_class, $module_data)
 	{
 		global $phpbb_root_path, $phpEx, $db;
-		$_module = &new acp_modules();
+		$_module = new acp_modules();
 		$_module->module_class = $parent_module_class;
 
 		$db->sql_error_triggered = false;
@@ -877,7 +877,7 @@ class module
 	function remove_modules($parent_module_data, $module_data)
 	{
 		global $db;
-		$_module = &new acp_modules();
+		$_module = new acp_modules();
 
 		$db->sql_error_triggered = false;
 
@@ -935,7 +935,7 @@ class module
 	function remove_module($module_data)
 	{
 		global $db;
-		$_module = &new acp_modules();
+		$_module = new acp_modules();
 
 		$db->sql_error_triggered = false;
 
