@@ -38,10 +38,9 @@ class tracker
 		}
 
 		// Do not change order of following includes
+		include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/cache.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/api.' . $phpEx);
-		include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
-		include($phpbb_root_path . 'tracker/includes/status.' . $phpEx);
 
 		// make an url builder object
 		$this->url_builder = new tracker_url_builder();
