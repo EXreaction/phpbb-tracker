@@ -13,20 +13,17 @@
 */
 define('IN_PHPBB', true);
 define('IN_INSTALL', true);
+
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
+
 require($phpbb_root_path . 'common.' . $phpEx);
 require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
-require($phpbb_root_path . 'includes/tracker/functions_files.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_module.' . $phpEx);
 require($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 require($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
-
-// tracker files and configuration
-require($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
-require('config.' . $phpEx);
 
 // Report all errors, except notices
 error_reporting(E_ALL);
@@ -63,6 +60,11 @@ else
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup(array('mods/tracker_install', 'acp/modules'));
+
+// Tracker files and configuration
+require($phpbb_root_path . 'tracker/includes/functions_files.' . $phpEx);
+require($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
+require($phpbb_root_path . 'install/config.' . $phpEx);
 
 // This is done here so when we add/delete the module we will see the language
 // value inside the admin log
@@ -330,44 +332,6 @@ class module
 	}
 
 	/**
-	* Generate an HTTP/1.1 header to redirect the user to another page
-	* This is used during the installation when we do not have a database available to call the normal redirect function
-	* @param string $page The page to redirect to relative to the installer root path
-	*/
-	function redirect($page)
-	{
-		// HTTP_HOST is having the correct browser url in most cases...
-		$server_name = (!empty($_SERVER['HTTP_HOST'])) ? strtolower($_SERVER['HTTP_HOST']) : ((!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME'));
-		$server_port = (!empty($_SERVER['SERVER_PORT'])) ? (int) $_SERVER['SERVER_PORT'] : (int) getenv('SERVER_PORT');
-		$secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 1 : 0;
-
-		$script_name = (!empty($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
-		if (!$script_name)
-		{
-			$script_name = (!empty($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : getenv('REQUEST_URI');
-		}
-
-		// Replace backslashes and doubled slashes (could happen on some proxy setups)
-		$script_name = str_replace(array('\\', '//'), '/', $script_name);
-		$script_path = trim(dirname($script_name));
-
-		$url = (($secure) ? 'https://' : 'http://') . $server_name;
-
-		if ($server_port && (($secure && $server_port <> 443) || (!$secure && $server_port <> 80)))
-		{
-			// HTTP HOST can carry a port number...
-			if (strpos($server_name, ':') === false)
-			{
-				$url .= ':' . $server_port;
-			}
-		}
-
-		$url .= $script_path . '/' . $page;
-		header('Location: ' . $url);
-		exit;
-	}
-
-	/**
 	* Generate the navigation tabs
 	*/
 	function generate_navigation()
@@ -608,40 +572,104 @@ class module
 	/**
 	* Add new permission
 	*/
-	function add_permissions($options)
+	function add_permissions($options, $mode = '')
 	{
-		$auth_admin = new auth_admin();
+		switch ($mode)
+		{
+			default:
+				$auth_admin = new auth_admin();
+			break;
+		}
 		$auth_admin->acl_add_option($options);
+	}
+
+
+	function add_roles($roles, $mode = '')
+	{
+		global $db;
+
+		$options_table = $roles_table = $roles_data_table = '';
+
+		switch ($mode)
+		{
+			default:
+				$options_table = ACL_OPTIONS_TABLE;
+				$roles_table = ACL_ROLES_TABLE;
+				$roles_data_table = ACL_ROLES_DATA_TABLE;
+			break;
+		}
+
+		$roles_array = $sql_ary = array();
+		foreach ($roles as $role)
+		{
+			$sql = "SELECT role_id FROM $roles_table
+				WHERE role_name = '" . $db->sql_escape($role['role_name']) . "'";
+			$db->sql_query($sql);
+			$role_id = $db->sql_fetchfield('role_id');
+
+			if ($role_id)
+			{
+				continue;
+			}
+
+			$sql = "SELECT MAX(role_order) AS max FROM $roles_table
+				WHERE role_type = '" . $db->sql_escape($role['role_type']) . "'";
+			$db->sql_query($sql);
+			$role_order = $db->sql_fetchfield('max');
+			$role_order = (!$role_order) ? 1 : $role_order + 1;
+
+
+			$sql = 'INSERT INTO ' . $roles_table . ' ' . $db->sql_build_array('INSERT', array(
+				'role_name'			=> $role['role_name'],
+				'role_description'	=> $role['role_description'],
+				'role_type'			=> $role['role_type'],
+				'role_order'		=> $role_order,
+			));
+			$db->sql_query($sql);
+			$role_id = $db->sql_nextid();
+
+			$sql = "SELECT auth_option_id FROM $options_table
+				WHERE " . $db->sql_in_set('auth_option', $role['data']['options']);
+
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql_ary[] = array(
+					'role_id'			=> $role_id,
+					'auth_option_id'	=> $row['auth_option_id'],
+					'auth_setting'		=> $role['data']['access'],
+				);
+			}
+			$db->sql_freeresult($result);
+		}
+		$db->sql_multi_insert($roles_data_table, $sql_ary);
 	}
 
 	/**
 	* Add permission options to roles
 	* Takes array or roles and permissions options
 	*/
-	function update_roles($roles, $options)
+	function update_roles($roles, $options, $mode = '')
 	{
 		global $db;
 
-		$options_array = array();
-		foreach ($options as $option)
-		{
-			$sql = 'SELECT auth_option_id
-				FROM ' . ACL_OPTIONS_TABLE . "
-				WHERE auth_option = '$option'";
-			$result = $db->sql_query($sql);
-			$auth_option_id = $db->sql_fetchfield('auth_option_id');
-			$db->sql_freeresult($result);
+		$options_table = $roles_table = $roles_data_table = '';
 
-			$options_array[$option] = $auth_option_id;
+		switch ($mode)
+		{
+			default:
+				$options_table = ACL_OPTIONS_TABLE;
+				$roles_table = ACL_ROLES_TABLE;
+				$roles_data_table = ACL_ROLES_DATA_TABLE;
+			break;
 		}
-		unset($option);
 
 		$roles_array = array();
 		foreach ($roles as $role)
 		{
-			$sql = 'SELECT role_id
-				FROM ' . ACL_ROLES_TABLE . "
-				WHERE role_name = '$role'";
+			$sql = "SELECT role_id
+				FROM $roles_table
+				WHERE role_name = '" . $db->sql_escape($role) . "'";
 			$result = $db->sql_query($sql);
 			$role_id = $db->sql_fetchfield('role_id');
 			$db->sql_freeresult($result);
@@ -650,38 +678,105 @@ class module
 		}
 		unset($role);
 
+		$options_array = array();
+		foreach ($options as $option)
+		{
+			$sql = "SELECT auth_option_id
+				FROM $options_table
+				WHERE auth_option = '" . $db->sql_escape($option) . "'";
+			$result = $db->sql_query($sql);
+			$auth_option_id = $db->sql_fetchfield('auth_option_id');
+			$db->sql_freeresult($result);
+
+			$options_array[$option] = $auth_option_id;
+		}
+		unset($option);
+
 		$sql_ary = array();
 		foreach ($roles_array as $role)
 		{
-			foreach ($options_array as $option)
+			if ($role)
 			{
-				$sql_ary[] = array(
-					'role_id'			=> $role,
-					'auth_option_id'	=> $option,
-					'auth_setting'		=> true,
-				);
+				foreach ($options_array as $option)
+				{
+					$sql_ary[] = array(
+						'role_id'			=> $role,
+						'auth_option_id'	=> $option,
+						'auth_setting'		=> true,
+					);
+				}
 			}
 		}
+		$db->sql_multi_insert($roles_data_table, $sql_ary);
+	}
 
-		$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
+	function remove_roles($roles, $mode)
+	{
+		global $cache, $db;
+
+		$options_table = $roles_table = $roles_data_table = '';
+
+		switch ($mode)
+		{
+			default:
+				$roles_table = ACL_ROLES_TABLE;
+				$roles_data_table = ACL_ROLES_DATA_TABLE;
+			break;
+		}
+
+		foreach ($roles as $role)
+		{
+			$sql = "SELECT role_id FROM $roles_data
+				WHERE role_name = '" . $db->sql_escape($role) . "'";
+			$db->sql_query($sql);
+			$role_id = $db->sql_fetchfield('role_id');
+
+			if (!$role_id)
+			{
+				continue;
+			}
+
+			$db->sql_query("DELETE FROM $roles_data_table WHERE role_id = " . (int) $role_id);
+			$db->sql_query("DELETE FROM $roles_table WHERE role_id = " . (int) $role_id);
+		}
+
+		switch ($mode)
+		{
+			default:
+				$auth_admin = new auth_admin();
+				$cache->destroy('_acl_options');
+			break;
+		}
+
+		$auth_admin->acl_clear_prefetch();
 	}
 
 	/**
-	* Removes permissions from phpBB permissions
+	* Removes permissions from phpBB or phpBB Tracker permissions
 	* Completely removes a permission options from
 	* all related tables
 	*/
-	function remove_permissions($options)
+	function remove_permissions($options, $mode = '')
 	{
 		global $db, $cache;
+
+		$options_table = '';
+
+		switch ($mode)
+		{
+			default:
+				$options_table = ACL_OPTIONS_TABLE;
+				$tables = array(ACL_OPTIONS_TABLE, ACL_GROUPS_TABLE, ACL_USERS_TABLE, ACL_ROLES_DATA_TABLE);
+			break;
+		}
 
 		$auth_option_id = array();
 		if (!empty($options['local']))
 		{
-			foreach($options['local'] as $local)
+			foreach ($options['local'] as $local)
 			{
-				$sql = 'SELECT auth_option_id
-					FROM ' . ACL_OPTIONS_TABLE . "
+				$sql = "SELECT auth_option_id
+					FROM $options_table
 				WHERE auth_option = '" . $db->sql_escape($local) . "'";
 
 				$result = $db->sql_query($sql);
@@ -695,10 +790,10 @@ class module
 
 		if (!empty($options['global']))
 		{
-			foreach($options['global'] as $global)
+			foreach ($options['global'] as $global)
 			{
-				$sql = 'SELECT auth_option_id
-					FROM ' . ACL_OPTIONS_TABLE . "
+				$sql = "SELECT auth_option_id
+					FROM $options_table
 				WHERE auth_option = '" . $db->sql_escape($global) . "'";
 
 				$result = $db->sql_query($sql);
@@ -713,8 +808,6 @@ class module
 		// We now have a list of ids we need to remove from the auth tables...
 		if (!empty($auth_option_id))
 		{
-			$tables = array(ACL_OPTIONS_TABLE, ACL_GROUPS_TABLE, ACL_USERS_TABLE, ACL_ROLES_DATA_TABLE);
-
 			foreach ($tables as $table)
 			{
 				$sql = "DELETE FROM $table
@@ -722,9 +815,16 @@ class module
 				$db->sql_query($sql);
 			}
 
-			$auth_admin = new auth_admin();
-			$cache->destroy('_acl_options');
-			$auth_admin->acl_clear_prefetch();
+			switch ($mode)
+			{
+				default:
+					$db->sql_return_on_error(true);
+					$auth_admin = new auth_admin();
+					$cache->destroy('_acl_options');
+					$auth_admin->acl_clear_prefetch();
+					$db->sql_return_on_error(false);
+				break;
+			}
 		}
 	}
 
@@ -797,8 +897,8 @@ class module
 
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . "
-			WHERE module_langname = '{$parent_module_data['module_langname']}'
-				AND module_class = '{$parent_module_data['module_class']}'";
+			WHERE module_langname = '" . $db->sql_escape($parent_module_data['module_langname']) . "'
+				AND module_class = '" . $db->sql_escape($parent_module_data['module_class']) . "'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -838,8 +938,8 @@ class module
 
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . "
-			WHERE module_langname = '$parent_module_langname'
-				AND module_class = '$parent_module_class'";
+			WHERE module_langname = '" . $db->sql_escape($parent_module_langname) . "'
+				AND module_class = '" . $db->sql_escape($parent_module_class) . "'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -874,18 +974,18 @@ class module
 	* Expects module_data to be an array of module_basename's to remove
 	* Expects parent_module_data to be an array of module_langname's to remove
 	*/
-	function remove_modules($parent_module_data, $module_data)
+	function remove_modules($module_data)
 	{
 		global $db;
 		$_module = new acp_modules();
 
 		$db->sql_error_triggered = false;
 
-		if (!empty($module_data))
+		if (!empty($module_data['modules']))
 		{
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
-				WHERE ' . $db->sql_in_set('module_basename', $module_data);
+				WHERE ' . $db->sql_in_set('module_basename', $module_data['modules']);
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -902,12 +1002,12 @@ class module
 			$db->sql_freeresult($result);
 		}
 
-		if (!empty($parent_module_data))
+		if (!empty($module_data['parents']))
 		{
 			// Needs to be ordered descending so that we can remove the parent module (tab) last
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . '
-				WHERE ' . $db->sql_in_set('module_langname', $parent_module_data) . '
+				WHERE ' . $db->sql_in_set('module_langname', $module_data['parents']) . '
 				ORDER BY module_id DESC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
@@ -943,9 +1043,9 @@ class module
 		{
 			$sql = 'SELECT module_id, module_class
 				FROM ' . MODULES_TABLE . "
-				WHERE module_basename = '" . $module_data['module_basename'] . "'
-					AND module_langname = '" . $module_data['module_langname'] . "'
-					AND module_mode = '" . $module_data['module_mode'] . "'";
+				WHERE module_basename = '" . $db->sql_escape($module_data['module_basename']) . "'
+					AND module_langname = '" . $db->sql_escape($module_data['module_langname']) . "'
+					AND module_mode = '" . $db->sql_escape($module_data['module_mode']) . "'";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -964,7 +1064,7 @@ class module
 
 		return;
 	}
-
+	
 	/**
 	* Load schema table files and display run queries
 	*/
@@ -1119,6 +1219,337 @@ class module
 		// Destroy the cache of the config
 		// because the values have changed
 		$cache->destroy('_tracker');
+	}
+	
+		/**
+	* Remove config value.
+	*/
+	function remove_config($config_name)
+	{
+		global $db, $cache;
+
+		$sql = 'DELETE FROM ' . TRACKER_CONFIG_TABLE . "
+			WHERE config_name = '" . $db->sql_escape($config_name) . "'";
+		$db->sql_query($sql);
+
+		// Destroy the cache of the config
+		// because the table has changed
+		$cache->destroy('_tracker');
+	}
+
+	/*
+	* Borrowed from UMIL
+	*/
+	function multicall($function, $params)
+	{
+		if (is_array($params) && !empty($params))
+		{
+			foreach ($params as $param)
+			{
+				if (!is_array($param))
+				{
+					call_user_func(array($this, $function), $param);
+				}
+				else
+				{
+					call_user_func_array(array($this, $function), $param);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	* Cache purge
+	* Borrowed from UMIL
+	*/
+	function cache_purge($type = '', $style_id = 0)
+	{
+		global $db, $auth, $cache, $phpbb_root_path, $phpEx;
+		if ($this->multicall(__FUNCTION__, $type))
+		{
+			return;
+		}
+		$style_id = (int) $style_id;
+		$type = (string) $type;
+		switch ($type)
+		{
+			case 'auth' :
+				$cache->destroy('_acl_options');
+				$auth->acl_clear_prefetch();
+				return;
+			break;
+
+			case 'imageset' :
+				if ($style_id == 0)
+				{
+					$return = array();
+					$sql = 'SELECT imageset_id
+						FROM ' . STYLES_IMAGESET_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$return[] = $this->cache_purge('imageset', $row['imageset_id']);
+					}
+					$db->sql_freeresult($result);
+					return implode('<br /><br />', $return);
+				}
+				else
+				{
+					$sql = 'SELECT *
+						FROM ' . STYLES_IMAGESET_TABLE . '
+						WHERE imageset_id = ' . (int) $style_id;
+					$result = $db->sql_query($sql);
+					$imageset_row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if (!$imageset_row)
+					{
+						return;
+					}
+					$sql_ary = array();
+					$cfg_data_imageset = parse_cfg_file("{$phpbb_root_path}styles/{$imageset_row['imageset_path']}/imageset/imageset.cfg");
+					$sql = 'DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . '
+						WHERE imageset_id = ' . (int) $style_id;
+					$result = $db->sql_query($sql);
+					foreach ($cfg_data_imageset as $image_name => $value)
+					{
+						if (strpos($value, '*') !== false)
+						{
+							if (substr($value, -1, 1) === '*')
+							{
+								list($image_filename, $image_height) = explode('*', $value);
+								$image_width = 0;
+							}
+							else
+							{
+								list($image_filename, $image_height, $image_width) = explode('*', $value);
+							}
+						}
+						else
+						{
+							$image_filename = $value;
+							$image_height = $image_width = 0;
+						}
+						if (strpos($image_name, 'img_') === 0 && $image_filename)
+						{
+							$image_name = substr($image_name, 4);
+							$sql_ary[] = array(
+								'image_name'		=> (string) $image_name,
+								'image_filename'	=> (string) $image_filename,
+								'image_height'		=> (int) $image_height,
+								'image_width'		=> (int) $image_width,
+								'imageset_id'		=> (int) $style_id,
+								'image_lang'		=> '',
+							);
+						}
+					}
+					$sql = 'SELECT lang_dir
+						FROM ' . LANG_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						if (@file_exists("{$phpbb_root_path}styles/{$imageset_row['imageset_path']}/imageset/{$row['lang_dir']}/imageset.cfg"))
+						{
+							$cfg_data_imageset_data = parse_cfg_file("{$phpbb_root_path}styles/{$imageset_row['imageset_path']}/imageset/{$row['lang_dir']}/imageset.cfg");
+							foreach ($cfg_data_imageset_data as $image_name => $value)
+							{
+								if (strpos($value, '*') !== false)
+								{
+									if (substr($value, -1, 1) === '*')
+									{
+										list($image_filename, $image_height) = explode('*', $value);
+										$image_width = 0;
+									}
+									else
+									{
+										list($image_filename, $image_height, $image_width) = explode('*', $value);
+									}
+								}
+								else
+								{
+									$image_filename = $value;
+									$image_height = $image_width = 0;
+								}
+								if (strpos($image_name, 'img_') === 0 && $image_filename)
+								{
+									$image_name = substr($image_name, 4);
+									$sql_ary[] = array(
+										'image_name'		=> (string) $image_name,
+										'image_filename'	=> (string) $image_filename,
+										'image_height'		=> (int) $image_height,
+										'image_width'		=> (int) $image_width,
+										'imageset_id'		=> (int) $style_id,
+										'image_lang'		=> (string) $row['lang_dir'],
+									);
+								}
+							}
+						}
+					}
+					$db->sql_freeresult($result);
+					$db->sql_multi_insert(STYLES_IMAGESET_DATA_TABLE, $sql_ary);
+					$cache->destroy('sql', STYLES_IMAGESET_DATA_TABLE);
+					return;
+				}
+			break;
+
+			case 'template' :
+				if ($style_id == 0)
+				{
+					$return = array();
+					$sql = 'SELECT template_id
+						FROM ' . STYLES_TEMPLATE_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$return[] = $this->cache_purge('template', $row['template_id']);
+					}
+					$db->sql_freeresult($result);
+					return implode('<br /><br />', $return);
+				}
+				else
+				{
+					$sql = 'SELECT *
+						FROM ' . STYLES_TEMPLATE_TABLE . '
+						WHERE template_id =  ' . (int) $style_id;
+					$result = $db->sql_query($sql);
+					$template_row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if (!$template_row)
+					{
+						return;
+					}
+
+					if ($template_row['template_storedb'] && file_exists("{$phpbb_root_path}styles/{$template_row['template_path']}/template/"))
+					{
+						$filelist = array('' => array());
+						$sql = 'SELECT template_filename, template_mtime
+							FROM ' . STYLES_TEMPLATE_DATA_TABLE . '
+							WHERE template_id = ' . (int) $style_id;
+						$result = $db->sql_query($sql);
+						while ($row = $db->sql_fetchrow($result))
+						{
+								if (($slash_pos = strrpos($row['template_filename'], '/')) === false)
+								{
+									$filelist[''][] = $row['template_filename'];
+								}
+								else
+								{
+									$filelist[substr($row['template_filename'], 0, $slash_pos + 1)][] = substr($row['template_filename'], $slash_pos + 1, strlen($row['template_filename']) - $slash_pos - 1);
+								}
+						}
+						$db->sql_freeresult($result);
+						$includes = array();
+						foreach ($filelist as $pathfile => $file_ary)
+						{
+							foreach ($file_ary as $file)
+							{
+								if (!($fp = @fopen("{$phpbb_root_path}styles/{$template_row['template_path']}$pathfile$file", 'r')))
+								{
+									return;
+								}
+								$template_data = fread($fp, filesize("{$phpbb_root_path}styles/{$template_row['template_path']}$pathfile$file"));
+								fclose($fp);
+								if (preg_match_all('#<!-- INCLUDE (.*?\.html) -->#is', $template_data, $matches))
+								{
+									foreach ($matches[1] as $match)
+									{
+										$includes[trim($match)][] = $file;
+									}
+								}
+							}
+						}
+						foreach ($filelist as $pathfile => $file_ary)
+						{
+							foreach ($file_ary as $file)
+							{
+								if (strpos($file, 'index.') === 0)
+								{
+									continue;
+								}
+								$sql_ary = array(
+									'template_id'			=> (int) $style_id,
+									'template_filename'		=> "$pathfile$file",
+									'template_included'		=> (isset($includes[$file])) ? implode(':', $includes[$file]) . ':' : '',
+									'template_mtime'		=> (int) filemtime("{$phpbb_root_path}styles/{$template_row['template_path']}$pathfile$file"),
+									'template_data'			=> (string) file_get_contents("{$phpbb_root_path}styles/{$template_row['template_path']}$pathfile$file"),
+								);
+								$sql = 'UPDATE ' . STYLES_TEMPLATE_DATA_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+									WHERE template_id = ' . (int) $style_id . "
+										AND template_filename = '" . $db->sql_escape("$pathfile$file") . "'";
+								$db->sql_query($sql);
+							}
+						}
+						unset($filelist);
+					}
+					$cache->purge();
+					return;
+				}
+			break;
+
+			case 'theme' :
+				if ($style_id == 0)
+				{
+					$return = array();
+					$sql = 'SELECT theme_id
+						FROM ' . STYLES_THEME_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$return[] = $this->cache_purge('theme', $row['theme_id']);
+					}
+					$db->sql_freeresult($result);
+					return implode('<br /><br />', $return);
+				}
+				else
+				{
+					$sql = 'SELECT *
+						FROM ' . STYLES_THEME_TABLE . '
+						WHERE theme_id = ' . (int) $style_id;
+					$result = $db->sql_query($sql);
+					$theme_row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if (!$theme_row)
+					{
+						return;
+					}
+
+					if ($theme_row['theme_storedb'] && file_exists("{$phpbb_root_path}styles/{$theme_row['theme_path']}/theme/stylesheet.css"))
+					{
+						$stylesheet = file_get_contents($phpbb_root_path . 'styles/' . $theme_row['theme_path'] . '/theme/stylesheet.css');
+						$matches = array();
+						preg_match_all('/@import url\(["\'](.*)["\']\);/i', $stylesheet, $matches);
+						if (sizeof($matches))
+						{
+							foreach ($matches[0] as $idx => $match)
+							{
+								if (!file_exists("{$phpbb_root_path}styles/{$theme_row['theme_path']}/theme/{$matches[1][$idx]}"))
+								{
+									continue;
+								}
+								$content = trim(file_get_contents("{$phpbb_root_path}styles/{$theme_row['theme_path']}/theme/{$matches[1][$idx]}"));
+								$stylesheet = str_replace($match, $content, $stylesheet);
+							}
+						}
+						$db_theme_data = str_replace('./', 'styles/' . $theme_row['theme_path'] . '/theme/', $stylesheet);
+						$sql_ary = array(
+							'theme_mtime'	=> (int) filemtime("{$phpbb_root_path}styles/{$theme_row['theme_path']}/theme/stylesheet.css"),
+							'theme_data'	=> $db_theme_data,
+						);
+						$sql = 'UPDATE ' . STYLES_THEME_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+							WHERE theme_id = $style_id";
+						$db->sql_query($sql);
+						$cache->destroy('sql', STYLES_THEME_TABLE);
+					}
+					return;
+				}
+			break;
+
+			default:
+				$cache->purge();
+				return;
+			break;
+		}
 	}
 }
 ?>

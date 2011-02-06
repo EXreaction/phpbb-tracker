@@ -26,19 +26,30 @@ if (!defined('IN_PHPBB'))
 */
 
 $mod_config = array(
-	'mod_title'					=> 'phpBB Tracker',
-	'mod_version'				=> '0.3.1',
-	'phpbb_version'				=> '3.0.0',
-	'data_file'					=> 'schemas/tracker/schema_data.sql',
-	'remove_data_file'			=> 'schemas/tracker/remove_schema_data.sql',
-	'pg_remove_data_file'		=> 'schemas/tracker/postgres_remove_schema_data.sql',
-	'parent_module_remove'		=> array('ACP_TRACKER'),
-	'module_remove'				=> array('tracker'),
-	'permission_options'		=> array(
-		'local'		=> array(),
-		'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_attach', 'u_tracker_download', 'u_tracker_ticket_security', 'a_tracker'),
+	'version'	=> array(
+		'current' 	=> '0.5.0',
+		'oldest'	=> '0.1.0',
+		'phpbb'		=> '3.0.8',
 	),
-	'mod_modules'				=> array(
+	'data_file'		=> array(
+		'add'		=> '',
+		'remove'	=> '',
+	),
+	'permission_options'		=> array(
+		'phpbb'		=> array(
+			'local'		=> array(),
+			'global'	=> array('u_tracker_view', 'u_tracker_post', 'u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_attach', 'u_tracker_download', 'u_tracker_ticket_security', 'a_tracker'),
+		),
+		'update'	=> array(
+			'0.2.0'=> array(
+				'phpbb'	=> array(
+					'local'		=> array(),
+					'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_ticket_security'),
+				),
+			),
+		),
+	),
+	'modules'				=> array(
 		array(
 			'parent_module_data'	=> array(
 				'module_basename' 	=> '',
@@ -99,70 +110,71 @@ $mod_config = array(
 			),
 		),
 	),
-	'update_schema_changes'	=> array(
-		// Change from version 0.1.0 to 0.1.1
-		'0.1.1'	=> array(
-			'add_columns'		=> array(
-				TRACKER_PROJECT_TABLE	=> array(
-					'project_name_clean'		=> array('VCHAR', ''),
-				),
-			),
-			'change_columns'		=> array(
-				TRACKER_TICKETS_TABLE	=> array(
-					'ticket_desc'	=> array('MTEXT_UNI', ''),
-				),
-				TRACKER_POSTS_TABLE	=> array(
-					'post_desc'	=> array('MTEXT_UNI', ''),
-				),
-			),
-		),
-		'0.1.2'	=> array(
-			'change_columns'		=> array(
-				TRACKER_PROJECT_TABLE	=> array(
-					'project_name'		=> array('VCHAR', ''),
-				),
-			),
-		),
-		'0.2.0'	=> array(
-			'add_columns'		=> array(
-				TRACKER_VERSION_TABLE	=> array(
-					'version_enabled'		=> array('TINT:1', 1),
-				),
-				TRACKER_PROJECT_TABLE	=> array(
-					'project_cat_id'		=> array('UINT', 0),
-					'show_php'				=> array('TINT:1', 0),
-					'show_dbms'				=> array('TINT:1', 0),
-					'ticket_security'		=> array('TINT:1', 0),
-					'lang_php'				=> array('VCHAR', 'TRACKER_TICKET_PHP'),
-					'lang_dbms'				=> array('VCHAR', 'TRACKER_TICKET_DBMS'),
-				),
-				TRACKER_TICKETS_TABLE	=> array(
-					'ticket_security'		=> array('TINT:1', 0),
-				),
-			),
-			'change_columns'		=> array(
-				TRACKER_TICKETS_TABLE	=> array(
-					'ticket_status'					=> array('TINT:1', 0),
-					'ticket_hidden'					=> array('TINT:1', 0),
-				),
-				TRACKER_PROJECT_TABLE	=> array(
-					'project_cat_id'		=> array('UINT', 0),
-					'project_type'			=> array('TINT:2', 0),
-					'project_enabled'		=> array('TINT:1', 0),
-					'project_security'		=> array('TINT:1', 0),
-				),
-			),
-		),
+	'modules_remove'	=> array(
+		'modules'		=> array('tracker'),
+		'parents'		=> array('ACP_TRACKER'),
 	),
-	'update_permission_options' => array(
-		'0.2.0'	=> array(
-			'local'		=> array(),
-			'global'	=> array('u_tracker_delete_all', 'u_tracker_delete_global', 'u_tracker_edit_global','u_tracker_edit_all', 'u_tracker_ticket_security'),
+	'schema_changes'=> array(
+		'add'		=> array(),
+		'update'	=> array(
+			'0.1.1'	=> array(
+				'add_columns'		=> array(
+					TRACKER_PROJECT_TABLE	=> array(
+						'project_name_clean'		=> array('VCHAR', ''),
+					),
+				),
+				'change_columns'		=> array(
+					TRACKER_TICKETS_TABLE	=> array(
+						'ticket_desc'	=> array('MTEXT_UNI', ''),
+					),
+					TRACKER_POSTS_TABLE	=> array(
+						'post_desc'	=> array('MTEXT_UNI', ''),
+					),
+				),
+			),
+			'0.1.2'	=> array(
+				'change_columns'		=> array(
+					TRACKER_PROJECT_TABLE	=> array(
+						'project_name'		=> array('VCHAR', ''),
+					),
+				),
+			),
+			'0.2.0'	=> array(
+				'add_columns'		=> array(
+					TRACKER_VERSION_TABLE	=> array(
+						'version_enabled'		=> array('TINT:1', 1),
+					),
+					TRACKER_PROJECT_TABLE	=> array(
+						'project_cat_id'		=> array('UINT', 0),
+						'show_php'				=> array('TINT:1', 0),
+						'show_dbms'				=> array('TINT:1', 0),
+						'ticket_security'		=> array('TINT:1', 0),
+						'lang_php'				=> array('VCHAR', 'TRACKER_TICKET_PHP'),
+						'lang_dbms'				=> array('VCHAR', 'TRACKER_TICKET_DBMS'),
+					),
+					TRACKER_TICKETS_TABLE	=> array(
+						'ticket_security'		=> array('TINT:1', 0),
+					),
+				),
+				'change_columns'		=> array(
+					TRACKER_TICKETS_TABLE	=> array(
+						'ticket_status'					=> array('TINT:1', 0),
+						'ticket_hidden'					=> array('TINT:1', 0),
+					),
+					TRACKER_PROJECT_TABLE	=> array(
+						'project_cat_id'		=> array('UINT', 0),
+						'project_type'			=> array('TINT:2', 0),
+						'project_enabled'		=> array('TINT:1', 0),
+						'project_security'		=> array('TINT:1', 0),
+					),
+				),
+			),
 		),
+		'remove'	=> array(),
 	),
 );
 
-$mod_config['install_check'] = array(
+$mod_config['verify'] = array(
 	'tables'		=> array(TRACKER_CONFIG_TABLE, TRACKER_ATTACHMENTS_TABLE, TRACKER_PROJECT_CATS_TABLE, TRACKER_PROJECT_TABLE, TRACKER_TICKETS_TABLE, TRACKER_POSTS_TABLE, TRACKER_COMPONENTS_TABLE, TRACKER_HISTORY_TABLE, TRACKER_VERSION_TABLE, TRACKER_PROJECT_WATCH_TABLE, TRACKER_TICKETS_WATCH_TABLE),
 	'files' 		=> array(
 		'core'			=> array(
@@ -179,14 +191,18 @@ $mod_config['install_check'] = array(
 			'includes/tracker/tracker_types.php',
 			'includes/tracker/tracker_viewonline.php',
 			'includes/tracker/functions_files.php',
-			'language/en/email/tracker_notify.txt',
-			'language/en/email/tracker_notify_comment.txt',
-			'language/en/email/tracker_notify_status_double.txt',
-			'language/en/email/tracker_notify_status_single.txt',
-			'language/en/mods/tracker.php',
-			'language/en/mods/tracker_install.php',
-			'language/en/mods/permissions_tracker.php',
-			'language/en/mods/info_acp_tracker.php',
+		),
+		'langs'			=> array(
+			'en'			=> array(
+				'language/en/email/tracker_notify.txt',
+				'language/en/email/tracker_notify_comment.txt',
+				'language/en/email/tracker_notify_status_double.txt',
+				'language/en/email/tracker_notify_status_single.txt',
+				'language/en/mods/tracker.php',
+				'language/en/mods/tracker_install.php',
+				'language/en/mods/permissions_tracker.php',
+				'language/en/mods/info_acp_tracker.php',
+			),
 		),
 		'styles'			=> array(
 			'prosilver'			=> array(

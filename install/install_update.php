@@ -18,7 +18,7 @@ if (!defined('IN_INSTALL'))
 
 if (!empty($setmodules))
 {
-	if (!$this->installed_version || $this->installed_version == $mod_config['mod_version'])
+	if (!$this->installed_version || $this->installed_version == $mod_config['version']['current'])
 	{
 		return;
 	}
@@ -198,12 +198,12 @@ class install_update extends module
 		// Purge the cache
 		$cache->purge();
 
-		if (version_compare($this->p_master->installed_version, $mod_config['mod_version'], '<'))
+		if (version_compare($this->p_master->installed_version, $mod_config['version']['current'], '<'))
 		{
 			switch ($this->p_master->installed_version)
 			{
 				case '0.1.0':
-					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']['update']['0.1.1']);
 
 					$sql = 'SELECT project_name, project_id
 						FROM ' . TRACKER_PROJECT_TABLE;
@@ -229,14 +229,46 @@ class install_update extends module
 
 				case '0.1.1':
 					// This is need because of a bug when installing 0.1.1 new
-					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.1']);
-					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.1.2']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']['update']['0.1.1']);
+					$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']['update']['0.1.2']);
 
 				case '0.1.2':
 				case '0.1.3':
-					$phpbb_db_tools->perform_schema_changes($mod_config['update_schema_changes']['0.2.0']);
-					$this->p_master->add_permissions($mod_config['update_permission_options']['0.2.0']);
-					$this->p_master->load_tables('0.2.0');
+					$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']['update']['0.2.0']);
+					$this->p_master->add_permissions($mod_config['permission_options']['update']['0.2.0']['phpbb']);
+
+					$schema_data = array();
+					$schema_data[TRACKER_PROJECT_CATS_TABLE] = array(
+						'COLUMNS'		=> array(
+							'project_cat_id'		=> array('UINT', NULL, 'auto_increment'),
+							'project_name'			=> array('VCHAR', ''),
+							'project_name_clean'	=> array('VCHAR', ''),
+						),
+						'PRIMARY_KEY'	=> 'project_cat_id',
+					);
+
+					$schema_data[TRACKER_PROJECT_WATCH_TABLE] = array(
+						'COLUMNS'		=> array(
+							'user_id'		=> array('UINT', 0),
+							'project_id'	=> array('UINT', 0),
+						),
+						'PRIMARY_KEY'	=> array('user_id', 'project_id'),
+					);
+
+					$schema_data['TRACKER_TICKETS_WATCH_TABLE'] = array(
+						'COLUMNS'		=> array(
+							'user_id'		=> array('UINT', 0),
+							'ticket_id'		=> array('UINT', 0),
+						),
+						'PRIMARY_KEY'	=> array('user_id', 'ticket_id'),
+					);
+
+					foreach ($schema_data as $table_name => $table_data)
+					{
+						// Now create the table
+						$phpbb_db_tools->sql_create_table($table_name, $table_data);
+					}
+
 					$this->p_master->set_config('default_status_type', TRACKER_ALL_OPENED);
 
 					// First lets pull all the project name data
@@ -277,7 +309,7 @@ class install_update extends module
 						),
 					);
 					$phpbb_db_tools->perform_schema_changes($schema_changes);
-					
+
 				case '0.2.0':
 				case '0.3.0':
 					$this->p_master->set_config('enable_post_confirm', true);
@@ -289,14 +321,14 @@ class install_update extends module
 			}
 
 			// Set tracker version config value to latest version
-			$this->p_master->set_config('version', $mod_config['mod_version']);
+			$this->p_master->set_config('version', $mod_config['version']['current']);
 			// Purge the cache
 			$cache->purge();
 		}
 
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-			'BODY'		=> $user->lang['STAGE_UPDATE_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['UPDATE_CONGRATS_EXPLAIN'], $mod_config['mod_version']),
+			'BODY'		=> $user->lang['STAGE_UPDATE_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['UPDATE_CONGRATS_EXPLAIN'], $mod_config['version']['current']),
 			'L_SUBMIT'	=> $user->lang['INSTALL_LOGIN'],
 			'U_ACTION'	=> append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id),
 		));

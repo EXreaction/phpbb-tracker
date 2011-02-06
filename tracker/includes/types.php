@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id: tracker_types.php 114 2008-05-05 20:07:38Z evil3 $
+* @version $Id$
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 if (!isset($status_type))
 {
 	global $phpbb_root_path, $phpEx;
-	$status_type = include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
+	$status_type = include($phpbb_root_path . 'tracker/includes/status.' . $phpEx);
 }
 
 /*

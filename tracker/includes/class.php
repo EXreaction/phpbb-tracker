@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id: tracker_class.php 131 2008-05-17 13:48:09Z evil3 $
+* @version $Id$
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -38,10 +38,10 @@ class tracker
 		}
 
 		// Do not change order of following includes
-		include($phpbb_root_path . 'includes/tracker/tracker_cache.' . $phpEx);
-		include($phpbb_root_path . 'includes/tracker/tracker_api.' . $phpEx);
-		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
-		include($phpbb_root_path . 'includes/tracker/tracker_status.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/cache.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/api.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/status.' . $phpEx);
 
 		// make an url builder object
 		$this->url_builder = new tracker_url_builder();
@@ -1226,8 +1226,8 @@ class tracker_url_builder
 	{
 		global $phpbb_root_path, $phpEx;
 
-		$this->url_base = "{$phpbb_root_path}tracker.$phpEx";
-		$this->clean_url_base = "tracker.$phpEx";
+		$this->url_base = "{$phpbb_root_path}tracker/index.$phpEx";
+		$this->clean_url_base = "tracker/index.$phpEx";
 	}
 
 	public function build($mode, $args)

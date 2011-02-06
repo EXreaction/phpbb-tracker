@@ -81,41 +81,36 @@ class install_uninstall extends module
 
 		$this->page_title = $user->lang['STAGE_UNINSTALL_TRACKER'];
 
-		// Remove all the tracker tables and data
-		$this->p_master->load_data($mod_config['remove_data_file']);
-		// Load any db specific files for tables and data to remove
-		switch ($db->sql_layer)
+		// Remove all the tracker tables.
+		foreach ($mod_config['verify']['tables'] as $table_name)
 		{
-			case 'postgres':
-				$this->p_master->load_data($mod_config['pg_remove_data_file']);
-			break;
-
-			default:
-			break;
+			$phpbb_db_tools->sql_table_drop($table_name);
 		}
 
-		if (isset($mod_config['remove_schema_changes']))
+		if (!empty($mod_config['data_file']['remove']))
+		{
+			$this->p_master->load_data($mod_config['data_file']['remove']);
+		}
+
+		if (!empty($mod_config['schema_changes']['remove']))
 		{
 			// Remove any changes made to existing tables
-			$phpbb_db_tools->perform_schema_changes($mod_config['remove_schema_changes']);
+			$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']['remove']);
 		}
 
 		// Remove all permission options
-		$this->p_master->remove_permissions($mod_config['permission_options']);
+		$this->p_master->remove_permissions($mod_config['permission_options']['phpbb']);
 
 		// Remove modules
-		$this->p_master->remove_modules($mod_config['parent_module_remove'], $mod_config['module_remove']);
-
-		// Clear prefetch and permissions cache
-		$auth_admin = new auth_admin();
-		$cache->destroy('_acl_options');
-		$auth_admin->acl_clear_prefetch();
+		$this->p_master->remove_modules($mod_config['modules_remove']);
 
 		// Purge the cache
-		$cache->purge();
+		$db->sql_return_on_error(true);
+		$this->p_master->cache_purge(array('auth', 'imageset', 'theme', 'template', ''));
+		$db->sql_return_on_error(false);
 
 		$template->assign_vars(array(
-			'BODY'		=> $user->lang['STAGE_UNINSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['UNINSTALL_CONGRATS_EXPLAIN'], $mod_config['mod_version']),
+			'BODY'		=> $user->lang['STAGE_UNINSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['UNINSTALL_CONGRATS_EXPLAIN'], $mod_config['version']['current']),
 			'L_SUBMIT'	=> $user->lang['INSTALL_LOGIN'],
 			'U_ACTION'	=> append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id),
 		));

@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (!isset($tracker))
 {
-	include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+	include($phpbb_root_path . 'tracker/includes/class.' . $phpEx);
 	$tracker = new tracker(false);
 }
 

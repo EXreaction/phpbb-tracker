@@ -16,6 +16,9 @@ if (!defined('IN_INSTALL'))
 	exit;
 }
 
+// Disabled for now
+return;
+
 if (!empty($setmodules))
 {
 	if (!$this->installed_version || ($this->installed_version && version_compare($this->installed_version, $mod_config['mod_version'], '<')))

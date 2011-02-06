@@ -97,10 +97,10 @@ class install_install extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
-			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['phpbb_version']),
+			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['version']['phpbb']),
 		));
 
-		if (version_compare($config['version'], $mod_config['phpbb_version']) < 0)
+		if (version_compare($config['version'],$mod_config['version']['phpbb']) < 0)
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}
@@ -111,7 +111,7 @@ class install_install extends module
 		}
 
 		$template->assign_block_vars('checks', array(
-			'TITLE'			=> sprintf($user->lang['PHPBB_VERSION_REQD'], $mod_config['phpbb_version']),
+			'TITLE'			=> sprintf($user->lang['PHPBB_VERSION_REQD'], $mod_config['version']['phpbb']),
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
@@ -191,38 +191,58 @@ class install_install extends module
 	*/
 	function install($mode, $sub)
 	{
-		global $user, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_db_tools, $mod_config;
+		global $user, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_db_tools, $mod_config, $table_prefix;
 
 		$this->page_title = $user->lang['STAGE_INSTALL_TRACKER'];
 
 		// Load all the tables
-		$this->p_master->load_tables();
-		// Load all the tracker data
-		$this->p_master->load_data($mod_config['data_file']);
-
-		if (isset($mod_config['schema_changes']))
+		include ($phpbb_root_path . 'install/schemas/tracker/schema_structure.' . $phpEx);
+		foreach ($schema_data as $table_name => $table_data)
 		{
-			// Alter some existing tables
+			// Change prefix, we always have phpbb_, therefore we can do a substr() here
+			$table_name = $table_prefix . substr($table_name, 6);
+			// Now create the table
+			$phpbb_db_tools->sql_create_table($table_name, $table_data);
+		}
+
+		// Load all the tracker data
+		if (!empty($mod_config['data_file']['add']))
+		{
+			$this->p_master->load_data($mod_config['data_file']['add']);
+		}
+		
+		$this->p_master->set_config('attachment_path', 'files/tracker');
+		$this->p_master->set_config('enable_post_confirm', '1');
+		$this->p_master->set_config('send_email', '1');
+		$this->p_master->set_config('tickets_per_page', '10');
+		$this->p_master->set_config('posts_per_page', '10');
+		$this->p_master->set_config('top_reporters', '10');
+		$this->p_master->set_config('default_status_type', '1');
+		$this->p_master->set_config('version', '0.5.0');
+
+		// Alter some existing tables
+		if (!empty($mod_config['schema_changes']))
+		{
 			$phpbb_db_tools->perform_schema_changes($mod_config['schema_changes']);
 		}
 
 		// Add the admin permissions for the tracker acp modules
-		$this->p_master->add_permissions($mod_config['permission_options']);
+		$this->p_master->add_permissions($mod_config['permission_options']['phpbb']);
 		// Add the admin permissions for the tracker acp modules to the correct roles
-		$this->p_master->update_roles(array('ROLE_ADMIN_STANDARD', 'ROLE_ADMIN_FULL'), array('a_tracker'));
+		$this->p_master->update_roles(array('ROLE_ADMIN_STANDARD', 'ROLE_ADMIN_FULL'), $mod_config['permission_options']['phpbb']['global']);
 
 		// Add the modules
-		foreach($mod_config['mod_modules'] as $modules)
+		foreach ($mod_config['modules'] as $modules)
 		{
 			$this->p_master->create_modules($modules['parent_module_data'], $modules['module_data']);
 		}
 
 		// Purge the cache
-		$cache->purge();
+		$this->p_master->cache_purge(array('auth', 'imageset', 'theme', 'template', ''));
 
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-			'BODY'		=> $user->lang['STAGE_INSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], $mod_config['mod_version']),
+			'BODY'		=> $user->lang['STAGE_INSTALL_TRACKER_EXPLAIN'] . '<br /><br />' . sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], $mod_config['version']['current']),
 			'L_SUBMIT'	=> $user->lang['INSTALL_LOGIN'],
 			'U_ACTION'	=> append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id),
 		));

@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id: tracker_download.php 118 2008-05-05 23:33:06Z evil3 $
+* @version $Id$
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -30,7 +30,7 @@ else if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'
 }
 
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+include($phpbb_root_path . 'tracker/includes/class.' . $phpEx);
 
 $download_id = request_var('id', 0);
 $mode = request_var('mode', '');

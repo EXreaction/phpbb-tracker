@@ -2,7 +2,7 @@
 /**
 *
 * @package tracker
-* @version $Id: tracker_api.php 131 2008-05-17 13:48:09Z evil3 $
+* @version $Id$
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -63,7 +63,7 @@ class tracker_api
 		$this->projects		= $this->cache->obtain_tracker_projects();
 		$this->extensions	= $this->cache->obtain_attach_extensions(TRACKER_EXTENSION_ID);
 
-		$this->types = include($phpbb_root_path . 'includes/tracker/tracker_types.' . $phpEx);
+		$this->types = include($phpbb_root_path . 'tracker/includes/types.' . $phpEx);
 	}
 
 	/**
