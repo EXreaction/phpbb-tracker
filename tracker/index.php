@@ -1060,7 +1060,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	
 	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	
-	if (!$submit || sizeof($error))
+	if (!$submit || sizeof($tracker->errors))
 	{
 		// Attachments
 		$attachment_data = $tracker->api->attachments->attachment_data;
