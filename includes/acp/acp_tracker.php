@@ -30,7 +30,7 @@ class acp_tracker
 		global $config, $db, $user, $auth, $template, $cache;
 		global $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
-		include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/class.' . $phpEx);
 
 		$this->tracker = new tracker();
 
