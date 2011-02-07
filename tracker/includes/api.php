@@ -22,9 +22,9 @@ if (!defined('IN_PHPBB'))
 */
 class tracker_api
 {
+	public $attachments	= array();
 	public $config		= array();
 	public $projects	= array();
-	public $extensions	= array();
 	public $types		= array();
 	public $status		= array();
 
@@ -61,9 +61,8 @@ class tracker_api
 		$this->config		= $this->cache->obtain_tracker_config();
 		$this->project_cats = $this->cache->obtain_tracker_project_cats();
 		$this->projects		= $this->cache->obtain_tracker_projects();
-		$this->extensions	= $this->cache->obtain_attach_extensions(TRACKER_EXTENSION_ID);
-
-		$this->types = include($phpbb_root_path . 'tracker/includes/types.' . $phpEx);
+		$this->attachments 	= new tracker_attachment();
+		$this->types 		= include($phpbb_root_path . 'tracker/includes/types.' . $phpEx);
 	}
 
 	/**
@@ -150,131 +149,6 @@ class tracker_api
 		}
 	}
 
-	public function add_attachment($form_name, &$errors)
-	{
-		global $auth, $phpbb_root_path, $cache, $config, $db, $user, $phpEx;
-
-		// Init upload class
-		$user->add_lang(array('posting', 'viewtopic'));
-
-		if (!$config['allow_attachments'])
-		{
-			$errors[] = $user->lang['ATTACHMENT_FUNCTIONALITY_DISABLED'];
-			return;
-		}
-
-		if (!class_exists('fileupload'))
-		{
-			include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
-		}
-
-		$upload = new fileupload();
-
-		$upload->set_allowed_extensions(array_keys($this->extensions['_allowed_']));
-
-		if (!empty($_FILES[$form_name]['name']))
-		{
-			$file = $upload->form_upload($form_name);
-		}
-		else
-		{
-			$errors[] = $user->lang['NO_UPLOAD_FORM_FOUND'];
-			return;
-		}
-
-		$cat_id = (isset($this->extensions[$file->get('extension')]['display_cat'])) ? $this->extensions[$file->get('extension')]['display_cat'] : ATTACHMENT_CATEGORY_NONE;
-
-		// Make sure the image category only holds valid images...
-		if ($cat_id == ATTACHMENT_CATEGORY_IMAGE && !$file->is_image())
-		{
-			$file->remove();
-
-			// If this error occurs a user tried to exploit an IE Bug by renaming extensions
-			// Since the image category is displaying content inline we need to catch this.
-			trigger_error($user->lang['ATTACHED_IMAGE_NOT_IMAGE']);
-		}
-
-
-		// Check Image Size, if it is an image
-		if (!$auth->acl_get('a_tracker') && $cat_id == ATTACHMENT_CATEGORY_IMAGE)
-		{
-			$file->upload->set_allowed_dimensions(0, 0, $config['img_max_width'], $config['img_max_height']);
-		}
-
-		// Admins are allowed to exceed the allowed filesize
-		if (!$auth->acl_get('a_tracker'))
-		{
-			if (!empty($this->extensions[$file->get('extension')]['max_filesize']))
-			{
-				$allowed_filesize = $this->extensions[$file->get('extension')]['max_filesize'];
-			}
-			else
-			{
-				$allowed_filesize = $config['max_filesize'];
-			}
-
-			$file->upload->set_max_filesize($allowed_filesize);
-		}
-
-		$file->clean_filename('unique', $user->data['user_id'] . '_');
-
-		// Move file and overwrite any existing image
-		$file->move_file($this->config['attachment_path'], true, true);
-
-		if (sizeof($file->error))
-		{
-			$file->remove();
-			$errors = array_merge($errors, $file->error);
-			return array();
-		}
-
-		$filedata = array(
-			'poster_id'			=> $user->data['user_id'],
-			'filesize'			=> $file->get('filesize'),
-			'mimetype'			=> $file->get('mimetype'),
-			'extension'			=> $file->get('extension'),
-			'physical_filename' => $file->get('realname'),
-			'real_filename'		=> $file->get('uploadname'),
-			'filetime'			=> time(),
-		);
-
-		$sql = 'INSERT INTO ' . TRACKER_ATTACHMENTS_TABLE . ' ' .
-			$db->sql_build_array('INSERT', $filedata);
-		$db->sql_query($sql);
-
-		$filedata['attach_id'] = $db->sql_nextid();
-
-		return $filedata;
-	}
-
-	public function posting_gen_attachment_data($filedata)
-	{
-		global $template, $user, $cache, $phpbb_root_path, $phpEx;
-
-		$user->add_lang('posting');
-
-		$template->assign_var('S_HAS_ATTACHMENTS', true);
-
-		$hidden = '';
-		$filedata['real_filename'] = basename($filedata['real_filename']);
-
-		foreach ($filedata as $key => $value)
-		{
-			$hidden .= '<input type="hidden" name="attachment_data[' . $key . ']" value="' . $value . '" />';
-		}
-
-		$download_link = $this->build_url('download', array($filedata['attach_id'], ''));
-
-		$template->assign_vars(array(
-			'FILENAME'			=> basename($filedata['real_filename']),
-			'A_FILENAME'		=> addslashes(basename($filedata['real_filename'])),
-			'ATTACH_ID'			=> $filedata['attach_id'],
-
-			'U_VIEW_ATTACHMENT'	=> $download_link,
-			'S_HIDDEN'			=> $hidden,
-		));
-	}
-
 	public function delete_orphan($attach_ids, &$errors)
 	{
 		global $db, $phpbb_root_path, $user;
@@ -312,41 +186,6 @@ class tracker_api
 				$errors[] = sprintf($user->lang['TRACKER_ERROR_REMOVING_FILE'], $item);
 			}
 		}
-	}
-
-	public function remove_attachment($filedata)
-	{
-		global $db, $phpbb_root_path;
-
-		$sql = 'DELETE FROM ' . TRACKER_ATTACHMENTS_TABLE. '
-			WHERE attach_id = ' . $filedata['attach_id'];
-		$db->sql_query($sql);
-
-		if (isset($filedata['physical_filename']))
-		{
-			$filename = basename($filedata['physical_filename']);
-			return @unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $filename);
-		}
-
-		return true;
-	}
-
-
-	public function update_attachment($filedata, $ticket_id, $post_id = 0)
-	{
-		global $db;
-
-		$data = array(
-			'ticket_id'		=> $ticket_id,
-			'post_id'		=> $post_id,
-			'is_orphan'		=> false,
-		);
-
-		$sql = 'UPDATE ' . TRACKER_ATTACHMENTS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $data) . '
-			WHERE ' . $db->sql_in_set('attach_id', $filedata['attach_id']);
-		$db->sql_query($sql);
-
 	}
 
 	public function get_project_name($project_cat_id, $project_id, $type_id = false)
@@ -822,20 +661,6 @@ class tracker_api
 	{
 		global $db;
 
-		$sql = 'SELECT attach_id FROM ' . TRACKER_ATTACHMENTS_TABLE . '
-			WHERE ticket_id = ' . $id;
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
-
-		if (sizeof($row))
-		{
-			foreach ($row as $item)
-			{
-				$this->remove_attachment($item);
-			}
-		}
-
 		$sql = 'DELETE FROM ' . TRACKER_TICKETS_TABLE. '
 			WHERE ticket_id = ' . $id;
 		$db->sql_query($sql);
@@ -1046,20 +871,6 @@ class tracker_api
 		$sql = 'DELETE FROM ' . TRACKER_POSTS_TABLE. '
 			WHERE post_id = ' . $id;
 		$db->sql_query($sql);
-
-		$sql = 'SELECT attach_id FROM ' . TRACKER_ATTACHMENTS_TABLE . '
-			WHERE post_id = ' . $id;
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrowset($result);
-		$db->sql_freeresult($result);
-
-		if (sizeof($row))
-		{
-			foreach ($row as $item)
-			{
-				$this->remove_attachment($item);
-			}
-		}
 
 		if ($ticket_id)
 		{

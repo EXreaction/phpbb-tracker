@@ -52,9 +52,9 @@ $unsubscribe				= request_var('unsubscribe', '');
 $submit						= (isset($_POST['submit'])) ? true : false;
 $submit_mod					= (isset($_POST['submit_mod'])) ? true : false;
 $update						= (isset($_POST['update'])) ? true : false;
-$add_attachment				= (isset($_POST['add_attachment'])) ? true : false;
-$remove_attachment			= (isset($_POST['delete_attachment'])) ? true : false;
-$attachment_data			= (isset($_POST['attachment_data'])) ? request_var('attachment_data', array('' => '')) : array();
+$add_file					= (isset($_POST['add_file'])) ? true : false;
+$remove_file				= (isset($_POST['delete_file'])) ? true : false;
+$refresh					= (isset($_POST['add_file']) || isset($_POST['delete_file'])) ?  true : false;
 $preview					= (isset($_POST['preview'])) ? true : false;
 $s_hidden_fields_confirm 	= '';
 
@@ -440,7 +440,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			);
 		}
 
-		if ($add_attachment)
+		if ($add_file)
 		{
 			$filedata = $tracker->api->add_attachment('attachment', $tracker->errors);
 
@@ -451,7 +451,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 		else if (sizeof($attachment_data))
 		{
-			if ($remove_attachment)
+			if ($remove_file)
 			{
 				$tracker->api->remove_attachment($attachment_data);
 			}
@@ -760,7 +760,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
 
-	$use_data = (sizeof($tracker->errors) || $preview || $add_attachment || $remove_attachment) ? true : false;
+	$use_data = (sizeof($tracker->errors) || $preview || $add_file || $remove_file) ? true : false;
 
 	$s_ticket_severity = $tracker->api->get_type_option('severity', $project_id);
 	$s_ticket_priority = $tracker->api->get_type_option('priority', $project_id);
@@ -893,29 +893,13 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 {
 	add_form_key('add_ticket');
 
-	if ($mode == 'edit' && !$preview && !$submit)
+	if ($mode == 'edit' && !$preview && !$submit && !$refresh)
 	{
 		$sql_array = array(
-			'SELECT'	=> 't.*,
-							a.attach_id,
-							a.poster_id,
-							a.is_orphan,
-							a.physical_filename,
-							a.real_filename,
-							a.extension,
-							a.mimetype,
-							a.filesize,
-							a.filetime',
+			'SELECT'	=> 't.*',
 
 			'FROM'		=> array(
 				TRACKER_TICKETS_TABLE	=> 't',
-			),
-
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(TRACKER_ATTACHMENTS_TABLE => 'a'),
-					'ON'	=> 't.ticket_id = a.ticket_id AND a.post_id = 0',
-				),
 			),
 
 			'WHERE'		=> 't.ticket_id = ' . $ticket_id,
@@ -934,19 +918,8 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 		$tracker->api->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
 
-		if ($ticket_data['attach_id'])
-		{
-			$attachment_data = array(
-				'poster_id'				=> $ticket_data['poster_id'],
-				'filesize'				=> $ticket_data['filesize'],
-				'mimetype'				=> $ticket_data['mimetype'],
-				'extension'				=> $ticket_data['extension'],
-				'physical_filename'		=> $ticket_data['physical_filename'],
-				'real_filename'			=> $ticket_data['real_filename'],
-				'filetime'				=> $ticket_data['filetime'],
-				'attach_id'				=> $ticket_data['attach_id'],
-			);
-		}
+		// Attachments
+		$tracker->api->attachments->get_attachment_data($ticket_id);
 	}
 	else
 	{
@@ -981,10 +954,9 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 				'ticket_security'			=> request_var('ticket_security', 0),
 			);
 		}
-
 	}
 
-	if ($mode == 'edit' && ($preview || $submit || $add_attachment || $remove_attachment))
+	if ($mode == 'edit' && ($preview || $submit || $refresh))
 	{
 		unset($ticket_data['ticket_user_id'], $ticket_data['ticket_time'], $ticket_data['status_id']);
 
@@ -995,25 +967,11 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		);
 	}
 
-	if ($add_attachment)
+	$tracker->api->attachments->get_submitted_attachment_data();
+	$tracker->api->attachments->parse_attachments('fileupload', $submit, $preview, $refresh, $tracker_data['ticket_desc']);
+	if (sizeof($tracker->api->attachments->warn_msg))
 	{
-		$filedata = $tracker->api->add_attachment('attachment', $tracker->errors);
-
-		if (sizeof($filedata))
-		{
-			$tracker->api->posting_gen_attachment_data($filedata);
-		}
-	}
-	else if (sizeof($attachment_data))
-	{
-		if ($remove_attachment)
-		{
-			$tracker->api->remove_attachment($attachment_data);
-		}
-		else
-		{
-			$tracker->api->posting_gen_attachment_data($attachment_data);
-		}
+		$tracker->errors[] = implode('<br />', $tracker->api->attachments->warn_msg);
 	}
 
 	if ($submit)
@@ -1030,26 +988,19 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			if ($mode == 'add')
 			{
 				$ticket_id = $tracker->api->add_ticket($ticket_data);
-
-				if (sizeof($attachment_data))
-				{
-					$tracker->api->update_attachment($attachment_data, $ticket_id);
-				}
 			}
 			else if ($mode == 'edit')
 			{
 				$tracker->api->update_ticket($ticket_data, $ticket_id, true);
-
-				if (sizeof($attachment_data))
-				{
-					$tracker->api->update_attachment($attachment_data, $ticket_id);
-				}
 			}
 			else
 			{
 				trigger_error('NO_MODE');
 			}
-
+			
+			// Update the attachments
+			$tracker->api->attachments->update_attachment_data($ticket_id);
+			
 			$tracker->back_link('TRACKER_TICKET_SUBMITTED', 'TRACKER_SUBMITTED_RETURN', $project_id, $ticket_id);
 		}
 		else
@@ -1076,16 +1027,63 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		);
 
 		generate_text_for_storage($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options'], true, true, true);
+		$preview_message = generate_text_for_display($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options']);
+		
+		// Attachments
+		if (sizeof($tracker->api->attachments->attachment_data))
+		{
+			$template->assign_var('S_HAS_ATTACHMENTS', true);
 
+			$update_count = array();
+			$attachment_data = $tracker->api->attachments->attachment_data;
+
+			$tracker->api->attachments->parse_attachments_for_view($preview_message, $attachment_data, $update_count, true);
+
+			if (sizeof($attachment_data))
+			{
+				foreach ($attachment_data as $row)
+				{
+					$template->assign_block_vars('attachment', array(
+						'DISPLAY_ATTACHMENT' => $row,
+					));
+				}
+			}
+
+			unset($attachment_data);
+		}
+		
 		$template->assign_vars(array(
 			'S_PREVIEW'			=> true,
-			'TICKET_PREVIEW'	=> generate_text_for_display($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options']),
+			'TICKET_PREVIEW'	=> $preview_message,
 		));
+	}
+	
+	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
+	
+	if (!$submit || sizeof($error))
+	{
+		// Attachments
+		$attachment_data = $tracker->api->attachments->attachment_data;
+		$filename_data = $tracker->api->attachments->filename_data;
+		if (!function_exists('posting_gen_inline_attachments'))
+		{
+			include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+		}
+		posting_gen_inline_attachments($attachment_data);
+		//if (($auth->acl_get('u_blogattach')) && $config['allow_attachments'] && $form_enctype)
+		if ($can_attach)
+		{
+			$allowed_extensions = $cache->obtain_attach_extensions();
+
+			if (sizeof($allowed_extensions['_allowed_']))
+			{
+				$tracker->api->attachments->posting_gen_attachment_entry($attachment_data, $filename_data);
+			}
+		}
 	}
 
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
-	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	$template->assign_vars(array(
 		'L_TITLE'					=> $tracker->api->projects[$project_id]['project_name'] . ' - ' . $tracker->api->get_type_option('title', $project_id),
 		'L_TITLE_EXPLAIN'			=> sprintf($user->lang['TRACKER_ADD_EXPLAIN'], $tracker->api->projects[$project_id]['project_name'], $tracker->api->get_type_option('title', $project_id)) . (($tracker->api->config['send_email']) ? $user->lang['TRACKER_ADD_EXPLAIN_EMAIL'] : ''),

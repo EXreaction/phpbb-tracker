@@ -41,6 +41,7 @@ class tracker
 		include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/cache.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/api.' . $phpEx);
+		include($phpbb_root_path . 'tracker/includes/functions_attachments.' . $phpEx);
 
 		// make an url builder object
 		$this->url_builder = new tracker_url_builder();
@@ -157,14 +158,6 @@ class tracker
 
 		$sql_array = array(
 			'SELECT'	=> 'p.*,
-							a.attach_id,
-							a.is_orphan,
-							a.physical_filename,
-							a.real_filename,
-							a.extension,
-							a.mimetype,
-							a.filesize,
-							a.filetime,
 							u.user_colour,
 							u.username',
 
@@ -173,10 +166,6 @@ class tracker
 			),
 
 			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(TRACKER_ATTACHMENTS_TABLE => 'a'),
-					'ON'	=> 'p.post_id = a.post_id',
-				),
 				array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
 					'ON'	=> 'p.post_user_id = u.user_id',
@@ -193,35 +182,6 @@ class tracker
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$upload_icon = $filesize = $size_lang = $u_download_link = '';
-			if ($row['attach_id'])
-			{
-				if ($this->api->extensions[$row['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
-				{
-					$u_download_link = $this->api->build_url('download_type', array($row['attach_id'], 'view'));
-				}
-				else
-				{
-					$u_download_link = $this->api->build_url('download', array($row['attach_id']));
-				}
-
-				if (isset($this->api->extensions[$row['extension']]))
-				{
-					if ($user->img('icon_topic_attach', '') && !$this->api->extensions[$row['extension']]['upload_icon'])
-					{
-						$upload_icon = $user->img('icon_topic_attach', '');
-					}
-					else if ($this->api->extensions[$row['extension']]['upload_icon'])
-					{
-						$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$row['extension']]['upload_icon']) . '" alt="" />';
-					}
-				}
-			}
-
-			$filesize = $row['filesize'];
-			$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
-			$filesize = get_formatted_filesize($filesize, false);
-
 			$template->assign_block_vars('comments', array(
 				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id, true),
 				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
@@ -233,15 +193,6 @@ class tracker
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
 				'POST_ID'				=> $row['post_id'],
-
-				'S_DISPLAY_NOTICE'		=> (($auth->acl_get('u_tracker_download') && $row['attach_id']) || !$row['attach_id']) ? false : true,
-				'S_SHOW_ATTACHMENTS'	=> ($auth->acl_get('u_tracker_download') && $row['attach_id']) ? true : false,
-				'U_DOWNLOAD_LINK'		=> $u_download_link,
-
-				'UPLOAD_ICON'			=> ($row['attach_id']) ? $upload_icon : '',
-				'FILESIZE'				=> ($row['attach_id']) ? $filesize : '',
-				'SIZE_LANG'				=> ($row['attach_id']) ? $size_lang: '',
-				'DOWNLOAD_NAME'			=> ($row['attach_id']) ? basename($row['real_filename']) : '',
 			));
 		}
 		$db->sql_freeresult($result);
@@ -882,48 +833,6 @@ class tracker
 
 		page_footer();
 
-	}
-
-	public function display_ticket_attachment($attachment)
-	{
-		global $user, $template, $config, $phpbb_root_path, $phpEx, $cache;
-
-		$upload_icon = '';
-
-		if ($this->api->extensions[$attachment['extension']]['display_cat'] == ATTACHMENT_CATEGORY_IMAGE)
-		{
-			$u_download_link = $this->api->build_url('download_type', array($attachment['attach_id'], 'view'));
-		}
-		else
-		{
-			$u_download_link = $this->api->build_url('download', array($attachment['attach_id']));
-		}
-
-		if (isset($this->api->extensions[$attachment['extension']]))
-		{
-			if ($user->img('icon_topic_attach', '') && !$this->api->extensions[$attachment['extension']]['upload_icon'])
-			{
-				$upload_icon = $user->img('icon_topic_attach', '');
-			}
-			else if ($this->api->extensions[$attachment['extension']]['upload_icon'])
-			{
-				$upload_icon = '<img src="' . $phpbb_root_path . $config['upload_icons_path'] . '/' . trim($this->api->extensions[$attachment['extension']]['upload_icon']) . '" alt="" />';
-			}
-		}
-
-		$filesize = $attachment['filesize'];
-		$size_lang = ($filesize >= 1048576) ? $user->lang['MIB'] : (($filesize >= 1024) ? $user->lang['KIB'] : $user->lang['BYTES']);
-		$filesize = get_formatted_filesize($filesize, false);
-
-		$template->assign_vars(array(
-			'S_SHOW_ATTACHMENTS'	=> true,
-			'U_DOWNLOAD_LINK'		=> $u_download_link,
-
-			'UPLOAD_ICON'			=> $upload_icon,
-			'FILESIZE'				=> $filesize,
-			'SIZE_LANG'				=> $size_lang,
-			'DOWNLOAD_NAME'			=> basename($attachment['real_filename']),
-		));
 	}
 
 	public function display_delete($project_id, $post_id, $ticket_id)
