@@ -212,6 +212,8 @@ class install_install extends module
 		}
 		
 		$this->p_master->set_config('attachment_path', 'files/tracker');
+		$this->p_master->set_config('allow_attachments', '1');
+		$this->p_master->set_config('max_attachments', '5');
 		$this->p_master->set_config('enable_post_confirm', '1');
 		$this->p_master->set_config('send_email', '1');
 		$this->p_master->set_config('tickets_per_page', '10');

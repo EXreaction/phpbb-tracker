@@ -32,16 +32,13 @@
 					<!-- ENDIF -->
 				<p class="author">&nbsp;</p>
 				<div class="content">{TICKET_DESC}</div>
-				<!-- IF S_SHOW_ATTACHMENTS -->
-				<dl class="attachbox">
-					<dt>{L_ATTACHMENTS}</dt>
-					<dd>
-						<dl class="file">
-							<dt><!-- IF UPLOAD_ICON -->{UPLOAD_ICON} <!-- ENDIF --><a class="postlink" href="{U_DOWNLOAD_LINK}">{DOWNLOAD_NAME}</a></dt>
-							<dd>({FILESIZE} {SIZE_LANG})</dd>
-						</dl>
-					</dd>
-				</dl>
+				<!-- IF S_TICKET_HAS_ATTACHMENTS -->
+					<dl class="attachbox">
+						<dt>{L_ATTACHMENTS}</dt>
+						<!-- BEGIN attachment -->
+							<dd>{attachment.DISPLAY_ATTACHMENT}</dd>
+						<!-- END attachment -->
+					</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_NOTICE --><div class="rules">{L_DOWNLOAD_NOTICE}</div><!-- ENDIF -->
 				<!-- IF EDITED_MESSAGE or EDIT_REASON -->
@@ -69,16 +66,13 @@
 					<!-- ENDIF -->
 					<p class="author"><a href="#p{comments.POST_ID}">{POST_IMG}</a> <strong>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_TRACKER_POSTED_ON_DATE} {comments.COMMENT_TIME}</strong></p>
 					<div class="content">{comments.COMMENT_DESC}</div>
-					<!-- IF comments.S_SHOW_ATTACHMENTS -->
-					<dl class="attachbox">
-						<dt>{L_ATTACHMENTS}</dt>
-						<dd>
-							<dl class="file">
-								<dt><!-- IF comments.UPLOAD_ICON -->{comments.UPLOAD_ICON} <!-- ENDIF --><a class="postlink" href="{comments.U_DOWNLOAD_LINK}">{comments.DOWNLOAD_NAME}</a></dt>
-								<dd>({comments.FILESIZE} {comments.SIZE_LANG})</dd>
-							</dl>
-						</dd>
-					</dl>
+					<!-- IF comments.S_HAS_ATTACHMENTS -->
+						<dl class="attachbox">
+							<dt>{L_ATTACHMENTS}</dt>
+							<!-- BEGIN attachment -->
+								<dd>{comments.attachment.DISPLAY_ATTACHMENT}</dd>
+							<!-- END attachment -->
+						</dl>
 					<!-- ENDIF -->
 					<!-- IF comments.S_DISPLAY_NOTICE --><div class="rules">{L_DOWNLOAD_NOTICE}</div><!-- ENDIF -->
 					<!-- IF comments.EDITED_MESSAGE or comments.EDIT_REASON -->
@@ -138,6 +132,14 @@
 		<div class="inner"><span class="corners-top"><span></span></span>
 			<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
 				<div class="content">{REPLY_PREVIEW}</div>
+				<!-- IF .attachment -->
+				<dl class="attachbox">
+					<dt>{L_ATTACHMENTS}</dt>
+					<!-- BEGIN attachment -->
+					<dd>{attachment.DISPLAY_ATTACHMENT}</dd>
+					<!-- END attachment -->
+				</dl>
+				<!-- ENDIF -->
 			</div>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
@@ -163,43 +165,36 @@
 			<span class="corners-bottom"><span></span></span>
 		</div>
 
-		<!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
-		<div class="panel bg2">
-			<div class="inner"><span class="corners-top"><span></span></span>
-			<fieldset>
-			<h3>{L_TRACKER_ATTACHMENTS}</h3>
-			<dl>
-				<dt><label for="attachment">{L_TRACKER_ATTACHMENTS_UPLOAD}:</label></dt>
-				<dd>
-					<input type="file" name="attachment" id="attachment" class="inputbox medium" />
-				</dd>
-			</dl>
-			<dl>
-				<dt></dt>
-				<dd><input type="submit" name="add_file" value="{L_TRACKER_ATTACHMENTS_ADD}" class="button2" /></dd>
-			</dl>
-			</fieldset>
-			<span class="corners-bottom"><span></span></span></div>
-		</div>
-		<!-- ENDIF -->
+		<!-- IF S_CAN_ATTACH --><!-- INCLUDE posting_attach_body.html --><!-- ENDIF -->
 
 		<!-- IF S_HAS_ATTACHMENTS -->
 			<div class="panel bg2">
 				<div class="inner"><span class="corners-top"><span></span></span>
 				<h3>{L_POSTED_ATTACHMENTS}</h3>
+
 				<fieldset class="fields2">
+
+				<!-- BEGIN attach_row -->
 				<dl>
-					<dd><a href="{U_VIEW_ATTACHMENT}" class="{S_CONTENT_FLOW_END}">{FILENAME}</a></dd>
+
+					<dt><label for="comment_list[{attach_row.ASSOC_INDEX}]">{L_FILE_COMMENT}:</label></dt>
+					<dd><textarea name="comment_list[{attach_row.ASSOC_INDEX}]" id="comment_list[{attach_row.ASSOC_INDEX}]" rows="1" cols="35" class="inputbox">{attach_row.FILE_COMMENT}</textarea></dd>
+					<dd><a href="{attach_row.U_VIEW_ATTACHMENT}" class="{S_CONTENT_FLOW_END}">{attach_row.FILENAME}</a></dd>
 					<dd style="margin-top: 5px;">
-						<input type="submit" name="delete_file" value="{L_DELETE_FILE}" class="button2" />
+						<!-- IF S_INLINE_ATTACHMENT_OPTIONS --><input type="button" value="{L_PLACE_INLINE}" onclick="attach_inline({attach_row.ASSOC_INDEX}, '{attach_row.A_FILENAME}');" class="button2" />&nbsp; <!-- ENDIF -->
+						<input type="submit" name="delete_file[{attach_row.ASSOC_INDEX}]" value="{L_DELETE_FILE}" class="button2" />
 					</dd>
 				</dl>
-				{S_HIDDEN}
+				{attach_row.S_HIDDEN}
+					<!-- IF not attach_row.S_LAST_ROW --><hr class="dashed" /><!-- ENDIF -->
+				<!-- END attach_row -->
+
 				</fieldset>
+
 				<span class="corners-bottom"><span></span></span></div>
 			</div>
 		<!-- ENDIF -->
-
+	
 		<!-- IF S_MANAGE_TICKET -->
 		<div class="panel bg2">
 			<div class="inner"><span class="corners-top"><span></span></span>

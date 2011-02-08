@@ -180,22 +180,64 @@ class tracker
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query_limit($sql, $posts_per_page, $start);
 
+		$comment_data = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
+			$comment_data[$row['post_id']] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		$post_ids = array_keys($comment_data);
+		if ($auth->acl_get('u_tracker_download'))
+		{
+			unset($this->api->attachment_data_post);
+			$this->api->get_attachment_data($ticket_id, $post_ids);
+			if (sizeof($this->api->attachment_data_post))
+			{
+				foreach ($this->api->attachment_data_post as $key => $value)
+				{
+					if (isset($comment_data[$key]))
+					{
+						$comment_data[$key]['attachment_data'] = $value;
+					}
+				}
+			}
+			unset($this->api->attachment_data_post);
+		}
+
+		foreach ($comment_data as $row)
+		{
+			$comment_desc = generate_text_for_display($row['post_desc'], $row['post_desc_uid'], $row['post_desc_bitfield'], $row['post_desc_options']);
+			if (isset($row['attachment_data']))
+			{
+				$update_count = array();
+				$this->api->parse_attachments_for_view($comment_desc, $row['attachment_data'], $update_count);
+			}
+
 			$template->assign_block_vars('comments', array(
+				'S_HAS_ATTACHMENTS'		=> $row['post_attachment'],
 				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id, true),
 				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
+				'COMMENT_DESC'			=> $comment_desc,
 				'COMMENT_POSTER'		=> get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']),
 				'COMMENT_TIME'			=> $user->format_date($row['post_time']),
-				'COMMENT_DESC'			=> generate_text_for_display($row['post_desc'], $row['post_desc_uid'], $row['post_desc_bitfield'], $row['post_desc_options']),
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
 				'POST_ID'				=> $row['post_id'],
 			));
+
+			if (isset($row['attachment_data']))
+			{
+				foreach ($row['attachment_data'] as $attach_row)
+				{
+					$template->assign_block_vars('comments.attachment', array(
+						'DISPLAY_ATTACHMENT' => $attach_row,
+					));
+				}
+			}
 		}
-		$db->sql_freeresult($result);
 
 		$l_total_posts = false;
 		if ($total_posts == 1)
@@ -386,7 +428,7 @@ class tracker
 				'POST_TEXT'		=> generate_text_for_display($review['text'], $review['uid'], $review['bitfield'], $review['options']),
 			));
 		}
-		
+
 		$template->assign_vars(array(
 			'POST_IMG'		=> $user->img('icon_post_target', ''),
 		));
@@ -975,13 +1017,13 @@ class tracker
 
 		return true;
 	}
-	
+
 	public function check_captcha($mode, $submit, $preview, &$s_hidden_fields_confirm)
-	{		
+	{
 		global $config, $user, $template, $db, $phpbb_root_path, $phpEx;
-		
+
 		$user->add_lang('posting');
-		
+
 		$solved_captcha = false;
 		if ($submit || $preview)
 		{
@@ -1009,7 +1051,7 @@ class tracker
 				}
 			}
 		}
-	
+
 		if (!$user->data['is_registered'] && $solved_captcha === false && ($mode == 'add' || $mode == 'reply' || $mode == 'edit'))
 		{
 			// Show confirm image
@@ -1119,6 +1161,7 @@ class tracker_url_builder
 		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
 		'statistics_pc'		=> 'mode=statistics&amp;c=%1$s',
 		'download'			=> 'mode=download&amp;id=%1$s',
+		'download_thumb'	=> 'mode=download&amp;id=%1$s&amp;t=%2$s',
 		'download_type'		=> 'mode=download&amp;id=%1$s&amp;type=%2$s',
 		'delete'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
 		'delete_pid'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',

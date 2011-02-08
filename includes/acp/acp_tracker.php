@@ -136,7 +136,9 @@ class acp_tracker
 				'version'					=> array('lang' => 'TRACKER_VERSION', 	'validate' => 'string', 'type' => 'custom', 'method' => 'tracker_version', 'explain' => true),
 
 				'legend2'					=> 'ACP_TRACKER_SETTINGS_GENERAL',
+				'allow_attachments'			=> array('lang' => 'TRACKER_ATTACHMENT_ALLOW',		'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 				'attachment_path'			=> array('lang' => 'TRACKER_ATTACHMENT_PATH',		'validate' => 'path', 	'type' => 'text:30:65', 	'explain' => true),
+				'max_attachments'			=> array('lang' => 'TRACKER_ATTACHMENT_MAX',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'enable_post_confirm'		=> array('lang' => 'VISUAL_CONFIRM_POST',			'validate' => 'bool',	'type' => 'radio:yes_no', 	'explain' => true),
 				'send_email'				=> array('lang' => 'TRACKER_SEND_EMAIL',			'validate' => 'bool', 	'type' => 'radio:yes_no', 	'explain' => true),
 				'tickets_per_page'			=> array('lang' => 'TRACKER_TICKETS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),

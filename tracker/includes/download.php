@@ -35,6 +35,7 @@ include($phpbb_root_path . 'tracker/includes/class.' . $phpEx);
 $download_id = request_var('id', 0);
 $mode = request_var('mode', '');
 $type = request_var('type', '');
+$thumbnail = request_var('t', false);
 
 // Start session management, do not update session page.
 $user->session_begin(false);
@@ -48,13 +49,14 @@ if (!$download_id)
 	trigger_error('NO_ATTACHMENT_SELECTED');
 }
 
-if (!$config['allow_attachments'])
+if (!$tracker->api->config['allow_attachments'])
 {
 	trigger_error('ATTACHMENT_FUNCTIONALITY_DISABLED');
 }
 
 if (!$auth->acl_get('u_tracker_download'))
 {
+	send_status_line(403, 'Forbidden');
 	trigger_error('SORRY_AUTH_VIEW_ATTACH');
 }
 
@@ -67,10 +69,12 @@ $db->sql_freeresult($result);
 
 if (!$attachment)
 {
+	send_status_line(403, 'Forbidden');
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
 $row = array();
+$extensions = $cache->obtain_attach_extensions(true);
 
 if ($attachment['is_orphan'])
 {
@@ -85,10 +89,11 @@ if ($attachment['is_orphan'])
 
 if (!download_allowed())
 {
+	send_status_line(403, 'Forbidden');
 	trigger_error($user->lang['LINKAGE_FORBIDDEN']);
 }
 
-$download_mode = (int) $tracker->api->extensions[$attachment['extension']]['download_mode'];
+$download_mode = (int) $extensions[$attachment['extension']]['download_mode'];
 
 // Fetching filename here to prevent sniffing of filename
 $sql = 'SELECT attach_id, is_orphan, ticket_id, post_id, extension, physical_filename, real_filename, mimetype, filetime
@@ -104,7 +109,7 @@ if (!$attachment)
 }
 
 $attachment['physical_filename'] = basename($attachment['physical_filename']);
-$display_cat = $tracker->api->extensions[$attachment['extension']]['display_cat'];
+$display_cat = $extensions[$attachment['extension']]['display_cat'];
 
 if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && !$user->optionget('viewimg'))
 {
@@ -116,6 +121,18 @@ if ($display_cat == ATTACHMENT_CATEGORY_FLASH && !$user->optionget('viewflash'))
 	$display_cat = ATTACHMENT_CATEGORY_NONE;
 }
 
+if ($thumbnail)
+{
+	$attachment['physical_filename'] = 'thumb_' . $attachment['physical_filename'];
+}
+else if (($display_cat == ATTACHMENT_CATEGORY_NONE/* || $display_cat == ATTACHMENT_CATEGORY_IMAGE*/) && !$attachment['is_orphan'])
+{
+	// Update download count
+	$sql = 'UPDATE ' . TRACKER_ATTACHMENTS_TABLE . '
+		SET download_count = download_count + 1
+		WHERE attach_id = ' . $attachment['attach_id'];
+	$db->sql_query($sql);
+}
 
 if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && $type == 'view' && (strpos($attachment['mimetype'], 'image') === 0) && strpos(strtolower($user->browser), 'msie') !== false)
 {

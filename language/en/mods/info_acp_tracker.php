@@ -98,6 +98,10 @@ $lang = array_merge($lang, array(
 	'LOG_TRACKER_VERSION_DELETE'				=> '<strong>Deleted tracker project version</strong><br />» %s',
 	'LOG_TRACKER_VERSION_EDIT'					=> '<strong>Altered tracker project version</strong><br />» %s',
 
+	'TRACKER_ATTACHMENT_ALLOW'					=> 'Allow attachments',
+	'TRACKER_ATTACHMENT_ALLOW_EXPLAIN'			=> 'Allow users to upload attachment to tickets and replies.  If enabled, this can be controlled with permissions.',
+	'TRACKER_ATTACHMENT_MAX'					=> 'Maximum attachments',
+	'TRACKER_ATTACHMENT_MAX_EXPLAIN'			=> 'Maximum number of attachments allowed per post. This does not apply to administrators.',
 	'TRACKER_ATTACHMENT_PATH'					=> 'Attachment path',
 	'TRACKER_ATTACHMENT_PATH_EXPLAIN'			=> 'Path where the attachments for the tracker will be uploaded.',
 	'TRACKER_CHECK_UPDATES'						=> 'Check for updates',
