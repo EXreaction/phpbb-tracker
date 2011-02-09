@@ -15,13 +15,27 @@
 <tr>
 	<td class="row1">
 		<div class="postbody">{TICKET_PREVIEW}</div>
+		<!-- IF .attachment -->
+			<br clear="all" /><br />
+
+			<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
+			</tr>
+			<!-- BEGIN attachment -->
+				<tr>
+					<td class="row2">{attachment.DISPLAY_ATTACHMENT}</td>
+				</tr>
+			<!-- END attachment -->
+			</table>
+		<!-- ENDIF -->
 	</td>
 </tr>
 </table>
 <br />
 <!-- ENDIF -->
 
-<form action="{U_ACTION}" method="post"{S_FORM_ENCTYPE}>
+<form id="add_ticket" action="{U_ACTION}" method="post"{S_FORM_ENCTYPE}>
 <table class="tablebg" width="100%" cellspacing="1">
 <tr>
 	<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_SUBMIT_A_TICKET}</b></td>
@@ -88,13 +102,64 @@
 	</dl>
 <!-- ENDIF -->
 <tr>
-	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_DESC}:</b><br />{L_TRACKER_TICKET_DESC_EXPLAIN}</td>
-	<td class="row2" width="78%"><textarea id="ticket_desc" name="ticket_desc" rows="15" cols="76">{TICKET_DESC}</textarea></td>
+	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_DESC}:</b><br />{L_TRACKER_TICKET_DESC_EXPLAIN}<br /><br />
+	<!-- IF S_SMILIES_ALLOWED -->
+		<table width="100%" cellspacing="5" cellpadding="0" border="0" align="center">
+		<tr>
+			<td class="gensmall" align="center"><b>{L_SMILIES}</b></td>
+		</tr>
+		<tr>
+			<td align="center">
+				<!-- BEGIN smiley -->
+					<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;" style="line-height: 20px;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" hspace="2" vspace="2" /></a>
+				<!-- END smiley -->
+			</td>
+		</tr>
+
+		<!-- IF S_SHOW_SMILEY_LINK -->
+			<tr>
+				<td align="center"><a class="nav" href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a></td>
+			</tr>
+		<!-- ENDIF -->
+
+		</table>
+	<!-- ENDIF -->
+	</td>
+	<td class="row2" width="78%">
+		<script type="text/javascript">
+		// <![CDATA[
+			var form_name = 'add_ticket';
+			var text_name = 'message';
+		// ]]>
+		</script>
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
+		<!-- INCLUDE posting_buttons.html -->
+		<tr>
+			<td valign="top" style="width: 100%;"><textarea name="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="width: 98%;">{TICKET_DESC}</textarea></td>
+			<!-- IF S_BBCODE_ALLOWED -->
+			<td width="80" align="center" valign="top">
+				<script type="text/javascript">
+				// <![CDATA[
+					colorPalette('v', 7, 6)
+				// ]]>
+				</script>
+			</td>
+			<!-- ENDIF -->
+	 	</tr>
+		</table>
+	</td>
 </tr>
-<!-- IF S_MANAGE_TICKET or S_TICKET_SECURITY -->
+<!-- IF S_MANAGE_TICKET or S_TICKET_SECURITY or S_INLINE_ATTACHMENT_OPTIONS -->
 <tr>
 	<th colspan="2"><b>{L_OPTIONS}</b></th>
 </tr>
+<!-- IF S_INLINE_ATTACHMENT_OPTIONS -->
+<tr>
+	<td class="row1"><b class="genmed">{L_ATTACHMENTS}:</b></td>
+	<td class="row2"><select name="attachments">{S_INLINE_ATTACHMENT_OPTIONS}</select>&nbsp;<input type="button" class="btnbbcode" accesskey="a" value="{L_PLACE_INLINE}" name="attachinline" onclick="attach_form = document.forms[form_name].elements['attachments']; attach_inline(attach_form.value, attach_form.options[attach_form.selectedIndex].text);" onmouseover="helpline('a')" onmouseout="helpline('tip')" />
+	</td>
+</tr>
+<!-- ENDIF -->
 <!-- IF S_TICKET_SECURITY -->
 <tr>
 	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_SECURITY_TICKET}:</b></td>
@@ -112,29 +177,7 @@
 </tr>
 <!-- ENDIF -->
 <!-- ENDIF -->
-<!-- IF S_CAN_ATTACH and not S_HAS_ATTACHMENTS-->
-<tr>
-	<th colspan="2"><b>{L_TRACKER_ATTACHMENTS}</b></th>
-</tr>
-<tr>
-	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_ATTACHMENTS_UPLOAD}:</b></td>
-	<td class="row2" width="78%"><input type="file" name="attachment" id="attachment" size="45" /></td>
-</tr>
-<tr>
-	<td class="row1" colspan="2"><input type="submit" name="add_attachment" value="{L_TRACKER_ATTACHMENTS_ADD}" class="btnlite" /></td>
-</tr>
-<!-- ENDIF -->
-<!-- IF S_HAS_ATTACHMENTS -->
-<tr>
-	<th colspan="2"><b>{L_POSTED_ATTACHMENTS}</b></th>
-</tr>
-<tr>
-	<td class="row1" colspan="2">
-		<a href="{U_VIEW_ATTACHMENT}" class="{S_CONTENT_FLOW_END}">{FILENAME}</a><br /><input type="submit" name="delete_attachment" value="{L_DELETE_FILE}" class="btnlite" />
-		{S_HIDDEN}
-	</td>
-</tr>
-<!-- ENDIF -->
+<!-- IF S_SHOW_ATTACH_BOX --><!-- INCLUDE posting_attach_body.html --><!-- ENDIF -->
 <!-- IF S_CONFIRM_CODE -->
 	<tr>
 		<th colspan="2" valign="middle">{L_POST_CONFIRMATION}</th>

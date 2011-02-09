@@ -68,7 +68,7 @@ if (!empty($project_id))
 	{
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
 	}
-	
+
 	if ($tracker->api->config['enable_post_confirm'])
 	{
 		$tracker->check_captcha($mode, $submit, $preview, $s_hidden_fields_confirm);
@@ -284,15 +284,15 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'TOTAL_TICKETS'	=> $l_total_tickets,
 		'PAGINATION'	=> ($tickets_per_page > 0) ? generate_pagination($pagination_url, $total_tickets, $tickets_per_page, $start) : false,
 	));
-	
+
 	$s_hidden_fields = build_hidden_fields(array('p' => $project_id, 'u' => $user_id, 'at' => $assigned_to_user_id));
 	if ($_SID)
 	{
 		$s_hidden_fields .= build_hidden_fields(array('sid' =>  $_SID));
 	}
-	
+
 	if ($mode == 'search' && !empty($term))
-	{	
+	{
 		$s_hidden_fields .= build_hidden_fields(array('mode' => 'search', 'term' => $term));
 	}
 
@@ -422,7 +422,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$tracker->errors[] = implode('<br />', $tracker->api->warn_msg);
 			}
 		}
-		
+
 		$data = array(
 			'ticket_assigned_to'	=> request_var('au', 0),
 			'status_id'				=> request_var('cs', 0),
@@ -457,7 +457,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				{
 					$tracker->api->update_post($post_data, $post_id);
 				}
-				
+
 				// Update the attachments
 				$tracker->api->update_attachment_data($ticket_id, $post_id);
 
@@ -515,7 +515,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 			generate_text_for_storage($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options'], true, true, true);
 			$preview_message = generate_text_for_display($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options']);
-			
+
 			// Attachments
 			if (sizeof($tracker->api->attachment_data))
 			{
@@ -538,7 +538,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 				unset($attachment_data);
 			}
-			
+
 			$template->assign_vars(array(
 				'S_PREVIEW'			=> true,
 				'REPLY_PREVIEW'		=> $preview_message,
@@ -718,7 +718,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	$s_ticket_reply = ($mode == 'reply' || $mode == 'edit') ? true : false;
 
 	$ticket_desc = generate_text_for_display($row['ticket_desc'], $row['ticket_desc_uid'], $row['ticket_desc_bitfield'], $row['ticket_desc_options']);
-	
+
 	// Ticket attachments...
 	if ($auth->acl_get('u_tracker_download') && !$s_ticket_reply)
 	{
@@ -751,7 +751,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	{
 		$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $tracker->api->config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
-	
+
 	if (!$submit || sizeof($tracker->errors) || $preview || $refresh)
 	{
 		// Attachments
@@ -787,13 +787,30 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'ticket_status'			=> ($use_data) ? $data['ticket_status'] : $row['ticket_status'],
 	);
 
+	if ($s_ticket_reply)
+	{
+		// Generate smiley listing
+		if (!function_exists('generate_smilies'))
+		{
+			include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+		}
+		generate_smilies('inline', false);
+
+		// Build custom bbcodes array
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+		}
+		display_custom_bbcodes();
+	}
+
 	$template->assign_vars(array(
 		'S_TICKET_REPLY'			=> $s_ticket_reply,
 		'S_MANAGE_TICKET'			=> $tracker->api->can_manage,
 		'S_MANAGE_TICKET_MOD'		=> ($tracker->api->can_manage || $auth->acl_get('u_tracker_edit_global')) ? true : false,
 		'S_HIDDEN_FIELDS_CONFIRM'	=> $s_hidden_fields_confirm,
 		'S_SEND_PM'					=> ($config['allow_privmsg'] && $auth->acl_get('u_sendpm') && $row['ticket_user_id'] != ANONYMOUS) ? true : false,
-		
+
 		'S_SHOW_PHP'				=> $tracker->api->projects[$project_id]['show_php'],
 		'S_SHOW_DBMS'				=> $tracker->api->projects[$project_id]['show_dbms'],
 
@@ -803,6 +820,14 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_CAN_ATTACH'				=> ($can_attach) ? true : false,
 		'S_DISPLAY_NOTICE'			=> (($auth->acl_get('u_tracker_download') && sizeof($tracker->api->attachment_data)) || !sizeof($tracker->api->attachment_data)) ? false : true,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
+		'S_CLOSE_PROGRESS_WINDOW'	=> (isset($_POST['add_file'])) ? true : false,
+		'UA_PROGRESS_BAR'			=> append_sid("{$phpbb_root_path}posting.$phpEx", "mode=popup", false),
+		'S_BBCODE_ALLOWED'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_SMILIES_ALLOWED'			=> ($config['allow_smilies'] && $user->optionget('smilies')) ? true : false,
+		'S_BBCODE_IMG'				=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
+		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : '',
@@ -984,7 +1009,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	if ($preview || $submit || $refresh)
 	{
 		$tracker->api->get_submitted_attachment_data();
-		$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $tracker_data['ticket_desc']);
+		$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $ticket_data['ticket_desc']);
 		if (sizeof($tracker->api->warn_msg))
 		{
 			$tracker->errors[] = implode('<br />', $tracker->api->warn_msg);
@@ -1003,7 +1028,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			generate_text_for_storage($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_bitfield'], $ticket_data['ticket_desc_options'], true, true, true);
 
 			$ticket_data['ticket_attachment'] = (sizeof($tracker->api->attachment_data)) ? true : false;
-			
+
 			if ($mode == 'add')
 			{
 				$ticket_id = $tracker->api->add_ticket($ticket_data);
@@ -1016,10 +1041,10 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			{
 				trigger_error('NO_MODE');
 			}
-			
+
 			// Update the attachments
 			$tracker->api->update_attachment_data($ticket_id);
-			
+
 			$tracker->back_link('TRACKER_TICKET_SUBMITTED', 'TRACKER_SUBMITTED_RETURN', $project_id, $ticket_id);
 		}
 		else
@@ -1047,7 +1072,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 		generate_text_for_storage($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options'], true, true, true);
 		$preview_message = generate_text_for_display($preview_data['text'], $preview_data['uid'], $preview_data['bitfield'], $preview_data['options']);
-		
+
 		// Attachments
 		if (sizeof($tracker->api->attachment_data))
 		{
@@ -1070,15 +1095,15 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 			unset($attachment_data);
 		}
-		
+
 		$template->assign_vars(array(
 			'S_PREVIEW'			=> true,
 			'TICKET_PREVIEW'	=> $preview_message,
 		));
 	}
-	
+
 	$can_attach = (file_exists($phpbb_root_path . $tracker->api->config['attachment_path']) && $tracker->api->config['allow_attachments'] && @is_writable($phpbb_root_path . $tracker->api->config['attachment_path']) && $auth->acl_get('u_tracker_attach') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
-	
+
 	if (!$submit || sizeof($tracker->errors))
 	{
 		// Attachments
@@ -1100,6 +1125,23 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		}
 	}
 
+	if ($mode == 'add' || $mode == 'edit')
+	{
+		// Generate smiley listing
+		if (!function_exists('generate_smilies'))
+		{
+			include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+		}
+		generate_smilies('inline', false);
+
+		// Build custom bbcodes array
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+		}
+		display_custom_bbcodes();
+	}
+
 	// Assign index specific vars
 	$ticket_desc = generate_text_for_edit($ticket_data['ticket_desc'], $ticket_data['ticket_desc_uid'], $ticket_data['ticket_desc_options']);
 	$template->assign_vars(array(
@@ -1110,6 +1152,14 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'S_HIDDEN_FIELDS_CONFIRM'	=> $s_hidden_fields_confirm,
 		'S_EDIT_REASON'				=> ($mode == 'edit') ? true : false,
 		'S_FORM_ENCTYPE'			=> ($can_attach) ? ' enctype="multipart/form-data"' : '',
+		'S_CLOSE_PROGRESS_WINDOW'	=> (isset($_POST['add_file'])) ? true : false,
+		'UA_PROGRESS_BAR'			=> append_sid("{$phpbb_root_path}posting.$phpEx", "mode=popup", false),
+		'S_BBCODE_ALLOWED'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_SMILIES_ALLOWED'			=> ($config['allow_smilies'] && $user->optionget('smilies')) ? true : false,
+		'S_BBCODE_IMG'				=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
+		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
+		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
 		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
