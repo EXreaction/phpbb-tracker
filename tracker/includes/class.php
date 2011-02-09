@@ -821,7 +821,7 @@ class tracker
 			{
 				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
 				$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
-				$changes[] = "[*][url=$ticket_url]$component_name{$fixed['ticket_title']}[/url]";
+				$changes[] = '[*][url=' . $ticket_url . '][' . $this->api->projects[$project_id]['project_name'] . '-' . $fixed['ticket_id'] . '][/url] - ' . $component_name . $fixed['ticket_title'];
 			}
 
 
@@ -835,7 +835,6 @@ class tracker
 			$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
 
 			// BBCode
-
 			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
 			$output = '[code]' . implode("\n", $changes) . '[/code]';
