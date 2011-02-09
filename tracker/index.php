@@ -69,9 +69,9 @@ if (!empty($project_id))
 		trigger_error('TRACKER_PROJECT_NO_EXIST');
 	}
 
-	if ($tracker->api->config['enable_post_confirm'])
+	if ($tracker->api->config['enable_post_confirm'] && !$user->data['is_registered'])
 	{
-		$tracker->check_captcha($mode, $submit, $preview, $s_hidden_fields_confirm);
+		$tracker->check_captcha($mode, $submit, $preview, $refresh, $s_hidden_fields_confirm);
 	}
 }
 
