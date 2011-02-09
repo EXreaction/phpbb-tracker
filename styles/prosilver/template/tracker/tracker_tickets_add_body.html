@@ -81,7 +81,13 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 	<!-- ENDIF -->
-
+	<script type="text/javascript">
+	// <![CDATA[
+		var form_name = 'add_ticket';
+		var text_name = 'message';
+	// ]]>
+	</script>
+	<script type="text/javascript" src="{T_TEMPLATE_PATH}/editor.js"></script>
 	<div class="panel bg2">
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
@@ -97,8 +103,8 @@
 			</dl>
 			<!-- ENDIF -->
 			<dl>
-				<dt><label for="ticket_desc">{L_TRACKER_TICKET_DESC}:</label><br /><span>{L_TRACKER_TICKET_DESC_EXPLAIN}</span></dt>
-				<dd><textarea id="ticket_desc" name="ticket_desc" rows="10" cols="20" class="inputbox">{TICKET_DESC}</textarea></dd>
+				<dt><label for="message">{L_TRACKER_TICKET_DESC}:</label><br /><span>{L_TRACKER_TICKET_DESC_EXPLAIN}</span></dt>
+				<dd><textarea id="message" name="message" rows="10" cols="20" class="inputbox">{TICKET_DESC}</textarea></dd>
 			</dl>
 		</fieldset>
 		<span class="corners-bottom"><span></span></span></div>

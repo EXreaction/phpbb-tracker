@@ -215,7 +215,7 @@ class tracker
 			}
 
 			$template->assign_block_vars('comments', array(
-				'S_HAS_ATTACHMENTS'		=> $row['post_attachment'],
+				'S_HAS_ATTACHMENTS'		=> (!empty($row['attachment_data'])) ? true : false,
 				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id, true),
 				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
@@ -228,7 +228,7 @@ class tracker
 				'POST_ID'				=> $row['post_id'],
 			));
 
-			if (isset($row['attachment_data']))
+			if (!empty($row['attachment_data']))
 			{
 				foreach ($row['attachment_data'] as $attach_row)
 				{
@@ -1143,34 +1143,36 @@ class tracker_url_builder
 	public $url_base;
 	public $clean_url_base;
 	public $url_ary = array(
-		'index'				=> false,
-		'project_cat'		=> 'c=%1$s',
-		'project'			=> 'p=%1$s',
-		'project_st'		=> 'p=%1$s&amp;st=%2$s',
-		'project_st_at'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;vid=%4$s&amp;cid=%5$s',
-		'project_st_at_u'	=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;u=%4$s&amp;vid=%5$s&amp;cid=%6$s',
-		'project_st_u'		=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s&amp;vid=%4$s&amp;cid=%5$s',
-		'ticket'			=> 'p=%1$s&amp;t=%2$s',
-		'subscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;subscribe=true',
-		'unsubscribe_t'		=> 'p=%1$s&amp;t=%2$s&amp;unsubscribe=true',
-		'subscribe_p'		=> 'p=%1$s&amp;subscribe=true',
-		'unsubscribe_p'		=> 'p=%1$s&amp;unsubscribe=true',
-		'changelog'			=> 'mode=changelog&amp;p=%1$s&amp;vid=%2$s',
-		'history'			=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
-		'statistics'		=> 'mode=statistics',
-		'statistics_p'		=> 'mode=statistics&amp;p=%1$s',
-		'statistics_pc'		=> 'mode=statistics&amp;c=%1$s',
-		'download'			=> 'mode=download&amp;id=%1$s',
-		'download_thumb'	=> 'mode=download&amp;id=%1$s&amp;t=%2$s',
-		'download_type'		=> 'mode=download&amp;id=%1$s&amp;type=%2$s',
-		'delete'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
-		'delete_pid'		=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
-		'edit'				=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
-		'edit_pid'			=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
-		'reply'				=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
-		'add'				=> 'mode=add&amp;p=%1$s',
-		'search'			=> 'mode=search&amp;p=%1$s&amp;term=%2$s',
-		'search_st_at_u'	=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s&amp;vid=%6$s&amp;cid=%7$s',
+		'index'					=> false,
+		'project_cat'			=> 'c=%1$s',
+		'project'				=> 'p=%1$s',
+		'project_st'			=> 'p=%1$s&amp;st=%2$s',
+		'project_st_at'			=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;vid=%4$s&amp;cid=%5$s',
+		'project_st_at_u'		=> 'p=%1$s&amp;st=%2$s&amp;at=%3$s&amp;u=%4$s&amp;vid=%5$s&amp;cid=%6$s',
+		'project_st_u'			=> 'p=%1$s&amp;st=%2$s&amp;u=%3$s&amp;vid=%4$s&amp;cid=%5$s',
+		'ticket'				=> 'p=%1$s&amp;t=%2$s',
+		'subscribe_t'			=> 'p=%1$s&amp;t=%2$s&amp;subscribe=true',
+		'unsubscribe_t'			=> 'p=%1$s&amp;t=%2$s&amp;unsubscribe=true',
+		'subscribe_p'			=> 'p=%1$s&amp;subscribe=true',
+		'unsubscribe_p'			=> 'p=%1$s&amp;unsubscribe=true',
+		'changelog'				=> 'mode=changelog&amp;p=%1$s&amp;vid=%2$s',
+		'history'				=> 'mode=history&amp;p=%1$s&amp;t=%2$s',
+		'statistics'			=> 'mode=statistics',
+		'statistics_p'			=> 'mode=statistics&amp;p=%1$s',
+		'statistics_pc'			=> 'mode=statistics&amp;c=%1$s',
+		'download'				=> 'mode=download&amp;id=%1$s',
+		'download_flash'		=> 'mode=download&amp;id=%1$s&amp;view=1',
+		'download_thumb'		=> 'mode=download&amp;id=%1$s&amp;t=%2$s',
+		'download_thumb_type'	=> 'mode=download&amp;id=%1$s&amp;t=%2$s&amp;type=%3$s',
+		'download_type'			=> 'mode=download&amp;id=%1$s&amp;type=%2$s',
+		'delete'				=> 'mode=delete&amp;p=%1$s&amp;t=%2$s',
+		'delete_pid'			=> 'mode=delete&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+		'edit'					=> 'mode=edit&amp;p=%1$s&amp;t=%2$s',
+		'edit_pid'				=> 'mode=edit&amp;p=%1$s&amp;t=%2$s&amp;pid=%3$s',
+		'reply'					=> 'mode=reply&amp;p=%1$s&amp;t=%2$s',
+		'add'					=> 'mode=add&amp;p=%1$s',
+		'search'				=> 'mode=search&amp;p=%1$s&amp;term=%2$s',
+		'search_st_at_u'		=> 'mode=search&amp;p=%1$s&amp;term=%2$s&amp;st=%3$s&amp;at=%4$s&amp;u=%5$s&amp;vid=%6$s&amp;cid=%7$s',
 	);
 
 	public function __construct()

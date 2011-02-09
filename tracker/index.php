@@ -392,7 +392,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		else
 		{
 			$post_data = array(
-				'post_desc'					=> utf8_normalize_nfc(request_var('post_text', '', true)),
+				'post_desc'					=> utf8_normalize_nfc(request_var('message', '', true)),
 				'post_time'					=> time(),
 				'post_user_id'				=> $user->data['user_id'],
 				'post_desc_bitfield'		=> '',
@@ -726,8 +726,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		// Attachments
 		if (sizeof($tracker->api->attachment_data_ticket[$ticket_id]))
 		{
-			$template->assign_var('S_TICKET_HAS_ATTACHMENTS', true);
-
 			$update_count = array();
 			$attachment_data = $tracker->api->attachment_data_ticket[$ticket_id];
 
@@ -735,6 +733,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 			if (sizeof($attachment_data))
 			{
+				$template->assign_var('S_TICKET_HAS_ATTACHMENTS', true);
 				foreach ($attachment_data as $attach_row)
 				{
 					$template->assign_block_vars('attachment', array(
@@ -940,7 +939,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	{
 		$ticket_data = array(
 			'ticket_title'				=> utf8_normalize_nfc(request_var('ticket_title', '', true)),
-			'ticket_desc'				=> utf8_normalize_nfc(request_var('ticket_desc', '', true)),
+			'ticket_desc'				=> utf8_normalize_nfc(request_var('message', '', true)),
 			'ticket_php'				=> utf8_normalize_nfc(request_var('ticket_php', '', true)),
 			'ticket_dbms'				=> utf8_normalize_nfc(request_var('ticket_dbms', '', true)),
 			'component_id'				=> request_var('component_id', 0),

@@ -2433,7 +2433,7 @@ class tracker_api
 	*/
 	public function parse_attachments($form_name, $submit, $preview, $refresh, &$text)
 	{
-		global $config, $auth, $user, $phpbb_root_path, $phpEx, $db, $message_parser;
+		global $config, $auth, $user, $phpbb_root_path, $phpEx, $db;
 
 		if (!$this->config['allow_attachments'] || !$auth->acl_get('u_tracker_attach'))
 		{
@@ -2498,7 +2498,7 @@ class tracker_api
 					);
 
 					$this->attachment_data = array_merge(array(0 => $new_entry), $this->attachment_data);
-					//$message_parser->message = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#e', "'[attachment='.(\\1 + 1).']\\2[/attachment]'", $message_parser->message);
+					$text = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#e', "'[attachment='.(\\1 + 1).']\\2[/attachment]'", $text);
 
 					$this->filename_data['filecomment'] = '';
 
@@ -2579,7 +2579,6 @@ class tracker_api
 
 					unset($this->attachment_data[$index]);
 					$text = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#e', "(\\1 == \$index) ? '' : ((\\1 > \$index) ? '[attachment=' . (\\1 - 1) . ']\\2[/attachment]' : '\\0')", $text);
-					//$message_parser->message = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#e', "(\\1 == \$index) ? '' : ((\\1 > \$index) ? '[attachment=' . (\\1 - 1) . ']\\2[/attachment]' : '\\0')", $message_parser->message);
 
 					// Reindex Array
 					$this->attachment_data = array_values($this->attachment_data);
@@ -2618,7 +2617,6 @@ class tracker_api
 
 						$this->attachment_data = array_merge(array(0 => $new_entry), $this->attachment_data);
 						$text = preg_replace('#\[attachment=([0-9]+)\](.*?)\[\/attachment\]#e', "'[attachment='.(\\1 + 1).']\\2[/attachment]'", $text);
-						//$message_parser->message = preg_replace('#\[attachment=([0-9]+):' . $message_parser->bbcode_uid . '\](.*?)\[\/attachment:' . $message_parser->bbcode_uid . '\]#e', "'[attachment='.(\\1 + 1).':{$message_parser->bbcode_uid}]\\2[/attachment:{$message_parser->bbcode_uid}]'", $message_parser->message);
 						$this->filename_data['filecomment'] = '';
 					}
 				}
@@ -2900,7 +2898,6 @@ class tracker_api
 	{
 		global $template, $user, $config, $phpbb_root_path, $auth, $cache;
 
-		//if (!$config['user_tracker_enable_attachments'] || !sizeof($attachments) || !$auth->acl_get('u_download'))
 		if (!sizeof($attachments) || !$auth->acl_get('u_tracker_download'))
 		{
 			return;
@@ -3077,7 +3074,8 @@ class tracker_api
 					case ATTACHMENT_CATEGORY_IMAGE:
 						$l_downloaded_viewed = 'VIEWED_COUNT';
 
-						$inline_link = $this->build_url('download_type', array(intval($attachment['attach_id']), 'view'));
+						$inline_link = $this->build_url('download', array(intval($attachment['attach_id'])));
+						$download_link = $this->build_url('download_type', array(intval($attachment['attach_id']), 'view'));
 
 						$block_array += array(
 							'S_IMAGE'		=> true,
@@ -3092,6 +3090,7 @@ class tracker_api
 						$l_downloaded_viewed = 'VIEWED_COUNT';
 
 						$thumbnail_link = $this->build_url('download_thumb', array(intval($attachment['attach_id']), true));
+						$download_link = $this->build_url('download_thumb_type', array(intval($attachment['attach_id']), true, 'view'));
 
 						$block_array += array(
 							'S_THUMBNAIL'		=> true,
@@ -3143,6 +3142,7 @@ class tracker_api
 							'S_FLASH_FILE'	=> true,
 							'WIDTH'			=> $width,
 							'HEIGHT'		=> $height,
+							'U_VIEW_LINK'	=> $this->build_url('download_flash', array(intval($attachment['attach_id']), '')),
 						);
 
 						// Viewed/Heared File ... update the download count

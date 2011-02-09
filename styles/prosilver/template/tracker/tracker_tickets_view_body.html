@@ -145,8 +145,14 @@
 	</div>
 	<br />
 	<!-- ENDIF -->
-
-	<form action="{U_ACTION}" method="post"{S_FORM_ENCTYPE}>
+	<form id="reply_ticket" action="{U_ACTION}" method="post"{S_FORM_ENCTYPE}>
+		<script type="text/javascript">
+		// <![CDATA[
+			var form_name = 'reply_ticket';
+			var text_name = 'message';
+		// ]]>
+		</script>
+		<script type="text/javascript" src="{T_TEMPLATE_PATH}/editor.js"></script>
 		<div class="panel bg2">
 			<span class="corners-top"><span></span></span>
 			<fieldset class="fields1">
@@ -158,8 +164,8 @@
 				</dl>
 				<!-- ENDIF -->
 				<dl>
-					<dt><label for="post_text">{L_MESSAGE}:</label></dt>
-					<dd><textarea id="post_text" name="post_text" rows="10" cols="20" class="inputbox">{REPLY_DESC}</textarea></dd>
+					<dt><label for="message">{L_MESSAGE}:</label></dt>
+					<dd><textarea id="message" name="message" rows="10" cols="20" class="inputbox">{REPLY_DESC}</textarea></dd>
 				</dl>
 			</fieldset>
 			<span class="corners-bottom"><span></span></span>
