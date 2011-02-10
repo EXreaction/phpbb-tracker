@@ -85,16 +85,22 @@
 		<div class="inner"><span class="corners-top"><span></span></span>
 		<fieldset>
 			<h3>{L_TRACKER_TICKET}</h3>
-			<dl>
-				<dt><label for="ticket_title">{L_TRACKER_TICKET_TITLE}:</label><br /><span>{L_TRACKER_TICKET_TITLE_EXPLAIN}</span></dt>
-				<dd><input type="text" id="ticket_title" name="ticket_title" value="{TICKET_TITLE}" class="inputbox medium" /><br /><span class="small">{L_TRACKER_TICKET_TITLE_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_TITLE_EXPLAIN_GOOD}</span></dd>
+			<!-- IF S_DISPLAY_USERNAME -->
+			<dl style="clear: left;">
+				<dt><label for="username">{L_USERNAME}:</label></dt>
+				<dd><input type="text" tabindex="1" name="username" id="username" size="25" value="{USERNAME}" class="inputbox autowidth" /></dd>
 			</dl>
+			<!-- ENDIF -->
 			<!-- IF S_EDIT_REASON -->
 			<dl>
 				<dt><label for="edit_reason">{L_TRACKER_EDIT_REASON}:</label><br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></dt>
 				<dd><input type="text" id="edit_reason" name="edit_reason" value="{EDIT_REASON_TEXT}" class="inputbox medium" /></dd>
 			</dl>
 			<!-- ENDIF -->
+			<dl>
+				<dt><label for="ticket_title">{L_TRACKER_TICKET_TITLE}:</label><br /><span>{L_TRACKER_TICKET_TITLE_EXPLAIN}</span></dt>
+				<dd><input type="text" id="ticket_title" name="ticket_title" value="{TICKET_TITLE}" class="inputbox medium" /><br /><span class="small">{L_TRACKER_TICKET_TITLE_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_TITLE_EXPLAIN_GOOD}</span></dd>
+			</dl>
 			<dl>
 				<dt><label for="message">{L_TRACKER_TICKET_DESC}:</label><br /><span>{L_TRACKER_TICKET_DESC_EXPLAIN}</span></dt>
 			</dl>

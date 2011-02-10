@@ -395,6 +395,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				'post_desc'					=> utf8_normalize_nfc(request_var('message', '', true)),
 				'post_time'					=> time(),
 				'post_user_id'				=> $user->data['user_id'],
+				'post_username'				=> utf8_normalize_nfc(request_var('username', '', true)),
 				'post_desc_bitfield'		=> '',
 				'post_desc_options'			=> 7,
 				'post_desc_uid'				=> '',
@@ -555,6 +556,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			'S_EDIT_REASON'			=> ($mode == 'edit') ? true : false,
 			'EDIT_REASON_TEXT'		=> ($mode == 'edit') ? $post_data['edit_reason'] : '',
 			'REPLY_DESC'			=> $post_data['post_desc'],
+			'USERNAME'				=> $post_data['post_username'],
 			'U_ACTION'				=> ($mode == 'edit') ? $tracker->api->build_url('edit_pid', array($project_id, $ticket_id, $post_id)) : $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		));
 	}
@@ -832,6 +834,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
 		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
 		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
+		'S_DISPLAY_USERNAME'		=> (!$user->data['is_registered'] || ($mode == 'edit' && $row['post_user_id'] == ANONYMOUS)) ? true : false,
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : '',
@@ -961,8 +964,14 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		$tracker->api->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
 
 		// Attachments
-		$tracker->api->get_attachment_data($ticket_id);
-		$tracker->api->attachment_data = $tracker->api->attachment_data_ticket[$ticket_id];
+		if ($ticket_data['ticket_attachment'])
+		{
+			$tracker->api->get_attachment_data($ticket_id);
+			if (isset($tracker->api->attachment_data_ticket[$ticket_id]))
+			{
+				$tracker->api->attachment_data = $tracker->api->attachment_data_ticket[$ticket_id];
+			}
+		}
 	}
 	else
 	{
@@ -975,6 +984,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			'version_id'				=> request_var('version_id', 0),
 			'ticket_time'				=> time(),
 			'ticket_user_id'			=> $user->data['user_id'],
+			'ticket_username'			=> utf8_normalize_nfc(request_var('username', '', true)),
 			'ticket_desc_bitfield'		=> '',
 			'ticket_desc_options'		=> 7,
 			'ticket_desc_uid'			=> '',
@@ -1165,6 +1175,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
 		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
 		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
+		'S_DISPLAY_USERNAME'		=> (!$user->data['is_registered'] || ($mode == 'edit' && $ticket_data['ticket_user_id'] == ANONYMOUS)) ? true : false,
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
 		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
@@ -1194,6 +1205,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'TICKET_DESC'				=> $ticket_desc['text'],
 		'TICKET_PHP'				=> $ticket_data['ticket_php'],
 		'TICKET_DBMS'				=> $ticket_data['ticket_dbms'],
+		'USERNAME'					=> $ticket_data['ticket_username'],
 
 		'U_ACTION'					=> ($mode == 'edit') ? $tracker->api->build_url('edit', array($project_id, $ticket_id)) : $tracker->api->build_url('add', array($project_id)),
 	));

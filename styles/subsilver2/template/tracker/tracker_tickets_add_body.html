@@ -91,16 +91,22 @@
 <tr>
 	<th colspan="2"><b>{L_TRACKER_TICKET}</b></th>
 </tr>
-<tr>
-	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_TITLE}:</b><br />{L_TRACKER_TICKET_TITLE_EXPLAIN}</td>
-	<td class="row2" width="78%"><input type="text" id="ticket_title" name="ticket_title" value="{TICKET_TITLE}" size="45" maxlength="60" /><br /><span class="small">{L_TRACKER_TICKET_TITLE_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_TITLE_EXPLAIN_GOOD}</span></td>
-</tr>
+<!-- IF S_DISPLAY_USERNAME -->
+	<tr>
+		<td class="row1"><b class="genmed">{L_USERNAME}:</b></td>
+		<td class="row2"><input class="post" type="text" tabindex="1" name="username" size="25" value="{USERNAME}" /></td>
+	</tr>
+<!-- ENDIF -->
 <!-- IF S_EDIT_REASON -->
 	<tr>
 		<td class="row1" width="22%"><b class="genmed">{L_TRACKER_EDIT_REASON}:<br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></td>
 		<td class="row2" width="78%"><input type="text" id="edit_reason" name="edit_reason" value="{EDIT_REASON_TEXT}" size="45" maxlength="60" /></td>
 	</dl>
 <!-- ENDIF -->
+<tr>
+	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_TITLE}:</b><br />{L_TRACKER_TICKET_TITLE_EXPLAIN}</td>
+	<td class="row2" width="78%"><input type="text" id="ticket_title" name="ticket_title" value="{TICKET_TITLE}" size="45" maxlength="60" /><br /><span class="small">{L_TRACKER_TICKET_TITLE_EXPLAIN_BAD}<br />{L_TRACKER_TICKET_TITLE_EXPLAIN_GOOD}</span></td>
+</tr>
 <tr>
 	<td class="row1" width="22%"><b class="genmed">{L_TRACKER_TICKET_DESC}:</b><br />{L_TRACKER_TICKET_DESC_EXPLAIN}<br /><br />
 	<!-- IF S_SMILIES_ALLOWED -->

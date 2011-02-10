@@ -210,6 +210,12 @@
 		<td class="row2" colspan="2" align="center"><span class="genmed error">{ERROR}</span></td>
 	</tr>
 	<!-- ENDIF -->
+	<!-- IF S_DISPLAY_USERNAME -->
+	<tr>
+		<td class="row1"><b class="genmed">{L_USERNAME}:</b></td>
+		<td class="row2"><input class="post" type="text" tabindex="1" name="username" size="25" value="{USERNAME}" /></td>
+	</tr>
+	<!-- ENDIF -->
 	<!-- IF S_EDIT_REASON -->
 	<tr>
 		<td class="row1" width="22%"><b class="genmed">{L_TRACKER_EDIT_REASON}:<br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></b></td>

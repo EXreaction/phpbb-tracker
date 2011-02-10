@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 /*
 * Tracker status type defined below
-* DO NOT REMOVE OR REPLACE ITEMS 0, 1, 2 and 3
+* DO NOT REMOVE OR REPLACE ITEMS 0, 1, 2, 3, 15 or 16
 * They are special types that the tracker
 * expects to be there
 */

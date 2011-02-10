@@ -41,7 +41,6 @@ class tracker
 		include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/cache.' . $phpEx);
 		include($phpbb_root_path . 'tracker/includes/api.' . $phpEx);
-		include($phpbb_root_path . 'tracker/includes/functions_attachments.' . $phpEx);
 
 		// make an url builder object
 		$this->url_builder = new tracker_url_builder();
@@ -1032,11 +1031,7 @@ class tracker
 		{
 			if (in_array($mode, array('add', 'edit', 'reply')))
 			{
-				$captcha_data = array(
-					'message'	=> utf8_normalize_nfc(request_var('message', '', true)),
-					'subject'	=> utf8_normalize_nfc(request_var('subject', '', true)),
-					'username'	=> utf8_normalize_nfc(request_var('username', '', true)),
-				);
+				$captcha_data = array();
 
 				$vc_response = $captcha->validate($captcha_data);
 				if ($vc_response)
