@@ -499,7 +499,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				$tracker->back_link('TRACKER_TICKET_REPLY_SUBMITTED', '', $project_id, $ticket_id);
 			}
 		}
-		
+
 		if ($submit || $preview || $refresh)
 		{
 			if (!$post_data['post_desc'])
@@ -1052,7 +1052,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			$tracker->back_link('TRACKER_TICKET_SUBMITTED', 'TRACKER_SUBMITTED_RETURN', $project_id, $ticket_id);
 		}
 	}
-	
+
 	if ($submit || $preview || $refresh)
 	{
 		if (!$ticket_data['ticket_title'])

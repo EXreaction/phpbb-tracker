@@ -180,14 +180,17 @@ class tracker
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query_limit($sql, $posts_per_page, $start);
 
-		$comment_data = array();
+		$comment_data = $post_ids = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$comment_data[$row['post_id']] = $row;
+			if ($row['post_attachment'])
+			{
+				$post_ids[] = $row['post_id'];
+			}
 		}
 		$db->sql_freeresult($result);
 
-		$post_ids = array_keys($comment_data);
 		if ($auth->acl_get('u_tracker_download') && sizeof($post_ids))
 		{
 			unset($this->api->attachment_data_post);
@@ -1034,7 +1037,7 @@ class tracker
 					'subject'	=> utf8_normalize_nfc(request_var('subject', '', true)),
 					'username'	=> utf8_normalize_nfc(request_var('username', '', true)),
 				);
-				
+
 				$vc_response = $captcha->validate($captcha_data);
 				if ($vc_response)
 				{
@@ -1042,7 +1045,7 @@ class tracker
 				}
 			}
 		}
-		
+
 		if ($submit)
 		{
 			if ((isset($captcha) && $captcha->is_solved() === true) && (in_array($mode, array('add', 'edit', 'reply'))))
@@ -1050,7 +1053,7 @@ class tracker
 				$captcha->reset();
 			}
 		}
-		
+
 		// Posting uses is_solved for legacy reasons. Plugins have to use is_solved to force themselves to be displayed.
 		if ((isset($captcha) && $captcha->is_solved() === false) && (in_array($mode, array('add', 'edit', 'reply'))))
 		{
@@ -1059,7 +1062,7 @@ class tracker
 				'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
 			));
 		}
-		
+
 		// Add the confirm id/code pair to the hidden fields, else an error is displayed on next submit/preview
 		if (isset($captcha) && $captcha->is_solved() !== false)
 		{

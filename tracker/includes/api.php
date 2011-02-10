@@ -2441,7 +2441,7 @@ class tracker_api
 		}
 
 		$error = array();
-		
+
 		$num_attachments = sizeof($this->attachment_data);
 		$this->filename_data['filecomment'] = utf8_normalize_nfc(request_var('filecomment', '', true));
 		$upload_file = (isset($_FILES[$form_name]) && $_FILES[$form_name]['name'] != 'none' && trim($_FILES[$form_name]['name'])) ? true : false;
@@ -2749,7 +2749,7 @@ class tracker_api
 		}
 
 		$upload = new fileupload();
-		
+
 		if ($config['check_attachment_content'])
 		{
 			$upload->set_disallowed_content(explode('|', $config['mime_triggers']));
@@ -2972,7 +2972,7 @@ class tracker_api
 			$template->destroy_block_vars('_file');
 
 			$block_array = array();
-			
+
 			// Some basics...
 			$attachment['extension'] = strtolower(trim($attachment['extension']));
 			$filename = $phpbb_root_path . $this->config['attachment_path'] . '/' . basename($attachment['physical_filename']);
