@@ -136,7 +136,7 @@ $schema_data = array();
 			'edit_user'					=> array('UINT', 0),
 			'edit_count'				=> array('USINT', 0),
 		),
-		'PRIMARY_KEY'	=> 'post_id',
+		'PRIMARY_KEY'	=> array('post_id', 'ticket_id', 'post_username'),
 	);
 
 	$schema_data['phpbb_tracker_components'] = array(
