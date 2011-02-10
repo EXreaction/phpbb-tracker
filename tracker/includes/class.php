@@ -1027,25 +1027,35 @@ class tracker
 		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
 		$captcha->init(CONFIRM_POST);
 
-		if (($submit || $preview || $refresh) && in_array($mode, array('add', 'edit', 'reply')))
+		if ($submit || $preview || $refresh)
 		{
-			$captcha_data = array();
-			$vc_response = $captcha->validate($captcha_data);
-			if ($vc_response)
+			if (in_array($mode, array('add', 'edit', 'reply')))
 			{
-				$this->errors[] = $vc_response;
+				$captcha_data = array(
+					'message'	=> utf8_normalize_nfc(request_var('message', '', true)),
+					'subject'	=> utf8_normalize_nfc(request_var('subject', '', true)),
+					'username'	=> utf8_normalize_nfc(request_var('username', '', true)),
+				);
+				
+				$vc_response = $captcha->validate($captcha_data);
+				if ($vc_response)
+				{
+					$this->errors[] = $vc_response;
+				}
 			}
 		}
 		
-		if ((isset($captcha) && $captcha->is_solved() === true) && (in_array($mode, array('add', 'edit', 'reply'))))
+		if ($submit)
 		{
-			$captcha->reset();
+			if ((isset($captcha) && $captcha->is_solved() === true) && (in_array($mode, array('add', 'edit', 'reply'))))
+			{
+				$captcha->reset();
+			}
 		}
 		
 		// Posting uses is_solved for legacy reasons. Plugins have to use is_solved to force themselves to be displayed.
 		if ((isset($captcha) && $captcha->is_solved() === false) && (in_array($mode, array('add', 'edit', 'reply'))))
 		{
-
 			$template->assign_vars(array(
 				'S_CONFIRM_CODE'			=> true,
 				'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),

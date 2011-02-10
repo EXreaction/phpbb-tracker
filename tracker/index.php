@@ -498,7 +498,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 				$tracker->back_link('TRACKER_TICKET_REPLY_SUBMITTED', '', $project_id, $ticket_id);
 			}
-			else if (!$post_data['post_desc'])
+		}
+		
+		if ($submit || $preview || $refresh)
+		{
+			if (!$post_data['post_desc'])
 			{
 				$tracker->errors[] = $user->lang['TRACKER_TICKET_MESSAGE_ERROR'];
 			}
@@ -1047,17 +1051,18 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 			$tracker->back_link('TRACKER_TICKET_SUBMITTED', 'TRACKER_SUBMITTED_RETURN', $project_id, $ticket_id);
 		}
-		else
+	}
+	
+	if ($submit || $preview || $refresh)
+	{
+		if (!$ticket_data['ticket_title'])
 		{
-			if (!$ticket_data['ticket_title'])
-			{
-				$tracker->errors[] = $user->lang['TRACKER_TICKET_TITLE_ERROR'];
-			}
+			$tracker->errors[] = $user->lang['TRACKER_TICKET_TITLE_ERROR'];
+		}
 
-			if (!$ticket_data['ticket_desc'])
-			{
-				$tracker->errors[] = $user->lang['TRACKER_TICKET_DESC_ERROR'];
-			}
+		if (!$ticket_data['ticket_desc'])
+		{
+			$tracker->errors[] = $user->lang['TRACKER_TICKET_DESC_ERROR'];
 		}
 	}
 
