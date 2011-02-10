@@ -178,7 +178,7 @@
 		</div>
 
 		<!-- IF S_CAN_ATTACH --><!-- INCLUDE posting_attach_body.html --><!-- ENDIF -->
-		
+
 		<!-- IF S_HAS_ATTACHMENTS -->
 			<div class="panel bg2">
 				<div class="inner"><span class="corners-top"><span></span></span>
@@ -322,7 +322,7 @@
 				<li<!-- IF not S_MANAGE_TICKET or S_TICKET_REPLY and (not S_USER_LOGGED_IN and S_IS_BOT) --> class="last"<!-- ENDIF -->><a href="{U_VIEW_TICKET_HISTORY}">{L_TICKET_HISTORY}</a></li>
 				<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
 					<li<!-- IF not S_MANAGE_TICKET or S_TICKET_REPLY --> class="last"<!-- ENDIF -->><a href="{U_WATCH_TICKET}">{L_WATCH_TICKET}</a></li>
-				<!-- ENDIF -->				
+				<!-- ENDIF -->
 				<!-- IF not S_TICKET_REPLY -->
 					<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><li><label for="au"><strong>{L_TRACKER_ASSIGN_USER}:</strong></label><select id="au" name="au" style="width: 150px;">{S_ASSIGN_USER_OPTIONS}</select></li><!-- ENDIF -->
 					<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS --><li><label for="cs"><strong>{L_TRACKER_CHANGE_STATUS}:</strong></label><select id="cs" name="cs" style="width: 125px;">{S_STATUS_OPTIONS}</select></li><!-- ENDIF -->
