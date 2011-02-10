@@ -51,7 +51,7 @@ class tracker
 		$this->api->set_url_builder(array(&$this->url_builder, 'build'));
 
 		// Add language vars to array
-		$user->add_lang('mods/tracker');
+		$user->add_lang(array('mods/tracker', 'posting'));
 
 		$template->assign_vars(array(
 			'S_IN_TRACKER'				=> $in_tracker,
@@ -188,7 +188,7 @@ class tracker
 		$db->sql_freeresult($result);
 
 		$post_ids = array_keys($comment_data);
-		if ($auth->acl_get('u_tracker_download'))
+		if ($auth->acl_get('u_tracker_download') && sizeof($post_ids))
 		{
 			unset($this->api->attachment_data_post);
 			$this->api->get_attachment_data($ticket_id, $post_ids);
@@ -1021,8 +1021,6 @@ class tracker
 	{
 		global $config, $user, $template, $db, $phpbb_root_path, $phpEx;
 
-		$user->add_lang('posting');
-		
 		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
 		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
 		$captcha->init(CONFIRM_POST);

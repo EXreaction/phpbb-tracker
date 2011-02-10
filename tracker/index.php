@@ -728,7 +728,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	{
 		$tracker->api->get_attachment_data($ticket_id);
 		// Attachments
-		if (sizeof($tracker->api->attachment_data_ticket[$ticket_id]))
+		if (isset($tracker->api->attachment_data_ticket[$ticket_id]) && sizeof($tracker->api->attachment_data_ticket[$ticket_id]))
 		{
 			$update_count = array();
 			$attachment_data = $tracker->api->attachment_data_ticket[$ticket_id];
