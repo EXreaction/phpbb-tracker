@@ -119,7 +119,7 @@ $status_type['bugs'] = array(
 	),
 	15 => array(
 		'id' 		=> 15,
-		'name' 		=> 'TRACKER_FIX_COMPLETED_SVN',
+		'name' 		=> 'TRACKER_FIX_COMPLETED_VCS',
 		'filter' 	=> false,
 		'open' 		=> false,
 	),
@@ -195,7 +195,7 @@ $status_type['feature'] = array(
 	),
 	9 => array(
 		'id' 		=> 9,
-		'name' 		=> 'TRACKER_IMPLEMENTED_SVN',
+		'name' 		=> 'TRACKER_IMPLEMENTED_VCS',
 		'filter' 	=> false,
 		'open' 		=> false,
 	),
@@ -325,7 +325,7 @@ $status_type['issue'] = array(
 	),
 	14 => array(
 		'id' 		=> 14,
-		'name' 		=> 'TRACKER_FIX_COMPLETED_SVN',
+		'name' 		=> 'TRACKER_FIX_COMPLETED_VCS',
 		'filter' 	=> false,
 		'open' 		=> false,
 	),
