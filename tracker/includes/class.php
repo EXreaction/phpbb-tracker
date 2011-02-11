@@ -223,7 +223,7 @@ class tracker
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'COMMENT_DESC'			=> $comment_desc,
-				'COMMENT_POSTER'		=> get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']),
+				'COMMENT_POSTER'		=> ($row['post_user_id'] != ANONYMOUS) ? get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']) :  get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour'], $row['post_username']),
 				'COMMENT_TIME'			=> $user->format_date($row['post_time']),
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
@@ -397,35 +397,37 @@ class tracker
 		foreach ($posts_row as $row)
 		{
 			$review_array[] = array (
-				'user_id'		=> $row['post_user_id'],
-				'user_colour'	=> $row['user_colour'],
-				'username'		=> $row['username'],
-				'text'			=> $row['post_desc'],
-				'uid'			=> $row['post_desc_uid'],
-				'bitfield'		=> $row['post_desc_bitfield'],
-				'options'		=> $row['post_desc_options'],
-				'time'			=> $row['post_time'],
+				'user_id'			=> $row['post_user_id'],
+				'user_colour'		=> $row['user_colour'],
+				'username'			=> $row['username'],
+				'post_username'		=> $row['post_username'],
+				'text'				=> $row['post_desc'],
+				'uid'				=> $row['post_desc_uid'],
+				'bitfield'			=> $row['post_desc_bitfield'],
+				'options'			=> $row['post_desc_options'],
+				'time'				=> $row['post_time'],
 			);
 		}
 
 		foreach ($ticket_row as $row)
 		{
 			$review_array[] = array (
-				'user_id'		=> $row['ticket_user_id'],
-				'user_colour'	=> $row['user_colour'],
-				'username'		=> $row['username'],
-				'text'			=> $row['ticket_desc'],
-				'uid'			=> $row['ticket_desc_uid'],
-				'bitfield'		=> $row['ticket_desc_bitfield'],
-				'options'		=> $row['ticket_desc_options'],
-				'time'			=> $row['ticket_time'],
+				'user_id'			=> $row['ticket_user_id'],
+				'user_colour'		=> $row['user_colour'],
+				'username'			=> $row['username'],
+				'post_username'		=> $row['ticket_username'],
+				'text'				=> $row['ticket_desc'],
+				'uid'				=> $row['ticket_desc_uid'],
+				'bitfield'			=> $row['ticket_desc_bitfield'],
+				'options'			=> $row['ticket_desc_options'],
+				'time'				=> $row['ticket_time'],
 			);
 		}
 
 		foreach ($review_array as $review)
 		{
 			$template->assign_block_vars('review', array(
-				'POST_USER'		=> get_username_string('full', $review['user_id'], $review['username'], $review['user_colour']),
+				'POST_USER'		=> ($review['user_id'] != ANONYMOUS) ? get_username_string('full', $review['user_id'], $review['username'], $review['user_colour']) :  get_username_string('full', $review['user_id'], $review['username'], $review['user_colour'], $review['post_username']),
 				'POST_TIME'		=> $user->format_date($review['time']),
 				'POST_TEXT'		=> generate_text_for_display($review['text'], $review['uid'], $review['bitfield'], $review['options']),
 			));
@@ -550,6 +552,7 @@ class tracker
 
 			$sql_array = array(
 				'SELECT'	=> 't.ticket_user_id,
+								t.ticket_username,
 								u.user_colour,
 								u.username,
 								u.username_clean,
@@ -589,7 +592,7 @@ class tracker
 				}
 
 				$template->assign_block_vars('top', array(
-					'USERNAME'		=> $this->api->get_assigned_to($project_id, $item['ticket_user_id'], $item['username'], $item['user_colour']),
+					'USERNAME'		=> ($item['ticket_user_id'] != ANONYMOUS) ? get_username_string('full', $item['ticket_user_id'], $item['username'], $item['user_colour']) :  get_username_string('full', $item['ticket_user_id'], $item['username'], $item['user_colour'], $item['ticket_username']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
 			}
@@ -1017,6 +1020,36 @@ class tracker
 		$this->api->set_type($project_id);
 
 		return true;
+	}
+
+	//$prefix needs to be either 'ticket' or 'post'
+	public function check_username($mode, $data, $prefix)
+	{
+		global $user;
+
+		$prefix = strtolower($prefix);
+		if ($prefix != 'ticket' && $prefix != 'post')
+		{
+			return;
+		}
+
+		if ($data[$prefix . '_user_id'] == ANONYMOUS)
+		{
+			$data['username'] = ($mode == 'add' || $mode == 'edit' || $mode == 'reply') ? trim($data[$prefix . '_username']) : '';
+		}
+		else
+		{
+			$data['username'] = ($mode == 'add' || $mode == 'edit' || $mode == 'reply') ? trim($data['username']) : '';
+		}
+
+		if (($data['username'] && !$user->data['is_registered']) || ($mode == 'edit' && $data[$prefix . '_user_id'] == ANONYMOUS && $data['username'] && $data[$prefix . '_username'] && $data[$prefix . '_username'] != $data['username']))
+		{
+			if (($result = validate_username($data['username'], (!empty($data[$prefix . '_username'])) ? $data[$prefix . '_username'] : '')) !== false)
+			{
+				$user->add_lang('ucp');
+				$this->errors[] = $user->lang[$result . '_USERNAME'];
+			}
+		}
 	}
 
 	public function check_captcha($mode, $submit, $preview, $refresh, &$s_hidden_fields_confirm)

@@ -112,11 +112,11 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	$sql_array = array(
 		'SELECT'	=> 't.*,
 						u1.user_colour as ticket_user_colour,
-						u1.username as ticket_username,
+						u1.username as user_ticket_username,
 						u2.user_colour as assigned_user_colour,
 						u2.username as assigned_username,
 						u3.user_colour as last_post_user_colour,
-						u3.username as last_post_username',
+						u3.username as user_last_post_username',
 
 		'FROM'		=> array(
 			TRACKER_TICKETS_TABLE	=> 't',
@@ -199,17 +199,21 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 
 	foreach ($tickets as $item)
 	{
+		// Fix user names
+		$item['last_post_username'] = ($item['last_post_user_id'] == ANONYMOUS) ? $item['last_post_username'] : $item['user_last_post_username'];
+		$item['ticket_username'] = ($item['ticket_user_id'] == ANONYMOUS) ? $item['ticket_username'] : $item['user_ticket_username'];
+		
 		$template->assign_block_vars('tickets', array(
 			'U_VIEW_TICKET'				=> $tracker->api->build_url('ticket', array($project_id, $item['ticket_id'])),
 
-			'LAST_POST_USERNAME'		=> (!empty($item['last_post_user_id'])) ? get_username_string('full', $item['last_post_user_id'], $item['last_post_username'], $item['last_post_user_colour']) : '',
+			'LAST_POST_USERNAME'		=> (!empty($item['last_post_user_id'])) ? get_username_string('full', $item['last_post_user_id'], $item['last_post_username'], $item['last_post_user_colour'],  $item['last_post_username']) : '',
 			'LAST_POST_TIME'			=> $user->format_date($item['last_post_time']),
 
 			'TICKET_HIDDEN'				=> ($item['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 			'TICKET_SECURITY'			=> ($item['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
 			'TICKET_ID'					=> $item['ticket_id'],
 			'TICKET_TITLE'				=> $item['ticket_title'],
-			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour']),
+			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour'],  $item['ticket_username']),
 			'TICKET_TIME'				=> $user->format_date($item['ticket_time']),
 			'TICKET_COMPONENT'			=> $tracker->api->set_component_name($item['component_id'], $components),
 			'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['assigned_username'], $item['assigned_user_colour']),
@@ -416,6 +420,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($preview || $submit || $refresh)
 		{
+			$tracker->check_username($mode, $post_data, 'post');
+			
 			$tracker->api->get_submitted_attachment_data();
 			$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $post_data['post_desc']);
 			if (sizeof($tracker->api->warn_msg))
@@ -576,7 +582,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 						p.ticket_security as project_ticket_security,
 						p.project_enabled,
 						u1.user_colour as ticket_user_colour,
-						u1.username as ticket_username,
+						u1.username as user_ticket_username,
 						u2.user_colour as assigned_user_colour,
 						u2.username as assigned_username,
 						c.component_name,
@@ -626,6 +632,9 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
+	
+	// Fix user name
+	$row['ticket_username'] = ($row['ticket_user_id'] == ANONYMOUS) ? $row['ticket_username'] : $row['user_ticket_username'];
 
 	$tracker->api->generate_nav($row, $ticket_id);
 
@@ -875,7 +884,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'ERROR'						=> (sizeof($tracker->errors)) ? implode('<br />', $tracker->errors) : '',
 		'PROJECT_NAME'				=> $row['project_name'],
 		'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $row['ticket_assigned_to'], $row['assigned_username'], $row['assigned_user_colour']),
-		'TICKET_REPORTED_BY'		=> get_username_string('full', $row['ticket_user_id'], $row['ticket_username'], $row['ticket_user_colour']),
+		'TICKET_REPORTED_BY'		=> get_username_string('full', $row['ticket_user_id'], $row['ticket_username'], $row['ticket_user_colour'],  $row['ticket_username']),
 		'TICKET_ID'					=> $row['ticket_id'],
 		'TICKET_TITLE'				=> $row['ticket_title'],
 		'TICKET_DESC'				=> $ticket_desc,
@@ -1022,6 +1031,8 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 	if ($preview || $submit || $refresh)
 	{
+		$tracker->check_username($mode, $ticket_data, 'ticket');
+		
 		$tracker->api->get_submitted_attachment_data();
 		$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $ticket_data['ticket_desc']);
 		if (sizeof($tracker->api->warn_msg))

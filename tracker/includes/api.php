@@ -827,7 +827,7 @@ class tracker_api
 	*/
 	public function add_post($data, $id)
 	{
-		global $db;
+		global $db, $user;
 
 		$sql = 'INSERT INTO ' . TRACKER_POSTS_TABLE . ' ' .
 			$db->sql_build_array('INSERT', $data);
@@ -836,8 +836,10 @@ class tracker_api
 		$post_id = $db->sql_nextid();
 
 		$ticket_data = array(
-			'last_post_time'		=> $data['post_time'],
 			'last_post_user_id'		=> $data['post_user_id'],
+			'last_post_username'	=> ($data['post_user_id'] == ANONYMOUS) ? $data['post_username'] : '',
+			'last_post_time'		=> $data['post_time'],
+			
 		);
 
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
@@ -879,7 +881,7 @@ class tracker_api
 
 		if ($ticket_id)
 		{
-			$sql = 'SELECT post_user_id
+			$sql = 'SELECT post_user_id, post_username, post_time
 						FROM ' . TRACKER_POSTS_TABLE . '
 					WHERE ticket_id = ' . $ticket_id . '
 					ORDER by post_time DESC';
@@ -888,10 +890,14 @@ class tracker_api
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			$new_id = ($row) ? $row['post_user_id'] : 0;
+			$sql_array = array(
+				'last_post_user_id'		=> ($row) ? $row['post_user_id'] : 0,
+				'last_post_username'	=> ($row) ? $row['post_username'] : '',
+				'last_post_time'		=> ($row) ? $row['post_time'] : 0,
+			);
 
 			$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
-				SET last_post_user_id = ' . $new_id . '
+				SET ' . $db->sql_build_array('UPDATE', $sql_array) . '
 				WHERE ' . $db->sql_in_set('ticket_id', $ticket_id);
 			$db->sql_query($sql);
 
