@@ -202,7 +202,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		// Fix user names
 		$item['last_post_username'] = ($item['last_post_user_id'] == ANONYMOUS) ? $item['last_post_username'] : $item['user_last_post_username'];
 		$item['ticket_username'] = ($item['ticket_user_id'] == ANONYMOUS) ? $item['ticket_username'] : $item['user_ticket_username'];
-		
+
 		$template->assign_block_vars('tickets', array(
 			'U_VIEW_TICKET'				=> $tracker->api->build_url('ticket', array($project_id, $item['ticket_id'])),
 
@@ -390,8 +390,15 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 			$tracker->api->check_edit($post_data['post_time'], $post_data['post_user_id'], false);
 
-			$tracker->api->get_attachment_data($ticket_id, $post_id);
-			$tracker->api->attachment_data = $tracker->api->attachment_data_post[$post_id];
+			// Attachments
+			if ($post_data['post_attachment'])
+			{
+				$tracker->api->get_attachment_data($ticket_id, $post_id);
+				if (isset($tracker->api->attachment_data_post[$post_id]))
+				{
+					$tracker->api->attachment_data = $tracker->api->attachment_data_post[$post_id];
+				}
+			}
 		}
 		else
 		{
@@ -407,6 +414,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			);
 		}
 
+		if ($preview || $submit || $refresh)
+		{
+			$tracker->check_username($mode, $post_data, 'post');
+		}
+
 		if ($mode == 'edit' && ($preview || $submit || $refresh))
 		{
 			unset($post_data['post_time'], $post_data['post_user_id']);
@@ -420,8 +432,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($preview || $submit || $refresh)
 		{
-			$tracker->check_username($mode, $post_data, 'post');
-			
 			$tracker->api->get_submitted_attachment_data();
 			$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $post_data['post_desc']);
 			if (sizeof($tracker->api->warn_msg))
@@ -632,7 +642,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	{
 		trigger_error('TRACKER_TICKET_NO_EXIST');
 	}
-	
+
 	// Fix user name
 	$row['ticket_username'] = ($row['ticket_user_id'] == ANONYMOUS) ? $row['ticket_username'] : $row['user_ticket_username'];
 
@@ -1018,6 +1028,11 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		}
 	}
 
+	if ($preview || $submit || $refresh)
+	{
+		$tracker->check_username($mode, $ticket_data, 'ticket');
+	}
+
 	if ($mode == 'edit' && ($preview || $submit || $refresh))
 	{
 		unset($ticket_data['ticket_user_id'], $ticket_data['ticket_time'], $ticket_data['status_id']);
@@ -1031,8 +1046,6 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 	if ($preview || $submit || $refresh)
 	{
-		$tracker->check_username($mode, $ticket_data, 'ticket');
-		
 		$tracker->api->get_submitted_attachment_data();
 		$tracker->api->parse_attachments('fileupload', $submit, $preview, $refresh, $ticket_data['ticket_desc']);
 		if (sizeof($tracker->api->warn_msg))
