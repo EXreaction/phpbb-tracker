@@ -1033,18 +1033,9 @@ class tracker
 			return;
 		}
 
-		if ($data[$prefix . '_user_id'] == ANONYMOUS)
+		if ($data[$prefix . '_username'] && $data[$prefix . '_user_id'] == ANONYMOUS)
 		{
-			$data['username'] = ($mode == 'add' || $mode == 'edit' || $mode == 'reply') ? trim($data[$prefix . '_username']) : '';
-		}
-		else
-		{
-			$data['username'] = ($mode == 'add' || $mode == 'edit' || $mode == 'reply') ? trim($data['username']) : '';
-		}
-
-		if (($data['username'] && !$user->data['is_registered']) || ($mode == 'edit' && $data[$prefix . '_user_id'] == ANONYMOUS && $data['username'] && $data[$prefix . '_username'] && $data[$prefix . '_username'] != $data['username']))
-		{
-			if (($result = validate_username($data['username'], (!empty($data[$prefix . '_username'])) ? $data[$prefix . '_username'] : '')) !== false)
+			if (($result = validate_username($data[$prefix . '_username'], '')) !== false)
 			{
 				$user->add_lang('ucp');
 				$this->errors[] = $user->lang[$result . '_USERNAME'];
