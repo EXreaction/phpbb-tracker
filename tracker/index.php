@@ -367,19 +367,11 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($mode == 'edit' && !$preview && !$submit)
 		{
-			$sql_array = array(
-				'SELECT'	=> 'p.*',
+			$sql = 'SELECT *
+				FROM ' . TRACKER_POSTS_TABLE . '
+				WHERE post_id = ' . $post_id;
 
-				'FROM'		=> array(
-					TRACKER_POSTS_TABLE	=> 'p',
-				),
-
-				'WHERE'		=> 'p.post_id = ' . $post_id,
-			);
-
-			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query($sql);
-
 			$post_data = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
@@ -388,6 +380,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 				trigger_error('TRACKER_POST_NO_EXIST');
 			}
 
+			$post_user_id = (int) $post_data['post_user_id'];
 			$tracker->api->check_edit($post_data['post_time'], $post_data['post_user_id'], false);
 
 			// Attachments
@@ -402,6 +395,26 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		}
 		else
 		{
+			if ($mode == 'edit')
+			{
+				$sql = 'SELECT post_user_id
+					FROM ' . TRACKER_POSTS_TABLE . '
+					WHERE post_id = ' . $post_id;
+
+				$result = $db->sql_query($sql);
+				$post_user_id = $db->sql_fetchfield('post_user_id');
+				$db->sql_freeresult($result);
+
+				if (!$post_user_id)
+				{
+					trigger_error('TRACKER_POST_NO_EXIST');
+				}
+			}
+			else
+			{
+				$post_user_id = $user->data['user_id'];
+			}
+			
 			$post_data = array(
 				'post_desc'					=> utf8_normalize_nfc(request_var('message', '', true)),
 				'post_time'					=> time(),
@@ -570,9 +583,12 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		$template->assign_vars(array(
 			'S_EDIT_REASON'			=> ($mode == 'edit') ? true : false,
+			'S_DISPLAY_USERNAME'	=> (!$user->data['is_registered'] || ($mode == 'edit' && $post_user_id == ANONYMOUS)) ? true : false,
+
 			'EDIT_REASON_TEXT'		=> ($mode == 'edit') ? $post_data['edit_reason'] : '',
 			'REPLY_DESC'			=> $post_data['post_desc'],
 			'USERNAME'				=> $post_data['post_username'],
+
 			'U_ACTION'				=> ($mode == 'edit') ? $tracker->api->build_url('edit_pid', array($project_id, $ticket_id, $post_id)) : $tracker->api->build_url('reply', array($project_id, $ticket_id)),
 		));
 	}
@@ -853,7 +869,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
 		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
 		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
-		'S_DISPLAY_USERNAME'		=> (!$user->data['is_registered'] || ($mode == 'edit' && $row['post_user_id'] == ANONYMOUS)) ? true : false,
 		'S_IS_LOCKED'				=> ($option_data['ticket_status'] == TRACKER_TICKET_LOCKED) ? true : false,
 
 		'U_UPDATE_ACTION'			=> ($tracker->api->can_manage) ? $tracker->api->build_url('ticket', array($project_id, $ticket_id)) : '',
@@ -959,19 +974,11 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 	if ($mode == 'edit' && !$preview && !$submit && !$refresh)
 	{
-		$sql_array = array(
-			'SELECT'	=> 't.*',
+		$sql = 'SELECT *
+			FROM ' . TRACKER_TICKETS_TABLE . '
+			WHERE ticket_id = ' . $ticket_id;
 
-			'FROM'		=> array(
-				TRACKER_TICKETS_TABLE	=> 't',
-			),
-
-			'WHERE'		=> 't.ticket_id = ' . $ticket_id,
-		);
-
-		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
-
 		$ticket_data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -980,6 +987,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			trigger_error('TRACKER_TICKET_NO_EXIST');
 		}
 
+		$ticket_user_id = (int) $ticket_data['ticket_user_id'];
 		$tracker->api->check_edit($ticket_data['ticket_time'], $ticket_data['ticket_user_id'], false);
 
 		// Attachments
@@ -994,6 +1002,18 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	}
 	else
 	{
+		$sql = 'SELECT ticket_user_id
+			FROM ' . TRACKER_TICKETS_TABLE . '
+			WHERE ticket_id = ' . $ticket_id;
+		$result = $db->sql_query($sql);		
+		$ticket_user_id = (int) $db->sql_fetchfield('ticket_user_id');
+		$db->sql_freeresult($result);
+
+		if (!$ticket_user_id)
+		{
+			trigger_error('TRACKER_TICKET_NO_EXIST');
+		}
+		
 		$ticket_data = array(
 			'ticket_title'				=> utf8_normalize_nfc(request_var('ticket_title', '', true)),
 			'ticket_desc'				=> utf8_normalize_nfc(request_var('message', '', true)),
@@ -1199,7 +1219,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		'S_BBCODE_QUOTE'			=> ($config['allow_bbcode'] && $user->optionget('bbcode')) ? true : false,
 		'S_LINKS_ALLOWED'			=> ($config['allow_post_links']) ? true : false,
 		'S_BBCODE_FLASH'			=> ($config['allow_bbcode'] && $user->optionget('bbcode') && $config['allow_post_flash']) ? true : false,
-		'S_DISPLAY_USERNAME'		=> (!$user->data['is_registered'] || ($mode == 'edit' && $ticket_data['ticket_user_id'] == ANONYMOUS)) ? true : false,
+		'S_DISPLAY_USERNAME'		=> (!$user->data['is_registered'] || ($mode == 'edit' && $ticket_user_id == ANONYMOUS)) ? true : false,
 		'S_COMPONENT_OPTIONS'		=> $tracker->api->select_options($project_id, 'component', $ticket_data['component_id']),
 		'S_VERSION_OPTIONS'			=> $tracker->api->select_options($project_id, 'version', $ticket_data['version_id']),
 		'S_CAN_ATTACH'				=> $can_attach,
