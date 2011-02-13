@@ -365,7 +365,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	{
 		$tracker->api->check_ticket_exists($ticket_id);
 
-		if ($mode == 'edit' && !$preview && !$submit)
+		if ($mode == 'edit' && !$preview && !$submit && !$refresh)
 		{
 			$sql = 'SELECT *
 				FROM ' . TRACKER_POSTS_TABLE . '
@@ -1002,16 +1002,23 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	}
 	else
 	{
-		$sql = 'SELECT ticket_user_id
-			FROM ' . TRACKER_TICKETS_TABLE . '
-			WHERE ticket_id = ' . $ticket_id;
-		$result = $db->sql_query($sql);		
-		$ticket_user_id = (int) $db->sql_fetchfield('ticket_user_id');
-		$db->sql_freeresult($result);
-
-		if (!$ticket_user_id)
+		if ($mode == 'edit')
 		{
-			trigger_error('TRACKER_TICKET_NO_EXIST');
+			$sql = 'SELECT ticket_user_id
+				FROM ' . TRACKER_TICKETS_TABLE . '
+				WHERE ticket_id = ' . $ticket_id;
+			$result = $db->sql_query($sql);		
+			$ticket_user_id = (int) $db->sql_fetchfield('ticket_user_id');
+			$db->sql_freeresult($result);
+
+			if (!$ticket_user_id)
+			{
+				trigger_error('TRACKER_TICKET_NO_EXIST');
+			}
+		}
+		else
+		{
+			$ticket_user_id = $user->data['user_id'];
 		}
 		
 		$ticket_data = array(

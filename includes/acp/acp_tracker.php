@@ -312,7 +312,7 @@ class acp_tracker
 				'ATTACH_ID'			=> $item['attach_id'],
 				'POSTER_USERNAME'	=> get_username_string('full', $item['poster_id'], $item['username'], $item['user_colour']),
 				'REAL_FILENAME'		=> $item['real_filename'],
-				'U_DOWNLOAD_LINK'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$item['attach_id']}"),
+				'U_DOWNLOAD_LINK'	=> append_sid("{$phpbb_root_path}tracker/index.$phpEx", "mode=download&amp;id={$item['attach_id']}"),
 				'FILESIZE'			=> $filesize,
 				'SIZE_LANG'			=> $size_lang,
 				'FILETIME'			=> $user->format_date($item['filetime']),
