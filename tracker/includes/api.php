@@ -387,8 +387,6 @@ class tracker_api
 			WHERE project_id = ' . $id;
 		$db->sql_query($sql);
 
-		$sql = 'DELETE FROM ' . TRACKER_TICKETS_WATCH_TABLE . '
-			WHERE ticket_id = ' . $id;
 		$db->sql_query($sql);
 
 		$cache->destroy('_tracker_projects');
@@ -664,7 +662,7 @@ class tracker_api
 	*/
 	public function delete_ticket($id)
 	{
-		global $db;
+		global $db, $phpbb_root_path;
 
 		$sql = 'DELETE FROM ' . TRACKER_TICKETS_TABLE. '
 			WHERE ticket_id = ' . $id;
@@ -675,6 +673,33 @@ class tracker_api
 		$db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . TRACKER_POSTS_TABLE. '
+			WHERE ticket_id = ' . $id;
+		$db->sql_query($sql);
+
+		$sql = 'SELECT physical_filename
+			FROM ' . TRACKER_ATTACHMENTS_TABLE . '
+			WHERE ticket_id = ' . $id;
+		$result = $db->sql_query($sql);
+
+		$filedata = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$filedata[] = $row['physical_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		if (sizeof($filedata))
+		{
+			foreach ($filedata as $item)
+			{
+				if (unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $item))
+				{
+					add_log('admin', 'LOG_TRACKER_DELETE_EXTRA', $item);
+				}
+			}
+		}
+
+		$sql = 'DELETE FROM ' . TRACKER_ATTACHMENTS_TABLE. '
 			WHERE ticket_id = ' . $id;
 		$db->sql_query($sql);
 
@@ -839,7 +864,7 @@ class tracker_api
 			'last_post_user_id'		=> $data['post_user_id'],
 			'last_post_username'	=> ($data['post_user_id'] == ANONYMOUS) ? $data['post_username'] : '',
 			'last_post_time'		=> $data['post_time'],
-			
+
 		);
 
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE. '
@@ -871,12 +896,41 @@ class tracker_api
 	* Removes a post from the bug tracker
 	* and resyncs the last post data of the ticket
 	*/
-	public function delete_post($id, $ticket_id = false)
+	public function delete_post($id, $ticket_id)
 	{
 		global $db;
 
 		$sql = 'DELETE FROM ' . TRACKER_POSTS_TABLE. '
 			WHERE post_id = ' . $id;
+		$db->sql_query($sql);
+
+		$sql = 'SELECT physical_filename
+			FROM ' . TRACKER_ATTACHMENTS_TABLE . '
+			WHERE post_id = ' . $id . '
+				AND ticket_id = ' . $ticket_id;
+		$result = $db->sql_query($sql);
+
+		$filedata = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$filedata[] = $row['physical_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		if (sizeof($filedata))
+		{
+			foreach ($filedata as $item)
+			{
+				if (@unlink($phpbb_root_path . $this->config['attachment_path'] . '/' . $item))
+				{
+					add_log('admin', 'LOG_TRACKER_DELETE_EXTRA', $item);
+				}
+			}
+		}
+
+		$sql = 'DELETE FROM ' . TRACKER_ATTACHMENTS_TABLE. '
+			WHERE post_id = ' . $id . '
+				AND ticket_id = ' . $ticket_id;
 		$db->sql_query($sql);
 
 		if ($ticket_id)
@@ -2998,16 +3052,14 @@ class tracker_api
 				}
 			}
 
-			$filesize = $attachment['filesize'];
-			$size_lang = ($filesize >= 1048576) ? $user->lang['MB'] : ( ($filesize >= 1024) ? $user->lang['KB'] : $user->lang['BYTES'] );
-			$filesize = ($filesize >= 1048576) ? round((round($filesize / 1048576 * 100) / 100), 2) : (($filesize >= 1024) ? round((round($filesize / 1024 * 100) / 100), 2) : $filesize);
+			$filesize = get_formatted_filesize($attachment['filesize'], false);
 
 			$comment = str_replace("\n", '<br />', censor_text($attachment['attach_comment']));
 
 			$block_array += array(
 				'UPLOAD_ICON'		=> $upload_icon,
-				'FILESIZE'			=> $filesize,
-				'SIZE_LANG'			=> $size_lang,
+				'FILESIZE'			=> $filesize['value'],
+				'SIZE_LANG'			=> $filesize['unit'],
 				'DOWNLOAD_NAME'		=> basename($attachment['real_filename']),
 				'COMMENT'			=> $comment,
 			);

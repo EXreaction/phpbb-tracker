@@ -64,13 +64,13 @@
 
 	<!-- ENDIF -->
 <!-- END options -->
-</fieldset>
 
-<fieldset class="submit-buttons">
-	<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-	<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+	{S_FORM_TOKEN}
 </fieldset>
-{S_FORM_TOKEN}
 </form>
 <!-- ELSEIF S_IN_MANAGE_ATTACHMENTS -->
 	<!-- IF S_IN_MANAGE_ATTACHMENTS_DEFAULT -->
@@ -103,7 +103,9 @@
 						<td style="text-align: center;"><input type="checkbox" class="radio" name="attach_ids[]" value="{orphan.ATTACH_ID}" /></td>
 					</tr>
 					<!-- BEGINELSE -->
-
+					<tr>
+						<td></td>
+					</tr>
 					<!-- END orphan -->
 				</tbody>
 				</table>
@@ -127,7 +129,9 @@
 						<td style="text-align: center;"><input type="checkbox" class="radio" name="extra_files[]" value="{extra_files.FILENAME}" /></td>
 					</tr>
 					<!-- BEGINELSE -->
-
+					<tr>
+						<td></td>
+					</tr>
 					<!-- END orphan -->
 				</tbody>
 				</table>
@@ -138,8 +142,8 @@
 				<p class="quick">
 					<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_DELETE_MARKED}" />
 				</p>
-			</fieldset>
 			{S_FORM_TOKEN}
+			</fieldset>
 		</form>
 	<!-- ENDIF -->
 
@@ -148,7 +152,7 @@
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 		<fieldset class="tabulated">
 		<legend>{L_TITLE}</legend>
-		<input name="project_name" type="text" class="text medium" id="project_name" value="" />&nbsp;&nbsp;<input class="button2" type="submit" id="submit" name="project_cat_add" value="{L_ACP_TRACKER_PROJECT_CAT_ADD}" /><br /><br />
+		<input name="project_name" type="text" class="text medium" id="project_name" value="" />&nbsp;&nbsp;<input class="button2" type="submit" id="project_cat_add" name="project_cat_add" value="{L_ACP_TRACKER_PROJECT_CAT_ADD}" /><br /><br />
 		<!-- BEGIN cat -->
 		<table cellspacing="1">
 		<tbody>
@@ -157,7 +161,7 @@
 				<th>{L_OPTIONS}</th>
 			</tr>
 			<tr class="row1">
-				<td colspan="3" ><strong>{cat.PROJECT_CAT_NAME}</td>
+				<td colspan="3" ><strong>{cat.PROJECT_CAT_NAME}</strong></td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
 					<a href="{cat.U_EDIT}">{ICON_EDIT}</a>
 					<a href="{cat.U_DELETE}">{ICON_DELETE}</a>
@@ -192,9 +196,8 @@
 		<!-- END cat -->
 
 		<p class="quick">
-			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_PROJECT_ADD}" />
+			<input class="button2" type="submit" id="project_add" name="project_add" value="{L_ACP_TRACKER_PROJECT_ADD}" />
 		</p>
-		</fieldset>
 
 	<!-- ELSEIF S_IN_MANAGE_PROJECT_CAT_EDIT -->
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
@@ -212,7 +215,6 @@
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>
 	<!-- ELSEIF S_IN_MANAGE_PROJECT_ADD_EDIT -->
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 
@@ -269,10 +271,9 @@
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>
-
 	<!-- ENDIF -->
-		{S_FORM_TOKEN}
+			{S_FORM_TOKEN}
+		</fieldset>
 		</form>
 <!-- ELSEIF S_IN_MANAGE_COMPONENT -->
 	<!-- IF S_IN_MANAGE_COMPONENT_DEFAULT -->
@@ -281,15 +282,9 @@
 		<fieldset>
 			<legend>{L_TITLE}</legend>
 			<dl>
-				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
-				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
-			</dl>
-		</fieldset>
-
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		</fieldset>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}:</label></dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select>&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" /></dd>
+			</dl>			
 	<!-- ELSEIF S_IN_MANAGE_COMPONENT_VIEW -->
 	<form id="acp_tracker" method="post" action="{U_ACTION}">
 		<fieldset class="tabulated">
@@ -318,7 +313,6 @@
 		<p class="quick">
 			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_COMPONENT_ADD}" />
 		</p>
-		</fieldset>
 	<!-- ELSEIF S_IN_MANAGE_COMPONENT_ADD_EDIT -->
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 
@@ -337,9 +331,10 @@
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>
+
 	<!-- ENDIF -->
 		{S_FORM_TOKEN}
+		</fieldset>
 		</form>
 <!-- ELSEIF S_IN_MANAGE_VERSION -->
 	<!-- IF S_IN_MANAGE_VERSION_DEFAULT -->
@@ -348,15 +343,9 @@
 		<fieldset>
 			<legend>{L_TITLE}</legend>
 			<dl>
-				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}</label>:</dt>
-				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select></dd>
+				<dt><label for="project_id">{L_TRACKER_PROJECT_ID}:</label></dt>
+				<dd><select name="project_id" id="project_id">{S_PROJECT_OPTIONS}</select>&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" /></dd>
 			</dl>
-		</fieldset>
-
-		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		</fieldset>
 	<!-- ELSEIF S_IN_MANAGE_VERSION_VIEW -->
 	<form id="acp_tracker" method="post" action="{U_ACTION}">
 		<fieldset class="tabulated">
@@ -393,7 +382,6 @@
 		<p class="quick">
 			<input class="button2" type="submit" id="submit" name="update" value="{L_ACP_TRACKER_VERSION_ADD}" />
 		</p>
-		</fieldset>
 	<!-- ELSEIF S_IN_MANAGE_VERSION_ADD_EDIT -->
 		<form id="acp_tracker" method="post" action="{U_ACTION}">
 
@@ -412,9 +400,10 @@
 			<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</fieldset>
+
 	<!-- ENDIF -->
-		{S_FORM_TOKEN}
+			{S_FORM_TOKEN}
+		</fieldset>
 		</form>
 <!-- ENDIF -->
 <!-- INCLUDE overall_footer.html -->

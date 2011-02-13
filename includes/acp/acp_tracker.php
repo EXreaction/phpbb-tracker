@@ -36,7 +36,7 @@ class acp_tracker
 
 		$this->tpl_name = 'acp_tracker';
 		$action	= request_var('action', '');
-		$version_check = (isset($_POST['version_check'])) ? true : false;
+		$version_check = (isset($_POST['version'])) ? true : false;
 
 		if ($version_check)
 		{
@@ -120,7 +120,7 @@ class acp_tracker
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		$user->add_lang('acp/board');
-		
+
 		$form_key = 'acp_tracker';
 		add_form_key($form_key);
 
@@ -145,6 +145,8 @@ class acp_tracker
 				'posts_per_page'			=> array('lang' => 'TRACKER_POSTS_PER_PAGE',		'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'top_reporters'				=> array('lang' => 'TRACKER_TOP_REPORTERS',			'validate' => 'int', 	'type' => 'text:3:4', 		'explain' => true),
 				'default_status_type'		=> array('lang' => 'TRACKER_DEFAULT_STATUS_TYPE',	'validate' => 'int', 	'type' => 'select', 		'explain' => true, 'method' => 'default_status_type_select'),
+
+				'legend3'					=> 'ACP_SUBMIT_CHANGES',
 		));
 
 		$this->new_config = $this->tracker->api->config;
@@ -304,17 +306,15 @@ class acp_tracker
 		$orphaned = $this->tracker->api->get_orphaned();
 		foreach ($orphaned as $item)
 		{
-			$filesize = $item['filesize'];
-			$size_lang = ($filesize >= 1048576) ? $user->lang['MB'] : ( ($filesize >= 1024) ? $user->lang['KB'] : $user->lang['BYTES'] );
-			$filesize = ($filesize >= 1048576) ? round((round($filesize / 1048576 * 100) / 100), 2) : (($filesize >= 1024) ? round((round($filesize / 1024 * 100) / 100), 2) : $filesize);
+			$filesize = get_formatted_filesize($item['filesize'], false);
 
 			$template->assign_block_vars('orphan', array(
 				'ATTACH_ID'			=> $item['attach_id'],
 				'POSTER_USERNAME'	=> get_username_string('full', $item['poster_id'], $item['username'], $item['user_colour']),
 				'REAL_FILENAME'		=> $item['real_filename'],
 				'U_DOWNLOAD_LINK'	=> append_sid("{$phpbb_root_path}tracker.$phpEx", "mode=download&amp;id={$item['attach_id']}"),
-				'FILESIZE'			=> $filesize,
-				'SIZE_LANG'			=> $size_lang,
+				'FILESIZE'			=> $filesize['value'],
+				'SIZE_LANG'			=> $filesize['unit'],
 				'FILETIME'			=> $user->format_date($item['filetime']),
 			));
 		}
@@ -1065,7 +1065,7 @@ class acp_tracker
 	{
 		global $user;
 
-		return $this->tracker->api->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="submit" name="version_check" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
+		return $this->tracker->api->config['version'] . '&nbsp;&nbsp;&nbsp;<input class="button1" type="submit" id="version" name="version" value="' . $user->lang['TRACKER_CHECK_UPDATES'] . '" />';
 	}
 
 	function default_status_type_select($value, $key = '')
