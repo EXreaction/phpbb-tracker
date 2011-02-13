@@ -414,7 +414,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 			{
 				$post_user_id = $user->data['user_id'];
 			}
-			
+
 			$post_data = array(
 				'post_desc'					=> utf8_normalize_nfc(request_var('message', '', true)),
 				'post_time'					=> time(),
@@ -429,7 +429,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 
 		if ($preview || $submit || $refresh)
 		{
-			$tracker->check_username($mode, $post_data, 'post');
+			$tracker->check_username($mode, $post_user_id, $post_data['post_username']);
 		}
 
 		if ($mode == 'edit' && ($preview || $submit || $refresh))
@@ -1007,7 +1007,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 			$sql = 'SELECT ticket_user_id
 				FROM ' . TRACKER_TICKETS_TABLE . '
 				WHERE ticket_id = ' . $ticket_id;
-			$result = $db->sql_query($sql);		
+			$result = $db->sql_query($sql);
 			$ticket_user_id = (int) $db->sql_fetchfield('ticket_user_id');
 			$db->sql_freeresult($result);
 
@@ -1020,7 +1020,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 		{
 			$ticket_user_id = $user->data['user_id'];
 		}
-		
+
 		$ticket_data = array(
 			'ticket_title'				=> utf8_normalize_nfc(request_var('ticket_title', '', true)),
 			'ticket_desc'				=> utf8_normalize_nfc(request_var('message', '', true)),
@@ -1057,7 +1057,7 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 	if ($preview || $submit || $refresh)
 	{
-		$tracker->check_username($mode, $ticket_data, 'ticket');
+		$tracker->check_username($mode, $ticket_user_id, $ticket_data['ticket_username']);
 	}
 
 	if ($mode == 'edit' && ($preview || $submit || $refresh))

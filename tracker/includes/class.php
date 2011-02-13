@@ -1023,19 +1023,13 @@ class tracker
 	}
 
 	//$prefix needs to be either 'ticket' or 'post'
-	public function check_username($mode, $data, $prefix)
+	public function check_username($mode, $user_id, $username)
 	{
 		global $user;
 
-		$prefix = strtolower($prefix);
-		if ($prefix != 'ticket' && $prefix != 'post')
+		if ($username && $user_id == ANONYMOUS)
 		{
-			return;
-		}
-
-		if ($data[$prefix . '_username'] && $data[$prefix . '_user_id'] == ANONYMOUS)
-		{
-			if (($result = validate_username($data[$prefix . '_username'], '')) !== false)
+			if (($result = validate_username($username, '')) !== false)
 			{
 				$user->add_lang('ucp');
 				$this->errors[] = $user->lang[$result . '_USERNAME'];
