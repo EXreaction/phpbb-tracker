@@ -125,17 +125,18 @@ class tracker
 			));
 		}
 
+		
 		// Assign index specific vars
 		$template->assign_vars(array(
 			'S_DISPLAY_PROJECT'			=> $display_project,
-			'S_LOGIN_ACTION'			=> $this->api->build_url('login'),
 
 			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
 		));
 
+		
 		// Output page
 		page_header($user->lang['TRACKER'], false);
-
+		
 		$template->set_filenames(array(
 			'body' => 'tracker/tracker_index_body.html')
 		);
@@ -1167,8 +1168,8 @@ class tracker_url_builder
 	{
 		global $phpbb_root_path, $phpEx;
 
-		$this->url_base = "{$phpbb_root_path}tracker/index.$phpEx";
-		$this->clean_url_base = "tracker/index.$phpEx";
+		$this->url_base = "{$phpbb_root_path}tracker.$phpEx";
+		$this->clean_url_base = "tracker.$phpEx";
 	}
 
 	public function build($mode, $args)
@@ -1187,6 +1188,7 @@ class tracker_url_builder
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . array_shift($args));
 			break;
 			case 'login':
+				//return append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url()));
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
 			break;
 			default:

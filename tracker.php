@@ -329,7 +329,6 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'S_STATUS_OPTIONS'				=> $tracker->api->status_select_options($status_type, true),
 		'S_VERSION_OPTIONS'				=> $tracker->api->select_options($project_id, 'version', $version_id, false),
 		'S_COMPONENT_OPTIONS'			=> $tracker->api->select_options($project_id, 'component', $component_id),
-		'S_LOGIN_ACTION'				=> $tracker->api->build_url('login'),
 	));
 
 	// Output page
