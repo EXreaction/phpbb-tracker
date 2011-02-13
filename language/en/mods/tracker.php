@@ -269,4 +269,22 @@ $lang = array_merge($lang, array(
 	'VIEWING_TRACKER_TICKET'				=> 'Viewing ticket for %s - %s',
 ));
 
+// in case add_lang is called twice
+if (!function_exists('tracker_format_username'))
+{
+	/**
+	 * Format a username correctly on localised basis
+	 */
+	function tracker_format_username($username)
+	{
+		if (in_array(strtolower(substr($username, -1, 1)), array('s', 'x', 'z'), true))
+		{
+			return $username . '\'';
+		}
+		else
+		{
+			return $username . '\'s';
+		}
+	}
+}
 ?>
