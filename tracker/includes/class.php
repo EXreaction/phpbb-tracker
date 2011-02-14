@@ -814,7 +814,7 @@ class tracker
 		$row = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 
-		$changes = array();
+		$changes = $change_html = array();
 		$board_url = generate_board_url() . '/';
 		$page_title = sprintf($user->lang['TRACKER_VERSION_CHANGELOG'], $this->api->projects[$project_id]['project_name'], $version_name);
 
@@ -822,23 +822,23 @@ class tracker
 		{
 			$changes[] = '[size=120][b]' . $page_title . '[/b][/size]';
 			$changes[] = '[list]';
+			
+			$changes_html[] = '<span style="font-size: 120%; line-height: 116%; font-weight: bold;">' . $page_title . '</span>';
+			$changes_html[] = '<ul>';
 
 			foreach ($row as $fixed)
 			{
 				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
-				$ticket_url = $board_url . $this->api->build_url('clean_ticket', array($project_id, $fixed['ticket_id']));
+				$ticket_url = $board_url . $this->api->build_url('changelog', array($project_id, $fixed['ticket_id']));
 				$changes[] = '[*][url=' . $ticket_url . '][' . $this->api->projects[$project_id]['project_name'] . '-' . $fixed['ticket_id'] . '][/url] - ' . $component_name . $fixed['ticket_title'];
+				$changes_html[] = '	<li><a href="' . $ticket_url . '">[' . $this->api->projects[$project_id]['project_name'] . '-' . $fixed['ticket_id'] . ']</a> - ' . $component_name . $fixed['ticket_title'] . '</li>';
 			}
 
-
 			$changes[] = '[/list]';
+			$changes_html[] = '</ul>';
 
 			// Output
-			$output = implode("\n", $changes);
-			$uid = $bitfield = $options = '';
-			$allow_bbcode = $allow_urls = $allow_smilies = true;
-			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
-			$output_text = generate_text_for_display($output, $uid, $bitfield, $options);
+			$display_output = implode("\n", $changes_html);
 
 			// BBCode
 			$uid = $bitfield = $options = '';
@@ -850,14 +850,14 @@ class tracker
 			// HTML
 			$uid = $bitfield = $options = '';
 			$allow_bbcode = $allow_urls = $allow_smilies = true;
-			$output = '[code]' . $output_text . '[/code]';
+			$output = '[code]' . $display_output . '[/code]';
 			generate_text_for_storage($output, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 			$html_output = generate_text_for_display($output, $uid, $bitfield, $options);
 
 
 			$template->assign_vars(array(
 				'S_HAS_CHANGELOG'		=> true,
-				'OUTPUT'				=> $output_text,
+				'OUTPUT'				=> $display_output,
 				'BBCODE_CHANGELOG'		=> $bbcode_output,
 				'HTML_CHANGELOG'		=> $html_output,
 			));
@@ -1188,8 +1188,10 @@ class tracker_url_builder
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . array_shift($args));
 			break;
 			case 'login':
-				//return append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url()));
-				return append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect={$this->url_base}");
+				return append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url()));
+			break;
+			case 'changelog':
+				return  $this->clean_url_base . '?' . vsprintf($this->url_ary['ticket'], $args);
 			break;
 			default:
 				if (isset($this->url_ary[$mode]))
