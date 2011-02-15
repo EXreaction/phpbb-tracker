@@ -965,7 +965,7 @@ class tracker
 			break;
 
 			case 'edit':
-				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_edit') && !$auth->acl_get('u_tracker_edit_all') && !$auth->acl_get('u_tracker_edit_global'))
+				if (!$auth->acl_get('a_tracker') && !$auth->acl_get('u_tracker_edit') && !$auth->acl_get('u_tracker_edit_global') && (!$auth->acl_get('u_tracker_edit_all') || !$this->api->can_manage))
 				{
 					if ($return)
 					{
