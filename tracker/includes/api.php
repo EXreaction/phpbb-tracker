@@ -154,11 +154,32 @@ class tracker_api
 		}
 	}
 
+	// Return the project id for the given ticket
+	public function get_project_id($ticket_id)
+	{
+		global $db;
+
+		$sql = 'SELECT project_id
+			FROM ' . TRACKER_TICKETS_TABLE . '
+			WHERE ticket_id = ' . (int) $ticket_id;
+		$result = $db->sql_query($sql);
+		$project_id = $db->sql_fetchfield('project_id');
+		$db->sql_freeresult($result);
+
+		if (!$project_id)
+		{
+			trigger_error('TRACKER_TICKET_NO_EXIST');
+		}
+
+		return $project_id;
+	}
+
 	public function delete_orphan($attach_ids, &$errors)
 	{
 		global $db, $phpbb_root_path, $user;
 
-		$sql = 'SELECT * FROM ' . TRACKER_ATTACHMENTS_TABLE . '
+		$sql = 'SELECT *
+			FROM ' . TRACKER_ATTACHMENTS_TABLE . '
 			WHERE ' . $db->sql_in_set('attach_id', $attach_ids);
 		$result = $db->sql_query($sql);
 
@@ -400,23 +421,23 @@ class tracker_api
 	{
 		global $db;
 
-			$sql_array = array(
-				'SELECT'	=> 'p.*,
-								pc.*',
+		$sql_array = array(
+			'SELECT'	=> 'p.*,
+							pc.*',
 
-				'FROM'		=> array(
-					TRACKER_PROJECT_TABLE	=> 'p',
+			'FROM'		=> array(
+				TRACKER_PROJECT_TABLE	=> 'p',
+			),
+
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
+					'ON'	=> 'p.project_cat_id = pc.project_cat_id',
 				),
+			),
 
-				'LEFT_JOIN'	=> array(
-					array(
-						'FROM'	=> array(TRACKER_PROJECT_CATS_TABLE => 'pc'),
-						'ON'	=> 'p.project_cat_id = pc.project_cat_id',
-					),
-				),
-
-				'ORDER_BY'	=> 'pc.project_name_clean ASC, p.project_type ASC',
-			);
+			'ORDER_BY'	=> 'pc.project_name_clean ASC, p.project_type ASC',
+		);
 
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);

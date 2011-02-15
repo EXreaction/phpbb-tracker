@@ -61,6 +61,12 @@ $s_hidden_fields_confirm 	= '';
 // check permissions
 $tracker->check_permission($mode, $project_id);
 
+// Allows us to link to just the ticket id
+if (empty($project_id) && !empty($ticket_id) && empty($mode))
+{
+	$project_id = $tracker->api->get_project_id($ticket_id);
+}
+
 // Make sure the project exists and enabled...
 if (!empty($project_id))
 {
