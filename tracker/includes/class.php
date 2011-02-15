@@ -219,7 +219,7 @@ class tracker
 
 			$template->assign_block_vars('comments', array(
 				'S_HAS_ATTACHMENTS'		=> (!empty($row['attachment_data'])) ? true : false,
-				'S_CAN_DELETE'			=> $this->check_permission('delete', $project_id, true),
+				'S_CAN_DELETE'			=> $this->check_permission('delete', true),
 				'U_DELETE'				=> $this->api->build_url('delete_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
@@ -930,7 +930,7 @@ class tracker
 		}
 	}
 
-	public function check_permission($mode, $project_id, $return = false)
+	public function check_permission($mode, $return = false)
 	{
 		global $auth, $user;
 

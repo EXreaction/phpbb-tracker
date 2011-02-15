@@ -59,7 +59,7 @@ $preview					= (isset($_POST['preview'])) ? true : false;
 $s_hidden_fields_confirm 	= '';
 
 // check permissions
-$tracker->check_permission($mode, $project_id);
+$tracker->check_permission($mode);
 
 // Allows us to link to just the ticket id
 if (empty($project_id) && !empty($ticket_id) && empty($mode))
@@ -892,7 +892,7 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 		'EDITED_MESSAGE'			=> $tracker->api->fetch_edited_by($row, 'ticket'),
 		'EDIT_REASON'				=> $row['edit_reason'],
 
-		'S_CAN_DELETE'				=> $tracker->check_permission('delete', $project_id, true),
+		'S_CAN_DELETE'				=> $tracker->check_permission('delete', true),
 		'U_DELETE'					=> $tracker->api->build_url('delete', array($project_id, $ticket_id)),
 		'S_CAN_EDIT'				=> $tracker->api->check_edit($row['ticket_time'], $row['ticket_user_id']),
 		'U_EDIT'					=> $tracker->api->build_url('edit', array($project_id, $ticket_id)),
