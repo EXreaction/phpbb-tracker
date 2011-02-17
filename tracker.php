@@ -348,6 +348,8 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 }
 else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode == 'reply' || $mode == 'delete') || ($mode == 'edit' && $post_id)))
 {
+	$tracker->api->generate_nav($tracker->api->projects[$project_id], $ticket_id);
+
 	if ($subscribe != '')
 	{
 		$tracker->api->subscribe('subscribe', $project_id, $ticket_id);
@@ -667,8 +669,6 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	// Fix user name
 	$row['ticket_username'] = ($row['ticket_user_id'] == ANONYMOUS) ? $row['ticket_username'] : $row['user_ticket_username'];
 
-	$tracker->api->generate_nav($row, $ticket_id);
-
 	if ($mode != 'reply' || $mode != 'edit')
 	{
 		if ($tracker->api->can_manage && $update && $user->data['is_registered'] && $auth->acl_get('u_tracker_view') && $auth->acl_get('u_tracker_post'))
@@ -975,6 +975,8 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 }
 else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 {
+	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
+
 	add_form_key('add_ticket');
 
 	if ($mode == 'edit' && !$preview && !$submit && !$refresh)
@@ -1285,8 +1287,6 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 
 	// Output page
 	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
-
-	$tracker->api->generate_nav($tracker->api->projects[$project_id]);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_add_body.html')
