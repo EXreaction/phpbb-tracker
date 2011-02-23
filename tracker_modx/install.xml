@@ -143,9 +143,11 @@
 				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
 		$db->sql_query($sql);]]></find>
-				<action type="after-add"><![CDATA[		
-		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
-		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
+				<action type="after-add"><![CDATA[		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
+		if (!defined('TRACKER_TICKETS_TABLE'))
+		{
+			include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
+		}		
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE . " SET last_visit_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('last_visit_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
