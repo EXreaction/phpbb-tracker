@@ -857,7 +857,7 @@ class tracker
 			foreach ($row as $fixed)
 			{
 				$component_name = (empty($fixed['component_name'])) ? '' : '[' . $this->api->set_lang_name($fixed['component_name']) . '] ';
-				$ticket_url = $board_url . $this->api->build_url('changelog', array($project_id, $fixed['ticket_id']));
+				$ticket_url = $board_url . $this->api->build_url('changelog_ticket', array($project_id, $fixed['ticket_id']));
 				$changes[] = '[*][url=' . $ticket_url . '][' . $this->api->projects[$project_id]['project_name'] . '-' . $fixed['ticket_id'] . '][/url] - ' . $component_name . $fixed['ticket_title'];
 				$changes_html[] = '	<li><a href="' . $ticket_url . '">[' . $this->api->projects[$project_id]['project_name'] . '-' . $fixed['ticket_id'] . ']</a> - ' . $component_name . $fixed['ticket_title'] . '</li>';
 			}
@@ -1218,7 +1218,7 @@ class tracker_url_builder
 			case 'login':
 				return append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url()));
 			break;
-			case 'changelog':
+			case 'changelog_ticket':
 				return  $this->clean_url_base . '?' . vsprintf($this->url_ary['ticket'], $args);
 			break;
 			default:
