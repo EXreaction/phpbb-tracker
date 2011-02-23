@@ -60,9 +60,9 @@
 			</thead>
 			<tbody>
 				<tr class="bg1">
-					<td><strong>{TOTAL_TICKETS}</strong></td>
-					<td style="color: red;"><strong>{TOTAL_OPENED}</strong></td>
-					<td><strong>{TOTAL_CLOSED}</strong></td>
+					<td><strong><!-- IF TOTAL_TICKETS --><a href="{U_TOTAL_TICKETS}"><!-- ENDIF -->{TOTAL_TICKETS}<!-- IF TOTAL_TICKETS --></a><!-- ENDIF --></strong></td>
+					<td style="color: red;"><strong><!-- IF TOTAL_OPENED --><a href="{U_TOTAL_OPENED}"><!-- ENDIF -->{TOTAL_OPENED}<!-- IF TOTAL_OPENED --></a><!-- ENDIF --></strong></td>
+					<td><strong><!-- IF TOTAL_CLOSED --><a href="{U_TOTAL_CLOSED}"><!-- ENDIF -->{TOTAL_CLOSED}<!-- IF TOTAL_CLOSED --></a><!-- ENDIF --></strong></td>
 				</tr>
 			</tbody>
 		</table>
@@ -84,7 +84,7 @@
 				<!-- BEGIN status -->
 				<!-- IF status.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 						<td>{status.STATUS_NAME}</td>
-						<td><strong>{status.STATUS_TOTAL}</strong></td>
+						<td><strong><!-- IF status.STATUS_TOTAL --><a href="{status.U_STATUS_TOTAL}"><!-- ENDIF -->{status.STATUS_TOTAL}<!-- IF status.STATUS_TOTAL --></a><!-- ENDIF --></strong></td>
 						<td>{status.STATUS_CLOSED}</td>
 					</tr>
 				<!-- BEGINELSE -->
@@ -99,7 +99,7 @@
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 
-	<!-- IF .assigne -->
+	<!-- IF .assignee -->
 	<h3>{L_TRACKER_ASSIGNEES}</h3>
 	<div class="forabg">
 		<div class="inner"><span class="corners-top"><span></span></span>
@@ -111,12 +111,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<!-- BEGIN assigne -->
-				<!-- IF assigne.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td>{assigne.USERNAME}</td>
-						<td><strong>{assigne.TOTAL}</strong></td>
+				<!-- BEGIN assignee -->
+				<!-- IF assignee.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
+						<td>{assignee.USERNAME}</td>
+						<td><strong><a href="{assignee.U_TOTAL}">{assignee.TOTAL}</a></strong></td>
 					</tr>
-				<!-- END assigne -->
+				<!-- END assignee -->
 			</tbody>
 		</table>
 		<span class="corners-bottom"><span></span></span></div>
@@ -138,7 +138,7 @@
 				<!-- BEGIN top -->
 				<!-- IF top.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 						<td>{top.USERNAME}</td>
-						<td><strong>{top.TOTAL}</strong></td>
+						<td><strong><a href="{top.U_TOTAL}">{top.TOTAL}</a></strong></td>
 					</tr>
 				<!-- END top -->
 			</tbody>
@@ -162,7 +162,7 @@
 				<!-- BEGIN component -->
 				<!-- IF component.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 						<td>{component.COMPONENT_NAME}</td>
-						<td>{component.TOTAL}</td>
+						<td><!-- IF component.TOTAL --><a href="{component.U_TOTAL}"><!-- ENDIF -->{component.TOTAL}<!-- IF component.TOTAL --></a><!-- ENDIF --></td>
 					</tr>
 				<!-- END component -->
 			</tbody>
@@ -186,7 +186,7 @@
 				<!-- BEGIN version -->
 				<!-- IF version.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 						<td><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
-						<td>{version.TOTAL}</td>
+						<td><!-- IF version.TOTAL --><a href="{version.U_TOTAL}"><!-- ENDIF -->{version.TOTAL}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
 					</tr>
 				<!-- END version -->
 			</tbody>

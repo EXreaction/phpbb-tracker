@@ -239,16 +239,23 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	}
 	else
 	{
-		$currently_showing = sprintf($user->lang['TRACKER_CURRENTLY_SHOWING'], $tracker->api->set_status($status_type));
+		$currently_showing = $tracker->api->set_status($status_type);
 	}
 
 	if ($assigned_to_user_id)
 	{
-		$sort_type['at'] = $assigned_to_user_id;
-		$filter_username = array();
-		$filter_user_id = $assigned_to_user_id;
-		user_get_id_name($filter_user_id, $filter_username);
-		$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
+		if ($assigned_to_user_id == TRACKER_ASSIGNED_TO_GROUP)
+		{
+			$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $tracker->api->set_lang_name($tracker->api->projects[$project_id]['group_name']));
+		}
+		else
+		{
+			$sort_type['at'] = $assigned_to_user_id;
+			$filter_username = array();
+			$filter_user_id = $assigned_to_user_id;
+			user_get_id_name($filter_user_id, $filter_username);
+			$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
+		}
 	}
 
 	if ($version_id && $version_name = $tracker->api->get_name('version', $project_id, $version_id))
@@ -314,7 +321,7 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		'PROJECT_ID'					=> $project_id,
 		'TRACKER_USER_ID'				=> $user_id,
 		'TRACKER_ASSIGNED_USER_ID'		=> $assigned_to_user_id,
-		'TRACKER_CURRENTLY_SHOWING'		=> $currently_showing,
+		'TRACKER_CURRENTLY_SHOWING'		=> sprintf($user->lang['TRACKER_CURRENTLY_SHOWING'], $currently_showing),
 		'S_CAN_POST_TRACKER'			=> $auth->acl_get('u_tracker_post'),
 		'TICKET_IMG'					=> $user->img('button_issue_new', $user->lang['TRACKER_POST_TICKET']),
 		'U_POST_NEW_TICKET'				=> $tracker->api->build_url('add', array($project_id, $ticket_id)),
@@ -338,7 +345,8 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 	));
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
+	$page_title = $user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'] . ' - ' . $currently_showing;
+	page_header($page_title, false);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_body.html')
@@ -965,7 +973,20 @@ else if ($project_id && $ticket_id && ((!$mode || $mode == 'history' || $mode ==
 	}
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
+	$page_title = $user->lang['TRACKER'] . ' - ' . $tracker->api->projects[$project_id]['project_name'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $user->lang['TRACKER_NAV_TICKET'] . $ticket_id .  ' - ' . $row['ticket_title'];
+	if ($mode == 'reply')
+	{
+		$page_title = $page_title . ' - ' . $user->lang['POST_REPLY'];
+	}
+	else if ($mode == 'edit')
+	{
+		$page_title = $page_title . ' - ' . $user->lang['EDIT_POST'];
+	}
+	else if ($mode == 'history')
+	{
+		$page_title = $page_title . ' - ' . $user->lang['TRACKER_TICKET_HISTORY'];
+	}
+	page_header($page_title, false);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_view_body.html')
@@ -1286,7 +1307,17 @@ else if ($project_id && ($mode == 'add' || $mode == 'edit'))
 	}
 
 	// Output page
-	page_header($user->lang['TRACKER'] . ' - ' . $tracker->api->get_type_option('title', $project_id) . ' - ' . $tracker->api->projects[$project_id]['project_name'], false);
+	$page_title = $user->lang['TRACKER'] . ' - ' . $tracker->api->projects[$project_id]['project_name'] . ' - ' . $tracker->api->get_type_option('title', $project_id);
+	if ($mode == 'add')
+	{
+		$page_title = $page_title . ' - ' . $user->lang['TRACKER_POST_TICKET'];
+	}
+	else if ($mode == 'edit')
+	{
+		$page_title = $page_title . ' - ' . $user->lang['TRACKER_NAV_TICKET'] . $ticket_id .  (($ticket_data['ticket_title'] != '') ? ' - ' . $ticket_data['ticket_title'] : '') . ' - ' . $user->lang['TRACKER_EDIT_TICKET'];
+	}
+
+	page_header($page_title, false);
 
 	$template->set_filenames(array(
 		'body' => 'tracker/tracker_tickets_add_body.html')

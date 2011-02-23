@@ -82,7 +82,7 @@
 	<!-- END status -->
 	</table>
 
-	<!-- IF .assigne -->
+	<!-- IF .assignee -->
 	<br />
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
@@ -92,12 +92,12 @@
 		<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
 		<th style="text-align: left; width: 50%;">{L_TRACKER_TOTAL_TICKETS}</th>
 	</tr>
-	<!-- BEGIN assigne -->
-		<!-- IF assigne.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td>{assigne.USERNAME}</td>
-			<td><b>{assigne.TOTAL}</b></td>
+	<!-- BEGIN assignee -->
+		<!-- IF assignee.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+			<td>{assignee.USERNAME}</td>
+			<td><b>{assignee.TOTAL}</b></td>
 		</tr>
-	<!-- END assigne -->
+	<!-- END assignee -->
 	</table>
 	<!-- ENDIF -->
 

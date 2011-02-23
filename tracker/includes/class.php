@@ -125,7 +125,7 @@ class tracker
 			));
 		}
 
-		
+
 		// Assign index specific vars
 		$template->assign_vars(array(
 			'S_DISPLAY_PROJECT'			=> $display_project,
@@ -133,10 +133,10 @@ class tracker
 			'TRACKER_PROJECTS'			=> sprintf($user->lang['TRACKER_PROJECTS'], '<a href="' . $this->api->build_url('statistics') . '">','</a>' ),
 		));
 
-		
+
 		// Output page
 		page_header($user->lang['TRACKER'], false);
-		
+
 		$template->set_filenames(array(
 			'body' => 'tracker/tracker_index_body.html')
 		);
@@ -446,8 +446,8 @@ class tracker
 		$template->assign_var('S_IN_STATS', true);
 
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'   		=> $user->lang['TRACKER_STATS'],
-			'U_VIEW_FORUM'  	=> $this->api->build_url('statistics'),
+			'FORUM_NAME'		=> $user->lang['TRACKER_STATS'],
+			'U_VIEW_FORUM'		=> $this->api->build_url('statistics'),
 		));
 
 		if ($project_id)
@@ -473,6 +473,10 @@ class tracker
 			$template->assign_vars(array(
 				'S_IN_PROJECT_STATS'	=> true,
 				'L_TITLE'				=> $this->api->projects[$project_id]['project_name'] . ' - ' . $this->api->get_type_option('title', $project_id),
+
+				'U_TOTAL_TICKETS'		=> $this->api->build_url('project_st', array($project_id, TRACKER_ALL)),
+				'U_TOTAL_OPENED'		=> $this->api->build_url('project_st', array($project_id, TRACKER_ALL_OPENED)),
+				'U_TOTAL_CLOSED'		=> $this->api->build_url('project_st', array($project_id, TRACKER_ALL_CLOSED)),
 
 				'TOTAL_TICKETS'			=> $total_opened + $total_closed,
 				'TOTAL_OPENED'			=> $total_opened,
@@ -501,6 +505,8 @@ class tracker
 				}
 
 				$template->assign_block_vars('status', array(
+					'U_STATUS_TOTAL'	=> $this->api->build_url('project_st', array($project_id, $item['id'])),
+
 					'STATUS_TOTAL'		=> (isset($status_count[$item['id']])) ? $status_count[$item['id']] : 0,
 					'STATUS_NAME'		=> $this->api->set_status($item['id']),
 					'STATUS_CLOSED'		=> ($item['open']) ? $user->lang['NO'] : $user->lang['YES'],
@@ -538,6 +544,16 @@ class tracker
 			$row = $db->sql_fetchrowset($result);
 			$db->sql_freeresult($result);
 
+			$group_assigned = 0;
+			foreach ($row as $item)
+			{
+				if ($item['ticket_assigned_to'] == TRACKER_ASSIGNED_TO_GROUP)
+				{
+					$group_assigned = ($item['ticket_assigned_to'] == TRACKER_ASSIGNED_TO_GROUP) ? $item['total_tickets'] : 0;
+					break;
+				}
+			}
+
 			foreach ($row as $item)
 			{
 				if ($item['ticket_assigned_to'] == 0)
@@ -545,7 +561,14 @@ class tracker
 					continue;
 				}
 
-				$template->assign_block_vars('assigne', array(
+				if ($item['ticket_assigned_to'] != TRACKER_ASSIGNED_TO_GROUP)
+				{
+					$item['total_tickets'] = $item['total_tickets'] + $group_assigned;
+				}
+
+				$template->assign_block_vars('assignee', array(
+					'U_TOTAL'		=> $this->api->build_url('project_st_at', array($project_id, 0, $item['ticket_assigned_to'], 0, 0)),
+
 					'USERNAME'		=> $this->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['username'], $item['user_colour']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
@@ -593,6 +616,8 @@ class tracker
 				}
 
 				$template->assign_block_vars('top', array(
+					'U_TOTAL'		=> $this->api->build_url('project_st_u', array($project_id, 0, $item['ticket_user_id'], 0, 0)),
+
 					'USERNAME'		=> ($item['ticket_user_id'] != ANONYMOUS) ? get_username_string('full', $item['ticket_user_id'], $item['username'], $item['user_colour']) :  get_username_string('full', $item['ticket_user_id'], $item['username'], $item['user_colour'], $item['ticket_username']),
 					'TOTAL'			=> $item['total_tickets'],
 				));
@@ -624,6 +649,8 @@ class tracker
 			foreach ($row as $item)
 			{
 				$template->assign_block_vars('component', array(
+					'U_TOTAL'				=> $this->api->build_url('search_st_at_u', array($project_id, '', TRACKER_ALL, 0, 0, 0, $item['component_id'])),
+
 					'COMPONENT_NAME'		=> $this->api->set_lang_name($item['component_name']),
 					'TOTAL'					=> (isset($component_count[$item['component_id']])) ? $component_count[$item['component_id']] : 0,
 				));
@@ -655,6 +682,7 @@ class tracker
 			foreach ($row as $item)
 			{
 				$template->assign_block_vars('version', array(
+					'U_TOTAL'				=> $this->api->build_url('search_st_at_u', array($project_id, '', TRACKER_ALL, 0, 0, $item['version_id'], 0)),
 					'U_VIEW_CHANGELOG'		=> $this->api->build_url('changelog', array($project_id, $item['version_id'])),
 
 					'VERSION_NAME'			=> $this->api->set_lang_name($item['version_name']),
@@ -665,7 +693,7 @@ class tracker
 			$this->api->generate_nav($this->api->projects[$project_id], false, true);
 
 			// Output page
-			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->api->get_type_option('title', $project_id) . ' - ' . $this->api->projects[$project_id]['project_name'], false);
+			page_header($user->lang['TRACKER_STATS'] . ' - ' . $this->api->projects[$project_id]['project_name'] . ' - ' . $this->api->get_type_option('title', $project_id), false);
 
 		}
 		else
@@ -822,7 +850,7 @@ class tracker
 		{
 			$changes[] = '[size=120][b]' . $page_title . '[/b][/size]';
 			$changes[] = '[list]';
-			
+
 			$changes_html[] = '<span style="font-size: 120%; line-height: 116%; font-weight: bold;">' . $page_title . '</span>';
 			$changes_html[] = '<ul>';
 
