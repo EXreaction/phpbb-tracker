@@ -131,7 +131,7 @@ $status_type['bugs'] = array(
 	),
 	17 => array(
 		'id' 		=> 17,
-		'name' 		=> 'TRACKER_UNREPRODUCABLE',
+		'name' 		=> 'TRACKER_UNREPRODUCIBLE',
 		'filter' 	=> false,
 		'open' 		=> false,
 	),
