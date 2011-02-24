@@ -16,7 +16,7 @@
 <!-- IF not S_TICKET_REPLY -->
 	<table class="tablebg" width="100%" cellspacing="1">
 		<tr>
-			<th><b<!-- IF TICKET_CLOSED --> style="text-decoration: line-through;"<!-- ENDIF -->>{TICKET_TITLE}<span> {TICKET_STATUS}</span></b></th>
+			<th><b<!-- IF TICKET_CLOSED --> style="text-decoration: line-through;"<!-- ENDIF -->>{TICKET_TITLE}<span> {TICKET_STATUS}</span></strong></th>
 		</tr>
 		<tr>
 			<td class="row1">
@@ -34,7 +34,7 @@
 
 					<table class="tablebg" width="100%" cellspacing="1">
 					<tr>
-						<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
+						<td class="row3"><strong class="genmed">{L_ATTACHMENTS}: </strong></td>
 					</tr>
 					<!-- BEGIN attachment -->
 						<tr>
@@ -70,7 +70,7 @@
 		<br />
 		<table class="tablebg" width="100%" cellspacing="1">
 		<tr>
-			<th><b>{L_TRACKER_TICKET_COMMENTS}</b></th>
+			<th><strong>{L_TRACKER_TICKET_COMMENTS}</strong></th>
 		</tr>
 		<tr>
 			<td class="row1">
@@ -85,7 +85,7 @@
 							<!-- IF comments.S_CAN_DELETE --><a href="{comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
 							</div>
 						<!-- ENDIF -->
-					<!-- ENDIF --><a href="#p{comments.POST_ID}">{POST_IMG}</a> <b>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_TRACKER_POSTED_ON_DATE} {comments.COMMENT_TIME}</b></div>
+					<!-- ENDIF --><a href="#p{comments.POST_ID}">{POST_IMG}</a> <strong>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_TRACKER_POSTED_ON_DATE} {comments.COMMENT_TIME}</strong></div>
 				<hr />
 				<div class="postbody">{comments.COMMENT_DESC}</div>
 				<!-- IF comments.S_HAS_ATTACHMENTS -->
@@ -93,7 +93,7 @@
 
 						<table class="tablebg" width="100%" cellspacing="1">
 						<tr>
-							<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
+							<td class="row3"><strong class="genmed">{L_ATTACHMENTS}: </strong></td>
 						</tr>
 						<!-- BEGIN attachment -->
 							<tr>
@@ -136,7 +136,7 @@
 	<br />
 	<table class="tablebg" width="100%" cellspacing="1">
 	<tr>
-		<th><b>{L_TRACKER_TICKET_HISTORY}</b></th>
+		<th><strong>{L_TRACKER_TICKET_HISTORY}</strong></th>
 	</tr>
 	<tr>
 		<td class="row1">
@@ -182,7 +182,7 @@
 
 				<table class="tablebg" width="100%" cellspacing="1">
 				<tr>
-					<td class="row3"><b class="genmed">{L_ATTACHMENTS}: </b></td>
+					<td class="row3"><strong class="genmed">{L_ATTACHMENTS}: </strong></td>
 				</tr>
 				<!-- BEGIN attachment -->
 					<tr>
@@ -200,7 +200,7 @@
 	<form id="postform" action="{U_ACTION}" method="post"{S_FORM_ENCTYPE}>
 	<table class="tablebg" width="100%" cellspacing="1">
 	<tr>
-		<th colspan="2"><b>{L_TRACKER_REPLY}</b></th>
+		<th colspan="2"><strong>{L_TRACKER_REPLY}</strong></th>
 	</tr>
 	<tr>
 		<td class="row2" colspan="2" align="center"><span class="genmed">{L_TITLE_EXPLAIN}</span></td>
@@ -212,22 +212,22 @@
 	<!-- ENDIF -->
 	<!-- IF S_DISPLAY_USERNAME -->
 	<tr>
-		<td class="row1"><b class="genmed">{L_USERNAME}:</b></td>
+		<td class="row1"><strong class="genmed">{L_USERNAME}:</strong></td>
 		<td class="row2"><input class="post" type="text" tabindex="1" name="username" size="25" value="{USERNAME}" /></td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_EDIT_REASON -->
 	<tr>
-		<td class="row1" width="22%"><b class="genmed">{L_TRACKER_EDIT_REASON}:<br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></b></td>
+		<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_EDIT_REASON}:<br /><span>{L_TRACKER_EDIT_REASON_EXPLAIN}</span></strong></td>
 		<td class="row2" width="78%"><input type="text" id="edit_reason" name="edit_reason" value="{EDIT_REASON_TEXT}" size="45" maxlength="60" /></td>
 	</tr>
 	<!-- ENDIF -->
 	<tr>
-		<td class="row1" width="22%"><b class="genmed">{L_MESSAGE}:</b><br /><br />
+		<td class="row1" width="22%"><strong class="genmed">{L_MESSAGE}:</strong><br /><br />
 		<!-- IF S_SMILIES_ALLOWED -->
 			<table width="100%" cellspacing="5" cellpadding="0" border="0" align="center">
 			<tr>
-				<td class="gensmall" align="center"><b>{L_SMILIES}</b></td>
+				<td class="gensmall" align="center"><strong>{L_SMILIES}</strong></td>
 			</tr>
 			<tr>
 				<td align="center">
@@ -275,51 +275,51 @@
 	</tr>
 	<!-- IF S_MANAGE_TICKET or S_INLINE_ATTACHMENT_OPTIONS -->
 		<tr>
-			<th colspan="2"><b>{L_OPTIONS}</b></th>
+			<th colspan="2"><strong>{L_OPTIONS}</strong></th>
 		</tr>
 		<!-- IF S_INLINE_ATTACHMENT_OPTIONS -->
 		<tr>
-			<td class="row1"><b class="genmed">{L_ATTACHMENTS}:</b></td>
+			<td class="row1"><strong class="genmed">{L_ATTACHMENTS}:</strong></td>
 			<td class="row2"><select name="attachments">{S_INLINE_ATTACHMENT_OPTIONS}</select>&nbsp;<input type="button" class="btnbbcode" accesskey="a" value="{L_PLACE_INLINE}" name="attachinline" onclick="attach_form = document.forms[form_name].elements['attachments']; attach_inline(attach_form.value, attach_form.options[attach_form.selectedIndex].text);" onmouseover="helpline('a')" onmouseout="helpline('tip')" />
 			</td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_ASSIGN_USER}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_ASSIGN_USER}:</strong></td>
 			<td class="row2" width="78%"><select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_CHANGE_STATUS}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_CHANGE_STATUS}:</strong></td>
 			<td class="row2" width="78%"><select id="cs" name="cs">{S_STATUS_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_CHANGE_PRIORITY}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_CHANGE_PRIORITY}:</strong></td>
 			<td class="row2" width="78%"><select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_CHANGE_SEVERITY}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_CHANGE_SEVERITY}:</strong></td>
 			<td class="row2" width="78%"><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_TICKET_SECURITY -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_SECURITY_TICKET}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_SECURITY_TICKET}:</strong></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_security" id="ticket_security" value="1"<!-- IF TICKET_SECURITY --> checked="checked"<!-- ENDIF --> /></td>
 		</tr>
 		<!-- ENDIF -->
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_HIDE_TICKET}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_HIDE_TICKET}:</strong></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_hidden" id="ticket_hidden" value="1"<!-- IF TICKET_HIDDEN --> checked="checked"<!-- ENDIF --> /></td>
 		</tr>
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_TRACKER_LOCK_TICKET}:</b></td>
+			<td class="row1" width="22%"><strong class="genmed">{L_TRACKER_LOCK_TICKET}:</strong></td>
 			<td class="row2" width="78%"><input type="checkbox" name="ticket_status" id="ticket_status" value="1"<!-- IF S_IS_LOCKED --> checked="checked"<!-- ENDIF --> /></td>
 		</tr>
 	<!-- ENDIF -->
@@ -340,14 +340,14 @@
 	<div id="ticket-review">
 		<table class="tablebg" width="100%" cellspacing="1">
 		<tr>
-			<th><b>{L_TRACKER_PREVIOUS_POSTS}</b></th>
+			<th><strong>{L_TRACKER_PREVIOUS_POSTS}</strong></th>
 		</tr>
 		<tr>
 			<td class="row1">
 			<!-- BEGIN review -->
 				<hr />
 				<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;<!-- IF review.S_LAST_ROW --> background-color:lightblue;<!-- ENDIF -->">
-					<div class="postdetails">{POST_IMG} <b>{L_TRACKER_POST_BY_AUTHOR} {review.POST_USER} {L_TRACKER_POSTED_ON_DATE} {review.POST_TIME}</b></div>
+					<div class="postdetails">{POST_IMG} <strong>{L_TRACKER_POST_BY_AUTHOR} {review.POST_USER} {L_TRACKER_POSTED_ON_DATE} {review.POST_TIME}</strong></div>
 					<hr />
 					<div class="postbody">{review.POST_TEXT}</div>
 				</div>
@@ -362,72 +362,72 @@
 <div id="col2">
 	<table class="tablebg" width="100%" cellspacing="1">
 	<tr>
-		<th colspan="2"><b class="genmed">{L_TRACKER_TICKET_DETAILS}</b></th>
+		<th colspan="2"><strong class="genmed">{L_TRACKER_TICKET_DETAILS}</strong></th>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_TICKET_ID}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_TICKET_ID}:</strong></td>
 		<td class="row2" width="60%">{TICKET_ID}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PROJECT_NAME}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_PROJECT_NAME}:</strong></td>
 		<td class="row2" width="60%">{PROJECT_NAME}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_STATUS}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_STATUS}:</strong></td>
 		<td class="row2" width="60%">{TICKET_STATUS_DETAILS}</td>
 	</tr>
 	<!-- IF S_TICKET_COMPONENT -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_COMPONENT}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_COMPONENT}:</strong></td>
 		<td class="row2" width="60%">{TICKET_COMPONENT}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_VERSION -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_DETAILS_VERSION}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_DETAILS_VERSION}:</strong></td>
 		<td class="row2" width="60%">{TICKET_VERSION}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_PRIORITY -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_PRIORITY}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_PRIORITY}:</strong></td>
 		<td class="row2" width="60%">{TICKET_PRIORITY}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_SEVERITY -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_SEVERITY}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_SEVERITY}:</strong></td>
 		<td class="row2" width="60%">{TICKET_SEVERITY}</td>
 	</tr>
 	<!-- ENDIF -->
 	<!-- IF S_TICKET_ENVIRONMENT -->
 		<!-- IF S_SHOW_PHP -->
 		<tr>
-			<td class="row1" width="40%"><b class="genmed">{L_TRACKER_TICKET_PHP_DETAIL}:</b></td>
+			<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_TICKET_PHP_DETAIL}:</strong></td>
 			<td class="row2" width="60%">{TICKET_PHP}</td>
 		</tr>
 		<!-- ENDIF -->
 		<!-- IF S_SHOW_DBMS -->
 		<tr>
-			<td class="row1" width="40%"><b class="genmed">{L_TRACKER_TICKET_DBMS_DETAIL}:</b></td>
+			<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_TICKET_DBMS_DETAIL}:</strong></td>
 			<td class="row2" width="60%">{TICKET_DBMS}</td>
 		</tr>
 		<!-- ENDIF -->
 	<!-- ENDIF -->
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_ASSIGNED_TO}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_ASSIGNED_TO}:</strong></td>
 		<td class="row2" width="60%">{TICKET_ASSIGNED_TO}</td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_BY}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_REPORTED_BY}:</strong></td>
 		<td class="row2" width="60%">{TICKET_REPORTED_BY} <!-- IF S_SEND_PM -->(<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)<!-- ENDIF --></td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTERS_TICKETS}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_REPORTERS_TICKETS}:</strong></td>
 		<td class="row2" width="60%"><a href="{U_REPORTERS_TICKETS}">{L_TRACKER_LIST_ALL_TICKETS}</a></td>
 	</tr>
 	<tr>
-		<td class="row1" width="40%"><b class="genmed">{L_TRACKER_REPORTED_ON}:</b></td>
+		<td class="row1" width="40%"><strong class="genmed">{L_TRACKER_REPORTED_ON}:</strong></td>
 		<td class="row2" width="60%">{TICKET_TIME}</td>
 	</tr>
 	<!-- IF TICKET_LAST_VISIT -->
@@ -440,7 +440,7 @@
 	<!-- IF S_MANAGE_TICKET --><form name="assign_user_form" action="{U_UPDATE_ACTION}" method="post"><!-- ENDIF -->
 	<table class="tablebg" width="100%" cellspacing="1">
 	<tr>
-		<th colspan="2"><b class="genmed">{L_OPTIONS}</b></th>
+		<th colspan="2"><strong class="genmed">{L_OPTIONS}</strong></th>
 	</tr>
 	<tr>
 		<td class="row1" colspan="2" align="center"><a href="{U_VIEW_TICKET_HISTORY}">{L_TICKET_HISTORY}</a></td>
@@ -451,10 +451,10 @@
 	</tr>
 	<!-- ENDIF -->
 		<!-- IF not S_TICKET_REPLY -->
-			<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><tr><td class="row1" width="40%"><b class="genmed"><label for="au">{L_TRACKER_ASSIGN_USER}:</label></b></td><td class="row2" width="60%"><select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></td></tr><!-- ENDIF -->
-			<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS--><tr><td class="row1" width="40%"><b class="genmed"><label for="cs">{L_TRACKER_CHANGE_STATUS}:</label></b></td><td class="row2" width="60%"><select id="cs" name="cs">{S_STATUS_OPTIONS}</select></td></tr><!-- ENDIF -->
-			<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS --><tr><td class="row1" width="40%"><b class="genmed"><label for="pr">{L_TRACKER_CHANGE_PRIORITY}:</label></b></td><td class="row2" width="60%"><select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></td></tr><!-- ENDIF -->
-			<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS --><tr><td class="row1" width="40%"><b class="genmed"><label for="s">{L_TRACKER_CHANGE_SEVERITY}:</label></b></td><td class="row2" width="60%"><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></td></tr><!-- ENDIF -->
+			<!-- IF S_MANAGE_TICKET and S_ASSIGN_USER_OPTIONS --><tr><td class="row1" width="40%"><strong class="genmed"><label for="au">{L_TRACKER_ASSIGN_USER}:</label></strong></td><td class="row2" width="60%"><select id="au" name="au">{S_ASSIGN_USER_OPTIONS}</select></td></tr><!-- ENDIF -->
+			<!-- IF S_MANAGE_TICKET and S_STATUS_OPTIONS--><tr><td class="row1" width="40%"><strong class="genmed"><label for="cs">{L_TRACKER_CHANGE_STATUS}:</label></strong></td><td class="row2" width="60%"><select id="cs" name="cs">{S_STATUS_OPTIONS}</select></td></tr><!-- ENDIF -->
+			<!-- IF S_MANAGE_TICKET and S_PRIORITY_OPTIONS --><tr><td class="row1" width="40%"><strong class="genmed"><label for="pr">{L_TRACKER_CHANGE_PRIORITY}:</label></strong></td><td class="row2" width="60%"><select id="pr" name="pr">{S_PRIORITY_OPTIONS}</select></td></tr><!-- ENDIF -->
+			<!-- IF S_MANAGE_TICKET and S_SEVERITY_OPTIONS --><tr><td class="row1" width="40%"><strong class="genmed"><label for="s">{L_TRACKER_CHANGE_SEVERITY}:</label></strong></td><td class="row2" width="60%"><select id="s" name="s">{S_SEVERITY_OPTIONS}</select></td></tr><!-- ENDIF -->
 			<!-- IF S_MANAGE_TICKET --><tr><td class="row2" colspan="2"><input type="submit" name="update" value="{L_SUBMIT}" class="btnlite" /></td></tr><!-- ENDIF -->
 		<!-- ENDIF -->
 	</table>

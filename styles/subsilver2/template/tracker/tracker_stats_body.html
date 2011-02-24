@@ -3,7 +3,7 @@
 	<!-- IF S_HAS_CHANGELOG -->
 	<table class="tablebg" cellspacing="1" width="100%">
 		<tr>
-			<td class="cat"><b class="genmed">{PAGE_TITLE}</b></td>
+			<td class="cat"><strong class="genmed">{PAGE_TITLE}</strong></td>
 		</tr>
 		<tr>
 			<th>{L_TRACKER_CHANGELOG_EXAMPLE}</th>
@@ -27,7 +27,7 @@
 	<!-- ELSE -->
 	<table class="tablebg" cellspacing="1" width="100%">
 		<tr>
-			<td class="cat"><b class="genmed">{PAGE_TITLE}</b></td>
+			<td class="cat"><strong class="genmed">{PAGE_TITLE}</strong></td>
 		</tr>
 		<tr class="row1">
 			<td><div class="postbody" style="text-align: center;">{L_TRACKER_NO_CHANGELOG}</div></td>
@@ -50,9 +50,9 @@
 		<th style="text-align: left; width: 33%;">{L_TRACKER_TOTAL_CLOSED_TICKETS}</th>
 	</tr>
 	<tr class="row1">
-		<td><b>{TOTAL_TICKETS}</b></td>
-		<td style="color: red;"><b>{TOTAL_OPENED}</b></td>
-		<td><b>{TOTAL_CLOSED}</b></td>
+		<td><!-- IF TOTAL_TICKETS --><a href="{U_TOTAL_TICKETS}"><!-- ENDIF -->{TOTAL_TICKETS}<!-- IF TOTAL_TICKETS --></a><!-- ENDIF --></td>
+		<td style="color: red;"><!-- IF TOTAL_OPENED --><a href="{U_TOTAL_OPENED}"><!-- ENDIF -->{TOTAL_OPENED}<!-- IF TOTAL_OPENED --></a><!-- ENDIF --></td>
+		<td><!-- IF TOTAL_CLOSED --><a href="{U_TOTAL_CLOSED}"><!-- ENDIF -->{TOTAL_CLOSED}<!-- IF TOTAL_CLOSED --></a><!-- ENDIF --></td>
 	</tr>
 	</table>
 	<br />
@@ -60,7 +60,7 @@
 
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<td colspan="3" class="cat"><b class="genmed">{L_TRACKER_TICKET_STATUS_OVERVIEW}</b></td>
+		<td colspan="3" class="cat"><strong class="genmed">{L_TRACKER_TICKET_STATUS_OVERVIEW}</strong></td>
 	</tr>
 	<tr>
 		<th style="text-align: left; width: 34%;">{L_TRACKER_STATUS_NAME}</th>
@@ -69,8 +69,8 @@
 	</tr>
 	<!-- BEGIN status -->
 	<!-- IF status.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-		<td>{status.STATUS_NAME}</td>
-		<td><b>{status.STATUS_TOTAL}</b></td>
+		<td><strong>{status.STATUS_NAME}</strong></td>
+		<td><!-- IF status.STATUS_TOTAL --><a href="{status.U_STATUS_TOTAL}"><!-- ENDIF -->{status.STATUS_TOTAL}<!-- IF status.STATUS_TOTAL --></a><!-- ENDIF --></td>
 		<td>{status.STATUS_CLOSED}</td>
 	</tr>
 	<!-- BEGINELSE -->
@@ -86,7 +86,7 @@
 	<br />
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_ASSIGNEES}</b></td>
+		<td colspan="2" class="cat"><strong class="genmed">{L_TRACKER_ASSIGNEES}</strong></td>
 	</tr>
 	<tr>
 		<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
@@ -94,8 +94,8 @@
 	</tr>
 	<!-- BEGIN assignee -->
 		<!-- IF assignee.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td>{assignee.USERNAME}</td>
-			<td><b>{assignee.TOTAL}</b></td>
+			<td><strong>{assignee.USERNAME}</strong></td>
+			<td><a href="{assignee.U_TOTAL}">{assignee.TOTAL}</a></td>
 		</tr>
 	<!-- END assignee -->
 	</table>
@@ -105,7 +105,7 @@
 	<br />
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<td colspan="2" class="cat"><b class="genmed">{TRACKER_TOP_REPORTERS}</b></td>
+		<td colspan="2" class="cat"><strong class="genmed">{TRACKER_TOP_REPORTERS}</strong></td>
 	</tr>
 	<tr>
 		<th style="text-align: left; width: 50%;">{L_TRACKER_USERNAME}</th>
@@ -113,8 +113,8 @@
 	</tr>
 	<!-- BEGIN top -->
 	<!-- IF top.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td>{top.USERNAME}</td>
-			<td><b>{top.TOTAL}</b></td>
+			<td><strong>{top.USERNAME}</strong></td>
+			<td><a href="{top.U_TOTAL}">{top.TOTAL}</a></td>
 		</tr>
 	<!-- END top -->
 	</table>
@@ -124,7 +124,7 @@
 	<br />
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_COMPONENT_STATS}</b></td>
+		<td colspan="2" class="cat"><strong class="genmed">{L_TRACKER_COMPONENT_STATS}</strong></td>
 	</tr>
 	<tr>
 		<th style="text-align: left; width: 50%;">{L_TRACKER_COMPONENT_NAME}</th>
@@ -132,8 +132,8 @@
 	</tr>
 	<!-- BEGIN component -->
 	<!-- IF component.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td>{component.COMPONENT_NAME}</td>
-			<td><b>{component.TOTAL}</b></td>
+			<td><strong>{component.COMPONENT_NAME}</strong></td>
+			<td><!-- IF component.TOTAL --><a href="{component.U_TOTAL}"><!-- ENDIF -->{component.TOTAL}<!-- IF component.TOTAL --></a><!-- ENDIF --></td>
 		</tr>
 	<!-- END component -->
 	</table>
@@ -143,7 +143,7 @@
 	<br />
 	<table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<td colspan="2" class="cat"><b class="genmed">{L_TRACKER_VERSION_STATS}</b></td>
+		<td colspan="2" class="cat"><strong class="genmed">{L_TRACKER_VERSION_STATS}</strong></td>
 	</tr>
 	<tr>
 		<th style="text-align: left; width: 50%;">{L_TRACKER_VERSION_NAME}</th>
@@ -151,8 +151,8 @@
 	</tr>
 	<!-- BEGIN version -->
 	<!-- IF version.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
-			<td><b>{version.TOTAL}</b></td>
+			<td><strong><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></strong></td>
+			<td><!-- IF version.TOTAL --><a href="{version.U_TOTAL}"><!-- ENDIF -->{version.TOTAL}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
 		</tr>
 	<!-- END version -->
 	</table>
@@ -171,7 +171,7 @@
 			<!-- IF cat.project.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 					<td style="text-align: left; width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
 					<td style="text-align: left; width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-					<td style="text-align: center; width: 10%;"><b>{cat.project.TOTAL_TICKETS}</b></td>
+					<td style="text-align: center; width: 10%;">{cat.project.TOTAL_TICKETS}</td>
 				</tr>
 			<!-- END project -->
 		</table>

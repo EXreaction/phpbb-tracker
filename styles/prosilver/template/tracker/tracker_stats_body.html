@@ -60,9 +60,9 @@
 			</thead>
 			<tbody>
 				<tr class="bg1">
-					<td><strong><!-- IF TOTAL_TICKETS --><a href="{U_TOTAL_TICKETS}"><!-- ENDIF -->{TOTAL_TICKETS}<!-- IF TOTAL_TICKETS --></a><!-- ENDIF --></strong></td>
-					<td style="color: red;"><strong><!-- IF TOTAL_OPENED --><a href="{U_TOTAL_OPENED}"><!-- ENDIF -->{TOTAL_OPENED}<!-- IF TOTAL_OPENED --></a><!-- ENDIF --></strong></td>
-					<td><strong><!-- IF TOTAL_CLOSED --><a href="{U_TOTAL_CLOSED}"><!-- ENDIF -->{TOTAL_CLOSED}<!-- IF TOTAL_CLOSED --></a><!-- ENDIF --></strong></td>
+					<td><!-- IF TOTAL_TICKETS --><a href="{U_TOTAL_TICKETS}"><!-- ENDIF -->{TOTAL_TICKETS}<!-- IF TOTAL_TICKETS --></a><!-- ENDIF --></td>
+					<td style="color: red;"><!-- IF TOTAL_OPENED --><a href="{U_TOTAL_OPENED}"><!-- ENDIF -->{TOTAL_OPENED}<!-- IF TOTAL_OPENED --></a><!-- ENDIF --></td>
+					<td><!-- IF TOTAL_CLOSED --><a href="{U_TOTAL_CLOSED}"><!-- ENDIF -->{TOTAL_CLOSED}<!-- IF TOTAL_CLOSED --></a><!-- ENDIF --></td>
 				</tr>
 			</tbody>
 		</table>
@@ -83,8 +83,8 @@
 			<tbody>
 				<!-- BEGIN status -->
 				<!-- IF status.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td>{status.STATUS_NAME}</td>
-						<td><strong><!-- IF status.STATUS_TOTAL --><a href="{status.U_STATUS_TOTAL}"><!-- ENDIF -->{status.STATUS_TOTAL}<!-- IF status.STATUS_TOTAL --></a><!-- ENDIF --></strong></td>
+						<td><strong>{status.STATUS_NAME}</strong></td>
+						<td><!-- IF status.STATUS_TOTAL --><a href="{status.U_STATUS_TOTAL}"><!-- ENDIF -->{status.STATUS_TOTAL}<!-- IF status.STATUS_TOTAL --></a><!-- ENDIF --></td>
 						<td>{status.STATUS_CLOSED}</td>
 					</tr>
 				<!-- BEGINELSE -->
@@ -113,8 +113,8 @@
 			<tbody>
 				<!-- BEGIN assignee -->
 				<!-- IF assignee.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td>{assignee.USERNAME}</td>
-						<td><strong><a href="{assignee.U_TOTAL}">{assignee.TOTAL}</a></strong></td>
+						<td><strong>{assignee.USERNAME}</strong></td>
+						<td><a href="{assignee.U_TOTAL}">{assignee.TOTAL}</a></td>
 					</tr>
 				<!-- END assignee -->
 			</tbody>
@@ -137,8 +137,8 @@
 			<tbody>
 				<!-- BEGIN top -->
 				<!-- IF top.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td>{top.USERNAME}</td>
-						<td><strong><a href="{top.U_TOTAL}">{top.TOTAL}</a></strong></td>
+						<td><strong>{top.USERNAME}</strong></td>
+						<td><a href="{top.U_TOTAL}">{top.TOTAL}</a></td>
 					</tr>
 				<!-- END top -->
 			</tbody>
@@ -161,7 +161,7 @@
 			<tbody>
 				<!-- BEGIN component -->
 				<!-- IF component.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td>{component.COMPONENT_NAME}</td>
+						<td><strong>{component.COMPONENT_NAME}</strong></td>
 						<td><!-- IF component.TOTAL --><a href="{component.U_TOTAL}"><!-- ENDIF -->{component.TOTAL}<!-- IF component.TOTAL --></a><!-- ENDIF --></td>
 					</tr>
 				<!-- END component -->
@@ -185,7 +185,7 @@
 			<tbody>
 				<!-- BEGIN version -->
 				<!-- IF version.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-						<td><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
+						<td><strong><!-- IF version.TOTAL --><a href="#" onclick="popup('{version.U_VIEW_CHANGELOG}', 700, 500, '');return false;" title="{L_TRACKER_VERSION_VIEW_CHANGELOG}"><!-- ENDIF -->{version.VERSION_NAME}<!-- IF version.TOTAL --></a><!-- ENDIF --></strong></td>
 						<td><!-- IF version.TOTAL --><a href="{version.U_TOTAL}"><!-- ENDIF -->{version.TOTAL}<!-- IF version.TOTAL --></a><!-- ENDIF --></td>
 					</tr>
 				<!-- END version -->
@@ -214,7 +214,7 @@
 					<!-- IF cat.project.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 							<td style="width: 30%;"><a href="{cat.project.U_PROJECT}"><strong>{cat.project.PROJECT_TYPE}</strong></a></td>
 							<td style="width: 60%;"><!-- IF cat.project.PROJECT_DESC -->{cat.project.PROJECT_DESC}<!-- ELSE -->&nbsp;<!-- ENDIF --></td>
-							<td style="width: 10%; text-align: center;"><strong>{project.TOTAL_TICKETS}</strong></td>
+							<td style="width: 10%; text-align: center;">{project.TOTAL_TICKETS}</td>
 						</tr>
 					<!-- END project -->
 				</tbody>
