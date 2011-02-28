@@ -217,6 +217,7 @@ class tracker
 				$this->api->parse_attachments_for_view($comment_desc, $row['attachment_data'], $update_count);
 			}
 
+			$comment_poster = ($row['post_user_id'] != ANONYMOUS) ? get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']) : get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour'], $row['post_username']);
 			$template->assign_block_vars('comments', array(
 				'S_HAS_ATTACHMENTS'		=> (!empty($row['attachment_data'])) ? true : false,
 				'S_CAN_DELETE'			=> $this->check_permission('delete', true),
@@ -224,7 +225,7 @@ class tracker
 				'S_CAN_EDIT'			=> $this->api->check_edit($row['post_time'], $row['post_user_id']),
 				'U_EDIT'				=> $this->api->build_url('edit_pid', array($project_id, $ticket_id, $row['post_id'])),
 				'COMMENT_DESC'			=> $comment_desc,
-				'COMMENT_POSTER'		=> ($row['post_user_id'] != ANONYMOUS) ? get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour']) :  get_username_string('full', $row['post_user_id'], $row['username'], $row['user_colour'], $row['post_username']),
+				'COMMENT_POSTER'		=> sprintf($user->lang['TRACKER_POST_BY_AUTHOR'], $comment_poster, $user->format_date($row['post_time'])),
 				'COMMENT_TIME'			=> $user->format_date($row['post_time']),
 				'EDITED_MESSAGE'		=> $this->api->fetch_edited_by($row, 'post'),
 				'EDIT_REASON'			=> $row['edit_reason'],
@@ -427,8 +428,9 @@ class tracker
 
 		foreach ($review_array as $review)
 		{
+			$post_user = ($review['user_id'] != ANONYMOUS) ? get_username_string('full', $review['user_id'], $review['username'], $review['user_colour']) :  get_username_string('full', $review['user_id'], $review['username'], $review['user_colour'], $review['post_username']);
 			$template->assign_block_vars('review', array(
-				'POST_USER'		=> ($review['user_id'] != ANONYMOUS) ? get_username_string('full', $review['user_id'], $review['username'], $review['user_colour']) :  get_username_string('full', $review['user_id'], $review['username'], $review['user_colour'], $review['post_username']),
+				'POST_USER'		=> sprintf($user->lang['TRACKER_POST_BY_AUTHOR'], $post_user, $user->format_date($review['time'])),
 				'POST_TIME'		=> $user->format_date($review['time']),
 				'POST_TEXT'		=> generate_text_for_display($review['text'], $review['uid'], $review['bitfield'], $review['options']),
 			));

@@ -212,14 +212,14 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 		$template->assign_block_vars('tickets', array(
 			'U_VIEW_TICKET'				=> $tracker->api->build_url('ticket', array($project_id, $item['ticket_id'])),
 
-			'LAST_POST_USERNAME'		=> (!empty($item['last_post_user_id'])) ? get_username_string('full', $item['last_post_user_id'], $item['last_post_username'], $item['last_post_user_colour'],  $item['last_post_username']) : '',
+			'LAST_POST_USERNAME'		=> (!empty($item['last_post_user_id'])) ? sprintf($user->lang['TRACKER_LAST_POST_BY'], get_username_string('full', $item['last_post_user_id'], $item['last_post_username'], $item['last_post_user_colour'],  $item['last_post_username']), $user->format_date($item['last_post_time'])) : '',
 			'LAST_POST_TIME'			=> $user->format_date($item['last_post_time']),
 
 			'TICKET_HIDDEN'				=> ($item['ticket_hidden'] == TRACKER_TICKET_HIDDEN) ? true : false,
 			'TICKET_SECURITY'			=> ($item['ticket_security'] == TRACKER_TICKET_SECURITY) ? true : false,
 			'TICKET_ID'					=> $item['ticket_id'],
 			'TICKET_TITLE'				=> $item['ticket_title'],
-			'TICKET_USERNAME'			=> get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour'],  $item['ticket_username']),
+			'TICKET_USERNAME'			=> sprintf($user->lang['TRACKER_POSTED_ON_DATE'], get_username_string('full', $item['ticket_user_id'], $item['ticket_username'], $item['ticket_user_colour'],  $item['ticket_username']), $user->format_date($item['ticket_time'])),
 			'TICKET_TIME'				=> $user->format_date($item['ticket_time']),
 			'TICKET_COMPONENT'			=> $tracker->api->set_component_name($item['component_id'], $components),
 			'TICKET_ASSIGNED_TO'		=> $tracker->api->get_assigned_to($project_id, $item['ticket_assigned_to'], $item['assigned_username'], $item['assigned_user_colour']),

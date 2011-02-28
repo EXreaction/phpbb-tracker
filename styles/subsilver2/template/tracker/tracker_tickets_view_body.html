@@ -85,7 +85,7 @@
 							<!-- IF comments.S_CAN_DELETE --><a href="{comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
 							</div>
 						<!-- ENDIF -->
-					<!-- ENDIF --><a href="#p{comments.POST_ID}">{POST_IMG}</a> <strong>{L_TRACKER_POST_BY_AUTHOR} {comments.COMMENT_POSTER} {L_TRACKER_POSTED_ON_DATE} {comments.COMMENT_TIME}</strong></div>
+					<!-- ENDIF --><a href="#p{comments.POST_ID}">{POST_IMG}</a> <strong>{comments.COMMENT_POSTER}</strong></div>
 				<hr />
 				<div class="postbody">{comments.COMMENT_DESC}</div>
 				<!-- IF comments.S_HAS_ATTACHMENTS -->
@@ -347,7 +347,7 @@
 			<!-- BEGIN review -->
 				<hr />
 				<div style="border: #ddd solid 1px; padding: 10px; margin: 10px 0 10px 0px; clear: both;<!-- IF review.S_LAST_ROW --> background-color:lightblue;<!-- ENDIF -->">
-					<div class="postdetails">{POST_IMG} <strong>{L_TRACKER_POST_BY_AUTHOR} {review.POST_USER} {L_TRACKER_POSTED_ON_DATE} {review.POST_TIME}</strong></div>
+					<div class="postdetails">{POST_IMG} <strong>{review.POST_USER}</strong></div>
 					<hr />
 					<div class="postbody">{review.POST_TEXT}</div>
 				</div>
