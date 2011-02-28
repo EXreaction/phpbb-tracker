@@ -53,7 +53,7 @@
 	<!-- IF S_DISPLAY_COMMENTS -->
 	<h3>{L_TRACKER_TICKET_COMMENTS}</h3>
 		<!-- BEGIN comments -->
-		<div id="{comments.POST_ID}" class="post <!-- IF comments.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+		<div id="p{comments.POST_ID}" class="post <!-- IF comments.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<div class="postbody" style="width: auto; float: none; margin: 0; height: auto;">
 					<!-- IF not S_IS_BOT -->
@@ -64,7 +64,7 @@
 						</ul>
 						<!-- ENDIF -->
 					<!-- ENDIF -->
-					<p class="author"><a href="#{comments.POST_ID}">{POST_IMG}</a> <strong>{comments.COMMENT_POSTER}</strong></p>
+					<p class="author"><a href="#p{comments.POST_ID}">{POST_IMG}</a> <strong>{comments.COMMENT_POSTER}</strong></p>
 					<div class="content">{comments.COMMENT_DESC}</div>
 					<!-- IF comments.S_HAS_ATTACHMENTS -->
 						<dl class="attachbox">
@@ -110,9 +110,9 @@
 		<!-- END -->
 	<!-- ENDIF -->
 
-	<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT or PAGINATION or TOTAL_POSTS -->
+	<!-- IF S_CAN_POST_TRACKER or PAGINATION or TOTAL_POSTS -->
 	<div class="topic-actions">
-		<!-- IF S_USER_LOGGED_IN and S_CAN_POST_TRACKER and not S_IS_BOT and not S_DISPLAY_HISTORY -->
+		<!-- IF S_CAN_POST_TRACKER and not S_IS_BOT -->
 		<div class="buttons">
 			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->reply-icon<!-- ENDIF -->"><a href="{U_POST_REPLY_TICKET}" title="<!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_TOPIC_LOCKED_SHORT}<!-- ELSE -->{L_POST_REPLY}<!-- ENDIF --></a></div>
 		</div>
@@ -179,6 +179,7 @@
 				<div id="message-box">
 					<textarea name="message" id="message" rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{REPLY_DESC}</textarea>
 				</div>
+
 			</fieldset>
 			<span class="corners-bottom"><span></span></span>
 		</div>
@@ -312,7 +313,7 @@
 					<!-- IF S_SHOW_DBMS --><li><strong>{L_TRACKER_TICKET_DBMS_DETAIL}:</strong> {TICKET_DBMS}</li><!-- ENDIF -->
 				<!-- ENDIF -->
 				<li><strong>{L_TRACKER_ASSIGNED_TO}:</strong> {TICKET_ASSIGNED_TO}</li>
-				<li><strong>{L_TRACKER_REPORTED_BY}:</strong> {TICKET_REPORTED_BY} (<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)</li>
+				<li><strong>{L_TRACKER_REPORTED_BY}:</strong> {TICKET_REPORTED_BY} <!-- IF S_SEND_PM -->(<a href="{U_SEND_PM}">{L_TRACKER_SEND_PM}</a>)<!-- ENDIF --></li>
 				<li><strong>{L_TRACKER_REPORTERS_TICKETS}:</strong> <a href="{U_REPORTERS_TICKETS}">{L_TRACKER_LIST_ALL_TICKETS}</a></li>
 				<li<!-- IF not TICKET_LAST_VISIT --> class="last"<!-- ENDIF -->><strong>{L_TRACKER_REPORTED_ON}:</strong> {TICKET_TIME}</li>
 				<!-- IF TICKET_LAST_VISIT --><li class="last">{TICKET_LAST_VISIT}</li><!-- ENDIF -->
