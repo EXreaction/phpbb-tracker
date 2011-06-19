@@ -22,17 +22,11 @@
 				<homepage><![CDATA[http://phpbbmodders.net]]></homepage>
 				<email><![CDATA[evil3@phpbb.com]]></email>
 			</author>
-			<author>
-				<realname><![CDATA[Komlódi Péter]]></realname>
-				<username><![CDATA[KillBill.]]></username>
-				<homepage><![CDATA[http://jatek-vilag.com/]]></homepage>
-				<email><![CDATA[killbill@jatek-vilag.com]]></email>
-			</author>
 		</author-group>
-		<mod-version>0.3.0</mod-version>
+		<mod-version>0.2.0</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>600</time>
+			<time>480</time>
 			<target-version>3.0.0</target-version>
 		</installation>
 		<history>
@@ -76,6 +70,7 @@
 				<date>2009-01-14</date>
 				<rev-version>0.2.0</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[Added selectable project view type inside acp]]></change>
 					<change><![CDATA[Added new issue buttons to prosilver and subsilver2]]></change>
 					<change><![CDATA[Added ability to enable/disable versions]]></change>
 					<change><![CDATA[Added ticket and project subscriptions]]></change>
@@ -86,34 +81,29 @@
 					<change><![CDATA[Updated minimum PHP version to 5.0.0.]]></change>
 				</changelog>
 			</entry>
-			<entry>
-				<date>2009-01-23</date>
-				<rev-version>0.3.0</rev-version>
-				<changelog lang="en">
-					<change><![CDATA[Fixed subscription emails]]></change>
-					<change><![CDATA[Fixed various style issues]]></change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2011-06-19</date>
-				<rev-version>0.4.0</rev-version>
-				<changelog lang="en">
-					<change><![CDATA[modx 1.2.5]]></change>
-				</changelog>
-			</entry>
 		</history>
-		<link-group>
-			<link type="template" href="subsilver2.xml" lang="en">subsilver2</link>
-		</link-group>
 	</header>
 	<action-group>
 		<copy>
+			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/*.*"/>
+			<file from="root/styles/prosilver/imageset/en/button_issue_new.gif" to="styles/prosilver/imageset/en/button_issue_new.gif"/>
+			<file from="root/styles/subsilver2/template/tracker/*.*" to="styles/subsilver2/template/tracker/*.*"/>
+			<file from="root/styles/subsilver2/imageset/en/button_issue_new.gif" to="styles/subsilver2/imageset/en/button_issue_new.gif"/>
 			<file from="root/tracker.php" to="tracker.php"/>
 			<file from="root/adm/style/acp_tracker.html" to="adm/style/acp_tracker.html"/>
 			<file from="root/install/*.*" to="install/*.*"/>
+			<file from="root/install/schemas/*.*" to="install/schemas/*.*"/>
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php"/>
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php"/>
-			<file from="root/tracker/*.*" to="tracker/*.*"/>
+			<file from="root/includes/tracker/functions_files.php" to="includes/tracker/functions_files.php"/>
+			<file from="root/includes/tracker/tracker_api.php" to="includes/tracker/tracker_api.php"/>
+			<file from="root/includes/tracker/tracker_cache.php" to="includes/tracker/tracker_cache.php"/>
+			<file from="root/includes/tracker/tracker_class.php" to="includes/tracker/tracker_class.php"/>
+			<file from="root/includes/tracker/tracker_constants.php" to="includes/tracker/tracker_constants.php"/>
+			<file from="root/includes/tracker/tracker_download.php" to="includes/tracker/tracker_download.php"/>
+			<file from="root/includes/tracker/tracker_viewonline.php" to="includes/tracker/tracker_viewonline.php"/>
+			<file from="root/includes/tracker/tracker_status.php" to="includes/tracker/tracker_status.php"/>
+			<file from="root/includes/tracker/tracker_types.php" to="includes/tracker/tracker_types.php"/>
 			<file from="root/language/en/email/tracker_notify.txt" to="language/en/email/tracker_notify.txt"/>
 			<file from="root/language/en/email/tracker_notify_comment.txt" to="language/en/email/tracker_notify_comment.txt"/>
 			<file from="root/language/en/email/tracker_notify_watch.txt" to="language/en/email/tracker_notify_watch.txt"/>
@@ -124,53 +114,87 @@
 			<file from="root/language/en/mods/tracker_install.php" to="language/en/mods/tracker_install.php"/>
 			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php"/>
 			<file from="root/files/tracker/index.htm" to="files/tracker/index.htm"/>
-			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/"/>
-			<file from="root/styles/prosilver/imageset/en/button_issue_new.gif" to="styles/prosilver/imageset/en/button_issue_new.gif"/>
 		</copy>
 		<open src="viewonline.php">
 			<edit>
-				<find><![CDATA[		case 'ucp':
-			$location = $user->lang['VIEWING_UCP'];
+				<find><![CDATA[		case 'tracker':
+			if (!isset($tracker))
+			{
+				include($phpbb_root_path . 'includes/tracker/tracker_class.' . $phpEx);
+				$tracker = new tracker(false);
+			}
 
 			// Grab some common modules
 			$url_params = array(
-				'mode=register'		=> 'VIEWING_REGISTER',
-				'i=pm&mode=compose'	=> 'POSTING_PRIVATE_MESSAGE',
-				'i=pm&'				=> 'VIEWING_PRIVATE_MESSAGES',
-				'i=profile&'		=> 'CHANGING_PROFILE',
-				'i=prefs&'			=> 'CHANGING_PREFERENCES',
+				'mode=statistics'	=> 'VIEWING_TRACKER_STATISTICS',
+				'mode=add'			=> 'ADDING_TRACKER_TICKET',
+				'mode=reply'		=> 'REPLYING_TRACKER_TICKET',
 			);
 
+			preg_match('#p=([0-9]+)#i', $row['session_page'], $project_id);
+			$project_id = (sizeof($project_id)) ? (int) $project_id[1] : 0;
+
+			preg_match('#t=([0-9]+)#i', $row['session_page'], $ticket_id);
+			$ticket_id = (sizeof($ticket_id)) ? (int) $ticket_id[1] : 0;
+
+			$found_tracker = false;
 			foreach ($url_params as $param => $lang)
 			{
 				if (strpos($row['session_page'], $param) !== false)
 				{
-					$location = $user->lang[$lang];
+					if ($param == 'mode=statistics')
+					{
+						$found_tracker = true;
+						if ($project_id)
+						{
+							$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+							$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics&amp;p=' . $project_id);
+						}
+						else
+						{
+							$location = sprintf($user->lang[$lang . '_ALL']);
+							$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'mode=statistics');
+						}
+					}
+					else if ($param == 'mode=add' && $project_id)
+					{
+						$found_tracker = true;
+						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
+					}
+					else if ($param == 'mode=reply' && $project_id && $ticket_id)
+					{
+						$found_tracker = true;
+						$location = sprintf($user->lang[$lang], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+						$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
+					}
 					break;
 				}
 			}
 
-			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+			if (!$found_tracker)
+			{
+				$lang = 'VIEWING_TRACKER';
+				if ($project_id && $ticket_id)
+				{
+					$location = sprintf($user->lang[$lang . '_TICKET'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id . '&amp;t=' . $ticket_id);
+				}
+				else if ($project_id && !$ticket_id)
+				{
+					$location = sprintf($user->lang[$lang . '_PROJECT'], $tracker->get_type_option('title', $project_id), $tracker->projects[$project_id]['project_name']);
+					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx", 'p=' . $project_id);
+				}
+				else
+				{
+					$location = $user->lang[$lang];
+					$location_url = append_sid("{$phpbb_root_path}tracker.$phpEx");
+				}
+			}
 		break;]]></find>
-				<action type="after-add"><![CDATA[		case 'tracker':
-			include($phpbb_root_path . 'tracker/includes/viewonline.' . $phpEx);
+				<action type="replace-with"><![CDATA[		case 'tracker':
+			include($phpbb_root_path . 'includes/tracker/tracker_viewonline.' . $phpEx);
 		break;]]></action>
-			</edit>
-		</open>
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[function page_header($page_title = '', $display_online_list = true)
-{
-	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;]]></find>
-				<action type="after-add"><![CDATA[	global $tracker;]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-				<action type="after-add"><![CDATA[	if (!isset($tracker))
-	{
-		$user->add_lang('mods/tracker');
-		$template->assign_var('U_TRACKER', append_sid("{$phpbb_root_path}tracker.$phpEx"));
-	}]]></action>
 			</edit>
 		</open>
 		<open src="includes/functions_user.php">
@@ -179,13 +203,13 @@
 			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
 		$db->sql_query($sql);]]></find>
 				<action type="after-add"><![CDATA[		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
-		if (!defined('TRACKER_TICKETS_TABLE'))
-		{
-			include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
-		}		
+		include($phpbb_root_path . 'includes/tracker/tracker_constants.' . $phpEx);
 		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE . " SET last_visit_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('last_visit_user_id', $user_id_ary);
-		$db->sql_query($sql);]]></action>
+		$db->sql_query($sql);
+		
+		$cache->destroy('_tracker_projects');
+		$cache->destroy('_tracker_project_cats');]]></action>
 			</edit>
 		</open>
 		<open src="includes/acp/acp_language.php">
@@ -220,15 +244,12 @@
 		</open>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
-				<find><![CDATA[</head>]]></find>
-				<action type="before-add"><![CDATA[<!-- IF S_IN_TRACKER -->
-<!-- INCLUDE tracker/tracker_header.html -->
-<!-- ENDIF -->]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[				<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
-				<action type="before-add"><![CDATA[				<li class="icon-faq"><a href="{U_TRACKER}" title="{L_TRACKER}">{L_TRACKER}</a></li>
-]]></action>
+				<find><![CDATA[			<!-- IF S_IN_TRACKER -->
+				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <strong>&#8249;</strong> <a href="{U_TRACKER}">{L_TRACKER}</a><!-- IF S_IN_STATS --> <strong>&#8249;</strong> <a href="{U_TRACKER_STATS}">{L_TRACKER_STATS}</a><!-- ENDIF --><!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --><!-- IF TRACKER_TICKET_ID --> <strong>&#8249;</strong> <a href="{U_VIEW_TRACKER_TICKET}">{L_TRACKER_NAV_TICKET}{TRACKER_TICKET_ID}</a><!-- ENDIF --></li>
+			<!-- ELSE -->
+				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --></li>
+			<!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[				<li class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --></li>]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/theme/buttons.css">
@@ -247,7 +268,23 @@
 				<action type="after-add"><![CDATA[.issue-icon span	{ background-image: url("{IMG_BUTTON_ISSUE_NEW_SRC}"); }]]></action>
 			</edit>
 		</open>
-		<diy-instructions lang="en"><![CDATA[Run the included installer at http://yoursite.com/phpBB/install/index.php
-Once done make sure to remove install folder from your server.]]></diy-instructions>
+		<open src="styles/subsilver2/imageset/en/imageset.cfg">
+			<edit>
+				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
+				<action type="after-add"><![CDATA[img_button_issue_new = button_issue_new.gif]]></action>
+			</edit>
+		</open>
+		<open src="styles/subsilver2/template/overall_header.html">
+			<edit>
+				<find><![CDATA[	<!-- IF S_IN_TRACKER -->
+	<!-- INCLUDE tracker/tracker_breadcrumbs.html -->
+	<!-- ELSE -->
+	<!-- INCLUDE breadcrumbs.html -->
+	<!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[	<!-- INCLUDE breadcrumbs.html -->]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="en"><![CDATA[Delete subsilver2/template/tracker/tracker_breadcrumbs.html. Run the included installer at http://yoursite.com/phpBB/install/index.php and select the option to update to latest version.
+Once done make sure to remove install folder from your server and then purge the cache and refresh your styles templates, themes and imageset.]]></diy-instructions>
 	</action-group>
 </mod>

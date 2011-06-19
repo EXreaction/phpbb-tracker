@@ -22,17 +22,11 @@
 				<homepage><![CDATA[http://phpbbmodders.net]]></homepage>
 				<email><![CDATA[evil3@phpbb.com]]></email>
 			</author>
-			<author>
-				<realname><![CDATA[Komlódi Péter]]></realname>
-				<username><![CDATA[KillBill.]]></username>
-				<homepage><![CDATA[http://jatek-vilag.com/]]></homepage>
-				<email><![CDATA[killbill@jatek-vilag.com]]></email>
-			</author>
 		</author-group>
-		<mod-version>0.3.0</mod-version>
+		<mod-version>0.4.0</mod-version>
 		<installation>
 			<level>easy</level>
-			<time>600</time>
+			<time>480</time>
 			<target-version>3.0.0</target-version>
 		</installation>
 		<history>
@@ -102,15 +96,17 @@
 				</changelog>
 			</entry>
 		</history>
-		<link-group>
-			<link type="template" href="subsilver2.xml" lang="en">subsilver2</link>
-		</link-group>
 	</header>
 	<action-group>
 		<copy>
+			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/"/>
+			<file from="root/styles/prosilver/imageset/en/button_issue_new.gif" to="styles/prosilver/imageset/en/button_issue_new.gif"/>
+			<file from="root/styles/subsilver2/template/tracker/*.*" to="styles/subsilver2/template/tracker/*.*"/>
+			<file from="root/styles/subsilver2/imageset/en/button_issue_new.gif" to="styles/subsilver2/imageset/en/button_issue_new.gif"/>
 			<file from="root/tracker.php" to="tracker.php"/>
 			<file from="root/adm/style/acp_tracker.html" to="adm/style/acp_tracker.html"/>
 			<file from="root/install/*.*" to="install/*.*"/>
+			<file from="root/install/schemas/*.*" to="install/schemas/"/>
 			<file from="root/includes/acp/acp_tracker.php" to="includes/acp/acp_tracker.php"/>
 			<file from="root/includes/acp/info/acp_tracker.php" to="includes/acp/info/acp_tracker.php"/>
 			<file from="root/tracker/*.*" to="tracker/*.*"/>
@@ -124,130 +120,8 @@
 			<file from="root/language/en/mods/tracker_install.php" to="language/en/mods/tracker_install.php"/>
 			<file from="root/language/en/mods/info_acp_tracker.php" to="language/en/mods/info_acp_tracker.php"/>
 			<file from="root/files/tracker/index.htm" to="files/tracker/index.htm"/>
-			<file from="root/styles/prosilver/template/tracker/*.*" to="styles/prosilver/template/tracker/"/>
-			<file from="root/styles/prosilver/imageset/en/button_issue_new.gif" to="styles/prosilver/imageset/en/button_issue_new.gif"/>
 		</copy>
-		<open src="viewonline.php">
-			<edit>
-				<find><![CDATA[		case 'ucp':
-			$location = $user->lang['VIEWING_UCP'];
-
-			// Grab some common modules
-			$url_params = array(
-				'mode=register'		=> 'VIEWING_REGISTER',
-				'i=pm&mode=compose'	=> 'POSTING_PRIVATE_MESSAGE',
-				'i=pm&'				=> 'VIEWING_PRIVATE_MESSAGES',
-				'i=profile&'		=> 'CHANGING_PROFILE',
-				'i=prefs&'			=> 'CHANGING_PREFERENCES',
-			);
-
-			foreach ($url_params as $param => $lang)
-			{
-				if (strpos($row['session_page'], $param) !== false)
-				{
-					$location = $user->lang[$lang];
-					break;
-				}
-			}
-
-			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
-		break;]]></find>
-				<action type="after-add"><![CDATA[		case 'tracker':
-			include($phpbb_root_path . 'tracker/includes/viewonline.' . $phpEx);
-		break;]]></action>
-			</edit>
-		</open>
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[function page_header($page_title = '', $display_online_list = true)
-{
-	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;]]></find>
-				<action type="after-add"><![CDATA[	global $tracker;]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-				<action type="after-add"><![CDATA[	if (!isset($tracker))
-	{
-		$user->add_lang('mods/tracker');
-		$template->assign_var('U_TRACKER', append_sid("{$phpbb_root_path}tracker.$phpEx"));
-	}]]></action>
-			</edit>
-		</open>
-		<open src="includes/functions_user.php">
-			<edit>
-				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
-		$db->sql_query($sql);]]></find>
-				<action type="after-add"><![CDATA[		global $cache, $phpbb_root_path, $phpEx, $table_prefix;
-		if (!defined('TRACKER_TICKETS_TABLE'))
-		{
-			include($phpbb_root_path . 'tracker/includes/constants.' . $phpEx);
-		}		
-		$sql = 'UPDATE ' . TRACKER_TICKETS_TABLE . " SET last_visit_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('last_visit_user_id', $user_id_ary);
-		$db->sql_query($sql);]]></action>
-			</edit>
-		</open>
-		<open src="includes/acp/acp_language.php">
-			<edit>
-				<find><![CDATA[, 'button_topic_reply']]></find>
-				<inline-edit>
-					<inline-find><![CDATA[, 'button_topic_reply']]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'button_issue_new']]></inline-action>
-				</inline-edit>
-			</edit>
-		</open>
-		<open src="includes/acp/acp_styles.php">
-			<edit>
-				<find><![CDATA[, 'button_topic_reply']]></find>
-				<inline-edit>
-					<inline-find><![CDATA[, 'button_topic_reply']]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'button_issue_new']]></inline-action>
-				</inline-edit>
-			</edit>
-		</open>
-		<open src="language/en/acp/styles.php">
-			<edit>
-				<find><![CDATA[	'IMG_BUTTON_TOPIC_REPLY'	=> 'Reply topic',]]></find>
-				<action type="after-add"><![CDATA[	'IMG_BUTTON_ISSUE_NEW'	=> 'New issue',]]></action>
-			</edit>
-		</open>
-		<open src="styles/prosilver/imageset/en/imageset.cfg">
-			<edit>
-				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
-				<action type="after-add"><![CDATA[img_button_issue_new = button_issue_new.gif*25*95]]></action>
-			</edit>
-		</open>
-		<open src="styles/prosilver/template/overall_header.html">
-			<edit>
-				<find><![CDATA[</head>]]></find>
-				<action type="before-add"><![CDATA[<!-- IF S_IN_TRACKER -->
-<!-- INCLUDE tracker/tracker_header.html -->
-<!-- ENDIF -->]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[				<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
-				<action type="before-add"><![CDATA[				<li class="icon-faq"><a href="{U_TRACKER}" title="{L_TRACKER}">{L_TRACKER}</a></li>
-]]></action>
-			</edit>
-		</open>
-		<open src="styles/prosilver/theme/buttons.css">
-			<edit>
-				<find><![CDATA[.reply-icon span	{ background: transparent none 0 0 no-repeat; }]]></find>
-				<action type="after-add"><![CDATA[.issue-icon span	{ background: transparent none 0 0 no-repeat; }]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[.buttons div.reply-icon		{ width: {IMG_BUTTON_TOPIC_REPLY_WIDTH}px; height: {IMG_BUTTON_TOPIC_REPLY_HEIGHT}px; }]]></find>
-				<action type="after-add"><![CDATA[.buttons div.issue-icon	{ width: {IMG_BUTTON_ISSUE_NEW_WIDTH}px; height: {IMG_BUTTON_ISSUE_NEW_HEIGHT}px; }]]></action>
-			</edit>
-		</open>
-		<open src="styles/prosilver/theme/colours.css">
-			<edit>
-				<find><![CDATA[.reply-icon span	{ background-image: url("{IMG_BUTTON_TOPIC_REPLY_SRC}"); }]]></find>
-				<action type="after-add"><![CDATA[.issue-icon span	{ background-image: url("{IMG_BUTTON_ISSUE_NEW_SRC}"); }]]></action>
-			</edit>
-		</open>
-		<diy-instructions lang="en"><![CDATA[Run the included installer at http://yoursite.com/phpBB/install/index.php
-Once done make sure to remove install folder from your server.]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Run the included installer at http://yoursite.com/phpBB/install/index.php and select the option to update to latest version.
+Once done make sure to remove install folder from your server and then purge the cache and refresh your styles templates, themes and imageset.]]></diy-instructions>
 	</action-group>
 </mod>
