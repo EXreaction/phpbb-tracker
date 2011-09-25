@@ -106,7 +106,7 @@ class install_uninstall extends module
 
 		// Purge the cache
 		$db->sql_return_on_error(true);
-		$this->p_master->cache_purge(array('auth', 'imageset', 'theme', 'template', ''));
+		$this->p_master->cache_purge(array('template', 'theme', 'imageset', 'auth', ''));
 		$db->sql_return_on_error(false);
 
 		$template->assign_vars(array(

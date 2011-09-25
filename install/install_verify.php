@@ -83,6 +83,7 @@ class install_verify extends module
 		global $user, $config, $mod_config, $template, $phpbb_root_path, $phpEx, $db;
 
 		$this->page_title = $user->lang['STAGE_REQUIREMENTS'];
+		$this->p_master->cache_purge(array('template', 'theme', 'imageset', 'auth', ''));
 
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['REQUIREMENTS_TITLE'],

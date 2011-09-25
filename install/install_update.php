@@ -323,7 +323,7 @@ class install_update extends module
 			// Set tracker version config value to latest version
 			$this->p_master->set_config('version', $mod_config['version']['current']);
 			// Purge the cache
-			$cache->purge();
+			$this->p_master->cache_purge(array('template', 'theme', 'imageset', 'auth', ''));
 		}
 
 		$template->assign_vars(array(

@@ -240,7 +240,7 @@ class install_install extends module
 		}
 
 		// Purge the cache
-		$this->p_master->cache_purge(array('auth', 'imageset', 'theme', 'template', ''));
+		$this->p_master->cache_purge(array('template', 'theme', 'imageset', 'auth', ''));
 
 		$template->assign_vars(array(
 			'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
