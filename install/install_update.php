@@ -100,7 +100,7 @@ class install_update extends module
 			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['phpbb_version']),
 		));
 
-		if (version_compare($config['version'], $mod_config['phpbb_version']) < 0)
+		if (phpbb_version_compare($config['version'], $mod_config['phpbb_version'], '<'))
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}
@@ -198,7 +198,7 @@ class install_update extends module
 		// Purge the cache
 		$cache->purge();
 
-		if (version_compare($this->p_master->installed_version, $mod_config['version']['current'], '<'))
+		if (phpbb_version_compare($this->p_master->installed_version, $mod_config['version']['current'], '<'))
 		{
 			switch ($this->p_master->installed_version)
 			{

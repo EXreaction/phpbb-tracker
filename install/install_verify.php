@@ -21,7 +21,7 @@ return;
 
 if (!empty($setmodules))
 {
-	if (!$this->installed_version || ($this->installed_version && version_compare($this->installed_version, $mod_config['mod_version'], '<')))
+	if (!$this->installed_version || ($this->installed_version && phpbb_version_compare($this->installed_version, $mod_config['mod_version'], '<')))
 	{
 		return;
 	}
@@ -110,7 +110,7 @@ class install_verify extends module
 			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['phpbb_version']),
 		));
 
-		if (version_compare($config['version'], $mod_config['phpbb_version']) < 0)
+		if (phpbb_version_compare($config['version'], $mod_config['phpbb_version'], '<'))
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}

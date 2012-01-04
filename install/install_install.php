@@ -100,7 +100,7 @@ class install_install extends module
 			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['version']['phpbb']),
 		));
 
-		if (version_compare($config['version'],$mod_config['version']['phpbb']) < 0)
+		if (phpbb_version_compare($config['version'], $mod_config['version']['phpbb'], '<'))
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}
@@ -210,7 +210,7 @@ class install_install extends module
 		{
 			$this->p_master->load_data($mod_config['data_file']['add']);
 		}
-		
+
 		$this->p_master->set_config('attachment_path', 'files/tracker');
 		$this->p_master->set_config('allow_attachments', '1');
 		$this->p_master->set_config('max_attachments', '5');
