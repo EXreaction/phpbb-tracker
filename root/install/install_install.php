@@ -100,7 +100,7 @@ class install_install extends module
 			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['version']['phpbb']),
 		));
 
-		if (phpbb_version_compare($config['version'], $mod_config['version']['phpbb'], '<'))
+		if (version_compare($config['version'], $mod_config['version']['phpbb'], '<'))
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}
