@@ -159,10 +159,8 @@
 		</open>
 		<open src="includes/functions.php">
 			<edit>
-				<find><![CDATA[function page_header($page_title = '', $display_online_list = true)
-{
-	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;]]></find>
-				<action type="after-add"><![CDATA[	global $tracker;]]></action>
+				<find><![CDATA[if (defined('HEADER_INC'))]]></find>
+				<action type="before-add"><![CDATA[	global $tracker;]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
