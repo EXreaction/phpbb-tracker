@@ -11,6 +11,12 @@
 		<author-notes lang="en"><![CDATA[This MOD requires a minimum PHP version of 5.0.0.]]></author-notes>
 		<author-group>
 			<author>
+				<realname>Nathaniel Guse</realname>
+				<username>EXreaction</username>
+				<homepage>http://lithiumstudios.org</homepage>
+				<email>exreaction@lithiumstudios.org</email>
+			</author>
+			<author>
 				<realname><![CDATA[J. Russo]]></realname>
 				<username><![CDATA[JRSweets]]></username>
 				<homepage><![CDATA[http://www.jeffrusso.net]]></homepage>
@@ -22,12 +28,18 @@
 				<homepage><![CDATA[http://phpbbmodders.net]]></homepage>
 				<email><![CDATA[evil3@phpbb.com]]></email>
 			</author>
+			<author>
+				<realname><![CDATA[Komlódi Péter]]></realname>
+				<username><![CDATA[KillBill.]]></username>
+				<homepage><![CDATA[http://jatek-vilag.com/]]></homepage>
+				<email><![CDATA[killbill@jatek-vilag.com]]></email>
+			</author>
 		</author-group>
-		<mod-version>0.3.0</mod-version>
+		<mod-version>0.5.1</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
-			<target-version>3.0.0</target-version>
+			<target-version>3.0.11</target-version>
 		</installation>
 	</header>
 	<action-group>
