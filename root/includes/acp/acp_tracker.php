@@ -88,7 +88,7 @@ class acp_tracker
 		$errstr = '';
 		$errno = 0;
 
-		$info = get_remote_file('www.jeffrusso.net', '/updatecheck', 'phpBBTracker.txt', $errstr, $errno);
+		$info = get_remote_file('lithiumstudios.org', '/updatecheck', 'phpBBTracker.txt', $errstr, $errno);
 
 		if ($info === false)
 		{
