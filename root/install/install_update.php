@@ -318,6 +318,28 @@ class install_update extends module
 					$this->p_master->set_config('allow_attachments', '1');
 					$this->p_master->set_config('max_attachments', '5');
 
+					// Add columns
+					$schema_changes = array(
+						'add_columns'		=> array(
+							TRACKER_ATTACHMENTS_TABLE	=> array(
+								'download_count' => array('UINT', 0),
+								'attach_comment' => array('TEXT_UNI', ''),
+								'thumbnail' => array('BOOL', 0),
+							),
+
+							TRACKER_TICKETS_TABLE	=> array(
+								'ticket_username' => array('VCHAR_UNI', ''),
+								'last_post_username' => array('VCHAR_UNI', ''),
+							),
+
+							TRACKER_POSTS_TABLE	=> array(
+								'post_attachment' => array('BOOL', 0),
+								'post_username' => array('VCHAR_UNI', ''),
+							),
+						),
+					);
+					$phpbb_db_tools->perform_schema_changes($schema_changes);
+
 				break;
 
 				default:
