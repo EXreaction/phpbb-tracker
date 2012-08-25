@@ -97,10 +97,10 @@ class install_update extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
-			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['phpbb_version']),
+			'LEGEND_EXPLAIN'	=> sprintf($user->lang['PHP_SETTINGS_EXPLAIN'], $mod_config['version']['phpbb']),
 		));
 
-		if (phpbb_version_compare($config['version'], $mod_config['phpbb_version'], '<'))
+		if (phpbb_version_compare($config['version'], $mod_config['version']['phpbb'], '<'))
 		{
 			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong>';
 		}
@@ -111,7 +111,7 @@ class install_update extends module
 		}
 
 		$template->assign_block_vars('checks', array(
-			'TITLE'			=> sprintf($user->lang['PHPBB_VERSION_REQD'], $mod_config['phpbb_version']),
+			'TITLE'			=> sprintf($user->lang['PHPBB_VERSION_REQD'], $mod_config['version']['phpbb']),
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
