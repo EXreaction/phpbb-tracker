@@ -314,6 +314,10 @@ class install_update extends module
 				case '0.3.0':
 					$this->p_master->set_config('enable_post_confirm', true);
 
+				case '0.5.0':
+					$this->p_master->set_config('allow_attachments', '1');
+					$this->p_master->set_config('max_attachments', '5');
+
 				break;
 
 				default:

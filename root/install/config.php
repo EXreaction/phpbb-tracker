@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 
 $mod_config = array(
 	'version'	=> array(
-		'current' 	=> '0.5.0',
+		'current' 	=> '0.5.1',
 		'oldest'	=> '0.1.0',
 		'phpbb'		=> '3.0.8',
 	),
