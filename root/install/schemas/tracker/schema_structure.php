@@ -73,11 +73,11 @@ $schema_data = array();
 		),
 		'PRIMARY_KEY'	=> 'attach_id',
 		'KEYS'			=> array(
-			'filetime'			=> array('INDEX', 'filetime'),
-			'ticket_id'			=> array('INDEX', 'ticket_id'),
-			'post_id'			=> array('INDEX', 'post_id'),
-			'poster_id'			=> array('INDEX', 'poster_id'),
-			'is_orphan'			=> array('INDEX', 'is_orphan'),
+			'ft'			=> array('INDEX', 'filetime'),
+			'tid'			=> array('INDEX', 'ticket_id'),
+			'pid'			=> array('INDEX', 'post_id'),
+			'poid'			=> array('INDEX', 'poster_id'),
+			'orph'			=> array('INDEX', 'is_orphan'),
 		),
 	);
 
