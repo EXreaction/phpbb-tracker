@@ -331,6 +331,7 @@ class install_update extends module
 							TRACKER_TICKETS_TABLE	=> array(
 								'ticket_username' => array('VCHAR_UNI', ''),
 								'last_post_username' => array('VCHAR_UNI', ''),
+								'ticket_attachment'	=> array('BOOL', 0),
 							),
 
 							TRACKER_POSTS_TABLE	=> array(
