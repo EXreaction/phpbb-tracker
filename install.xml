@@ -115,6 +115,13 @@
 					<change>Numerous bug fixes</change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2012-00-00</date>
+				<rev-version>1.0.0-b1-dev</rev-version>
+				<changelog lang="en">
+					<change>Fix an error from users submitting an invalid project category id on the index</change>
+				</changelog>
+			</entry>
 		</history>
 		<link-group>
 			<link type="template" href="subsilver2.xml" lang="en">subsilver2</link>

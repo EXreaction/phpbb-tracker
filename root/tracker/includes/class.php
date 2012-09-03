@@ -74,6 +74,11 @@ class tracker
 	{
 		global $user, $template;
 
+		if (!isset($this->api->project_cats[$project_cat_id]))
+		{
+			$project_cat_id = false;
+		}
+
 		if (!sizeof($this->api->projects))
 		{
 			trigger_error('TRACKER_NO_PROJECT_EXIST');
