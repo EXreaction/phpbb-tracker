@@ -35,7 +35,7 @@
 				<email><![CDATA[killbill@jatek-vilag.com]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.5.1</mod-version>
+		<mod-version>1.0.0-b1-dev</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>600</time>
@@ -113,6 +113,13 @@
 				<changelog lang="en">
 					<change>Copied from the old SVN Repository for the mod JRSweets had setup</change>
 					<change>Numerous bug fixes</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-00-00</date>
+				<rev-version>1.0.0-b1-dev</rev-version>
+				<changelog lang="en">
+					<change>Fix an error from users submitting an invalid project category id on the index</change>
 				</changelog>
 			</entry>
 		</history>
