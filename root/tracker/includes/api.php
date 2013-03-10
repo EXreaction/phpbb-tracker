@@ -2958,6 +2958,11 @@ class tracker_api
 			$source = $file->get('destination_file');
 			$destination = $file->get('destination_path') . '/thumb_' . $file->get('realname');
 
+			if (!function_exists('create_thumbnail'))
+			{
+				include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+			}
+
 			if (!create_thumbnail($source, $destination, $file->get('mimetype')))
 			{
 				$filedata['thumbnail'] = 0;
