@@ -254,6 +254,12 @@ if ($project_id && (!$mode || $mode == 'search') && !$ticket_id)
 			$filter_username = array();
 			$filter_user_id = $assigned_to_user_id;
 			user_get_id_name($filter_user_id, $filter_username);
+
+			if (!isset($filter_username[$assigned_to_user_id]))
+			{
+				trigger_error('NO_USER');
+			}
+
 			$currently_showing = $currently_showing . sprintf($user->lang['TRACKER_ASSIGNED_TO_USERNAME'], $filter_username[$assigned_to_user_id]);
 		}
 	}
