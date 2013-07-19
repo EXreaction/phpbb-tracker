@@ -84,21 +84,8 @@ class acp_tracker
 		$this->page_title = 'ACP_VERSION_CHECK';
 		$current_version = str_replace(' ', '.', $this->tracker->api->config['version']);
 
-		// Get current and latest version
-		$errstr = '';
-		$errno = 0;
+		$latest_version = '0.0.0';
 
-		$info = get_remote_file('lithiumstudios.org', '/updatecheck', 'phpBBTracker.txt', $errstr, $errno);
-
-		if ($info === false)
-		{
-			trigger_error($errstr, E_USER_WARNING);
-		}
-
-		$info = explode("\n", $info);
-		$latest_version = trim($info[0]);
-
-		$announcement_url = trim($info[1]);
 		$update_link = append_sid($phpbb_root_path . 'install/index.' . $phpEx);
 
 		$up_to_date = (version_compare(str_replace('rc', 'RC', strtolower($current_version)), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
@@ -110,7 +97,7 @@ class acp_tracker
 			'LATEST_VERSION'	=> $latest_version,
 			'CURRENT_VERSION'	=> $current_version,
 
-			'UPDATE_INSTRUCTIONS'	=> sprintf($user->lang['TRACKER_UPDATE_INSTRUCTIONS'], $announcement_url, $update_link),
+			'UPDATE_INSTRUCTIONS'	=> sprintf($user->lang['TRACKER_UPDATE_INSTRUCTIONS'], '', $update_link),
 		));
 	}
 
