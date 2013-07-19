@@ -219,7 +219,7 @@ class install_install extends module
 		$this->p_master->set_config('posts_per_page', '10');
 		$this->p_master->set_config('top_reporters', '10');
 		$this->p_master->set_config('default_status_type', '1');
-		$this->p_master->set_config('version', '0.5.1');
+		$this->p_master->set_config('version', '0.5.2');
 
 		// Alter some existing tables
 		if (!empty($mod_config['schema_changes']))
