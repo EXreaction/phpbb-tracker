@@ -2,7 +2,6 @@
 /**
 *
 * @package install
-* @version $Id$
 * @copyright (c) 2010 http://www.phpbbarcade.com
 * @copyright (c) 2008 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License

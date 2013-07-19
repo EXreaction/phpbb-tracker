@@ -2,7 +2,6 @@
 /**
 *
 * @package tracker
-* @version $Id$
 * @copyright (c) 2007, 2008 jrsweets
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

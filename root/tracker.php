@@ -2,7 +2,6 @@
 /**
 *
 * @package tracker
-* @version $Id$
 * @copyright (c) 2008-2012 http://www.jeffrusso.net
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
